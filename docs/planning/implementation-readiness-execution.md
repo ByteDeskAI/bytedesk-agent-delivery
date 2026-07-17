@@ -97,38 +97,88 @@ The canonical decision sources for this task are the
 
 ### Acceptance criteria
 
-- [ ] Source-controlled JSON Schema Draft 2020-12 files exist for every Agent
+- [x] Source-controlled JSON Schema Draft 2020-12 files exist for every Agent
   Delivery-owned authoritative object, with stable IDs, closed authority
   boundaries, offline reference closure, and exact canonical digests.
-- [ ] Restricted-YAML-to-JSON parsing and RFC 8785 canonicalization have a
+- [x] Restricted-YAML-to-JSON parsing and RFC 8785 canonicalization have a
   runnable reference implementation plus positive, negative, boundary,
   malicious-input, Unicode, numeric, and parser-differential fixtures.
-- [ ] Strict functional JSON, file, and skill operation profiles and all
+- [x] Strict functional JSON, file, and skill operation profiles and all
   lifecycle state machines have executable positive/negative fixtures and
   exhaustive legal/illegal transition verification.
-- [ ] OpenAPI 3.2 and AsyncAPI 3.1/CloudEvents documents reference the normative
+- [x] OpenAPI 3.2 and AsyncAPI 3.1/CloudEvents documents reference the normative
   schemas rather than copying independent field models and pass lint/closure
   validation.
-- [ ] A deterministic offline contract bundle contains schemas, references,
+- [x] A deterministic offline contract bundle contains schemas, references,
   fixtures, API/event contracts, compatibility metadata, and documentation
   mappings; clean rebuilds are byte-identical and its manifest is identified by
   RFC 8785 SHA-256.
-- [ ] Bundle signing and verification are runnable without repository secrets:
+- [x] Bundle signing and verification are runnable without repository secrets:
   tests use ephemeral non-exported keys, and the release workflow accepts only
   an external/KMS or workload-identity signer.
-- [ ] Two independent Draft 2020-12 validators agree on every schema fixture;
+- [x] Two independent Draft 2020-12 validators agree on every schema fixture;
   generated projections/examples/docs pass drift checks; unknown schemas,
   fields, references, operations, and illegal transitions fail closed.
-- [ ] `development-plan.json` is explicitly repository-internal planning data,
+- [x] `development-plan.json` is explicitly repository-internal planning data,
   validated by a repository schema and drift checks, and no longer claims to be
   a released consumer product contract.
-- [ ] The complete AD-01 verification command passes from a clean checkout,
+- [x] The complete AD-01 verification command passes from a clean checkout,
   machine-readable evidence is archived, `CONTRACTS-FROZEN` is justified by that
   evidence, and the task commit is pushed.
 
 ### Evidence
 
-Pending.
+- The closed source inventory contains 49 product JSON Schemas and 136 indexed
+  positive, denial, malicious-input, and boundary fixtures. Go and Python Draft
+  2020-12 validators agreed on every result and denial proof. The canonical
+  schema-inventory digest is
+  `sha256:f73ec940f9d247c2a8de4f155eb8051de773a7f7f28793a354eb2c295e79e5ef`.
+- The Go reference implementation passed race-enabled unit tests, 22 strict-JSON
+  resource cases, 45 operation/source/rebase fixtures, and exhaustive checks of
+  73 states and 86 transitions across seven lifecycle models. Seven live fuzz
+  campaigns completed 3,101,157 executions without a failing corpus, including
+  Unicode/pointer, operation-order, array, changed-target rebase, file-collision,
+  skill-conflict, invalid-UTF-8, and custom-serializer execution boundaries.
+- The exact `pyagentspec==26.1.2` wheel is locked by SHA-256
+  `26b65d5afc440d904877ffa68efbbedd028339314e4d1120922a0267e4051449`.
+  Eleven official-SDK source-resolution cases ran offline with socket creation
+  denied; local exact-version, inline-source, and authority restrictions were
+  applied after exactly one official validation call where required.
+- Pinned official OpenAPI 3.2 and AsyncAPI 3.1 validators accepted the
+  projections. The topology/drift suite passed all 44 cases; bundle-source and
+  documentation-map closure passed all 59 cases; and offline schema authority
+  passed all 17 cases.
+- Two clean builds produced byte-identical 1,228,800-byte, 257-entry bundles
+  containing 49 schemas and 204 other documents. The bundle digest is
+  `sha256:39a289fda8189fd8ce8747459efe047e6ea9da6a1b5579477fa21babed3e5740`;
+  its 62,366-byte RFC 8785 manifest digest is
+  `sha256:00ef23c1421b100243de74adf01a2b8f13c717f81f984ec90e07054729c5e56b`.
+- Ephemeral in-memory test signing, external-verifier isolation, 25 signing-
+  binding cases, 33 supply-chain cases, replay/tamper/trailing-byte and
+  repository-only-member denials all passed without issuing authority. The
+  production caller delegates only to the sealed external/workload-identity
+  signer workflow pinned at reviewed content commit
+  `bc5257b9ec44e572fd75bf02bb7c40de52aa6d85`; 17 workflow-boundary cases prove
+  the activated pin, full-history availability, minimum permissions, hermetic
+  verifier phases, exact source rebuild, and denial mutations. Production use
+  remains gated by an immutable release tag, protected environment, and
+  independently configured digest-pinned verifier, trust policy, and signer.
+- Repository validation covered 69 Markdown files, 366 local links, four
+  structured fences, two validated contract examples, three YAML files, 220
+  JSON files, 12 SHA-pinned workflow actions, and the complete acyclic
+  18-task/7-milestone plan. Repository-only plan fixtures were validated and
+  excluded from the 204-document product bundle.
+- Content commit `bc5257b9ec44e572fd75bf02bb7c40de52aa6d85` and signer-activation commit
+  `0fc2c5f199a567e71d41b820e7d2031af416ebf4` were pushed to
+  `origin/agent/contracts-frozen-readiness`. A detached clean checkout at the
+  activation commit passed `make verify` with no tracked changes.
+- GitHub Actions [contracts run 29586713741](https://github.com/ByteDeskAI/bytedesk-agent-delivery/actions/runs/29586713741)
+  passed the exact activation commit and archived artifact
+  `contract-verification-0fc2c5f199a567e71d41b820e7d2031af416ebf4` with artifact
+  digest
+  `sha256:4ca1daab97d74867f1a2df1895ac6fcdcf1fe98a8f7dd27d7303c3d8834c66d8`.
+  Focused contract, official-validator, operation/fuzz, supply-chain, and
+  landing audits reported no remaining Task 3 correctness blocker.
 
 ## Task 4 — Freeze downstream ports and conformance contracts
 
