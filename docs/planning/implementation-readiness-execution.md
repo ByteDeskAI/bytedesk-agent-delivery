@@ -50,24 +50,48 @@ The canonical decision sources for this task are the
 
 ### Acceptance criteria
 
-- [ ] A new accepted ADR fixes the primary implementation language/runtime,
+- [x] A new accepted ADR fixes the primary implementation language/runtime,
   dependency/build/release toolchain, module boundaries, and supported platform
   matrix without weakening the harness-neutral public contracts.
-- [ ] The ADR fixes one production-capable reference topology for relational
+- [x] The ADR fixes one production-capable reference topology for relational
   state, durable work, transactional outbox/inbox, object/OCI storage, renderer
   isolation, API/worker deployment, high availability, backup, and disaster
   recovery while preserving Adapter alternatives.
-- [ ] The ADR fixes concrete reference profiles for sandboxing, identity between
+- [x] The ADR fixes concrete reference profiles for sandboxing, identity between
   components, configuration/secrets, observability, migrations, and local
   development.
-- [ ] Every affected architecture, operations, contribution, and task document
+- [x] Every affected architecture, operations, contribution, and task document
   points to the ADR and contains no contradictory implementation guidance.
-- [ ] ADR/document validation and `git diff --check` pass, the decision is
+- [x] ADR/document validation and `git diff --check` pass, the decision is
   independently reviewed, and the task commit is pushed.
 
 ### Evidence
 
-Pending.
+- Accepted [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md)
+  fixes the Go/Python implementation boundary, monorepo/module shape, locked
+  trusted-builder/SLSA v1 release profile, supported platform matrix,
+  PostgreSQL transaction/action/outbox authority, dual-region Harbor/S3 and
+  evidence archive, KMS/SPIFFE identity, Kubernetes deployment, gVisor renderer
+  isolation, configuration/secrets, OpenTelemetry, migrations, local Compose,
+  and fenced regional recovery.
+- All 52 affected tracked architecture, standards, operations, integration,
+  contribution, and AD task documents were aligned to the ADR; together with
+  ADR-0002, the content commit covered 53 paths. Focused contradiction scans
+  found no conflicting language/runtime, Agent Spec/WayFlow, persistence/queue,
+  Harbor/Distribution, Kubernetes support-target, sandbox, or Adapter guidance.
+- Independent architecture, authority-boundary, supply-chain, Harbor, SLSA,
+  SPIRE/KMS, and renderer-isolation reviews accepted the final profile. Review
+  findings about legacy SLSA v0.2 dependencies and the Harbor consumer token
+  realm were resolved with a SHA-pinned `actions/attest` SLSA v1 trusted builder
+  and separate region-pinned publisher versus fenced consumer-auth routes.
+- Validation covered 65 Markdown files, 362 local links, 54 fence markers, all
+  structured fences and repository JSON, 42 SHA-256 tokens, and the complete
+  acyclic 18-task/7-milestone (25-node) planning graph with zero errors.
+  `git diff --check` and the untracked-ADR no-index whitespace check passed
+  before commit.
+- Content commit `d174300` (`docs: freeze implementation reference topology`)
+  was pushed to `origin/agent/contracts-frozen-readiness`; local and remote
+  commit IDs matched exactly after the push.
 
 ## Task 3 — Complete AD-01 and emit executable contracts
 
