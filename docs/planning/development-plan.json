@@ -1,34 +1,102 @@
 {
-  "schema": "bytedesk.agent-delivery.plan/1",
+  "schema": "bytedesk.agent-delivery.plan/2",
+  "contractStatus": "bootstrap-pre-contract",
   "plan": "agent-delivery-v1",
   "created": "2026-07-16",
+  "revised": "2026-07-17",
   "title": "ByteDesk Agent Delivery v1",
   "repository": "ByteDeskAI/bytedesk-agent-delivery",
   "productionMutationAuthorized": false,
-  "coreReleaseGate": {
-    "id": "core-cert",
-    "task": "ad-18",
-    "dependsOn": ["ad-01", "ad-02", "ad-03", "ad-04", "ad-05", "ad-06", "ad-07", "ad-08", "ad-09", "ad-10", "ad-11", "ad-12", "ad-13", "ad-14", "ad-15"],
-    "outcome": "A clean third party validates, renders, packages, verifies, installs, compiles, reconciles, rolls back, and reproduces an agent without ByteDesk Platform."
-  },
+  "tracks": [
+    {
+      "id": "core",
+      "description": "Standalone product, including native, Hermes, and OpenClaw renderer products and generic fixtures."
+    },
+    {
+      "id": "reference-catalog",
+      "description": "ByteDesk's optional definition-only marketplace and 34+1 reference catalog."
+    },
+    {
+      "id": "reference-consumer",
+      "description": "Optional ByteDesk Hermes and OpenClaw consumer cutovers."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "contracts-frozen",
+      "name": "CONTRACTS-FROZEN",
+      "track": "core",
+      "dependsOnTasks": ["ad-01"],
+      "dependsOnMilestones": [],
+      "outcome": "Signed offline schema bundle, canonical encoding, authority, renderer identity, lifecycle, API/event, and operational contracts are frozen."
+    },
+    {
+      "id": "supply-chain-cert",
+      "name": "SUPPLY-CHAIN-CERT",
+      "track": "core",
+      "dependsOnTasks": ["ad-04", "ad-05", "ad-06", "ad-07", "ad-08"],
+      "dependsOnMilestones": ["contracts-frozen"],
+      "outcome": "Generic source and native, Hermes, and OpenClaw fixtures render, package, publish, sign, and verify by exact product and artifact digest."
+    },
+    {
+      "id": "control-plane-cert",
+      "name": "CONTROL-PLANE-CERT",
+      "track": "core",
+      "dependsOnTasks": ["ad-09", "ad-10", "ad-11", "ad-12", "ad-13"],
+      "dependsOnMilestones": ["supply-chain-cert"],
+      "outcome": "Installations, strict customization, current consumer authority, sole-writer desired state, updates, private compilation, APIs, and events pass conformance."
+    },
+    {
+      "id": "runtime-cert",
+      "name": "RUNTIME-CERT",
+      "track": "core",
+      "dependsOnTasks": ["ad-14", "ad-15"],
+      "dependsOnMilestones": ["control-plane-cert"],
+      "outcome": "The reference reconciler, separate canary actors, forward recovery, and the complete API/CLI operator path pass runtime conformance."
+    },
+    {
+      "id": "core-cert",
+      "name": "CORE-CERT / standalone GA",
+      "track": "core",
+      "dependsOnTasks": ["ad-18"],
+      "dependsOnMilestones": ["contracts-frozen", "supply-chain-cert", "control-plane-cert", "runtime-cert"],
+      "outcome": "A clean third party completes the generic public and consumer flow and the product meets the signed operational-readiness gate without ByteDesk Platform or the ByteDesk 34+1 catalog."
+    },
+    {
+      "id": "reference-catalog-cert",
+      "name": "REFERENCE-CATALOG-CERT",
+      "track": "reference-catalog",
+      "dependsOnTasks": ["ad-02", "ad-03"],
+      "dependsOnMilestones": ["core-cert"],
+      "outcome": "The independent ByteDesk marketplace and its 34 selectable plus one system package pass the released core catalog contract."
+    },
+    {
+      "id": "reference-consumer-cert",
+      "name": "REFERENCE-CONSUMER-CERT",
+      "track": "reference-consumer",
+      "dependsOnTasks": ["ad-16", "ad-17"],
+      "dependsOnMilestones": ["core-cert", "reference-catalog-cert"],
+      "outcome": "ByteDesk Hermes and OpenClaw cutovers pass consumer Adapter, authority, capability, rollout, and no-dual-writer certification against the certified reference catalog."
+    }
+  ],
   "tasks": [
-    {"id":"ad-01","historicalJira":"BDP-3302","doc":"tasks/AD-01-architecture.md","dependsOn":[],"phase":"core"},
-    {"id":"ad-02","historicalJira":"BDP-3304","doc":"tasks/AD-02-marketplace-bootstrap.md","dependsOn":["ad-01"],"phase":"core"},
-    {"id":"ad-03","historicalJira":"BDP-3306","doc":"tasks/AD-03-baseline-catalog.md","dependsOn":["ad-02"],"phase":"core"},
-    {"id":"ad-04","historicalJira":"BDP-3307","doc":"tasks/AD-04-renderer-contract.md","dependsOn":["ad-02"],"phase":"core"},
-    {"id":"ad-05","historicalJira":"BDP-3303","doc":"tasks/AD-05-hermes-renderer.md","dependsOn":["ad-03","ad-04"],"phase":"core"},
-    {"id":"ad-06","historicalJira":"BDP-3305","doc":"tasks/AD-06-openclaw-renderer.md","dependsOn":["ad-03","ad-04"],"phase":"core"},
-    {"id":"ad-07","historicalJira":"BDP-3308","doc":"tasks/AD-07-oci-packaging.md","dependsOn":["ad-05","ad-06"],"phase":"core"},
-    {"id":"ad-08","historicalJira":"BDP-3309","doc":"tasks/AD-08-signing-and-attestations.md","dependsOn":["ad-07"],"phase":"core"},
-    {"id":"ad-09","historicalJira":"BDP-3310","doc":"tasks/AD-09-bindings-and-receipts.md","dependsOn":["ad-08"],"phase":"core"},
-    {"id":"ad-10","historicalJira":"BDP-3311","doc":"tasks/AD-10-control-plane-api.md","dependsOn":["ad-09"],"phase":"core"},
-    {"id":"ad-11","historicalJira":"BDP-3312","doc":"tasks/AD-11-git-desired-state.md","dependsOn":["ad-09"],"phase":"core"},
-    {"id":"ad-12","historicalJira":"BDP-3313","doc":"tasks/AD-12-update-promotion.md","dependsOn":["ad-10","ad-11"],"phase":"core"},
-    {"id":"ad-13","historicalJira":"BDP-3314","doc":"tasks/AD-13-private-deployment-compiler.md","dependsOn":["ad-05","ad-06","ad-08","ad-09","ad-11"],"phase":"core"},
-    {"id":"ad-14","historicalJira":"BDP-3315","doc":"tasks/AD-14-runtime-reconciler.md","dependsOn":["ad-10","ad-12","ad-13"],"phase":"core"},
-    {"id":"ad-15","historicalJira":"BDP-3316","doc":"tasks/AD-15-cli.md","dependsOn":["ad-07","ad-10","ad-13"],"phase":"core"},
-    {"id":"ad-16","historicalJira":"BDP-3317","doc":"tasks/AD-16-bytedesk-hermes-cutover.md","dependsOn":["core-cert"],"phase":"deferred-reference-integration"},
-    {"id":"ad-17","historicalJira":"BDP-3318","doc":"tasks/AD-17-bytedesk-openclaw-cutover.md","dependsOn":["core-cert"],"phase":"deferred-reference-integration"},
-    {"id":"ad-18","historicalJira":"BDP-3319","doc":"tasks/AD-18-certification.md","dependsOn":["ad-01","ad-02","ad-03","ad-04","ad-05","ad-06","ad-07","ad-08","ad-09","ad-10","ad-11","ad-12","ad-13","ad-14","ad-15"],"optionalAppendicesDependOn":["ad-16","ad-17"],"phase":"core-certification-with-deferred-reference-appendices"}
+    {"id":"ad-01","historicalJira":"BDP-3302","doc":"tasks/AD-01-architecture.md","dependsOnTasks":[],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-02","historicalJira":"BDP-3304","doc":"tasks/AD-02-marketplace-bootstrap.md","dependsOnTasks":["ad-01"],"dependsOnMilestones":[],"track":"reference-catalog"},
+    {"id":"ad-03","historicalJira":"BDP-3306","doc":"tasks/AD-03-baseline-catalog.md","dependsOnTasks":["ad-02","ad-04"],"dependsOnMilestones":[],"track":"reference-catalog"},
+    {"id":"ad-04","historicalJira":"BDP-3307","doc":"tasks/AD-04-renderer-contract.md","dependsOnTasks":["ad-01"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-05","historicalJira":"BDP-3303","doc":"tasks/AD-05-hermes-renderer.md","dependsOnTasks":["ad-04"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-06","historicalJira":"BDP-3305","doc":"tasks/AD-06-openclaw-renderer.md","dependsOnTasks":["ad-04"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-07","historicalJira":"BDP-3308","doc":"tasks/AD-07-oci-packaging.md","dependsOnTasks":["ad-01","ad-04"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-08","historicalJira":"BDP-3309","doc":"tasks/AD-08-signing-and-attestations.md","dependsOnTasks":["ad-07"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-09","historicalJira":"BDP-3310","doc":"tasks/AD-09-bindings-and-receipts.md","dependsOnTasks":["ad-01","ad-08"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-10","historicalJira":"BDP-3311","doc":"tasks/AD-10-control-plane-api.md","dependsOnTasks":["ad-09"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-11","historicalJira":"BDP-3312","doc":"tasks/AD-11-git-desired-state.md","dependsOnTasks":["ad-09","ad-10"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-12","historicalJira":"BDP-3313","doc":"tasks/AD-12-update-promotion.md","dependsOnTasks":["ad-08","ad-09","ad-10"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-13","historicalJira":"BDP-3314","doc":"tasks/AD-13-private-deployment-compiler.md","dependsOnTasks":["ad-04","ad-07","ad-08","ad-09","ad-12"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-14","historicalJira":"BDP-3315","doc":"tasks/AD-14-runtime-reconciler.md","dependsOnTasks":["ad-09","ad-10","ad-13"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-15","historicalJira":"BDP-3316","doc":"tasks/AD-15-cli.md","dependsOnTasks":["ad-04","ad-07","ad-10","ad-13","ad-14"],"dependsOnMilestones":[],"track":"core"},
+    {"id":"ad-16","historicalJira":"BDP-3317","doc":"tasks/AD-16-bytedesk-hermes-cutover.md","dependsOnTasks":[],"dependsOnMilestones":["core-cert"],"track":"reference-consumer"},
+    {"id":"ad-17","historicalJira":"BDP-3318","doc":"tasks/AD-17-bytedesk-openclaw-cutover.md","dependsOnTasks":[],"dependsOnMilestones":["core-cert"],"track":"reference-consumer"},
+    {"id":"ad-18","historicalJira":"BDP-3319","doc":"tasks/AD-18-certification.md","dependsOnTasks":["ad-01","ad-04","ad-05","ad-06","ad-07","ad-08","ad-09","ad-10","ad-11","ad-12","ad-13","ad-14","ad-15"],"dependsOnMilestones":[],"track":"core"}
   ]
 }
