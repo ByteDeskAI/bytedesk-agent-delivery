@@ -28,7 +28,7 @@ The canonical decision sources for this task are the
   parses; and the 18-task/7-milestone planning DAG is complete and acyclic.
 - [x] `git diff --check` passes and a focused peer audit reports no remaining
   architecture-resolution defect.
-- [ ] The complete baseline is committed as one intentional commit and pushed
+- [x] The complete baseline is committed as one intentional commit and pushed
   to the task branch.
 
 ### Evidence
@@ -42,8 +42,9 @@ The canonical decision sources for this task are the
 - Three focused read-only re-audits reported clean after resolving OpenClaw
   migration ownership, Capability Verifier dispatch, Native Agent Spec/WayFlow
   scope, candidate/rollout cancellation, and documentation navigation.
-- `git diff --check` passed. Commit and push evidence is recorded after the
-  baseline reaches the remote branch.
+- `git diff --check` passed.
+- Baseline commit `ea9bb1e` (`docs: freeze agent delivery architecture`) was
+  pushed to `origin/agent/contracts-frozen-readiness`.
 
 ## Task 2 — Freeze the implementation stack and reference topology
 
