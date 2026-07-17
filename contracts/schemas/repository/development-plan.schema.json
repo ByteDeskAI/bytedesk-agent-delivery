@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/repository/development-plan/1",
+  "x-bytedesk-scope": "repository-internal",
+  "title": "Repository-internal Agent Delivery development plan",
+  "type": "object",
+  "required": ["schema", "contractStatus", "plan", "created", "revised", "title", "repository", "productionMutationAuthorized", "tracks", "milestones", "tasks"],
+  "properties": {
+    "schema": { "const": "https://schemas.bytedesk.ai/agent-delivery/repository/development-plan/1" },
+    "contractStatus": { "const": "repository-internal" },
+    "plan": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,127}$" },
+    "created": { "type": "string", "format": "date" },
+    "revised": { "type": "string", "format": "date" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "repository": { "const": "ByteDeskAI/bytedesk-agent-delivery" },
+    "productionMutationAuthorized": { "const": false },
+    "tracks": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "description"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" },
+          "description": { "type": "string", "minLength": 1, "maxLength": 1024 }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    },
+    "milestones": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "track", "dependsOnTasks", "dependsOnMilestones", "outcome"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" },
+          "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+          "track": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" },
+          "dependsOnTasks": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^ad-[0-9]{2}$" } },
+          "dependsOnMilestones": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" } },
+          "outcome": { "type": "string", "minLength": 1, "maxLength": 2048 }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 18,
+      "maxItems": 18,
+      "items": {
+        "type": "object",
+        "required": ["id", "historicalJira", "doc", "dependsOnTasks", "dependsOnMilestones", "track"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^ad-[0-9]{2}$" },
+          "historicalJira": { "type": "string", "pattern": "^BDP-[0-9]+$" },
+          "doc": { "type": "string", "pattern": "^tasks/AD-[0-9]{2}-[A-Za-z0-9-]+\\.md$" },
+          "dependsOnTasks": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^ad-[0-9]{2}$" } },
+          "dependsOnMilestones": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" } },
+          "track": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Repository planning validation only. This schema and its instances are excluded from the released product contract bundle."
+}

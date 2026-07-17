@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/identity-registration-manifest/1.0.0",
+  "title": "Product-owned SPIFFE identity registration manifest",
+  "type": "object",
+  "required": ["contract", "schema", "trustDomain", "entries", "precondition", "predecessor", "approvedAt", "trustPolicy"],
+  "properties": {
+    "contract": { "const": "bytedesk.identity-registration-manifest/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "trustDomain": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "required": ["spiffeId", "nodeAlias", "namespace", "serviceAccount", "containerName", "imageDigest", "operations"],
+        "properties": {
+          "spiffeId": { "type": "string", "format": "uri", "pattern": "^spiffe://", "maxLength": 2048 },
+          "nodeAlias": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "namespace": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "serviceAccount": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "containerName": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "imageDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+          "operations": { "type": "array", "minItems": 1, "maxItems": 100000, "uniqueItems": true, "items": { "type": "string", "maxLength": 128, "pattern": "^[a-z][a-z0-9_]{0,127}$" } }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    },
+    "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" },
+    "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0" },
+    "approvedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Portable definitions, skills, consumer customization, and runtime configuration cannot create or broaden these entries."
+}

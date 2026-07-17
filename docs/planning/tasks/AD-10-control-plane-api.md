@@ -42,12 +42,20 @@ clients an authority source.
 11. Expose Promotion Coordinator commands and TargetDeliveryState reads without
     adding a second desired writer. API credentials, events, operators, and
     generated clients cannot bypass revision-plus-digest CAS.
+12. Generate deterministic Go, Python, and TypeScript models/clients from the
+    frozen language-neutral schemas and API contracts. Pin every generator and
+    configuration input, keep generated output non-authoritative, and fail a
+    clean-tree regeneration check on any drift. Generated clients must preserve
+    strict unknown-field behavior, exact digest/revision types, conditional
+    request headers, idempotency semantics, and closed error/result variants.
 
 ## Outputs
 
 - Versioned API contracts, endpoints, and OpenAPI document.
-- Signed OpenAPI/AsyncAPI artifacts derived from the offline schema bundle,
-  generated clients, CloudEvents/outbox/inbox contract, and drift tests.
+- Signed OpenAPI/AsyncAPI artifacts derived from the offline schema bundle;
+  deterministic Go, Python, and TypeScript models/clients; the
+  CloudEvents/outbox/inbox contract; pinned generation manifests; and
+  clean-tree drift tests.
 - Registry/catalog, renderer, consumer-subject, and authorization-decision application adapters.
 - Preview/commit installation and binding flow.
 - Authentication, authorization-decision, idempotency, failure-mode, and contract tests.
@@ -66,6 +74,10 @@ clients an authority source.
 - Commands and authority objects reject unknown fields while optional read-model
   and notification additions follow explicit compatibility rules.
 - Equivalent allowed YAML imported through an authoring surface and strict JSON submitted through the API resolve to the same canonical object and digest; presentation formatting is never authority.
+- A clean checkout can regenerate every released Go, Python, and TypeScript
+  model/client byte-for-byte with pinned tooling, and no generated artifact can
+  add authority, weaken validation, or bypass preconditions present in the
+  normative schemas and API contract.
 
 ## Verification
 

@@ -1,0 +1,25 @@
+{
+  "profile": "bytedesk.lifecycle-fixtures/1",
+  "cases": [
+    {"name": "installation-accept", "model": "installation.v1.json", "from": "provisioning", "to": "active", "actor": "promotion-coordinator", "transition": "accept", "valid": true},
+    {"name": "installation-terminal-reopen", "model": "installation.v1.json", "from": "retired", "to": "active", "actor": "promotion-coordinator", "transition": "resume", "valid": false},
+    {"name": "candidate-sign", "model": "candidate.v1.json", "from": "compiled", "to": "signing", "actor": "promotion-coordinator", "transition": "begin_sign", "valid": true},
+    {"name": "candidate-cancel-after-signing", "model": "candidate.v1.json", "from": "signing", "to": "cancelled", "actor": "promotion-coordinator", "transition": "cancel", "valid": false},
+    {"name": "candidate-supersede-prepared", "model": "candidate.v1.json", "from": "prepared", "to": "superseded", "actor": "promotion-coordinator", "transition": "supersede", "valid": false},
+    {"name": "rollout-isolated-canary", "model": "rollout.v1.json", "from": "preflight_passed", "to": "canary_running", "actor": "promotion-coordinator", "transition": "isolated_begin_canary", "valid": true},
+    {"name": "rollout-host-self-promote", "model": "rollout.v1.json", "from": "verifying_active", "to": "promoted", "actor": "host-reconciler", "transition": "isolated_promote", "valid": false},
+    {"name": "rollout-backward", "model": "rollout.v1.json", "from": "activating", "to": "staged", "actor": "promotion-coordinator", "transition": "retry", "valid": false},
+    {"name": "rollout-switch-committed-before-readback", "model": "rollout.v1.json", "from": "activating", "to": "recovery_required", "actor": "promotion-coordinator", "transition": "fail_after_switch", "valid": true},
+    {"name": "host-switch", "model": "host-reconciliation-attempt.v1.json", "from": "preflight_passed", "to": "switching", "actor": "host-reconciler", "transition": "begin_switch", "valid": true},
+    {"name": "host-cancel-after-switch", "model": "host-reconciliation-attempt.v1.json", "from": "verifying", "to": "cancelled", "actor": "host-reconciler", "transition": "cancel_before_switch", "valid": false},
+    {"name": "slot-reactivate-predecessor", "model": "runtime-slot.v1.json", "from": "predecessor", "to": "active", "actor": "host-reconciler", "transition": "activate_initial", "valid": false},
+    {"name": "slot-tombstone", "model": "runtime-slot.v1.json", "from": "retiring", "to": "tombstoned", "actor": "host-reconciler", "transition": "write_tombstone", "valid": true},
+    {"name": "action-complete", "model": "durable-action.v1.json", "from": "running", "to": "succeeded", "actor": "action-worker", "transition": "complete", "valid": true},
+    {"name": "action-lease-expiry-retries-with-new-fence", "model": "durable-action.v1.json", "from": "running", "to": "retry_wait", "actor": "action-sweeper", "transition": "lease_expired_retry", "valid": true},
+    {"name": "action-cancellation-reclaimed-after-lease-expiry", "model": "durable-action.v1.json", "from": "cancellation_requested", "to": "cancellation_requested", "actor": "action-sweeper", "transition": "reclaim_cancellation", "valid": true},
+    {"name": "action-lease-expiry-exhaustion-dead-letters", "model": "durable-action.v1.json", "from": "cancellation_requested", "to": "dead_lettered", "actor": "action-sweeper", "transition": "lease_expired_exhausted", "valid": true},
+    {"name": "action-stale-worker-cannot-fence-itself", "model": "durable-action.v1.json", "from": "running", "to": "retry_wait", "actor": "action-worker", "transition": "lease_expired_retry", "valid": false},
+    {"name": "target-forward-recovery", "model": "target-condition.v1.json", "from": "operator_required", "to": "rollout_pending", "actor": "promotion-coordinator", "transition": "publish_forward_recovery", "valid": true},
+    {"name": "target-observation-promote", "model": "target-condition.v1.json", "from": "rollout_pending", "to": "idle", "actor": "host-reconciler", "transition": "promote", "valid": false}
+  ]
+}

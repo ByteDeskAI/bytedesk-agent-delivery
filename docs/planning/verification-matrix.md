@@ -12,7 +12,7 @@ executable evidence in addition to the portable contract evidence below.
 
 | Area | Positive evidence | Negative evidence |
 |---|---|---|
-| Contract bundle | Every normative Draft 2020-12 schema and transitive reference resolves offline from one signed bundle; two validators agree; generated models, OpenAPI, AsyncAPI, examples, and docs match | Network schema fetch, unknown schema/digest/field, unresolved reference, validator disagreement, or generated-contract drift fails |
+| Contract bundle | Every normative Draft 2020-12 schema and transitive reference resolves offline from one signed bundle; any root schema descriptor exactly matches the selected schema ID and canonical digest before instance validation; two validators agree; OpenAPI, AsyncAPI, examples, docs, and every generated language binding released by the current milestone match | Network schema fetch, unknown or mismatched schema ID/digest/field, unresolved reference, validator disagreement, or released-projection drift fails |
 | Agent Spec | Official SDK accepts pinned `26.1.2` fixtures | Unsupported version, malformed kind, duplicate keys, unknown security fields fail |
 | Contract encoding | Restricted YAML and equivalent JSON produce the same RFC 8785 JCS bytes and semantic digest; arbitrary payload bytes are unchanged | Duplicate keys/member names, aliases, custom tags, non-string keys, non-finite numbers, or signing raw authoring YAML fails |
 | Functional operations | Ordered strict add/replace/remove operations apply atomically to an exact validated baseline; Agent and portable SpecializedAgent sources resolve once | Move/copy/test, root mutation, unknown path, changed ancestor, ambiguous array, partial patch, source escape, cycle, or security path fails |

@@ -1,0 +1,33 @@
+{
+  "contract": "bytedesk.candidate/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0",
+    "digest": "sha256:009cf8bfacdc403752cb578a5c3896c2a88645ee93014ceed29da261efcfbea3"
+  },
+  "candidateId": "candidate-01",
+  "consumerId": "consumer-01",
+  "installationId": "installation-01",
+  "targetId": "target-01",
+  "input": {
+    "repository": "registry.example/agents/source",
+    "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "mediaType": "application/vnd.bytedesk.agent.source.v1+json",
+    "size": 4096,
+    "trustPolicy": {
+      "id": "public-source-v1",
+      "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  },
+  "state": "received",
+  "attempt": 0,
+  "revision": 1,
+  "precondition": {
+    "kind": "absent"
+  },
+  "predecessor": {
+    "kind": "none"
+  },
+  "createdAt": "2026-07-17T12:00:00Z",
+  "updatedAt": "2026-07-17T12:00:00Z",
+  "unknownAuthority": true
+}

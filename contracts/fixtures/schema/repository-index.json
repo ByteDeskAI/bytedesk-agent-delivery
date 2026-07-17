@@ -1,0 +1,20 @@
+{
+  "scope": "repository-internal",
+  "fixtures": [
+    {
+      "path": "contracts/fixtures/schema/positive/development-plan__current.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/repository/development-plan/1",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/development-plan__product-contract-marker.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/repository/development-plan/1",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "const"
+    }
+  ],
+  "bundleInclusion": false
+}

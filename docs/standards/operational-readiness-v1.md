@@ -94,6 +94,7 @@ selected from artifact metadata.
 | Resource | V1 default maximum |
 |---|---|
 | Authoritative structured object | 4 MiB canonical JSON |
+| Otherwise unconstrained schema collection | 100,000 members, still subject to the full-object node and byte ceilings |
 | Functional customization operations | 10,000 total |
 | Files in one source or skill package | 10,000 |
 | Files in one private deployment | 50,000 |

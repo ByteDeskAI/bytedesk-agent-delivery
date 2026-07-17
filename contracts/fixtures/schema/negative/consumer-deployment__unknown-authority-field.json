@@ -1,0 +1,114 @@
+{
+  "contract": "bytedesk.consumer-deployment/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-deployment/1.0.0",
+    "digest": "sha256:60fb29bb8b8c3dd01056fc3b4bd35ca494c37ea40bb9451e9a99fb53e7a50e74"
+  },
+  "deploymentId": "deployment-01",
+  "consumerId": "consumer-01",
+  "subjectId": "subject-01",
+  "installationId": "installation-01",
+  "targetId": "target-01",
+  "source": {
+    "repository": "registry.example/agents/source",
+    "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "mediaType": "application/vnd.bytedesk.agent.source.v1+json",
+    "size": 4096,
+    "trustPolicy": {
+      "id": "public-source-v1",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  },
+  "publicRender": {
+    "repository": "registry.example/agents/renders",
+    "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "mediaType": "application/vnd.bytedesk.agent.render.v1+json",
+    "size": 4096,
+    "trustPolicy": {
+      "id": "public-render-v1",
+      "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  },
+  "binding": {
+    "repository": "registry.example/consumer/bindings",
+    "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+    "mediaType": "application/vnd.bytedesk.agent.binding.v1+json",
+    "size": 2048,
+    "trustPolicy": {
+      "id": "consumer-authority-v1",
+      "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+    }
+  },
+  "approvedSkills": [],
+  "skillApprovals": [],
+  "compilationAuthority": {
+    "repository": "registry.example/consumer/authority",
+    "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+    "mediaType": "application/vnd.bytedesk.agent.consumer-authority.v1+json",
+    "size": 2048,
+    "trustPolicy": {
+      "id": "consumer-authority-v1",
+      "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+    }
+  },
+  "rendererRelease": {
+    "repository": "registry.example/product/renderers",
+    "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+    "mediaType": "application/vnd.bytedesk.agent.renderer-release.v1+json",
+    "size": 8192,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+    }
+  },
+  "executedDistribution": {
+    "repository": "registry.example/product/images",
+    "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "size": 2048,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+    }
+  },
+  "compiledAllowlistDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "opaqueConsumerDigests": {
+    "policy": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "grantSet": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "credentialSet": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "workloadIdentity": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "lifecycle": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+    "sandbox": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+    "network": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+    "approvalPolicy": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+    "targetBinding": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+  },
+  "effectiveRender": {
+    "manifestDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "bundle": {
+      "repository": "registry.example/consumer/deployments",
+      "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "size": 4096,
+      "trustPolicy": {
+        "id": "consumer-deployment-v1",
+        "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    }
+  },
+  "files": [
+    {
+      "path": "agent.yaml",
+      "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "size": 512,
+      "mode": "0644"
+    }
+  ],
+  "deploymentSubdigest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "createdAt": "2026-07-17T12:00:00Z",
+  "trustPolicy": {
+    "id": "consumer-deployment-v1",
+    "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "unknownAuthority": true
+}

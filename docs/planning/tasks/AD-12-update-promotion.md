@@ -25,10 +25,14 @@ Git and bots are optional intent producers, not desired-state writers.
 
 ## Required work
 
-1. Detect stable successors and perform the normative three-way rebase of strict
-   JSON Patch, file, and skill operations over exact prior/proposed sources.
-   Changed targets/ancestors, removed parents, unstable arrays, descriptor
-   mismatches, or changed skill digests conflict or quarantine.
+1. Detect stable successors and perform the normative ordered dual-working-tree
+   rebase of strict JSON Patch over exact prior/proposed sources. A changed
+   target or containing top-level subtree, including a removed parent or
+   changed array, conflicts; the document root is excluded so unrelated
+   top-level changes survive. Recheck canonical parser limits after each
+   operation and on the final result. Rebase file and skill operations under
+   their exact descriptor/precondition rules; descriptor mismatches or changed
+   skill digests conflict or quarantine.
 2. Produce human-readable and machine-verifiable change/evaluation reports.
 3. Accept operator/API/Git/update-bot intent as commands and enforce exact
    absent/match revision-plus-digest preconditions. A bot may propose a reviewed

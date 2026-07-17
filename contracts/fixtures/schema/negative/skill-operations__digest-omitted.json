@@ -1,0 +1,12 @@
+{
+  "contract": "bytedesk.skill-operations/1",
+  "operations": [
+    {
+      "op": "remove",
+      "packageId": "analysis-helper",
+      "precondition": {
+        "kind": "match"
+      }
+    }
+  ]
+}

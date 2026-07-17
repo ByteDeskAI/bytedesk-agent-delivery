@@ -83,17 +83,24 @@ reporting relationship.
 
 ### 3. Canonical Agent Spec source
 
-V1 accepts Agent Spec `26.1.2` `Agent` and `SpecializedAgent` documents. The
-exact version is pinned and every document is validated with the official Agent
-Spec SDK. A hand-written approximation is not accepted because a patch release
-may be incompatible.
+V1 accepts Agent Spec `26.1.2` `Agent` and `SpecializedAgent` documents. Source
+resolution verifies the exact payload digest and RFC 8785 bytes before exactly
+one official Agent Spec `26.1.2` validator call. The declared source kind must
+agree with the official result and root `component_type`; a hand-written
+approximation is not accepted because a patch release may be incompatible. The
+raw document must then contain top-level `agentspec_version: 26.1.2` exactly;
+omission, another SDK-supported version, or legacy `air_version` fails.
 
 `Agent` is the default standalone catalog form. A `SpecializedAgent` is allowed
-as an intentional, complete public specialization governed by Agent Spec; it is
-not a private customization or organizational identity. Source kind and
-effective output kind are recorded. Private customization applies once to the
-complete validated public document and introduces no second inheritance model.
-A kind-changing effective result is breaking and requires manual promotion.
+as an intentional, complete public specialization governed by Agent Spec and
+must embed one complete `Agent` plus one complete specialization-parameters
+object. Remote, package-relative, `$ref`, and nested-specialization resolution
+fail, including official `$component_ref`/`$referenced_components`
+indirection. It is not a private customization or organizational identity.
+Source kind and effective output kind are recorded. Private customization
+applies once to the complete validated public document and introduces no second
+inheritance model. A kind-changing effective result is breaking and requires
+manual promotion.
 
 Every authoritative or digest-bearing structured object uses the JSON data
 model and RFC 8785 JSON Canonicalization Scheme bytes as its semantic identity.
@@ -184,9 +191,11 @@ lineage or security inputs fail. The complete result is revalidated.
 File and skill operations use separate closed schemas. File paths are relative
 portable Unicode-NFC POSIX paths with traversal, control, reserved-name, case-
 fold, and normalization-collision denial. Replace/remove bind the expected
-current content or skill digest. A source update uses a three-way rebase;
-changed targets, ancestors, parents, or unstable array positions conflict
-instead of being blindly replayed.
+current content or skill digest. A source update clones old and proposed
+working trees and applies operations, in order, to both. A changed target or
+containing top-level subtree, including a changed parent or array, conflicts.
+The root is excluded so unrelated top-level changes survive, and canonical
+parser limits are rechecked after each operation and on the final result.
 
 The delta may override any functional Agent Spec property and configure models,
 provider endpoints, tools, MCP servers, resources, and harness behavior. It may

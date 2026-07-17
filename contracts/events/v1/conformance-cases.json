@@ -1,0 +1,40 @@
+{
+  "profile": "bytedesk.event-conformance-cases/1",
+  "cases": [
+    {
+      "id": "next-sequence-applies-projection-only",
+      "input": {"lastSequence": 7, "incomingSequence": 8, "eventIdSeen": false, "schemaKnown": true},
+      "expected": {"action": "apply_projection", "authoritativeWrite": false}
+    },
+    {
+      "id": "duplicate-id-deduplicates",
+      "input": {"lastSequence": 8, "incomingSequence": 8, "eventIdSeen": true, "schemaKnown": true},
+      "expected": {"action": "deduplicate", "authoritativeWrite": false}
+    },
+    {
+      "id": "sequence-gap-resynchronizes",
+      "input": {"lastSequence": 8, "incomingSequence": 10, "eventIdSeen": false, "schemaKnown": true},
+      "expected": {"action": "stop_and_api_resynchronize", "authoritativeWrite": false}
+    },
+    {
+      "id": "reordered-event-does-not-move-backward",
+      "input": {"lastSequence": 8, "incomingSequence": 7, "eventIdSeen": false, "schemaKnown": true},
+      "expected": {"action": "retain_without_apply", "authoritativeWrite": false}
+    },
+    {
+      "id": "unknown-schema-resynchronizes",
+      "input": {"lastSequence": 8, "incomingSequence": 9, "eventIdSeen": false, "schemaKnown": false},
+      "expected": {"action": "stop_and_api_resynchronize", "authoritativeWrite": false}
+    },
+    {
+      "id": "sensitive-payload-is-rejected-and-redacted",
+      "input": {"containsCredential": true, "containsRawPrivatePayload": false, "redactionClassification": "restricted"},
+      "expected": {"action": "reject_and_record_redacted_diagnostic", "authoritativeWrite": false}
+    },
+    {
+      "id": "dead-letter-preserves-redacted-evidence",
+      "input": {"deliveryAttemptsExhausted": true, "originalEnvelopePreserved": true, "diagnosticRedacted": true},
+      "expected": {"action": "dead_letter_preserve_evidence", "authoritativeWrite": false}
+    }
+  ]
+}

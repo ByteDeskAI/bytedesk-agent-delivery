@@ -1,0 +1,118 @@
+{
+  "x-bytedesk-document-uri": "https://contracts.bytedesk.ai/agent-delivery/asyncapi/v1/agent-delivery.asyncapi.json",
+  "asyncapi": "3.1.0",
+  "defaultContentType": "application/cloudevents+json",
+  "info": {
+    "title": "ByteDesk Agent Delivery notification events",
+    "version": "1.0.0",
+    "description": "CloudEvents 1.0.2 structured-JSON notifications emitted from the transactional outbox. Events are never desired state, promotion, identity, approval, or authorization authority."
+  },
+  "servers": {
+    "consumerFeed": {
+      "host": "agent-delivery.invalid",
+      "pathname": "/v1/events",
+      "protocol": "https",
+      "description": "Deployment-selected authenticated resumable pull feed. The example host is intentionally non-routable.",
+      "security": [{"$ref": "#/components/securitySchemes/consumerBearer"}]
+    },
+    "consumerWebhook": {
+      "host": "consumer.invalid",
+      "pathname": "/agent-delivery/events",
+      "protocol": "https",
+      "description": "Consumer-configured signed HTTPS webhook. Endpoint unavailability does not erase the event or block unrelated aggregates.",
+      "security": [{"$ref": "#/components/securitySchemes/mutualTLS"}]
+    }
+  },
+  "channels": {
+    "notifications": {
+      "address": "/v1/events",
+      "description": "At-least-once, resumable notifications partitioned and ordered by aggregate only.",
+      "servers": [
+        {"$ref": "#/servers/consumerFeed"},
+        {"$ref": "#/servers/consumerWebhook"}
+      ],
+      "messages": {
+        "agentDeliveryNotification": {"$ref": "#/components/messages/AgentDeliveryNotification"}
+      }
+    }
+  },
+  "operations": {
+    "receiveNotifications": {
+      "action": "receive",
+      "summary": "Receive Agent Delivery notifications",
+      "description": "Deduplicate by CloudEvent id. On an unknown event-data schema or aggregate-sequence gap, stop applying the projection and fetch the exact current resource URI from the authenticated v1 API before resuming.",
+      "channel": {"$ref": "#/channels/notifications"},
+      "messages": [{"$ref": "#/channels/notifications/messages/agentDeliveryNotification"}],
+      "traits": [
+        {
+          "x-bytedesk-delivery": "at-least-once",
+          "x-bytedesk-ordering": "per-aggregate-sequence",
+          "x-bytedesk-authority": "notification-only",
+          "x-bytedesk-gap-behavior": "stop-and-api-resynchronize",
+          "x-bytedesk-deduplication-key": "CloudEvent.id"
+        }
+      ]
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "consumerBearer": {
+        "type": "httpApiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Short-lived consumer-scoped bearer credential validated by the deployment Authentication Adapter."
+      },
+      "mutualTLS": {
+        "type": "X509",
+        "description": "Consumer webhook TLS identity and event-signing policy are configured independently of event content."
+      }
+    },
+    "schemas": {
+      "EventDataEnvelope": {
+        "$ref": "../../schemas/v1/event-data-envelope.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243"
+      }
+    },
+    "messages": {
+      "AgentDeliveryNotification": {
+        "name": "AgentDeliveryNotification",
+        "title": "Agent Delivery CloudEvent",
+        "summary": "Sanitized notification containing an exact API resynchronization reference.",
+        "contentType": "application/cloudevents+json",
+        "correlationId": {"location": "$message.payload#/data/correlationId"},
+        "x-bytedesk-cloudevents-version": "1.0.2",
+        "x-bytedesk-data-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+        "x-bytedesk-data-schema-digest": "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243",
+        "payload": {
+          "type": "object",
+          "required": ["specversion", "id", "source", "type", "subject", "time", "datacontenttype", "dataschema", "data"],
+          "properties": {
+            "specversion": {"const": "1.0"},
+            "id": {"type": "string", "minLength": 1, "maxLength": 256},
+            "source": {"type": "string", "format": "uri-reference", "maxLength": 2048},
+            "type": {
+              "type": "string",
+              "enum": [
+                "ai.bytedesk.agent-delivery.installation.changed.v1",
+                "ai.bytedesk.agent-delivery.action.changed.v1",
+                "ai.bytedesk.agent-delivery.candidate.changed.v1",
+                "ai.bytedesk.agent-delivery.rollout.changed.v1",
+                "ai.bytedesk.agent-delivery.target-delivery-state.changed.v1",
+                "ai.bytedesk.agent-delivery.observation.appended.v1",
+                "ai.bytedesk.agent-delivery.receipt.appended.v1"
+              ]
+            },
+            "subject": {"type": "string", "minLength": 1, "maxLength": 256},
+            "time": {"type": "string", "format": "date-time"},
+            "datacontenttype": {"const": "application/json"},
+            "dataschema": {"const": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0"},
+            "data": {"$ref": "#/components/schemas/EventDataEnvelope"}
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      }
+    }
+  }
+}

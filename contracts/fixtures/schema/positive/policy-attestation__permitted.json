@@ -1,0 +1,13 @@
+{
+  "contract": "bytedesk.policy-attestation/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/policy-attestation/1.0.0", "digest": "sha256:5197b799176678754f897ac4d6a7eb9f8ef90544dfb5f1c1dad96592d17b31c0" },
+  "consumerId": "consumer-01",
+  "subject": { "repository": "registry.example/consumer/candidates", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "mediaType": "application/vnd.bytedesk.agent.release.v1+json", "size": 8192, "trustPolicy": { "id": "consumer-deployment-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } },
+  "policy": { "id": "consumer-policy-v1", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" },
+  "decision": "permitted",
+  "reasonCodes": [],
+  "evaluatedAt": "2026-07-17T12:00:00Z",
+  "expiresAt": "2026-07-17T12:05:00Z",
+  "nonce": "nonce_0123456789abcdef",
+  "trustPolicy": { "id": "consumer-authority-v1", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" }
+}

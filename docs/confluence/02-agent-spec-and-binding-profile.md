@@ -16,6 +16,17 @@ has a closed JSON Schema Draft 2020-12 schema shipped with its transitive
 references and fixtures in the signed contract bundle. The official Agent Spec
 SDK remains normative for the embedded Agent Spec document.
 
+Source resolution verifies the exact payload SHA-256 digest and requires those
+payload bytes to equal their RFC 8785 representation before exactly one call to
+the official Agent Spec `26.1.2` validator. The binding's declared source kind
+must match both the official result and root `component_type`. The raw document
+must then prove explicit top-level `agentspec_version: 26.1.2`; another or
+implicit version and legacy `air_version` fail. A `SpecializedAgent` embeds one
+complete `Agent` and one complete `AgentSpecializationParameters` object;
+remote, package-relative, generic `$ref`, official `$component_ref` or
+`$referenced_components`, and nested-specialization resolution are not
+accepted.
+
 ## Authoring and authority encoding
 
 Definitions and bindings may be written as YAML for people to review. That
@@ -102,7 +113,7 @@ An illustrative binding is:
 contract: bytedesk.agent-binding/1
 schema:
   id: https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0
-  digest: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  digest: sha256:3c2b7490e808d3dd33ba6dea497a0b83b82545caa2b981b05ca997640490a2e7
 agentId: chief-of-staff
 agentSpecVersion: 26.1.2
 sourceKind: agent
@@ -127,44 +138,57 @@ renderer:
       id: product-release-v1
       digest: sha256:3333333333333333333333333333333333333333333333333333333333333333
 customization:
-  profile: bytedesk.json-patch/1
-  agentSpecOperations:
-    - op: replace
-      path: /llm_config/model_id
-      value: acme-approved-model
-    - op: replace
-      path: /system_prompt
-      value: Follow Acme operating guidance and escalation procedures.
-  harnessConfigurationOperations:
-    - op: add
-      path: /workspaceLayout
-      value: acme-chief-of-staff
-  fileOperations:
-    - op: add
-      path: guidance/escalation.md
-      content:
-        repository: registry.example.com/acme/files
-        digest: sha256:4444444444444444444444444444444444444444444444444444444444444444
-        mediaType: application/octet-stream
-        size: 2048
-        trustPolicy:
-          id: acme-private-file-v1
-          digest: sha256:5555555555555555555555555555555555555555555555555555555555555555
-      mode: "0644"
-    - op: remove
-      path: guidance/default-escalation.md
-      expectedContentDigest: sha256:6666666666666666666666666666666666666666666666666666666666666666
-  skillOperations:
-    - op: add
-      packageId: acme.escalation
-      descriptor:
-        repository: registry.example.com/acme/skills/escalation
-        digest: sha256:7777777777777777777777777777777777777777777777777777777777777777
-        mediaType: application/vnd.bytedesk.agent.skill.v1+json
-        size: 8192
-        trustPolicy:
-          id: consumer-private-skill-v1
-          digest: sha256:8888888888888888888888888888888888888888888888888888888888888888
+  agentSpec:
+    profile: bytedesk.json-patch/1
+    operations:
+      - op: replace
+        path: /llm_config/model_id
+        value: acme-approved-model
+      - op: replace
+        path: /system_prompt
+        value: Follow Acme operating guidance and escalation procedures.
+  harnessConfiguration:
+    profile: bytedesk.json-patch/1
+    operations:
+      - op: add
+        path: /workspaceLayout
+        value: acme-chief-of-staff
+  files:
+    contract: bytedesk.file-operations/1
+    operations:
+      - op: add
+        path: guidance/escalation.md
+        precondition:
+          kind: absent
+        content:
+          repository: registry.example.com/acme/files
+          digest: sha256:4444444444444444444444444444444444444444444444444444444444444444
+          mediaType: application/octet-stream
+          size: 2048
+          trustPolicy:
+            id: acme-private-file-v1
+            digest: sha256:5555555555555555555555555555555555555555555555555555555555555555
+        mode: "0644"
+      - op: remove
+        path: guidance/default-escalation.md
+        precondition:
+          kind: match
+          digest: sha256:6666666666666666666666666666666666666666666666666666666666666666
+  skills:
+    contract: bytedesk.skill-operations/1
+    operations:
+      - op: add
+        packageId: acme.escalation
+        precondition:
+          kind: absent
+        descriptor:
+          repository: registry.example.com/acme/skills/escalation
+          digest: sha256:7777777777777777777777777777777777777777777777777777777777777777
+          mediaType: application/vnd.bytedesk.agent.skill.v1+json
+          size: 8192
+          trustPolicy:
+            id: consumer-private-skill-v1
+            digest: sha256:8888888888888888888888888888888888888888888888888888888888888888
 updatePolicy:
   channel: stable
   automaticCompatibleUpdates: true
@@ -177,9 +201,12 @@ precondition:
 This non-normative example is human-authored YAML; its presentation bytes are
 not authority. [Agent binding v1](../standards/agent-binding-v1.md) records the
 binding invariants. [Machine contracts v1](../standards/machine-contracts-v1.md)
-closes the schema, operation, path, extension, and predecessor semantics; the
-concrete schema artifact and fixtures are a release-blocking deliverable rather
-than an unresolved design choice.
+closes the schema, operation, path, extension, and predecessor semantics. AD-01
+freezes the concrete schema and fixtures, including
+`contracts/fixtures/operations/source-resolution.cases.json` and
+`contracts/fixtures/operations/three-way-rebase.cases.json`; the private
+compiler, consumer and KMS Adapters, runtime integration, and operational
+evidence remain later workstreams.
 
 ## Deterministic functional customization
 
@@ -220,6 +247,15 @@ indices, paths outside functional allowlists, and partial application fail.
 `add` requires absence; `replace` and `remove` require presence. The complete
 result is revalidated.
 
+An automatic source update clones the old and proposed exact sources into
+working trees, then applies the operations in order to both. It conflicts when
+an operation's target or complete containing top-level subtree differs,
+including a changed parent or containing array. The document root is excluded
+from that comparison, preserving unrelated top-level upstream changes. This
+also permits a later operation to use a parent created earlier in the same
+atomic delta. Inputs stay unchanged, and canonical parser limits are rechecked
+after each operation and over the final proposed result.
+
 File and skill operations use their own closed schemas rather than JSON Patch.
 File paths are NFC-normalized portable POSIX relative paths. An add requires an
 absent path; replace/remove require the expected current digest; and one path
@@ -242,9 +278,14 @@ Resolution is deterministic:
    contract bundle, rejecting ambiguous YAML constructs and unknown fields.
 2. Convert the accepted envelope to the JSON data model and produce its RFC
    8785 JCS bytes for semantic identity, hashing, and signing.
-3. Resolve the source by repository plus exact digest.
+3. Resolve the source by repository, verify the SHA-256 digest over the exact
+   payload, and require the payload itself to be RFC 8785 bytes.
 4. Verify media type, signer policy, provenance, and withdrawal state.
-5. Validate the source with the official pinned Agent Spec SDK.
+5. Call the official Agent Spec `26.1.2` validator exactly once, require the
+   declared kind to match its result and root `component_type`, require the raw
+   source's explicit exact version field with no legacy substitute, and resolve
+   an accepted `SpecializedAgent` only from its one embedded complete `Agent`
+   and one embedded complete parameters object without component references.
 6. Apply the public definition policy.
 7. Normalize and apply the ordered private functional Agent Spec and harness
    configuration operations.

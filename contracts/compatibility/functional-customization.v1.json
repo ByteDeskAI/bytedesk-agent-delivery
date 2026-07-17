@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/functional-customization-profile/1.0.0",
+  "profile": "bytedesk.functional-customization/1",
+  "version": "1.0.0",
+  "jsonPatchProfile": "bytedesk.json-patch/1",
+  "targets": [
+    {
+      "document": "agent-spec",
+      "schemaAuthority": "official-agent-spec-sdk",
+      "rootMutation": false,
+      "nonRootFunctionalMutation": true,
+      "authorityPlanePresent": false
+    },
+    {
+      "document": "renderer-functional-config",
+      "schemaAuthority": "exact-renderer-release-schema",
+      "rootMutation": false,
+      "nonRootFunctionalMutation": true,
+      "authorityPlanePresent": false
+    }
+  ],
+  "separateOperations": [
+    "bytedesk.file-operations/1",
+    "bytedesk.skill-operations/1"
+  ]
+}

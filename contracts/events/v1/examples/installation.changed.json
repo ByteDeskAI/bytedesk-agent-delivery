@@ -1,0 +1,40 @@
+{
+  "specversion": "1.0",
+  "id": "event-installation-000001",
+  "source": "https://agent-delivery.example.invalid/v1",
+  "type": "ai.bytedesk.agent-delivery.installation.changed.v1",
+  "subject": "installation-000001",
+  "time": "2026-07-17T00:00:00Z",
+  "datacontenttype": "application/json",
+  "dataschema": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+  "data": {
+    "contract": "bytedesk.event-data/1",
+    "schema": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+      "digest": "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243"
+    },
+    "eventType": "ai.bytedesk.agent-delivery.installation.changed.v1",
+    "dataSchema": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+      "digest": "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243"
+    },
+    "aggregate": {
+      "type": "installation",
+      "id": "installation-000001",
+      "revisionDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "sequence": 7
+    },
+    "resource": {
+      "uri": "/v1/installations/installation-000001",
+      "etag": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "projectionSchema": {
+        "id": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0",
+        "digest": "sha256:af01882c9dc8dbf80fc753f148a35fd916d4bdbe5d93b6a8938c0b10f58ff8dc"
+      }
+    },
+    "consumerScope": "consumer-example",
+    "correlationId": "correlation-000001",
+    "causationId": "command-000001",
+    "redaction": "consumer-private"
+  }
+}

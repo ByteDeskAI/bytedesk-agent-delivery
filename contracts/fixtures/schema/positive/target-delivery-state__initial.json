@@ -1,0 +1,20 @@
+{
+  "contract": "bytedesk.target-delivery-state/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0", "digest": "sha256:126bc30d3dd0174be7b5e10261b0874955cad41a7a0d8d80edc68c7c51849cfc" },
+  "consumerId": "consumer-01",
+  "targetId": "target-01",
+  "revision": 1,
+  "precondition": { "kind": "absent" },
+  "predecessor": { "kind": "none" },
+  "condition": "idle",
+  "activeRelease": null,
+  "pendingRollout": null,
+  "constraints": {
+    "trustPolicy": { "id": "consumer-deployment-v1", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    "authorityPolicyDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "canaryPolicyDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "recoveryPolicyDigest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "slotGeneration": { "slotId": "slot-01", "generation": 1 },
+  "transitionRefs": []
+}

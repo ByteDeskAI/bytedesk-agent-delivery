@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0",
+  "title": "Closed authoritative HTTP command requests",
+  "type": "object",
+  "required": ["schema", "command", "idempotencyKey"],
+  "properties": {
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "command": {
+      "type": "string",
+      "enum": ["source_validate", "render", "import", "installation_create", "installation_update_binding", "update_proposal", "promote", "forward_recover", "action_cancel", "publish"]
+    },
+    "idempotencyKey": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }
+  },
+  "oneOf": [
+    {
+      "required": ["command", "source", "agentSpecVersion", "contractBundleDigest"],
+      "properties": {
+        "command": { "const": "source_validate" },
+        "source": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "agentSpecVersion": { "const": "26.1.2" },
+        "contractBundleDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      }
+    },
+    {
+      "required": ["command", "source", "publicSkills", "rendererRelease", "normalizedParametersDigest"],
+      "properties": {
+        "command": { "const": "render" },
+        "source": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "publicSkills": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" } },
+        "rendererRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "normalizedParametersDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      }
+    },
+    {
+      "required": ["command", "consumerId", "source", "harnessId", "identityBinding", "precondition"],
+      "properties": {
+        "command": { "const": "import" },
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "source": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "harnessId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "identityBinding": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
+      }
+    },
+    {
+      "required": ["command", "consumerId", "subjectId", "harnessId", "targetId", "binding", "precondition"],
+      "properties": {
+        "command": { "const": "installation_create" },
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "subjectId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "harnessId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "binding": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0" },
+        "precondition": {
+          "type": "object",
+          "required": ["kind"],
+          "properties": { "kind": { "const": "absent" } },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      }
+    },
+    {
+      "required": ["command", "consumerId", "installationId", "binding", "precondition"],
+      "properties": {
+        "command": { "const": "installation_update_binding" },
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "installationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "binding": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0" },
+        "precondition": {
+          "type": "object",
+          "required": ["kind", "revision", "digest"],
+          "properties": {
+            "kind": { "const": "match" },
+            "revision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+            "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      }
+    },
+    {
+      "required": ["command", "consumerId", "installationId", "targetId", "candidateSource", "precondition"],
+      "properties": {
+        "command": { "const": "update_proposal" },
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "installationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "candidateSource": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
+      }
+    },
+    {
+      "required": ["command", "consumerId", "targetId", "candidate", "authority", "technicalEvidence", "capabilityEvidence", "precondition"],
+      "properties": {
+        "command": { "const": "promote" },
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "authority": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "technicalEvidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "capabilityEvidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
+      }
+    },
+    {
+      "required": ["command", "consumerId", "targetId", "recoveryPlan", "authority", "precondition"],
+      "properties": {
+        "command": { "const": "forward_recover" },
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "recoveryPlan": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "authority": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
+      }
+    },
+    {
+      "required": ["command", "consumerId", "actionId", "precondition"],
+      "properties": {
+        "command": { "const": "action_cancel" },
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "actionId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
+      }
+    },
+    {
+      "required": ["command", "subject", "targetRepository", "purpose", "precondition"],
+      "properties": {
+        "command": { "const": "publish" },
+        "subject": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "targetRepository": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/ociRepository" },
+        "purpose": { "type": "string", "enum": ["product-release-v1", "public-source-v1", "public-render-v1", "consumer-private-skill-v1", "consumer-deployment-v1"] },
+        "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
+      }
+    }
+  ],
+  "unevaluatedProperties": false,
+  "description": "Every command variant is closed. There is no parameters bag, authority extension, force flag, wildcard precondition, credential value, or caller-selected code path."
+}

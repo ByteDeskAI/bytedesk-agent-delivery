@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+  "profile": "bytedesk.runtime-slot-lifecycle/1",
+  "version": 1,
+  "initialStates": ["absent"],
+  "states": [
+    {"name": "absent", "terminal": false},
+    {"name": "staging", "terminal": false},
+    {"name": "staged", "terminal": false},
+    {"name": "active", "terminal": false},
+    {"name": "predecessor", "terminal": false},
+    {"name": "retiring", "terminal": false},
+    {"name": "tombstoned", "terminal": true}
+  ],
+  "transitions": [
+    {"name": "allocate", "from": ["absent"], "to": "staging", "actor": "host-reconciler", "guard": "slot_generation_absent_and_desired_revision_current", "cas": "host-journal-match", "effects": ["append_slot_fact", "create_generation_directory"], "event": "runtime-slot.staging.v1", "retryable": false},
+    {"name": "stage", "from": ["staging"], "to": "staged", "actor": "host-reconciler", "guard": "inventory_digest_verified_and_staged_marker_fsynced", "cas": "host-journal-match", "effects": ["append_slot_fact", "fsync_staged_marker"], "event": "runtime-slot.staged.v1", "retryable": false},
+    {"name": "activate_initial", "from": ["staged"], "to": "active", "actor": "host-reconciler", "guard": "activation_authorized_and_atomic_switch_committed", "cas": "host-journal-match", "effects": ["append_slot_fact", "fsync_switch_committed_marker"], "event": "runtime-slot.active.v1", "retryable": false},
+    {"name": "mark_predecessor", "from": ["active"], "to": "predecessor", "actor": "host-reconciler", "guard": "different_generation_became_active_in_same_atomic_switch", "cas": "host-journal-match", "effects": ["append_slot_fact", "preserve_known_good_evidence"], "event": "runtime-slot.predecessor.v1", "retryable": false},
+    {"name": "retire_predecessor", "from": ["predecessor"], "to": "retiring", "actor": "host-reconciler", "guard": "retention_root_and_recovery_policy_allow_cleanup", "cas": "host-journal-match", "effects": ["append_slot_fact", "enqueue_cleanup"], "event": "runtime-slot.retiring.v1", "retryable": false},
+    {"name": "retire_active_after_stop", "from": ["active"], "to": "retiring", "actor": "host-reconciler", "guard": "current_desired_state_explicitly_stops_target_and_retention_allows_cleanup", "cas": "host-journal-match", "effects": ["append_slot_fact", "enqueue_cleanup"], "event": "runtime-slot.retiring.v1", "retryable": false},
+    {"name": "abandon_unactivated", "from": ["staging", "staged"], "to": "retiring", "actor": "host-reconciler", "guard": "attempt_cancelled_superseded_failed_or_fenced", "cas": "host-journal-match", "effects": ["append_slot_fact", "enqueue_cleanup"], "event": "runtime-slot.retiring.v1", "retryable": false},
+    {"name": "write_tombstone", "from": ["retiring"], "to": "tombstoned", "actor": "host-reconciler", "guard": "content_removed_and_tombstone_fsynced", "cas": "host-journal-match", "effects": ["append_slot_fact", "preserve_tombstone_identity"], "event": "runtime-slot.tombstoned.v1", "retryable": false}
+  ]
+}

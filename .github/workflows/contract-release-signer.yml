@@ -1,0 +1,428 @@
+name: trusted-contract-release-signer
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        required: true
+        type: string
+      source-commit:
+        required: true
+        type: string
+      source-ref:
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: contract-release
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+    env:
+      CALLER_ARTIFACT_NAME: ${{ inputs.artifact-name }}
+      CALLER_SOURCE_COMMIT: ${{ inputs.source-commit }}
+      CALLER_SOURCE_REF: ${{ inputs.source-ref }}
+      CONTRACT_RELEASE_REPOSITORY: ${{ vars.CONTRACT_RELEASE_REPOSITORY }}
+      CONTRACT_RELEASE_TRUST_POLICY_ID: ${{ vars.CONTRACT_RELEASE_TRUST_POLICY_ID }}
+      CONTRACT_RELEASE_TRUST_POLICY_DIGEST: ${{ vars.CONTRACT_RELEASE_TRUST_POLICY_DIGEST }}
+      CONTRACT_RELEASE_TRUST_POLICY_B64: ${{ vars.CONTRACT_RELEASE_TRUST_POLICY_B64 }}
+      CONTRACT_RELEASE_KEY_VERSION: ${{ vars.CONTRACT_RELEASE_KEY_VERSION }}
+      CONTRACT_RELEASE_VERIFIER_IMAGE: ${{ vars.CONTRACT_RELEASE_VERIFIER_IMAGE }}
+      CONTRACT_RELEASE_COSIGN_DIGEST: ${{ vars.CONTRACT_RELEASE_COSIGN_DIGEST }}
+      CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_B64: ${{ vars.CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_B64 }}
+      CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_DIGEST: ${{ vars.CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_DIGEST }}
+    steps:
+      - name: Validate immutable caller identity before handling the candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_EVENT_NAME" == workflow_dispatch ]]
+          [[ "$CALLER_SOURCE_COMMIT" == "$GITHUB_SHA" ]]
+          [[ "$CALLER_SOURCE_REF" == "$GITHUB_REF" ]]
+          [[ "$GITHUB_REF_TYPE" == tag ]]
+          [[ "$GITHUB_SHA" =~ ^[a-f0-9]{40}$ ]]
+          [[ "$CALLER_ARTIFACT_NAME" =~ ^contract-release-candidate-[0-9]+-[0-9]+$ ]]
+          [[ "$CONTRACT_RELEASE_REPOSITORY" =~ ^[^@[:space:]]+/[^@[:space:]]+$ ]]
+          [[ "$CONTRACT_RELEASE_TRUST_POLICY_ID" =~ ^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$ ]]
+          [[ "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]
+          [[ "$CONTRACT_RELEASE_KEY_VERSION" =~ ^[A-Za-z0-9][A-Za-z0-9._:/@+-]{0,2047}$ ]]
+          [[ "$CONTRACT_RELEASE_VERIFIER_IMAGE" =~ ^ghcr\.io/bytedesk/agent-delivery-contract-release-tool@sha256:[a-f0-9]{64}$ ]]
+          [[ "$CONTRACT_RELEASE_COSIGN_DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]
+          [[ "$CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]
+          [[ -n "$CONTRACT_RELEASE_TRUST_POLICY_B64" ]]
+          [[ -n "$CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_B64" ]]
+
+      - name: Download the candidate without checking out or executing candidate code
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: ${{ env.CALLER_ARTIFACT_NAME }}
+          path: candidate
+
+      - name: Validate the closed candidate file set and authenticated metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          require_regular_bounded() {
+            local path="$1"
+            local maximum="$2"
+            [[ -f "$path" && ! -L "$path" ]]
+            local size
+            size="$(stat -c %s -- "$path")"
+            (( size > 0 && size <= maximum ))
+          }
+          [[ -z "$(find candidate -mindepth 1 ! -type d ! -type f -print -quit)" ]]
+          [[ -z "$(find candidate -mindepth 1 -type d -print -quit)" ]]
+          mapfile -d '' -t FILES < <(find candidate -mindepth 1 -type f -printf '%P\0' | LC_ALL=C sort -z)
+          EXPECTED=(
+            agent-delivery-contracts-v1.manifest.json
+            agent-delivery-contracts-v1.manifest.sha256
+            agent-delivery-contracts-v1.tar
+            candidate-metadata.json
+          )
+          [[ "${#FILES[@]}" -eq "${#EXPECTED[@]}" ]]
+          for index in "${!EXPECTED[@]}"; do
+            [[ "${FILES[$index]}" == "${EXPECTED[$index]}" ]]
+          done
+          require_regular_bounded candidate/agent-delivery-contracts-v1.tar 67108864
+          require_regular_bounded candidate/agent-delivery-contracts-v1.manifest.json 4194304
+          require_regular_bounded candidate/agent-delivery-contracts-v1.manifest.sha256 256
+          require_regular_bounded candidate/candidate-metadata.json 4194304
+          MANIFEST_DIGEST="sha256:$(sha256sum candidate/agent-delivery-contracts-v1.manifest.json | cut -d' ' -f1)"
+          BUNDLE_DIGEST="sha256:$(sha256sum candidate/agent-delivery-contracts-v1.tar | cut -d' ' -f1)"
+          EXPECTED_CHECKSUM="${MANIFEST_DIGEST#sha256:}  agent-delivery-contracts-v1.manifest.json"
+          [[ "$(cat candidate/agent-delivery-contracts-v1.manifest.sha256)" == "$EXPECTED_CHECKSUM" ]]
+          jq -e \
+            --arg repository "$GITHUB_REPOSITORY" \
+            --arg ref "$CALLER_SOURCE_REF" \
+            --arg commit "$CALLER_SOURCE_COMMIT" \
+            --arg bundleDigest "$BUNDLE_DIGEST" \
+            --arg manifestDigest "$MANIFEST_DIGEST" \
+            --arg policyId "$CONTRACT_RELEASE_TRUST_POLICY_ID" \
+            --arg policyDigest "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST" \
+            '.profile == "bytedesk.contract-release-candidate/1" and .sourceRepository == $repository and .sourceRef == $ref and .sourceCommit == $commit and .bundleDigest == $bundleDigest and .manifestDigest == $manifestDigest and .trustPolicy == {id:$policyId,digest:$policyDigest} and .authorityIssued == false and (keys == ["authorityIssued","bundleDigest","manifestDigest","profile","sourceCommit","sourceRef","sourceRepository","trustPolicy"])' \
+            candidate/candidate-metadata.json > /dev/null
+          jq -e \
+            --arg policyId "$CONTRACT_RELEASE_TRUST_POLICY_ID" \
+            --arg policyDigest "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST" \
+            '.contract == "bytedesk.contract-bundle/1" and .trustPolicy == {id:$policyId,digest:$policyDigest}' \
+            candidate/agent-delivery-contracts-v1.manifest.json > /dev/null
+
+      - name: Fetch the exact commit snapshot through the signer SCM channel
+        shell: bash
+        env:
+          SCM_READ_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          umask 077
+          install -d -m 0700 source
+          API_CURL_COMMON=(
+            --fail
+            --silent
+            --show-error
+            --proto '=https'
+            --tlsv1.2
+            --header "Authorization: Bearer $SCM_READ_TOKEN"
+            --header 'Accept: application/vnd.github+json'
+            --header 'X-GitHub-Api-Version: 2022-11-28'
+          )
+          curl "${API_CURL_COMMON[@]}" \
+            --max-filesize 4194304 \
+            --output source/commit-metadata.json \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/git/commits/$CALLER_SOURCE_COMMIT"
+          curl "${API_CURL_COMMON[@]}" \
+            --max-filesize 65536 \
+            --dump-header source/snapshot-redirect.headers \
+            --output /dev/null \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/tarball/$CALLER_SOURCE_COMMIT"
+          [[ -f source/snapshot-redirect.headers && ! -L source/snapshot-redirect.headers ]]
+          [[ "$(stat -c %s -- source/snapshot-redirect.headers)" -gt 0 ]]
+          [[ "$(stat -c %s -- source/snapshot-redirect.headers)" -le 65536 ]]
+          mapfile -t SNAPSHOT_LOCATIONS < <(sed -n 's/^[Ll]ocation:[[:space:]]*//p' source/snapshot-redirect.headers | tr -d '\r')
+          [[ "${#SNAPSHOT_LOCATIONS[@]}" -eq 1 ]]
+          SNAPSHOT_URL="${SNAPSHOT_LOCATIONS[0]}"
+          EXPECTED_SNAPSHOT_URL="https://codeload.github.com/$GITHUB_REPOSITORY/legacy.tar.gz/$CALLER_SOURCE_COMMIT"
+          [[ "$SNAPSHOT_URL" == "$EXPECTED_SNAPSHOT_URL" ]]
+          rm source/snapshot-redirect.headers
+          curl \
+            --fail \
+            --silent \
+            --show-error \
+            --proto '=https' \
+            --tlsv1.2 \
+            --max-filesize 67108864 \
+            --output source/source.tar.gz \
+            "$SNAPSHOT_URL"
+          [[ -z "$(find source -mindepth 1 ! -type f -print -quit)" ]]
+          mapfile -d '' -t SOURCE_FILES < <(find source -mindepth 1 -type f -printf '%P\0' | LC_ALL=C sort -z)
+          [[ "${#SOURCE_FILES[@]}" -eq 2 ]]
+          [[ "${SOURCE_FILES[0]}" == commit-metadata.json ]]
+          [[ "${SOURCE_FILES[1]}" == source.tar.gz ]]
+          [[ -f source/commit-metadata.json && ! -L source/commit-metadata.json ]]
+          [[ -f source/source.tar.gz && ! -L source/source.tar.gz ]]
+          [[ "$(stat -c %s -- source/commit-metadata.json)" -gt 0 ]]
+          [[ "$(stat -c %s -- source/commit-metadata.json)" -le 4194304 ]]
+          [[ "$(stat -c %s -- source/source.tar.gz)" -gt 0 ]]
+          [[ "$(stat -c %s -- source/source.tar.gz)" -le 67108864 ]]
+          jq -e \
+            --arg commit "$CALLER_SOURCE_COMMIT" \
+            '.sha == $commit and (.tree.sha | test("^[a-f0-9]{40}$"))' \
+            source/commit-metadata.json > /dev/null
+          [[ "$(od -An -tx1 -N2 source/source.tar.gz | tr -d '[:space:]')" == 1f8b ]]
+
+      - name: Install checksum-verified Cosign 3.0.6
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: v3.0.6
+
+      - name: Snapshot independently supplied trust and pull the sealed verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          install -d -m 0700 final signed trusted
+          printf '%s' "$CONTRACT_RELEASE_TRUST_POLICY_B64" | base64 --decode > trusted/trust-policy.json
+          printf '%s' "$CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_B64" | base64 --decode > trusted/sigstore-trusted-root.json
+          [[ "sha256:$(sha256sum trusted/trust-policy.json | cut -d' ' -f1)" == "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST" ]]
+          [[ "sha256:$(sha256sum trusted/sigstore-trusted-root.json | cut -d' ' -f1)" == "$CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_DIGEST" ]]
+          [[ "sha256:$(sha256sum "$(command -v cosign)" | cut -d' ' -f1)" == "$CONTRACT_RELEASE_COSIGN_DIGEST" ]]
+          docker pull "$CONTRACT_RELEASE_VERIFIER_IMAGE"
+          docker image inspect "$CONTRACT_RELEASE_VERIFIER_IMAGE" > /dev/null
+
+      - name: Certify candidate semantics and create the canonical request in the sealed tool
+        shell: bash
+        run: |
+          set -euo pipefail
+          REQUEST_ID="contract-release-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          NONCE="contractrelease${GITHUB_RUN_ID}${GITHUB_RUN_ATTEMPT}${GITHUB_SHA}"
+          VERIFIER_DIGEST="${CONTRACT_RELEASE_VERIFIER_IMAGE##*@}"
+          SOURCE_TREE="$(jq -er .tree.sha source/commit-metadata.json)"
+          SOURCE_ARCHIVE_DIGEST="sha256:$(sha256sum source/source.tar.gz | cut -d' ' -f1)"
+          SOURCE_METADATA_DIGEST="sha256:$(sha256sum source/commit-metadata.json | cut -d' ' -f1)"
+          CANDIDATE_BUNDLE_DIGEST="sha256:$(sha256sum candidate/agent-delivery-contracts-v1.tar | cut -d' ' -f1)"
+          CANDIDATE_MANIFEST_DIGEST="sha256:$(sha256sum candidate/agent-delivery-contracts-v1.manifest.json | cut -d' ' -f1)"
+          docker run --rm \
+            --network none \
+            --read-only \
+            --cap-drop ALL \
+            --security-opt no-new-privileges \
+            --pids-limit 128 \
+            --memory 512m \
+            --cpus 1 \
+            --user "$(id -u):$(id -g)" \
+            --tmpfs /tmp:rw,noexec,nosuid,size=67108864 \
+            --mount type=bind,src="$PWD/candidate",dst=/candidate,readonly \
+            --mount type=bind,src="$PWD/source",dst=/source,readonly \
+            --mount type=bind,src="$PWD/trusted",dst=/trusted,readonly \
+            --mount type=bind,src="$PWD/signed",dst=/output \
+            --entrypoint /usr/local/bin/bytedesk-contract-release-tool \
+            "$CONTRACT_RELEASE_VERIFIER_IMAGE" \
+            certify-contract-release-v1 \
+            --bundle /candidate/agent-delivery-contracts-v1.tar \
+            --manifest /candidate/agent-delivery-contracts-v1.manifest.json \
+            --candidate-metadata /candidate/candidate-metadata.json \
+            --source-archive /source/source.tar.gz \
+            --source-commit-metadata /source/commit-metadata.json \
+            --trust-policy /trusted/trust-policy.json \
+            --expected-trust-policy-id "$CONTRACT_RELEASE_TRUST_POLICY_ID" \
+            --expected-trust-policy-digest "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST" \
+            --expected-repository "$CONTRACT_RELEASE_REPOSITORY" \
+            --expected-key-version "$CONTRACT_RELEASE_KEY_VERSION" \
+            --expected-source-repository "$GITHUB_REPOSITORY" \
+            --expected-source-ref "$CALLER_SOURCE_REF" \
+            --expected-source-commit "$CALLER_SOURCE_COMMIT" \
+            --expected-source-tree "$SOURCE_TREE" \
+            --expected-source-archive-digest "$SOURCE_ARCHIVE_DIGEST" \
+            --expected-source-metadata-digest "$SOURCE_METADATA_DIGEST" \
+            --source-archive-max-bytes 67108864 \
+            --source-member-max-bytes 16777216 \
+            --source-expanded-max-bytes 67108864 \
+            --source-member-max-count 20000 \
+            --source-path-max-bytes 1024 \
+            --source-path-max-segments 32 \
+            --source-path-profile bytedesk.portable-path/1 \
+            --reject-source-links-and-special-files \
+            --require-source-metadata-match-before-extraction \
+            --require-source-tree-object-match \
+            --expected-workflow-trigger workflow_dispatch \
+            --expected-builder-digest "$VERIFIER_DIGEST" \
+            --require-trusted-source-rebuild-match \
+            --request-id "$REQUEST_ID" \
+            --nonce "$NONCE" \
+            --request-validity-seconds 300 \
+            --output-request /output/agent-delivery-contracts-v1.signing-request.json \
+            --output-signer-binding /output/signer-binding.json \
+            --output-certification /output/pre-sign-certification.json
+          require_regular_bounded() {
+            local path="$1"
+            local maximum="$2"
+            [[ -f "$path" && ! -L "$path" ]]
+            local size
+            size="$(stat -c %s -- "$path")"
+            (( size > 0 && size <= maximum ))
+          }
+          [[ -z "$(find signed -mindepth 1 ! -type f -print -quit)" ]]
+          mapfile -d '' -t OUTPUTS < <(find signed -mindepth 1 -type f -printf '%P\0' | LC_ALL=C sort -z)
+          EXPECTED_OUTPUTS=(
+            agent-delivery-contracts-v1.signing-request.json
+            pre-sign-certification.json
+            signer-binding.json
+          )
+          [[ "${#OUTPUTS[@]}" -eq "${#EXPECTED_OUTPUTS[@]}" ]]
+          for index in "${!EXPECTED_OUTPUTS[@]}"; do
+            [[ "${OUTPUTS[$index]}" == "${EXPECTED_OUTPUTS[$index]}" ]]
+          done
+          require_regular_bounded signed/agent-delivery-contracts-v1.signing-request.json 4194304
+          require_regular_bounded signed/signer-binding.json 4194304
+          require_regular_bounded signed/pre-sign-certification.json 4194304
+          jq -e \
+            --arg repository "$GITHUB_REPOSITORY" \
+            --arg ref "$CALLER_SOURCE_REF" \
+            --arg commit "$CALLER_SOURCE_COMMIT" \
+            --arg builderDigest "$VERIFIER_DIGEST" \
+            '.profile == "bytedesk.contract-release-signer-binding/1" and .certificateOidcIssuer == "https://token.actions.githubusercontent.com" and .sourceRepository == $repository and .sourceRef == $ref and .sourceCommit == $commit and .workflowTrigger == "workflow_dispatch" and .builderDigest == $builderDigest and .outcome == "permitted_to_sign"' \
+            signed/signer-binding.json > /dev/null
+          jq -e \
+            --arg commit "$CALLER_SOURCE_COMMIT" \
+            --arg tree "$SOURCE_TREE" \
+            --arg snapshotDigest "$SOURCE_ARCHIVE_DIGEST" \
+            --arg metadataDigest "$SOURCE_METADATA_DIGEST" \
+            --arg bundleDigest "$CANDIDATE_BUNDLE_DIGEST" \
+            --arg manifestDigest "$CANDIDATE_MANIFEST_DIGEST" \
+            '.profile == "bytedesk.contract-release-certification/1" and .fullBundleNativeSemantics == true and .sourceLineage == {commit:$commit,tree:$tree,snapshotDigest:$snapshotDigest,commitMetadataDigest:$metadataDigest,safeExtractionProfile:"bytedesk.portable-path/1",treeObjectMatch:true,rebuildBundleDigest:$bundleDigest,rebuildManifestDigest:$manifestDigest,byteForByteCandidateMatch:true} and .authorityIssued == false and .outcome == "permitted_to_sign"' \
+            signed/pre-sign-certification.json > /dev/null
+
+      - name: Sign and verify only the sealed tool's canonical request
+        shell: bash
+        run: |
+          set -euo pipefail
+          cosign sign-blob --yes \
+            --bundle signed/agent-delivery-contracts-v1.sigstore.json \
+            signed/agent-delivery-contracts-v1.signing-request.json
+          CERTIFICATE_IDENTITY="$(jq -er .certificateIdentity signed/signer-binding.json)"
+          cosign verify-blob \
+            --bundle signed/agent-delivery-contracts-v1.sigstore.json \
+            --trusted-root trusted/sigstore-trusted-root.json \
+            --certificate-identity "$CERTIFICATE_IDENTITY" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            --certificate-github-workflow-repository "$GITHUB_REPOSITORY" \
+            --certificate-github-workflow-ref "$CALLER_SOURCE_REF" \
+            --certificate-github-workflow-sha "$CALLER_SOURCE_COMMIT" \
+            --certificate-github-workflow-trigger workflow_dispatch \
+            signed/agent-delivery-contracts-v1.signing-request.json \
+            > signed/cosign-verification.txt
+          require_regular_bounded() {
+            local path="$1"
+            local maximum="$2"
+            [[ -f "$path" && ! -L "$path" ]]
+            local size
+            size="$(stat -c %s -- "$path")"
+            (( size > 0 && size <= maximum ))
+          }
+          [[ -z "$(find signed -mindepth 1 ! -type f -print -quit)" ]]
+          mapfile -d '' -t SIGNED_OUTPUTS < <(find signed -mindepth 1 -type f -printf '%P\0' | LC_ALL=C sort -z)
+          EXPECTED_SIGNED_OUTPUTS=(
+            agent-delivery-contracts-v1.signing-request.json
+            agent-delivery-contracts-v1.sigstore.json
+            cosign-verification.txt
+            pre-sign-certification.json
+            signer-binding.json
+          )
+          [[ "${#SIGNED_OUTPUTS[@]}" -eq "${#EXPECTED_SIGNED_OUTPUTS[@]}" ]]
+          for index in "${!EXPECTED_SIGNED_OUTPUTS[@]}"; do
+            [[ "${SIGNED_OUTPUTS[$index]}" == "${EXPECTED_SIGNED_OUTPUTS[$index]}" ]]
+          done
+          require_regular_bounded signed/agent-delivery-contracts-v1.signing-request.json 4194304
+          require_regular_bounded signed/signer-binding.json 4194304
+          require_regular_bounded signed/pre-sign-certification.json 4194304
+          require_regular_bounded signed/agent-delivery-contracts-v1.sigstore.json 67108864
+          require_regular_bounded signed/cosign-verification.txt 4194304
+
+      - name: Finalize signature evidence in the same sealed verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERIFIER_DIGEST="${CONTRACT_RELEASE_VERIFIER_IMAGE##*@}"
+          SOURCE_TREE="$(jq -er .tree.sha source/commit-metadata.json)"
+          SOURCE_ARCHIVE_DIGEST="sha256:$(sha256sum source/source.tar.gz | cut -d' ' -f1)"
+          SOURCE_METADATA_DIGEST="sha256:$(sha256sum source/commit-metadata.json | cut -d' ' -f1)"
+          docker run --rm \
+            --network none \
+            --read-only \
+            --cap-drop ALL \
+            --security-opt no-new-privileges \
+            --pids-limit 128 \
+            --memory 512m \
+            --cpus 1 \
+            --user "$(id -u):$(id -g)" \
+            --tmpfs /tmp:rw,noexec,nosuid,size=67108864 \
+            --mount type=bind,src="$PWD/candidate",dst=/candidate,readonly \
+            --mount type=bind,src="$PWD/source",dst=/source,readonly \
+            --mount type=bind,src="$PWD/trusted",dst=/trusted,readonly \
+            --mount type=bind,src="$PWD/signed",dst=/signed,readonly \
+            --mount type=bind,src="$PWD/final",dst=/output \
+            --entrypoint /usr/local/bin/bytedesk-contract-release-tool \
+            "$CONTRACT_RELEASE_VERIFIER_IMAGE" \
+            finalize-contract-release-v1 \
+            --bundle /candidate/agent-delivery-contracts-v1.tar \
+            --manifest /candidate/agent-delivery-contracts-v1.manifest.json \
+            --source-archive /source/source.tar.gz \
+            --source-commit-metadata /source/commit-metadata.json \
+            --trust-policy /trusted/trust-policy.json \
+            --trusted-root /trusted/sigstore-trusted-root.json \
+            --signing-request /signed/agent-delivery-contracts-v1.signing-request.json \
+            --sigstore-bundle /signed/agent-delivery-contracts-v1.sigstore.json \
+            --signer-binding /signed/signer-binding.json \
+            --pre-sign-certification /signed/pre-sign-certification.json \
+            --expected-source-commit "$CALLER_SOURCE_COMMIT" \
+            --expected-source-tree "$SOURCE_TREE" \
+            --expected-source-archive-digest "$SOURCE_ARCHIVE_DIGEST" \
+            --expected-source-metadata-digest "$SOURCE_METADATA_DIGEST" \
+            --source-archive-max-bytes 67108864 \
+            --source-member-max-bytes 16777216 \
+            --source-expanded-max-bytes 67108864 \
+            --source-member-max-count 20000 \
+            --source-path-max-bytes 1024 \
+            --source-path-max-segments 32 \
+            --source-path-profile bytedesk.portable-path/1 \
+            --reject-source-links-and-special-files \
+            --require-source-metadata-match-before-extraction \
+            --require-source-tree-object-match \
+            --expected-cosign-digest "$CONTRACT_RELEASE_COSIGN_DIGEST" \
+            --expected-builder-digest "$VERIFIER_DIGEST" \
+            --require-trusted-source-rebuild-match \
+            --output /output/release-signing-evidence.json
+          require_regular_bounded() {
+            local path="$1"
+            local maximum="$2"
+            [[ -f "$path" && ! -L "$path" ]]
+            local size
+            size="$(stat -c %s -- "$path")"
+            (( size > 0 && size <= maximum ))
+          }
+          [[ -z "$(find final -mindepth 1 ! -type f -print -quit)" ]]
+          mapfile -d '' -t FINAL_OUTPUTS < <(find final -mindepth 1 -type f -printf '%P\0' | LC_ALL=C sort -z)
+          [[ "${#FINAL_OUTPUTS[@]}" -eq 1 ]]
+          [[ "${FINAL_OUTPUTS[0]}" == release-signing-evidence.json ]]
+          require_regular_bounded final/release-signing-evidence.json 4194304
+          jq -e \
+            '.profile == "bytedesk.contract-release-signing-evidence/1" and .verificationMode == "sigstore_product_release" and .signatureAuthenticated == true and .productReleaseSignatureIssued == true and .consumerPermitIssued == false and .fullBundleNativeSemantics == true and .sourceLineageVerified == true and .byteForByteSourceRebuildMatch == true and .outcome == "signed_and_verified"' \
+            final/release-signing-evidence.json > /dev/null
+
+      - name: Publish only the signed release candidate and verification evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: contract-release-signed-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            candidate/
+            final/
+            signed/
+            source/
+            trusted/
+          if-no-files-found: error
+          retention-days: 30

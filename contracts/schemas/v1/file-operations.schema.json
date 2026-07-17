@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+  "title": "Digest-preconditioned regular-file operations",
+  "type": "object",
+  "required": ["contract", "operations"],
+  "properties": {
+    "contract": { "const": "bytedesk.file-operations/1" },
+    "operations": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["op", "path", "precondition", "content", "mode"],
+            "properties": {
+              "op": { "const": "add" },
+              "path": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/portablePath" },
+              "precondition": {
+                "type": "object",
+                "required": ["kind"],
+                "properties": { "kind": { "const": "absent" } },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              },
+              "content": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/contentDescriptor" },
+              "mode": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/fileMode" }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["op", "path", "precondition", "content", "mode"],
+            "properties": {
+              "op": { "const": "replace" },
+              "path": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/portablePath" },
+              "precondition": {
+                "type": "object",
+                "required": ["kind", "digest"],
+                "properties": {
+                  "kind": { "const": "match" },
+                  "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              },
+              "content": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/contentDescriptor" },
+              "mode": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/fileMode" }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["op", "path", "precondition"],
+            "properties": {
+              "op": { "const": "remove" },
+              "path": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/portablePath" },
+              "precondition": {
+                "type": "object",
+                "required": ["kind", "digest"],
+                "properties": {
+                  "kind": { "const": "match" },
+                  "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

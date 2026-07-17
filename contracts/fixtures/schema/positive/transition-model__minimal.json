@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+  "profile": "bytedesk.example-lifecycle/1",
+  "version": 1,
+  "initialStates": ["received"],
+  "states": [
+    { "name": "received", "terminal": false },
+    { "name": "completed", "terminal": true }
+  ],
+  "transitions": [
+    {
+      "name": "complete",
+      "from": ["received"],
+      "to": "completed",
+      "actor": "coordinator",
+      "guard": "exact precondition matches",
+      "cas": "match",
+      "effects": ["append evidence"],
+      "event": "example.completed.v1",
+      "retryable": false
+    }
+  ]
+}

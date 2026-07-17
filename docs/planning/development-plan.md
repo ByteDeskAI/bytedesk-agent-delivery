@@ -7,18 +7,15 @@ normative architecture and standards linked from the
 current implementation-readiness work are maintained in the
 [implementation-readiness execution plan](implementation-readiness-execution.md).
 
-## Bootstrap contract status
+## Repository-internal planning status
 
 [`development-plan.json`](development-plan.json) is the authoritative planning
-projection, but `bytedesk.agent-delivery.plan/2` is currently a bootstrap
-format rather than a released product contract. Its
-`contractStatus: bootstrap-pre-contract` marker means consumers MUST NOT treat
-the file as a validated runtime, API, artifact, or release object. AD-01 must
-publish the closed Draft 2020-12 plan schema, positive and denial fixtures, and
-Markdown/JSON drift validation in the signed offline contract bundle, then
-replace the marker with the released exact schema ID and digest before
-`CONTRACTS-FROZEN`. If the plan is not retained as a product contract, AD-01
-must instead remove the schema claim and keep it explicitly informational.
+projection for this repository, not a released product contract. Its
+`contractStatus: repository-internal` marker and repository-only schema validate
+the 18-task/7-milestone graph and Markdown drift without exposing the plan as a
+runtime, API, artifact, bundle, or consumer contract. The repository schema is
+excluded from the signed product contract bundle. Consumers MUST NOT resolve,
+pin, or implement against this planning format.
 
 ## Objective
 
@@ -160,8 +157,11 @@ GA result.
 - Public contracts are versioned before the first external artifact is
   published.
 - Every authoritative object resolves its exact schema ID and digest from the
-  signed offline contract bundle; generated code, OpenAPI, AsyncAPI, examples,
-  and docs pass drift checks.
+  signed offline contract bundle; every derived output released by the current
+  milestone passes its drift check. AD-01 covers OpenAPI, AsyncAPI, examples,
+  documentation mappings, and the bundle; AD-10 adds deterministic Go, Python,
+  and TypeScript model/client generation and clean-tree drift checks after the
+  externally visible ports are frozen.
 - Use TDD and denial fixtures before implementation for every trust boundary.
 - Implement the reference stack and topology from
   [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md);

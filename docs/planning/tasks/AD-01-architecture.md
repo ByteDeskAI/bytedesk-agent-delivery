@@ -41,11 +41,9 @@ inventing authority or state semantics later.
    Agent Delivery-owned object; close authority boundaries, resolve all
    references offline, and package schemas, fixtures, OpenAPI, AsyncAPI,
    compatibility metadata, and documentation mappings as one signed,
-   content-addressed contract bundle. This explicitly includes
-   `bytedesk.agent-delivery.plan/2` if the machine-readable development plan is
-   retained as an authoritative planning projection; until then its
-   `bootstrap-pre-contract` marker forbids treating it as a released product
-   contract.
+   content-addressed contract bundle. The machine-readable development plan is
+   instead validated by a repository-only schema and drift checks, remains
+   explicitly non-product planning data, and is excluded from that bundle.
 9. Freeze `bytedesk.json-patch/1`, file-operation, and skill-operation
    semantics; Agent versus portable `SpecializedAgent` resolution; and
    absent/match revision-plus-digest preconditions.
@@ -67,11 +65,14 @@ inventing authority or state semantics later.
 - An explicit supersession matrix showing which historical Platform decisions become consumer-adapter concerns and which remain authoritative in the Platform.
 - A versioned canonical-encoding contract and parser/canonicalizer denial fixtures.
 - Normative schema sources and a reproducible signed offline contract bundle
-  with schema IDs/digests, two-validator fixtures, generated-code/OpenAPI/
-  AsyncAPI/doc drift tests, and historical-resolution policy.
-- A released `bytedesk.agent-delivery.plan/2` schema, positive and denial
-  fixtures, and Markdown/JSON drift test, or removal of its schema claim if the
-  development plan remains informational.
+  with schema IDs/digests, two-validator fixtures, OpenAPI/AsyncAPI/example/
+  documentation drift tests, and historical-resolution policy. Task AD-01
+  releases no generated language binding; deterministic Go, Python, and
+  TypeScript models/clients and their clean-tree drift checks are owned by
+  AD-10 after the externally visible ports are frozen.
+- A repository-only development-plan schema, positive and denial fixtures, and
+  Markdown/JSON/DAG drift test, with explicit exclusion from the released
+  product contract bundle.
 - Accepted renderer-release, consumer-authority, skill-approval,
   private-signing, target-delivery-state, canary, recovery, and operational-
   readiness contracts.
@@ -92,10 +93,9 @@ inventing authority or state semantics later.
 - Equivalent restricted YAML and JSON produce identical JCS bytes and semantic digests; unsupported YAML constructs and raw-YAML signing fail closed.
 - Every authority-bearing object validates from the offline bundle and fails
   closed for unknown versions, fields, operations, references, or schemas.
-- `development-plan.json` either validates against the released exact
-  `plan/2` schema and matches the Markdown plan or is explicitly
-  non-contractual with no schema claim; the bootstrap marker cannot survive
-  `CONTRACTS-FROZEN`.
+- `development-plan.json` validates against the exact repository-only schema,
+  matches the Markdown plan and DAG, carries the `repository-internal` marker,
+  and is absent from the released product contract bundle.
 - Exact renderer release identity, fresh consumer authority, per-consumer
   private keys, sole-writer desired state, separate canary actors, and forward
   recovery have one non-contradictory normative contract each.
@@ -105,7 +105,8 @@ inventing authority or state semantics later.
 
 ## Verification
 
-Run ADR validation, C4/Structurizr validation and export, documentation link
+Run ADR validation, constrained C4/Mermaid validation and deterministic source
+export, documentation link
 checking, JSON Schema metaschema/reference closure and two-validator fixtures,
 RFC 8785/parser differentials, OpenAPI/AsyncAPI generation and drift checks,
 task/milestone DAG validation, transition-model checks, and peer architecture

@@ -17,13 +17,18 @@ access.
 
 ## Status
 
-This repository is in the architecture and delivery-planning phase. The product
-boundary, information contracts, implementation stack, and production reference
-topology are accepted architecturally, and the implementation workstreams are
-documented under [`docs/`](docs/README.md).
-Concrete schemas, manifests, conformance fixtures, and measured operational
-evidence remain release-blocking. No production deployment is authorized or
-implied by this repository.
+The product boundary, information contracts, implementation stack, and
+production reference topology are accepted architecturally. AD-01 freezes the
+language-neutral contract sources, 49 product schemas, manifests, projections,
+and positive, denial, boundary, parser, operation, and bundle fixtures in this
+repository. Their independent validators and deterministic offline bundle are
+implemented; the remaining workstreams are documented under
+[`docs/`](docs/README.md).
+
+This is not a claim that the delivery product is complete. Runtime services,
+renderer, registry, KMS, and consumer Adapters, lifecycle controllers,
+production deployment, and measured operational evidence remain later-task GA
+gates. No production deployment is authorized or implied by this repository.
 
 ## Product promise
 

@@ -1,0 +1,56 @@
+{
+  "profile": "bytedesk.skill-operation-fixtures/1",
+  "cases": [
+    {
+      "name": "add-private-skill",
+      "initial": {},
+      "operations": {"contract": "bytedesk.skill-operations/1", "operations": [{"op": "add", "packageId": "research.private", "precondition": {"kind": "absent"}, "descriptor": {"repository": "registry.example/skills/research", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "mediaType": "application/vnd.bytedesk.agent.skill.v1+json", "size": 42, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}}]},
+      "valid": true,
+      "expected": {"research.private": {"descriptor": {"repository": "registry.example/skills/research", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "mediaType": "application/vnd.bytedesk.agent.skill.v1+json", "size": 42, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}}}
+    },
+    {
+      "name": "replace-skill",
+      "initial": {"research.private": {"descriptor": {"repository": "registry.example/skills/research", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "mediaType": "application/vnd.bytedesk.agent.skill.v1+json", "size": 42, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}}},
+      "operations": {"contract": "bytedesk.skill-operations/1", "operations": [{"op": "replace", "packageId": "research.private", "precondition": {"kind": "match", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}, "descriptor": {"repository": "registry.example/skills/research", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "mediaType": "application/vnd.bytedesk.agent.skill.v1+json", "size": 43, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}}]},
+      "valid": true,
+      "expected": {"research.private": {"descriptor": {"repository": "registry.example/skills/research", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "mediaType": "application/vnd.bytedesk.agent.skill.v1+json", "size": 43, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}}}
+    },
+    {
+      "name": "remove-skill",
+      "initial": {"research.private": {"descriptor": {"repository": "registry.example/skills/research", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "mediaType": "application/vnd.bytedesk.agent.skill.v1+json", "size": 42, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}}},
+      "operations": {"contract": "bytedesk.skill-operations/1", "operations": [{"op": "remove", "packageId": "research.private", "precondition": {"kind": "match", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}}]},
+      "valid": true,
+      "expected": {}
+    },
+    {
+      "name": "remove-missing-denied",
+      "initial": {},
+      "operations": {"contract": "bytedesk.skill-operations/1", "operations": [{"op": "remove", "packageId": "missing.skill", "precondition": {"kind": "match", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"}}]},
+      "valid": false
+    },
+    {
+      "name": "digest-mismatch-denied",
+      "initial": {"research.private": {"descriptor": {"repository": "registry.example/skills/research", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "mediaType": "application/vnd.bytedesk.agent.skill.v1+json", "size": 42, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}}},
+      "operations": {"contract": "bytedesk.skill-operations/1", "operations": [{"op": "remove", "packageId": "research.private", "precondition": {"kind": "match", "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"}}]},
+      "valid": false
+    },
+    {
+      "name": "duplicate-target-denied",
+      "initial": {},
+      "operations": {"contract": "bytedesk.skill-operations/1", "operations": [{"op": "add", "packageId": "same.skill", "precondition": {"kind": "absent"}, "descriptor": {"repository": "registry.example/skills/same", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "mediaType": "application/vnd.bytedesk.agent.skill.v1+json", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}}, {"op": "remove", "packageId": "same.skill", "precondition": {"kind": "match", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"}}]},
+      "valid": false
+    },
+    {
+      "name": "invalid-initial-state-denied",
+      "initial": {"../escaped": {"descriptor": {"repository": "registry.example/skills/research", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "mediaType": "application/vnd.bytedesk.agent.skill.v1+json", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}}}},
+      "operations": {"contract": "bytedesk.skill-operations/1", "operations": []},
+      "valid": false
+    },
+    {
+      "name": "tagged-repository-denied",
+      "initial": {},
+      "operations": {"contract": "bytedesk.skill-operations/1", "operations": [{"op": "add", "packageId": "tagged.skill", "precondition": {"kind": "absent"}, "descriptor": {"repository": "registry.example/skills/tagged:latest", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "mediaType": "application/vnd.bytedesk.agent.skill.v1+json", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}}}]},
+      "valid": false
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0",
+  "title": "Absent or exact revision-and-digest mutation precondition",
+  "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/precondition"
+}

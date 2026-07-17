@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-package/1.0.0",
+  "title": "Untrusted non-executing skill package manifest",
+  "type": "object",
+  "required": ["contract", "schema", "packageId", "version", "scope", "contentLayer", "files", "nestedArchiveDepth", "evidence", "withdrawal", "trustPolicy"],
+  "properties": {
+    "contract": { "const": "bytedesk.skill-package/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "packageId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "version": { "type": "string", "maxLength": 128, "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "scope": { "type": "string", "enum": ["public", "consumer-private"] },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "contentLayer": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "files": { "type": "array", "maxItems": 10000, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/fileInventoryEntry" } },
+    "nestedArchiveDepth": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "evidence": {
+      "type": "object",
+      "required": ["sbom", "scan", "license"],
+      "properties": {
+        "sbom": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "scan": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "license": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "withdrawal": { "type": "string", "enum": ["active", "withdrawn", "compromised"] },
+    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "scope": { "const": "consumer-private" } }, "required": ["scope"] },
+      "then": { "required": ["consumerId"] },
+      "else": { "not": { "required": ["consumerId"] } }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Executable regular files are allowed, but hooks, grants, secret values, and pipeline execution authority have no fields."
+}

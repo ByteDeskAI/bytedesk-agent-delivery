@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+  "title": "Immutable independently distributed trust policy",
+  "type": "object",
+  "required": ["contract", "schema", "policyId", "version", "effective", "scope", "signers", "requiredEvidence", "rules", "revocations", "failureMode", "predecessor"],
+  "properties": {
+    "contract": { "const": "bytedesk.trust-policy/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "policyId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "version": { "type": "string", "maxLength": 128, "pattern": "^[1-9][0-9]*\\.[0-9]+\\.[0-9]+$" },
+    "effective": {
+      "type": "object",
+      "required": ["notBefore", "notAfter"],
+      "properties": {
+        "notBefore": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+        "notAfter": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["repositories", "mediaTypes", "purposes"],
+      "properties": {
+        "repositories": { "type": "array", "minItems": 1, "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/ociRepository" } },
+        "mediaTypes": { "type": "array", "minItems": 1, "maxItems": 100000, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 255 } },
+        "purposes": { "type": "array", "minItems": 1, "maxItems": 6, "uniqueItems": true, "items": { "type": "string", "enum": ["product-release-v1", "public-source-v1", "public-render-v1", "consumer-private-skill-v1", "consumer-authority-v1", "consumer-deployment-v1"] } },
+        "consumers": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" } },
+        "targets": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" } }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "signers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "required": ["purpose", "keyVersion", "algorithm", "workloadIdentity", "claims"],
+        "properties": {
+          "purpose": { "type": "string", "enum": ["product-release-v1", "public-source-v1", "public-render-v1", "consumer-private-skill-v1", "consumer-authority-v1", "consumer-deployment-v1"] },
+          "keyVersion": { "type": "string", "minLength": 1, "maxLength": 2048 },
+          "algorithm": { "const": "ECDSA_P256_SHA256" },
+          "workloadIdentity": { "type": "string", "minLength": 1, "maxLength": 2048 },
+          "claims": {
+            "type": "object",
+            "required": ["issuer", "audience", "subject"],
+            "properties": {
+              "issuer": { "type": "string", "format": "uri", "maxLength": 2048 },
+              "audience": { "type": "string", "minLength": 1, "maxLength": 512 },
+              "subject": { "type": "string", "minLength": 1, "maxLength": 2048 },
+              "repository": { "type": "string", "maxLength": 1024 },
+              "workflow": { "type": "string", "maxLength": 1024 },
+              "ref": { "type": "string", "maxLength": 1024 },
+              "environment": { "type": "string", "maxLength": 256 },
+              "builderDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    },
+    "requiredEvidence": { "type": "array", "maxItems": 11, "uniqueItems": true, "items": { "type": "string", "enum": ["schema", "provenance", "sbom", "vulnerability", "license", "compatibility", "evaluation", "authority", "skill_approval", "canary", "readiness"] } },
+    "rules": {
+      "type": "object",
+      "required": ["freshnessSeconds", "requireNonce", "requirePredecessor", "denyDowngrade", "withdrawal", "outage"],
+      "properties": {
+        "freshnessSeconds": { "type": "integer", "minimum": 1, "maximum": 604800 },
+        "requireNonce": { "type": "boolean" },
+        "requirePredecessor": { "type": "boolean" },
+        "denyDowngrade": { "type": "boolean" },
+        "withdrawal": { "type": "string", "enum": ["deny_new_use", "deny_all"] },
+        "outage": { "type": "string", "enum": ["fail_closed_new_work", "deny_all"] }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "revocations": {
+      "type": "object",
+      "required": ["keyVersions", "digests", "workflows", "builders", "schemas", "renderers", "content"],
+      "properties": {
+        "keyVersions": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "type": "string", "maxLength": 2048 } },
+        "digests": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" } },
+        "workflows": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "type": "string", "maxLength": 1024 } },
+        "builders": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" } },
+        "schemas": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" } },
+        "renderers": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" } },
+        "content": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" } }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "failureMode": { "const": "fail_closed" },
+    "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

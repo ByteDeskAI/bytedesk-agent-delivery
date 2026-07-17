@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/host-reconciliation-attempt/1.0.0",
+  "title": "Target-bound Host Reconciler technical attempt",
+  "type": "object",
+  "required": ["contract", "schema", "attemptId", "consumerId", "targetId", "rolloutId", "desiredRevisionDigest", "hostIdentity", "fencingToken", "state", "startedAt", "updatedAt"],
+  "properties": {
+    "contract": { "const": "bytedesk.host-reconciliation-attempt/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "attemptId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "rolloutId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "desiredRevisionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "hostIdentity": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "fencingToken": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "state": { "type": "string", "enum": ["claimed", "staging", "staged", "preflighting", "preflight_passed", "switching", "verifying", "observing", "retry_wait", "succeeded", "cancelled", "fenced", "failed"] },
+    "technicalEvidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "problem": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0" },
+    "startedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "updatedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "state": { "const": "succeeded" } }, "required": ["state"] },
+      "then": { "required": ["technicalEvidence"], "not": { "required": ["problem"] } }
+    },
+    {
+      "if": { "properties": { "state": { "const": "failed" } }, "required": ["state"] },
+      "then": { "required": ["technicalEvidence", "problem"] }
+    },
+    {
+      "if": { "properties": { "state": { "enum": ["cancelled", "fenced"] } }, "required": ["state"] },
+      "then": { "required": ["technicalEvidence"], "not": { "required": ["problem"] } }
+    },
+    {
+      "if": { "properties": { "state": { "const": "retry_wait" } }, "required": ["state"] },
+      "then": { "required": ["problem"] }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Contains technical host evidence only and cannot carry capability, credential, promotion, or desired-state authority."
+}

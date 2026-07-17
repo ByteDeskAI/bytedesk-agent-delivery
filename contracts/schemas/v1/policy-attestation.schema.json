@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/policy-attestation/1.0.0",
+  "title": "Consumer policy evaluation attestation",
+  "type": "object",
+  "required": ["contract", "schema", "consumerId", "subject", "policy", "decision", "reasonCodes", "evaluatedAt", "expiresAt", "nonce", "trustPolicy"],
+  "properties": {
+    "contract": { "const": "bytedesk.policy-attestation/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "subject": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "policy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+    "decision": { "type": "string", "enum": ["permitted", "denied", "manual_review"] },
+    "reasonCodes": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "type": "string", "maxLength": 128, "pattern": "^[a-z][a-z0-9_]{0,127}$" } },
+    "evaluatedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "expiresAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "nonce": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonce" },
+    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Records a policy result; it is not identity, a grant, a credential, or call-time authorization."
+}

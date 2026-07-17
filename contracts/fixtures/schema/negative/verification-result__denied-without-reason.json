@@ -1,0 +1,11 @@
+{
+  "contract": "bytedesk.verification-result/1",
+  "schema": {"id": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0", "digest": "sha256:e7a125abfede2f5b71b10f72b03f9ac57ed61a5f5008ce8d3835c34b0314499f"},
+  "verificationId": "verify-denied-no-reason-01",
+  "subject": {"repository": "registry.example/agents/source", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "mediaType": "application/vnd.bytedesk.agent.source.v1+json", "size": 4096, "trustPolicy": {"id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}},
+  "policy": {"id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+  "evaluatedAt": "2026-07-17T12:00:00Z",
+  "outcome": "denied",
+  "reasonCodes": [],
+  "evidenceDigests": ["sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"]
+}

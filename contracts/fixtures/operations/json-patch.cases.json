@@ -1,0 +1,56 @@
+{
+  "profile": "bytedesk.json-patch-fixtures/1",
+  "cases": [
+    {
+      "name": "ordered-add-replace-remove",
+      "target": "agent-spec",
+      "document": {"name": "public", "nested": {"x": 1}, "items": ["a"]},
+      "patch": {"profile": "bytedesk.json-patch/1", "operations": [{"op": "add", "path": "/nested/y", "value": 2}, {"op": "replace", "path": "/name", "value": "private"}, {"op": "remove", "path": "/nested/x"}, {"op": "add", "path": "/items/-", "value": "b"}]},
+      "valid": true,
+      "expected": {"name": "private", "nested": {"y": 2}, "items": ["a", "b"]}
+    },
+    {
+      "name": "authority-document-target-denied",
+      "target": "consumer-authority",
+      "document": {"policy": "external"},
+      "patch": {"profile": "bytedesk.json-patch/1", "operations": [{"op": "replace", "path": "/policy", "value": "disabled"}]},
+      "valid": false
+    },
+    {
+      "name": "atomic-failure",
+      "target": "renderer-functional-config",
+      "document": {"name": "public", "nested": {}},
+      "patch": {"profile": "bytedesk.json-patch/1", "operations": [{"op": "replace", "path": "/name", "value": "changed"}, {"op": "remove", "path": "/nested/missing"}]},
+      "valid": false
+    },
+    {
+      "name": "array-leading-zero-denied",
+      "target": "agent-spec",
+      "document": {"items": ["a"]},
+      "patch": {"profile": "bytedesk.json-patch/1", "operations": [{"op": "replace", "path": "/items/00", "value": "b"}]},
+      "valid": false
+    },
+    {
+      "name": "numeric-array-add-existing-denied",
+      "target": "agent-spec",
+      "document": {"items": ["a"]},
+      "patch": {"profile": "bytedesk.json-patch/1", "operations": [{"op": "add", "path": "/items/0", "value": "b"}]},
+      "valid": false
+    },
+    {
+      "name": "root-replacement-denied",
+      "target": "renderer-functional-config",
+      "document": {"name": "public"},
+      "patch": {"profile": "bytedesk.json-patch/1", "operations": [{"op": "replace", "path": "", "value": {"name": "private"}}]},
+      "valid": false
+    },
+    {
+      "name": "renderer-top-level-functional-property-added",
+      "target": "renderer-functional-config",
+      "document": {"model": "baseline"},
+      "patch": {"profile": "bytedesk.json-patch/1", "operations": [{"op": "add", "path": "/providerEndpoint", "value": "https://provider.example.invalid/v1"}]},
+      "valid": true,
+      "expected": {"model": "baseline", "providerEndpoint": "https://provider.example.invalid/v1"}
+    }
+  ]
+}

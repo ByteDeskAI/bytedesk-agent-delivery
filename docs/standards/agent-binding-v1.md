@@ -2,8 +2,10 @@
 
 **Logical contract:** `bytedesk.agent-binding/1`
 
-**Status:** Accepted architecture contract; concrete Draft 2020-12 schema and
-fixtures are release-blocking deliverables
+**Status:** Accepted contract; its Draft 2020-12 schema and binding, operation,
+source-resolution, and rebase fixtures are frozen by AD-01. Private compiler,
+consumer Adapter, KMS, runtime, and operational evidence remain later-task GA
+gates.
 
 ## Purpose
 
@@ -18,6 +20,15 @@ Public catalog and render endpoints reject bindings. An authenticated private
 path or non-publishing local private workflow may accept one. A public Agent
 Spec `SpecializedAgent` remains portable source and is never shorthand for this
 private delta.
+
+Private customization may change every non-root functional property in the
+complete Agent Spec or renderer-owned functional configuration. It cannot
+target consumer authority or security objects: identity, roles, grants,
+credentials, workload identity, trust, approvals, desired runtime state,
+sandbox policy, and network policy remain independently supplied and enforced
+by the consuming platform. File and skill operations are separate, may include
+arbitrary regular-file bytes, and do not authorize Agent Delivery to execute
+their contents.
 
 This contract uses [Canonical encoding v1](canonical-encoding-v1.md), the
 schemas and operation profiles in
@@ -36,7 +47,7 @@ JSON serialization carries semantic identity.
 contract: bytedesk.agent-binding/1
 schema:
   id: https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0
-  digest: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  digest: sha256:3c2b7490e808d3dd33ba6dea497a0b83b82545caa2b981b05ca997640490a2e7
 agentId: chief-of-staff
 agentSpecVersion: 26.1.2
 sourceKind: agent
@@ -61,44 +72,57 @@ renderer:
       id: product-release-v1
       digest: sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 customization:
-  profile: bytedesk.json-patch/1
-  agentSpecOperations:
-    - op: replace
-      path: /llm_config/model_id
-      value: acme-approved-model
-    - op: replace
-      path: /system_prompt
-      value: Follow Acme operating guidance and escalation procedures.
-  harnessConfigurationOperations:
-    - op: add
-      path: /workspaceLayout
-      value: acme-chief-of-staff
-  fileOperations:
-    - op: add
-      path: guidance/acme-escalation.md
-      content:
-        repository: registry.acme.example/agent-inputs/files
-        digest: sha256:1111111111111111111111111111111111111111111111111111111111111111
-        mediaType: application/octet-stream
-        size: 2048
-        trustPolicy:
-          id: acme-private-file-v1
-          digest: sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-      mode: "0644"
-    - op: remove
-      path: guidance/default-escalation.md
-      expectedContentDigest: sha256:3333333333333333333333333333333333333333333333333333333333333333
-  skillOperations:
-    - op: add
-      packageId: acme-escalation
-      descriptor:
-        repository: registry.acme.example/agent-skills/escalation
-        digest: sha256:2222222222222222222222222222222222222222222222222222222222222222
-        mediaType: application/vnd.bytedesk.agent.skill.v1+json
-        size: 8192
-        trustPolicy:
-          id: consumer-private-skill-v1
-          digest: sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  agentSpec:
+    profile: bytedesk.json-patch/1
+    operations:
+      - op: replace
+        path: /llm_config/model_id
+        value: acme-approved-model
+      - op: replace
+        path: /system_prompt
+        value: Follow Acme operating guidance and escalation procedures.
+  harnessConfiguration:
+    profile: bytedesk.json-patch/1
+    operations:
+      - op: add
+        path: /workspaceLayout
+        value: acme-chief-of-staff
+  files:
+    contract: bytedesk.file-operations/1
+    operations:
+      - op: add
+        path: guidance/acme-escalation.md
+        precondition:
+          kind: absent
+        content:
+          repository: registry.acme.example/agent-inputs/files
+          digest: sha256:1111111111111111111111111111111111111111111111111111111111111111
+          mediaType: application/octet-stream
+          size: 2048
+          trustPolicy:
+            id: acme-private-file-v1
+            digest: sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+        mode: "0644"
+      - op: remove
+        path: guidance/default-escalation.md
+        precondition:
+          kind: match
+          digest: sha256:3333333333333333333333333333333333333333333333333333333333333333
+  skills:
+    contract: bytedesk.skill-operations/1
+    operations:
+      - op: add
+        packageId: acme-escalation
+        precondition:
+          kind: absent
+        descriptor:
+          repository: registry.acme.example/agent-skills/escalation
+          digest: sha256:2222222222222222222222222222222222222222222222222222222222222222
+          mediaType: application/vnd.bytedesk.agent.skill.v1+json
+          size: 8192
+          trustPolicy:
+            id: consumer-private-skill-v1
+            digest: sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 updatePolicy:
   channel: stable
   automaticCompatibleUpdates: true
@@ -127,8 +151,12 @@ revision and digest.
   nominate a new validator.
 - `agentId` identifies verified public-package lineage even when functional
   customization changes effective display or semantic fields.
-- `sourceKind` is `agent` or `specialized-agent` and agrees with the official
-  Agent Spec document. `Agent` is the default standalone form.
+- `sourceKind` is `agent` or `specialized-agent`. After exact digest and RFC
+  8785-byte checks, it must agree with the one official Agent Spec `26.1.2`
+  validation result and the document's root `component_type`. The raw source
+  must explicitly carry `agentspec_version: 26.1.2`; another version, omission,
+  or legacy `air_version` fails after that call. `Agent` is the default
+  standalone form.
 - The complete source descriptor is immutable. Tags, branches, missing sizes,
   and mutable repository aliases are forbidden.
 - The complete renderer-release descriptor is required and must map exactly to
@@ -171,10 +199,15 @@ pinned Agent Spec SDK, exact renderer schemas, portability policy, and consumer
 policy. A valid kind-changing result records both source and effective kinds and
 is breaking, requiring manual promotion.
 
-An automatic source update performs a three-way rebase against the previous
-exact source, accepted delta, and proposed exact source. A changed target,
-ancestor, parent, or unstable array position conflicts. An old delta is never
-blindly replayed.
+An automatic source update clones the previous and proposed exact sources into
+working trees and applies the accepted operations, in order, to both. Before
+each operation, a changed target or complete containing top-level subtree is a
+conflict; that rule also catches changed or removed parents and changed arrays.
+The document root is excluded from comparison so unrelated top-level upstream
+changes survive. A later operation may use a parent created by an earlier
+operation in the same atomic delta. Inputs remain immutable, canonical parser
+limits are checked after each operation and on the final result, and an old
+delta is never blindly replayed.
 
 ## File operations
 
@@ -182,7 +215,8 @@ File operations are a separate closed contract, not JSON Patch:
 
 - portable paths are relative POSIX-style Unicode NFC paths;
 - empty segments, `.`, `..`, leading slash, backslash, controls, Windows drive
-  or device syntax, and normalization/case-fold collisions fail;
+  or device syntax, Windows-forbidden filename characters, segments longer
+  than 255 UTF-8 bytes, and normalization/case-fold collisions fail;
 - `add` requires absence, exact content descriptor, and safe regular-file mode;
 - `replace` requires existence, expected current digest, replacement
   descriptor, and mode;
@@ -243,9 +277,16 @@ Resolution:
 
 1. parses accepted input, validates the exact binding schema, and creates its
    RFC 8785 identity;
-2. verifies the exact public source, source kind, and declared public skills;
-3. validates source through the official pinned Agent Spec SDK and portability
-   policy;
+2. verifies the exact public-source descriptor and declared public skills,
+   checks the SHA-256 digest over the obtained source payload, and requires
+   those payload bytes to equal their RFC 8785 form before semantic validation;
+3. calls the official Agent Spec `26.1.2` validator exactly once and requires
+   `sourceKind` to agree with its result and root `component_type`, then
+   requires explicit top-level `agentspec_version: 26.1.2` and no legacy
+   `air_version`; a `SpecializedAgent` must embed one complete `Agent` and one
+   complete `AgentSpecializationParameters` object, with no remote,
+   package-relative, generic `$ref`, official `$component_ref` or
+   `$referenced_components`, or nested specialization resolution;
 4. verifies and quarantines every effective file/skill descriptor and current
    consumer skill approval;
 5. applies all ordered property, file, and skill operations atomically in a
@@ -289,10 +330,15 @@ fails closed. The system never guesses, drops fields, partially applies a
 delta, loads package code, chooses another renderer, or accepts caller-supplied
 effective output.
 
-Release fixtures cover minimal/full bindings, `Agent` and `SpecializedAgent`,
-both precondition variants, every operation, three-way conflicts, Unicode and
-case-fold paths, exact renderer substitution denials, public/private skill
-approval, authority-smuggling and secret denials, full rerender, exact public-
-output reuse, post-render-patch rejection, archive/resource attacks, YAML/JSON
-canonical equivalence, byte-exact arbitrary payloads, and execution spies that
-prove input code never runs in Agent Delivery.
+Release fixtures cover minimal/full bindings, both precondition variants, every
+operation, Unicode and case-fold paths, exact renderer substitution denials,
+public/private skill approval, authority-smuggling and secret denials, full
+rerender, exact public-output reuse, post-render-patch rejection,
+archive/resource attacks, YAML/JSON canonical equivalence, byte-exact arbitrary
+payloads, and execution spies that prove input code never runs in Agent
+Delivery. The seven cases in
+`contracts/fixtures/operations/source-resolution.cases.json` close `Agent` and
+`SpecializedAgent` resolution and escape/nesting denials; the seven cases in
+`contracts/fixtures/operations/three-way-rebase.cases.json` close ordered
+dual-tree application, unrelated top-level preservation, and target,
+containing-subtree, parent, and array conflicts.

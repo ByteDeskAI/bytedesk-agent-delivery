@@ -1,0 +1,9 @@
+{
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0", "digest": "sha256:ef166e871e6bbe4ecef05907b1201e7962c5e93d29e61d996926f803fad40b6f" },
+  "command": "action_cancel",
+  "idempotencyKey": "cancel-01",
+  "consumerId": "consumer-01",
+  "actionId": "action-01",
+  "precondition": { "kind": "match", "revision": 1, "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+  "force": true
+}

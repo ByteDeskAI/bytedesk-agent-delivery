@@ -1,0 +1,21 @@
+{
+  "contract": "bytedesk.harness-render/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0", "digest": "sha256:55f6123e2913b52db2c9b6f8e944a4cb08a6f2202a2a6741b9a3a09d49cb5018" },
+  "source": { "repository": "registry.example/agents/source", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "mediaType": "application/vnd.bytedesk.agent.source.v1+json", "size": 4096, "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } },
+  "publicSkills": [],
+  "rendererRelease": { "repository": "registry.example/product/renderers", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "mediaType": "application/vnd.bytedesk.agent.renderer-release.v1+json", "size": 8192, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" } },
+  "executedDistribution": { "repository": "registry.example/product/images", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "mediaType": "application/vnd.oci.image.manifest.v1+json", "size": 2048, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" } },
+  "platform": "linux/amd64",
+  "compiledAllowlistDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "rendererSchemas": [
+    { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" }
+  ],
+  "normalizedParametersDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "compatibility": { "repository": "registry.example/agents/evidence", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "mediaType": "application/vnd.bytedesk.agent.compatibility.v1+json", "size": 1024, "trustPolicy": { "id": "public-render-v1", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444" } },
+  "outputLayer": { "repository": "registry.example/agents/renders", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip", "size": 4096, "trustPolicy": { "id": "public-render-v1", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444" } },
+  "files": [
+    { "path": "agent.yaml", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "size": 512, "mode": "0644" }
+  ],
+  "createdAt": "2026-07-17T12:00:00Z",
+  "trustPolicy": { "id": "public-render-v1", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444" }
+}

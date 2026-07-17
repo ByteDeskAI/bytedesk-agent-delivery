@@ -2,8 +2,10 @@
 
 **Profile:** `bytedesk.machine-contracts/1`
 
-**Status:** Accepted architecture contract; concrete schema artifacts are a
-release-blocking AD-01 deliverable
+**Status:** Accepted contract; its language-neutral sources, 49 product
+schemas, projections, and conformance fixtures are frozen by AD-01. Generated
+language bindings and downstream service, runtime, and operational evidence
+remain later-task GA gates.
 
 ## Purpose
 
@@ -36,6 +38,14 @@ Each schema MUST:
   `https://schemas.bytedesk.ai/agent-delivery/v1/`;
 - declare the logical contract name and major version;
 - use explicit types, required members, bounds, patterns, and enumerations;
+- give every directly typed array an explicit `maxItems`; a collection without
+  a stricter contract-specific limit uses the canonical parser's 100,000-node
+  ceiling as its outer `maxItems`, while the full-object node and 4 MiB limits
+  remain independently mandatory;
+- bound directly typed strings with `maxLength` unless `const` or a closed
+  `enum` inherently bounds them, bound directly typed integers on both sides
+  within the interoperable range, and either close objects to a fixed property
+  set or declare `maxProperties`;
 - bound JSON integers to the interoperable range
   `-9007199254740991..9007199254740991`; larger exact quantities and
   identifiers use canonical decimal strings;
@@ -49,6 +59,12 @@ Each schema MUST:
 The source-controlled schema is authoritative. Generated language models,
 validators, SDKs, OpenAPI components, documentation, and examples are derived
 outputs and MUST pass drift tests against it.
+
+AD-01 releases the schemas and language-neutral projections only. It does not
+release generated Go, Python, or TypeScript bindings. AD-10 owns deterministic
+model/client generation after the externally visible ports are frozen and MUST
+add clean-tree regeneration and drift checks before any such binding becomes a
+released projection.
 
 Agent Spec is an external contract. Agent Delivery validates the pinned Agent
 Spec version with its official SDK. A locally written JSON Schema may be used
@@ -68,7 +84,22 @@ transitive local references are:
 6. listed by `$id`, logical version, media type, size, digest, and required
    immutable trust-policy ID and digest in the release manifest.
 
-Schemas, transitive references, OpenAPI, AsyncAPI, compatibility metadata, and
+The exact product-schema set is independently closed by
+[`contracts/bundle/v1/schema-inventory.json`](../../contracts/bundle/v1/schema-inventory.json),
+profile `bytedesk.contract-schema-inventory/1`. Its only root fields are
+`profile` and `schemas`; each schema entry has only its stable `id`, canonical
+repository `path`, and RFC 8785 digest, and entries are ordered by ID. The
+current v1 inventory contains 49 schemas. The Go and Python validators, bundle
+builder, and offline verifier MUST compare the complete discovered or bundled
+registry to these exact triples. An omitted or added schema, path rename, ID
+substitution, digest drift, duplicate, unknown field, or reordered entry fails
+closed. A reviewed inventory update and matching schema change are one release
+change; neither can silently expand or narrow the other.
+
+The inventory enters the signed bundle as exact RFC 8785 JCS bytes, is bound by
+its own manifest inventory entry and `buildInputDigest`, and is verified before
+the bundled registry can satisfy the release contract. Schemas, transitive
+references, OpenAPI, AsyncAPI, compatibility metadata, and
 their complete positive and denial fixture set ship together as one signed,
 content-addressed contract bundle. Resolution is bundle-local and offline;
 runtime network schema fetching is forbidden.
@@ -82,6 +113,33 @@ The API, CLI, manifests, attestations, and receipts expose the exact schema
 `$id` and digest used to validate an object. Implementations MUST NOT fetch a
 new schema merely because an artifact names it. The schema must already be
 allowed by independently configured product or consumer trust policy.
+
+Every validation operation MUST first select one accepted schema by its exact
+`$id` and canonical digest. If the instance has a root `schema` descriptor,
+the validator MUST compare that descriptor with the selected schema before
+ordinary Draft 2020-12 instance validation: `schema.id` equals the selected
+schema's `$id`, and `schema.digest` equals the selected source schema's RFC
+8785 canonical SHA-256 digest. A descriptor that is structurally valid but
+names a different ID or digest fails closed. Structural validation alone is
+not evidence of this binding because a schema cannot normatively assert its
+own canonical digest.
+
+## Signing and verification-result contract
+
+A signing request binds one exact subject descriptor, including a media type
+that uses the shared bounded `type/subtype` grammar. An empty, malformed,
+uppercase, parameter-only, or overlong media type is invalid. The signer and
+verifier compare that value exactly; content sniffing or substituting a more
+general media type cannot authorize different bytes.
+
+A verification result has only the closed outcomes `permitted` and `denied`.
+Every result carries at least one exact digest of authenticated or independently
+integrity-verified evidence used to reach it. A permitted result has no reason
+codes. A denied result has one or more values from the versioned, closed reason
+code registry, so a new denial meaning requires an intentional contract change
+instead of an ad hoc string. Missing, stale, invalid, or unavailable evidence
+uses its specific reason; absence or transport failure MUST NOT be recast as
+`policy_denied`.
 
 ## Unknown fields and extension points
 
@@ -133,27 +191,53 @@ never published or signed.
 
 Pointers use JSON string representation and the RFC 6901 `~0` and `~1`
 escapes. Implementations reject non-canonical array tokens, invalid escapes,
-ambiguous Unicode, paths outside the contract-specific functional allowlist,
-and paths into independently supplied security or authority inputs. After all
-operations, the complete result is revalidated by the official Agent Spec SDK,
-the selected renderer contract, portability policy, and consumer policy.
+ambiguous Unicode, a target other than one complete functional document, and
+the empty root pointer. The JSON Schema `maxLength` ceiling is 4,096 Unicode
+characters; semantic validation independently limits the encoded pointer to
+4,096 UTF-8 bytes and requires every decoded token to be NFC. This byte ceiling
+is intentionally stricter for multibyte input and is applied before traversal.
+Independently supplied security or authority objects are not target documents.
+After all operations, the complete result is revalidated by the official Agent
+Spec SDK, the selected renderer contract, portability policy, and consumer
+policy.
+
+The v1 boundary is target-based rather than a blacklist of sensitive property
+names. A JSON Patch document targets exactly one complete validated Agent Spec
+or one exact renderer-owned functional-configuration document. Every non-root
+path within those two functional documents is eligible for customization. They
+cannot contain consumer identity, roles, grants, credentials, workload
+identity, trust or approval policy, desired runtime state, sandbox or network
+policy, or other security authority; those are separate consumer-owned objects
+and are never valid patch targets. Revalidation against the exact official or
+renderer schema rejects attempts to smuggle authority through unknown fields.
+File and skill changes use their separate profiles and may carry arbitrary
+bytes, but Agent Delivery never executes artifact-provided content.
 
 JSON Merge Patch is not accepted. Its null/delete behavior and array replacement
 semantics are too ambiguous for a digest-pinned customization lineage.
 
-Automatic source updates perform a three-way rebase using the previous exact
-public source, its accepted delta, and the proposed exact public source. A
-changed target node, changed ancestor, removed parent, or unstable array
-position is a conflict. The controller never blindly replays an old delta onto
-a structurally changed source.
+Automatic source updates clone the previous and proposed exact public sources
+into separate working trees, then process the accepted operations in order.
+Before each operation, the rebase compares its target and complete containing
+top-level subtree in the two working trees; a changed target, containing
+subtree, parent, or array is a conflict. It then applies the operation to both
+trees, allowing a later operation to use a parent created earlier in the same
+atomic delta. The document root is deliberately excluded from ancestor
+comparison, so an unrelated top-level upstream change survives in the proposed
+result. Inputs remain immutable, and canonical parser limits are rechecked
+after every operation and over the final result. The controller never blindly
+replays an old delta onto a structurally changed target context.
 
 ## File operation profile
 
 File changes use a separate closed operation schema; they are not JSON Patch.
 Paths are portable POSIX-style relative paths normalized to Unicode NFC. Empty
 segments, `.`, `..`, leading slash, backslash, NUL/control characters, Windows
-drive or device syntax, and names that collide after Unicode normalization or
-case folding are rejected.
+drive or device syntax, Windows-forbidden filename characters, segments longer
+than 255 UTF-8 bytes, and names that collide after Unicode normalization or
+case folding are rejected. The complete path has both the schema ceiling of
+1,024 Unicode characters and a stricter semantic ceiling of 1,024 UTF-8 bytes;
+it may contain at most 32 segments.
 
 - `add` requires an absent path and an exact content descriptor plus safe
   regular-file mode.
@@ -185,14 +269,26 @@ have current consumer approval evidence before compilation and activation.
 
 ## Source resolution
 
-Public source may be an Agent Spec `Agent` or `SpecializedAgent`, with an
-explicit source-kind discriminator that agrees with the official document.
-`Agent` is the default standalone catalog form. `SpecializedAgent` is allowed
-only as an intentional, complete portable public specialization governed by
-the official Agent Spec contract; it is not private customization, identity,
-or organizational authority. The complete public document is independently
-validated and digested. Mutable, missing, cyclic, remote-implicit, or package-
-escaping references fail.
+Public source may be an Agent Spec `Agent` or `SpecializedAgent`. The resolver
+first verifies the supplied SHA-256 digest over the exact payload, parses it
+under the canonical resource limits, and requires the payload itself to equal
+its RFC 8785 bytes. Only then does it call the official Agent Spec `26.1.2`
+validator exactly once. The declared `agent` or `specialized-agent` kind must
+agree with both that official result and the root `component_type`; no caller-
+declared or inferred substitute kind is accepted. After that one official call,
+the raw document must contain top-level `agentspec_version: 26.1.2` exactly;
+an omitted field, another SDK-supported version, or legacy `air_version`
+substitution fails closed.
+
+`Agent` is the default standalone catalog form. A `SpecializedAgent` is allowed
+only as an intentional complete portable public specialization governed by the
+official contract. It embeds one complete `Agent` object and one complete
+`AgentSpecializationParameters` object. A string, generic `$ref`, official
+`$component_ref`/`$referenced_components` indirection, remote or
+package-relative lookup, embedded `SpecializedAgent`, or another nested
+specialization-resolution step fails after official validation. Public
+specialization is not private customization, identity, or organizational
+authority.
 
 Private customization applies exactly once to the complete validated public
 document. It creates no second inheritance system and cannot change source-
@@ -203,13 +299,19 @@ as build output.
 
 ## Predecessor and concurrency contract
 
-Every mutation carries a required discriminated `precondition`. Initial
-creation uses `{ "kind": "absent" }` and succeeds only when no current aggregate
-exists. An update uses `{ "kind": "match", "revision": N, "digest":
+Every durable aggregate mutation carries a required discriminated
+`precondition`. Initial creation uses `{ "kind": "absent" }` and succeeds only
+when no current aggregate exists. An update uses `{ "kind": "match", "revision": N, "digest":
 "sha256:..." }` and must match both the monotonic revision and canonical digest
 of the immediately previous accepted revision. Requiring both prevents an ABA
 change from passing a digest-only comparison. Omission, `null`, a wildcard, or
 a digest without its revision is invalid, including for break-glass workflows.
+
+Nested file and skill operation elements are not independently durable
+aggregates. They execute atomically inside the already CAS-guarded binding
+mutation and use the absent-or-current-item-digest preconditions defined in
+their profiles. The enclosing aggregate revision is the monotonic ABA guard;
+inventing resettable per-item revisions would not provide another safe CAS.
 
 Every accepted immutable record separately carries `predecessor`:
 `{ "kind": "none" }` for revision one or the exact prior revision and digest.
@@ -223,12 +325,43 @@ canonical resource digest. Creation requires `If-None-Match: *`; update,
 promotion, cancellation, and forward-recovery requests require `If-Match`. A
 failed precondition returns `412` without side effects.
 
+The polymorphic command endpoint preserves this rule without making both HTTP
+conditionals ambiguous. `source_validate` and `render` have no durable aggregate
+precondition and send neither conditional header. For every other command,
+`precondition.kind: absent` requires exactly `If-None-Match: *`, while
+`precondition.kind: match` requires exactly `If-Match` equal to the quoted
+`precondition.digest`; the opposite header is forbidden. Missing, conflicting,
+wildcard update, body/header mismatch, or unsupported precondition combinations
+return `412` with no accepted action and no side effect.
+
 ## HTTP API contract
 
 The normative HTTP description uses OpenAPI 3.2.0 with JSON Schema Draft
 2020-12 as its declared dialect. It references the exact same source schemas
 rather than copying them into an independent model. The signed OpenAPI document
 is versioned with the product release and has a stable `$self` URI and digest.
+Release validation first applies the exact vendored official OpenAPI 3.2 schema
+identified by its source URI and SHA-256, entirely offline, and then applies the
+stricter Agent Delivery projection, reference, authentication, conditional,
+header, and source-schema-digest checks. The official schema and its retained
+Apache-2.0 license ship as tooling documents in the same signed bundle.
+
+The v1 projection also freezes the complete path, HTTP method, and
+`operationId` map. Each operation has one exact security requirement and
+accepted response-status set, and each success or default response points to
+the required component. Release lint evaluates this closed topology before
+per-operation checks, so deleting or renaming an operation cannot bypass its
+authentication, conditional-request, or response obligations. A topology
+change is an intentional API-contract change, never projection cleanup.
+
+That closed topology includes every operation's ordered parameter references,
+the absence or exact required JSON request-body schema, and the complete
+semantic definitions of parameter and header components. Response component
+names, media types, schema references, and header-name-to-header-component
+bindings are exact. Schema component names bind one exact normative `$ref`,
+schema `$id`, and canonical digest; substituting another valid source schema
+under an existing component name is projection drift. Descriptions and other
+prose may change without changing these semantic bindings.
 
 The API uses:
 
@@ -247,10 +380,38 @@ The API uses:
 - explicit scopes, tenant/consumer binding, rate-limit headers, and no secret
   values in requests, responses, URLs, or diagnostics.
 
+Every command is authenticated; there is no anonymous dispatch path.
+`source_validate` and `render` may be authorized under the narrow public-purpose
+profile, while every private or state-changing command requires exact consumer
+and operation scope. An unknown command or authorization profile fails closed.
+Authentication never weakens the independent precondition, idempotency,
+canonical-request-digest, trust, or consumer-authority checks.
+
+Every accepted asynchronous command returns the created `Action` in the `202`
+body, a required strong `ETag` for that exact action representation, a required
+relative `Location` of `/v1/actions/{actionId}`, and required
+`RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` headers. The
+location cannot name a collection or unrelated resource, and the accepted
+response does not imply that the action or requested business transition has
+succeeded.
+
 Action resources expose immutable input digest, state, progress, attempts,
 timestamps, cancellability, result or problem reference, and append-only
 evidence. Cancellation is conditional and cannot erase a side effect; after a
 desired revision is published, reversal requires a new forward revision.
+
+Action execution is lease- and fencing-token based. A worker may start,
+heartbeat, publish output, retry, cancel, or terminalize an attempt only while
+its database lease and monotonically issued fencing token are current. After a
+process crash or lease expiry, a sweeper atomically fences the stale attempt,
+records that evidence, and discards its output. Recoverable `claimed` or
+`running` work advances to `retry_wait` with full-jitter backoff; exhausted work
+advances to `dead_lettered`. A cancellation request is never lost during
+recovery: expired `cancellation_requested` work remains in that state while a
+new fenced attempt is assigned to finish cancellation, or dead-letters when its
+budget is exhausted. A stale worker cannot complete, fail, retry, or cancel the
+action after fencing. Every transition and outbox notification is appended in
+the same durable transaction; retry never edits prior evidence.
 
 ## Event contract
 
@@ -259,6 +420,30 @@ JSON is mandatory. An event carries the exact event-data schema `$id` and
 digest, aggregate identifier, aggregate revision digest, per-aggregate
 monotonic sequence, correlation and causation identifiers, consumer scope, and
 redaction classification.
+
+The AsyncAPI entry document uses the stable
+`x-bytedesk-document-uri` specification extension because AsyncAPI 3.1 has no
+OpenAPI-style `$self` field. Release validation applies the exact vendored
+AsyncAPI 3.1 all-in-one Draft 7 schema and all 113 embedded resources without
+network retrieval before applying Agent Delivery's stricter event-registry and
+projection checks. The pinned schema, upstream license, and notice ship in the
+signed offline bundle.
+
+The event topology is closed to two HTTPS transports: authenticated resumable
+`consumerFeed` and independently configured mutual-TLS `consumerWebhook`. The
+single `notifications` channel explicitly binds both servers, and the single
+`receiveNotifications` operation binds that channel, its exact message, and
+the notification-only delivery traits. Server, channel, operation, security
+scheme, or reference removal and rename is release-blocking.
+
+The message topology is closed as well. `EventDataEnvelope` binds its exact
+normative `$ref`, schema `$id`, and canonical digest, while
+`AgentDeliveryNotification` binds the structured CloudEvents content type,
+correlation location, CloudEvents version, event-data descriptor, exact
+required-member and property sets, closed event-type enum, `dataschema`
+constant, and `data` reference. A valid but different schema, media type,
+envelope constraint, or component placed under either existing name is
+release-blocking projection drift.
 
 Delivery is at least once. Ordering is guaranteed only within one aggregate
 partition. Receivers deduplicate by CloudEvent `id`; a sequence gap or unknown
@@ -293,8 +478,8 @@ Deprecation and support windows follow
 
 ## Failure behavior
 
-Unknown schema or digest, unavailable schema, unresolved reference, validation
-difference, unknown field, invalid extension, unsupported patch, failed path
+Unknown schema or digest, unavailable schema, closed-inventory mismatch,
+unresolved reference, validation difference, unknown field, invalid extension, unsupported patch, failed path
 precondition, source-resolution ambiguity, stale predecessor, incompatible API
 version, or event gap fails closed. An implementation does not guess, coerce,
 drop, partially apply, or fall back to prose or generated code.
@@ -304,15 +489,31 @@ drop, partially apply, or fall back to prose or generated code.
 Release evidence includes:
 
 - at least two independent Draft 2020-12 validators agreeing on every golden
-  and denial fixture;
+  and denial fixture, including indexed single-fault wrong-root-schema-ID and
+  wrong-root-schema-digest semantic denials performed before ordinary instance
+  validation;
 - schema metaschema validation, reference closure, digest, signature, and
   offline resolution tests;
-- schema-to-code, schema-to-OpenAPI, examples, and documentation drift tests;
+- independent exact-inventory comparison proving schema removal, addition,
+  path rename, ID substitution, and stale digest are denied by the repository
+  validators and authenticated offline bundle verifier;
+- recursive schema-resource proofs that reject an unbounded direct array,
+  string, integer, or open-ended object before a contract bundle is built;
+- schema-to-OpenAPI, examples, documentation, and bundle drift tests, plus
+  schema-to-code drift for every language binding released by the current
+  milestone;
 - unknown-field, extension, open/closed-enum, and compatibility tests;
 - RFC 6901/6902 conformance plus the stricter add/replace/remove preconditions;
 - operation-order, conflict, array, Unicode, path-collision, and atomic-failure
   fuzz tests;
-- Agent and SpecializedAgent resolution equivalence and escape/cycle denials;
+- the eleven `contracts/fixtures/operations/source-resolution.cases.json`
+  cases proved against exact canonical bytes by the pinned official SDK with
+  socket access denied, covering Agent and SpecializedAgent resolution,
+  official-kind agreement, explicit version binding, and remote,
+  package-relative, component-reference, and nested-resolution denial;
+- the seven `contracts/fixtures/operations/three-way-rebase.cases.json` cases
+  proving ordered dual-tree application, unrelated top-level preservation,
+  and changed-target, containing-subtree, parent, and array conflicts;
 - ETag, first-create, stale-update, idempotency replay/collision, pagination,
   problem-details, and asynchronous-action tests; and
 - duplicate, reorder, gap, replay, dead-letter, redaction, and API-resync event

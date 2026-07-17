@@ -1,0 +1,428 @@
+{
+  "$self": "https://contracts.bytedesk.ai/agent-delivery/openapi/v1/agent-delivery.openapi.json",
+  "openapi": "3.2.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {
+    "title": "ByteDesk Agent Delivery API",
+    "version": "1.0.0",
+    "description": "Consumer-neutral, headless delivery API. Exact JSON Schemas in the signed offline contract bundle are normative; this document is a projection. Events and clients cannot write desired state."
+  },
+  "servers": [
+    {
+      "url": "https://{authority}",
+      "variables": {
+        "authority": {
+          "default": "agent-delivery.invalid",
+          "description": "Deployment-selected authenticated API authority; the example default is intentionally non-routable."
+        }
+      }
+    }
+  ],
+  "tags": [
+    {"name": "public", "description": "Tenant-free exact-digest reads."},
+    {"name": "actions", "description": "Durable asynchronous work."},
+    {"name": "installations", "description": "Consumer installation and binding state."},
+    {"name": "promotion", "description": "Promotion Coordinator command and status surface."},
+    {"name": "reconciliation", "description": "Target-scoped host observations."},
+    {"name": "evidence", "description": "Receipts and verification results."}
+  ],
+  "paths": {
+    "/v1/catalogs/{catalogId}/releases/{revision}": {
+      "get": {
+        "operationId": "getCatalogRelease",
+        "summary": "Read one signed catalog release",
+        "description": "Discovery only. Every returned artifact descriptor must be independently verified before use.",
+        "tags": ["public"],
+        "security": [],
+        "parameters": [
+          {"$ref": "#/components/parameters/CatalogId"},
+          {"$ref": "#/components/parameters/Revision"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/CatalogIndex"},
+          "304": {"description": "The caller already has the exact current representation."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/sources/{sourceDigest}": {
+      "get": {
+        "operationId": "getAgentSource",
+        "summary": "Inspect one exact portable source manifest",
+        "tags": ["public"],
+        "security": [],
+        "parameters": [
+          {"$ref": "#/components/parameters/SourceDigest"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/AgentSource"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/renderers/{rendererId}/releases/{rendererDigest}": {
+      "get": {
+        "operationId": "getRendererRelease",
+        "summary": "Inspect one allowlisted renderer release",
+        "tags": ["public"],
+        "security": [],
+        "parameters": [
+          {"$ref": "#/components/parameters/RendererId"},
+          {"$ref": "#/components/parameters/RendererDigest"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/RendererRelease"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/renders/{renderDigest}": {
+      "get": {
+        "operationId": "getHarnessRender",
+        "summary": "Inspect one tenant-free public render",
+        "description": "This public path rejects consumer customization, private skills, opaque secret references, and tenant metadata.",
+        "tags": ["public"],
+        "security": [],
+        "parameters": [
+          {"$ref": "#/components/parameters/RenderDigest"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/HarnessRender"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/actions/{actionId}": {
+      "get": {
+        "operationId": "getAction",
+        "summary": "Read durable asynchronous action state",
+        "tags": ["actions"],
+        "security": [{"consumerBearer": []}],
+        "parameters": [
+          {"$ref": "#/components/parameters/ActionId"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/Action"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/installations/{installationId}": {
+      "get": {
+        "operationId": "getInstallation",
+        "summary": "Read one installation revision",
+        "tags": ["installations"],
+        "security": [{"consumerBearer": []}],
+        "parameters": [
+          {"$ref": "#/components/parameters/InstallationId"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/Installation"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/candidates/{candidateId}": {
+      "get": {
+        "operationId": "getCandidate",
+        "summary": "Read immutable candidate preparation state",
+        "tags": ["promotion"],
+        "security": [{"consumerBearer": []}],
+        "parameters": [
+          {"$ref": "#/components/parameters/CandidateId"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/Candidate"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/targets/{targetId}/state": {
+      "get": {
+        "operationId": "getTargetDeliveryState",
+        "summary": "Read the one authoritative desired-state aggregate",
+        "description": "The API exposes no direct desired-state mutation. Commands go through the Promotion Coordinator, its sole logical writer.",
+        "tags": ["promotion"],
+        "security": [{"targetReconcilerBearer": []}],
+        "parameters": [
+          {"$ref": "#/components/parameters/TargetId"},
+          {"$ref": "#/components/parameters/IfNoneMatch"},
+          {"$ref": "#/components/parameters/LastEventId"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/TargetDeliveryState"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/targets/{targetId}/rollouts/{rolloutId}": {
+      "get": {
+        "operationId": "getRollout",
+        "summary": "Read one rollout",
+        "tags": ["promotion"],
+        "security": [{"consumerBearer": []}],
+        "parameters": [
+          {"$ref": "#/components/parameters/TargetId"},
+          {"$ref": "#/components/parameters/RolloutId"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/Rollout"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/commands": {
+      "post": {
+        "operationId": "submitCommand",
+        "summary": "Submit one closed typed command",
+        "description": "The command discriminator selects one schema-defined source validation, render, import, installation, update-proposal, promotion, forward-recovery, cancellation, or publication request. Every command submission requires a short-lived authenticated caller; source_validate and render may use only a public-purpose scope and tenant-free inputs, while every private command requires exact consumer and operation scope selected from the validated command discriminator. If-Match or If-None-Match and the schema precondition must agree whenever the command mutates an aggregate. The API routes promotion commands to the sole logical writer; accepting a command never makes the caller or event stream a desired-state writer.",
+        "tags": ["actions", "promotion"],
+        "security": [{"consumerBearer": []}],
+        "x-bytedesk-command-authorization": {
+          "discriminator": "command",
+          "publicPurposeCommands": ["source_validate", "render"],
+          "privateDefault": "require-exact-consumer-and-operation-scope",
+          "unknownCommand": "deny"
+        },
+        "x-bytedesk-conditional-request": {
+          "discriminator": "precondition.kind",
+          "notApplicableCommands": ["source_validate", "render"],
+          "absent": {
+            "requiredHeader": "If-None-Match",
+            "requiredValue": "*",
+            "forbiddenHeader": "If-Match"
+          },
+          "match": {
+            "requiredHeader": "If-Match",
+            "requiredValueFrom": "precondition.digest",
+            "forbiddenHeader": "If-None-Match"
+          },
+          "missingOrConflicting": "deny"
+        },
+        "parameters": [
+          {"$ref": "#/components/parameters/IfMatch"},
+          {"$ref": "#/components/parameters/IfNoneMatch"},
+          {"$ref": "#/components/parameters/IdempotencyKey"},
+          {"$ref": "#/components/parameters/CanonicalRequestDigest"}
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {"schema": {"$ref": "#/components/schemas/CommandRequest"}}
+          }
+        },
+        "responses": {
+          "202": {"$ref": "#/components/responses/AcceptedAction"},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/targets/{targetId}/observations": {
+      "post": {
+        "operationId": "appendObservation",
+        "summary": "Append target-scoped technical evidence",
+        "description": "An observation is never desired state, promotion, capability approval, identity, or authorization authority.",
+        "tags": ["reconciliation"],
+        "security": [{"targetReconcilerBearer": []}],
+        "x-bytedesk-conditional-request": {
+          "requiredHeader": "If-Match",
+          "requiredValueFrom": "requestBody.desiredRevisionDigest",
+          "valueEncoding": "quoted-strong-etag",
+          "missingOrMismatch": "deny"
+        },
+        "parameters": [
+          {"$ref": "#/components/parameters/TargetId"},
+          {"$ref": "#/components/parameters/RequiredIfMatch"},
+          {"$ref": "#/components/parameters/IdempotencyKey"},
+          {"$ref": "#/components/parameters/CanonicalRequestDigest"}
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {"schema": {"$ref": "#/components/schemas/Observation"}}
+          }
+        },
+        "responses": {
+          "201": {"$ref": "#/components/responses/Observation"},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/targets/{targetId}/observations/{observationId}": {
+      "get": {
+        "operationId": "getObservation",
+        "summary": "Read one exact append-only target observation",
+        "description": "Returns technical evidence for event resynchronization. The observation remains non-authoritative for desired state, consumer capability, identity, approval, or promotion.",
+        "tags": ["reconciliation", "evidence"],
+        "security": [{"consumerBearer": []}, {"targetReconcilerBearer": []}],
+        "parameters": [
+          {"$ref": "#/components/parameters/TargetId"},
+          {"$ref": "#/components/parameters/ObservationId"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/Observation"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/deployments/{deploymentDigest}": {
+      "get": {
+        "operationId": "getConsumerDeployment",
+        "summary": "Read one authenticated private deployment manifest",
+        "tags": ["evidence"],
+        "security": [{"consumerBearer": []}],
+        "parameters": [
+          {"$ref": "#/components/parameters/DeploymentDigest"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/ConsumerDeployment"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/receipts/{receiptId}": {
+      "get": {
+        "operationId": "getDeploymentReceipt",
+        "summary": "Read an exact append-only deployment receipt",
+        "tags": ["evidence"],
+        "security": [{"consumerBearer": []}],
+        "parameters": [
+          {"$ref": "#/components/parameters/ReceiptId"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/DeploymentReceipt"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    },
+    "/v1/verifications/{verificationId}": {
+      "get": {
+        "operationId": "getVerificationResult",
+        "summary": "Read one exact graph-verification result",
+        "tags": ["evidence"],
+        "security": [{"consumerBearer": []}],
+        "parameters": [
+          {"$ref": "#/components/parameters/VerificationId"},
+          {"$ref": "#/components/parameters/IfNoneMatch"}
+        ],
+        "responses": {
+          "200": {"$ref": "#/components/responses/VerificationResult"},
+          "304": {"description": "Not modified."},
+          "default": {"$ref": "#/components/responses/Problem"}
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "consumerBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "consumer-issued short-lived sender-bound token",
+        "description": "The deployment Authentication Adapter validates issuer, audience, expiry, sender/consumer binding, and operation scope."
+      },
+      "targetReconcilerBearer": {
+        "type": "mutualTLS",
+        "description": "Certificate-bound identity scoped to exactly one consumer and runtime target. It can read desired state and append observations only."
+      }
+    },
+    "parameters": {
+      "ActionId": {"name": "actionId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
+      "CandidateId": {"name": "candidateId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
+      "CatalogId": {"name": "catalogId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
+      "InstallationId": {"name": "installationId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
+      "ObservationId": {"name": "observationId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
+      "ReceiptId": {"name": "receiptId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
+      "RendererId": {"name": "rendererId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
+      "RolloutId": {"name": "rolloutId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
+      "TargetId": {"name": "targetId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
+      "VerificationId": {"name": "verificationId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
+      "Revision": {"name": "revision", "in": "path", "required": true, "schema": {"type": "integer", "minimum": 1, "maximum": 9007199254740991}},
+      "SourceDigest": {"name": "sourceDigest", "in": "path", "required": true, "schema": {"$ref": "#/components/schemas/Sha256Digest"}},
+      "RendererDigest": {"name": "rendererDigest", "in": "path", "required": true, "schema": {"$ref": "#/components/schemas/Sha256Digest"}},
+      "RenderDigest": {"name": "renderDigest", "in": "path", "required": true, "schema": {"$ref": "#/components/schemas/Sha256Digest"}},
+      "DeploymentDigest": {"name": "deploymentDigest", "in": "path", "required": true, "schema": {"$ref": "#/components/schemas/Sha256Digest"}},
+      "IfMatch": {"name": "If-Match", "in": "header", "required": false, "description": "Strong ETag containing the exact current canonical resource digest. The command precondition profile decides when this header is required.", "schema": {"type": "string", "pattern": "^\"sha256:[a-f0-9]{64}\"$"}},
+      "RequiredIfMatch": {"name": "If-Match", "in": "header", "required": true, "description": "Strong ETag containing the exact current target canonical resource digest. It must agree with the observation desiredRevisionDigest or the append fails with 412 and no side effects.", "schema": {"type": "string", "pattern": "^\"sha256:[a-f0-9]{64}\"$"}},
+      "IfNoneMatch": {"name": "If-None-Match", "in": "header", "required": false, "description": "Use star for first creation or a strong ETag for conditional reads.", "schema": {"type": "string", "pattern": "^(?:\\*|\"sha256:[a-f0-9]{64}\")$"}},
+      "IdempotencyKey": {"name": "Idempotency-Key", "in": "header", "required": true, "description": "Must exactly equal command.idempotencyKey. Reuse with the same canonical request returns the original result; reuse with another digest returns 409.", "schema": {"type": "string", "minLength": 16, "maxLength": 128}},
+      "CanonicalRequestDigest": {"name": "X-Canonical-Request-Digest", "in": "header", "required": true, "description": "SHA-256 of RFC 8785 canonical request data; key reuse with a different digest returns 409.", "schema": {"$ref": "#/components/schemas/Sha256Digest"}},
+      "LastEventId": {"name": "Last-Event-ID", "in": "header", "required": false, "description": "Resume hint only; the host must always conditionally fetch and verify the authoritative target state.", "schema": {"type": "string", "maxLength": 256}}
+    },
+    "headers": {
+      "ETag": {"required": true, "description": "Strong ETag equal to the canonical resource SHA-256 digest.", "schema": {"type": "string", "pattern": "^\"sha256:[a-f0-9]{64}\"$"}},
+      "Location": {"required": true, "description": "Relative URI of the durable action resource created for the accepted command.", "schema": {"type": "string", "format": "uri-reference", "pattern": "^/v1/actions/[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "maxLength": 256}},
+      "RateLimitLimit": {"required": true, "schema": {"type": "integer", "minimum": 0, "maximum": 9007199254740991}},
+      "RateLimitRemaining": {"required": true, "schema": {"type": "integer", "minimum": 0, "maximum": 9007199254740991}},
+      "RateLimitReset": {"required": true, "schema": {"type": "integer", "minimum": 0, "maximum": 9007199254740991}}
+    },
+    "schemas": {
+      "Action": {"$ref": "../../schemas/v1/action.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0", "x-bytedesk-schema-digest": "sha256:7b751d842207e9d9fe9f3e88edf50abfcc6a5cfdeea1db3b73ae9344ce827b9f"},
+      "AgentSource": {"$ref": "../../schemas/v1/agent-source.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-source/1.0.0", "x-bytedesk-schema-digest": "sha256:44fa5624b641e046f04365c5230c83028d29396c596f6ab894526e28fc8328c8"},
+      "Candidate": {"$ref": "../../schemas/v1/candidate.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0", "x-bytedesk-schema-digest": "sha256:009cf8bfacdc403752cb578a5c3896c2a88645ee93014ceed29da261efcfbea3"},
+      "CatalogIndex": {"$ref": "../../schemas/v1/catalog-index.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/catalog-index/1.0.0", "x-bytedesk-schema-digest": "sha256:f7bdca8523a7c8c3de3dcc9909857217959ace7744550d35c4e5b3b429bded62"},
+      "CommandRequest": {"$ref": "../../schemas/v1/command-request.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0", "x-bytedesk-schema-digest": "sha256:ef166e871e6bbe4ecef05907b1201e7962c5e93d29e61d996926f803fad40b6f"},
+      "ConsumerDeployment": {"$ref": "../../schemas/v1/consumer-deployment.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-deployment/1.0.0", "x-bytedesk-schema-digest": "sha256:60fb29bb8b8c3dd01056fc3b4bd35ca494c37ea40bb9451e9a99fb53e7a50e74"},
+      "DeploymentReceipt": {"$ref": "../../schemas/v1/deployment-receipt.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0", "x-bytedesk-schema-digest": "sha256:8fac6eb977a10c0eb275f930e00c247b8cfaecab1e0e9b4751ca79c3272b879a"},
+      "HarnessRender": {"$ref": "../../schemas/v1/harness-render.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0", "x-bytedesk-schema-digest": "sha256:55f6123e2913b52db2c9b6f8e944a4cb08a6f2202a2a6741b9a3a09d49cb5018"},
+      "Installation": {"$ref": "../../schemas/v1/installation.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0", "x-bytedesk-schema-digest": "sha256:af01882c9dc8dbf80fc753f148a35fd916d4bdbe5d93b6a8938c0b10f58ff8dc"},
+      "Observation": {"$ref": "../../schemas/v1/observation.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/observation/1.0.0", "x-bytedesk-schema-digest": "sha256:61cec89f0502071956315db65fabc3c0e7bb7c97b563711cfdb935987a3d5c92"},
+      "ProblemDetails": {"$ref": "../../schemas/v1/problem-details.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0", "x-bytedesk-schema-digest": "sha256:8da584af6e0f3d0d09a8ad356fbd81d2945f083a591cfd900d8bed8f95791bde"},
+      "RecoveryPlan": {"$ref": "../../schemas/v1/recovery-plan.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/recovery-plan/1.0.0", "x-bytedesk-schema-digest": "sha256:94649f9d4fcb5e7dca3aaefd4a01f81f7fb6ec7ab8963b3c71184bc26688c1b1"},
+      "RendererRelease": {"$ref": "../../schemas/v1/renderer-release.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-release/1.0.0", "x-bytedesk-schema-digest": "sha256:4742178bd53c03cc5ddf8d8049a97ad0018e5c465e0c3c99a127459c0d520c82"},
+      "Rollout": {"$ref": "../../schemas/v1/rollout.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/rollout/1.0.0", "x-bytedesk-schema-digest": "sha256:1dfb93051147cf66884d788a19da4158bc579327c168297b2d1ebd07cffb7e36"},
+      "Sha256Digest": {"$ref": "../../schemas/v1/common.schema.json#/$defs/sha256", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0", "x-bytedesk-schema-digest": "sha256:7e821fb269cccb656b897741c1c0dd27ea66249d92fed49f62526153bf543796"},
+      "TargetDeliveryState": {"$ref": "../../schemas/v1/target-delivery-state.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0", "x-bytedesk-schema-digest": "sha256:126bc30d3dd0174be7b5e10261b0874955cad41a7a0d8d80edc68c7c51849cfc"},
+      "VerificationResult": {"$ref": "../../schemas/v1/verification-result.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0", "x-bytedesk-schema-digest": "sha256:e7a125abfede2f5b71b10f72b03f9ac57ed61a5f5008ce8d3835c34b0314499f"}
+    },
+    "responses": {
+      "Action": {"description": "Durable asynchronous action.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Action"}}}},
+      "AcceptedAction": {
+        "description": "Command accepted into the durable action queue.",
+        "headers": {
+          "ETag": {"$ref": "#/components/headers/ETag"},
+          "Location": {"$ref": "#/components/headers/Location"},
+          "RateLimit-Limit": {"$ref": "#/components/headers/RateLimitLimit"},
+          "RateLimit-Remaining": {"$ref": "#/components/headers/RateLimitRemaining"},
+          "RateLimit-Reset": {"$ref": "#/components/headers/RateLimitReset"}
+        },
+        "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Action"}}}
+      },
+      "AgentSource": {"description": "Exact public source manifest.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/AgentSource"}}}},
+      "Candidate": {"description": "Candidate state.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Candidate"}}}},
+      "CatalogIndex": {"description": "Signed catalog release.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CatalogIndex"}}}},
+      "ConsumerDeployment": {"description": "Private deployment manifest.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ConsumerDeployment"}}}},
+      "DeploymentReceipt": {"description": "Append-only deployment receipt.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/DeploymentReceipt"}}}},
+      "HarnessRender": {"description": "Tenant-free public render manifest.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HarnessRender"}}}},
+      "Installation": {"description": "Installation revision.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Installation"}}}},
+      "Observation": {"description": "Accepted append-only observation.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Observation"}}}},
+      "RendererRelease": {"description": "Allowlisted renderer release.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/RendererRelease"}}}},
+      "Rollout": {"description": "Rollout state.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Rollout"}}}},
+      "TargetDeliveryState": {"description": "Authoritative target desired state.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/TargetDeliveryState"}}}},
+      "VerificationResult": {"description": "Verification result.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/VerificationResult"}}}},
+      "Problem": {"description": "RFC 9457 problem details. Details are redacted and the machine code is stable.", "content": {"application/problem+json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}}}
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "contract": "bytedesk.trust-policy/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+    "digest": "sha256:027ec4d4e85c447794ddb558a34ef1d6f171dc6b375851c77d4cdf07e9b6707e"
+  },
+  "policyId": "contract-test-product-release-v1",
+  "version": "1.0.0",
+  "effective": {
+    "notBefore": "2026-07-16T00:00:00Z",
+    "notAfter": "2026-07-18T00:00:00Z"
+  },
+  "scope": {
+    "repositories": [
+      "registry.example.invalid/bytedesk/agent-delivery-contracts"
+    ],
+    "mediaTypes": [
+      "application/vnd.bytedesk.agent.contract-bundle.v1+json"
+    ],
+    "purposes": [
+      "product-release-v1"
+    ]
+  },
+  "signers": [
+    {
+      "purpose": "product-release-v1",
+      "keyVersion": "test-ephemeral-memory",
+      "algorithm": "ECDSA_P256_SHA256",
+      "workloadIdentity": "https://github.com/ByteDeskAI/bytedesk-agent-delivery/.github/workflows/contract-release-signer.yml@1111111111111111111111111111111111111111",
+      "claims": {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audience": "sigstore",
+        "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:contract-test",
+        "repository": "ByteDeskAI/bytedesk-agent-delivery",
+        "workflow": ".github/workflows/contract-release-signer.yml@1111111111111111111111111111111111111111",
+        "ref": "refs/tags/v0.1.0-contract-test",
+        "environment": "contract-test"
+      }
+    }
+  ],
+  "requiredEvidence": [
+    "schema",
+    "compatibility"
+  ],
+  "rules": {
+    "freshnessSeconds": 300,
+    "requireNonce": true,
+    "requirePredecessor": false,
+    "denyDowngrade": true,
+    "withdrawal": "deny_new_use",
+    "outage": "fail_closed_new_work"
+  },
+  "revocations": {
+    "keyVersions": [],
+    "digests": [],
+    "workflows": [],
+    "builders": [],
+    "schemas": [],
+    "renderers": [],
+    "content": []
+  },
+  "failureMode": "fail_closed",
+  "predecessor": {
+    "kind": "none"
+  }
+}

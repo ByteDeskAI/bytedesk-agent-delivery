@@ -111,8 +111,12 @@ add/replace/remove exact public/private skills.
 Agent Spec and harness values use ordered strict add/replace/remove JSON Pointer
 operations. Files and skills use separate operation schemas with portable paths,
 exact descriptors, and expected current digests for replace/remove. A failed
-operation aborts the complete delta. A source update uses a three-way rebase and
-conflicts on changed targets, ancestors, parents, or unstable arrays.
+operation aborts the complete delta. A source update applies the ordered
+operations to cloned old and proposed working trees. It conflicts on a changed
+target or containing top-level subtree, including changed parents and arrays,
+but excludes the document root so unrelated top-level upstream changes survive.
+Canonical parser limits are rechecked after each operation and on the final
+result.
 
 Functional model/provider selection is already covered by the binding and
 effective-render digest. Provider access, MCP/tool/resource grants, credential
@@ -140,7 +144,13 @@ The compiler:
 
 1. verifies contract bundle, source, public render, exact renderer release,
    binding, skills, approvals, consumer authority, and trust;
-2. validates `Agent` or public `SpecializedAgent` with the official pinned SDK;
+2. verifies the exact source digest and RFC 8785 bytes before exactly one
+   official Agent Spec `26.1.2` validation; requires the declared kind to match
+   root `component_type`, explicit top-level `agentspec_version: 26.1.2`, and no
+   legacy version substitute; and permits a public `SpecializedAgent` only with
+   one complete embedded `Agent`, one complete parameters object, and no
+   remote, package-relative, component-reference, or nested specialization
+   resolution;
 3. applies the private delta atomically to the complete public document and
    isolated filesystem view;
 4. revalidates Agent Spec, renderer configuration, portability, content safety,

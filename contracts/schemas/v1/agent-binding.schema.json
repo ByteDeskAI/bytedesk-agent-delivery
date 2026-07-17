@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0",
+  "title": "Deterministic private functional agent binding",
+  "type": "object",
+  "required": ["contract", "schema", "agentId", "agentSpecVersion", "sourceKind", "source", "renderer", "customization", "updatePolicy", "precondition"],
+  "properties": {
+    "contract": { "const": "bytedesk.agent-binding/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "agentId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "agentSpecVersion": { "const": "26.1.2" },
+    "sourceKind": { "type": "string", "enum": ["agent", "specialized-agent"] },
+    "source": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "renderer": {
+      "type": "object",
+      "required": ["harnessId", "rendererId", "version", "release"],
+      "properties": {
+        "harnessId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "rendererId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "version": { "type": "string", "maxLength": 128, "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "release": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "customization": {
+      "type": "object",
+      "required": ["agentSpec", "harnessConfiguration", "files", "skills"],
+      "properties": {
+        "agentSpec": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/json-patch/1.0.0" },
+        "harnessConfiguration": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/json-patch/1.0.0" },
+        "files": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0" },
+        "skills": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-operations/1.0.0" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "updatePolicy": {
+      "type": "object",
+      "required": ["channel", "automaticCompatibleUpdates"],
+      "properties": {
+        "channel": { "type": "string", "enum": ["stable", "preview", "pinned"] },
+        "automaticCompatibleUpdates": { "type": "boolean" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Only functional deltas and exact descriptors are representable. Consumer identity authority, roles, grants, credential values, trust roots, workload identity, business approval, and mandatory security policy are separate inputs."
+}

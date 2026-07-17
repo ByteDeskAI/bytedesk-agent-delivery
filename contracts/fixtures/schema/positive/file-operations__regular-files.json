@@ -1,0 +1,42 @@
+{
+  "contract": "bytedesk.file-operations/1",
+  "operations": [
+    {
+      "op": "add",
+      "path": "guidance/acme.md",
+      "precondition": {
+        "kind": "absent"
+      },
+      "content": {
+        "repository": "registry.example/inputs/files",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "mediaType": "application/octet-stream",
+        "size": 128,
+        "trustPolicy": {
+          "id": "consumer-private-file-v1",
+          "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      },
+      "mode": "0644"
+    },
+    {
+      "op": "replace",
+      "path": "bin/helper",
+      "precondition": {
+        "kind": "match",
+        "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "content": {
+        "repository": "registry.example/inputs/files",
+        "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "mediaType": "application/octet-stream",
+        "size": 1024,
+        "trustPolicy": {
+          "id": "consumer-private-file-v1",
+          "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      },
+      "mode": "0755"
+    }
+  ]
+}

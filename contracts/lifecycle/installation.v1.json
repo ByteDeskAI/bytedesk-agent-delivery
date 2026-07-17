@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+  "profile": "bytedesk.installation-lifecycle/1",
+  "version": 1,
+  "initialStates": ["provisioning"],
+  "states": [
+    {"name": "provisioning", "terminal": false},
+    {"name": "active", "terminal": false},
+    {"name": "rejected", "terminal": true},
+    {"name": "suspended", "terminal": false},
+    {"name": "retirement_pending", "terminal": false},
+    {"name": "retiring", "terminal": false},
+    {"name": "retired", "terminal": true}
+  ],
+  "transitions": [
+    {"name": "accept", "from": ["provisioning"], "to": "active", "actor": "promotion-coordinator", "guard": "installation_valid_and_consumer_authority_current", "cas": "match", "effects": ["append_transition", "enable_new_work"], "event": "installation.active.v1", "retryable": false},
+    {"name": "reject", "from": ["provisioning"], "to": "rejected", "actor": "promotion-coordinator", "guard": "validation_or_policy_denial_terminal", "cas": "match", "effects": ["append_transition", "record_problem"], "event": "installation.rejected.v1", "retryable": false},
+    {"name": "suspend", "from": ["active"], "to": "suspended", "actor": "promotion-coordinator", "guard": "consumer_command_and_authority_current", "cas": "match", "effects": ["append_transition", "block_new_compile_and_activation"], "event": "installation.suspended.v1", "retryable": false},
+    {"name": "resume", "from": ["suspended"], "to": "active", "actor": "promotion-coordinator", "guard": "consumer_command_and_authority_current", "cas": "match", "effects": ["append_transition", "enable_new_work"], "event": "installation.active.v1", "retryable": false},
+    {"name": "request_retirement", "from": ["active", "suspended"], "to": "retirement_pending", "actor": "promotion-coordinator", "guard": "consumer_command_and_authority_current", "cas": "match", "effects": ["append_transition", "record_retirement_origin"], "event": "installation.retirement-pending.v1", "retryable": false},
+    {"name": "cancel_retirement_to_active", "from": ["retirement_pending"], "to": "active", "actor": "promotion-coordinator", "guard": "retirement_origin_active_and_no_retiring_side_effect", "cas": "match", "effects": ["append_transition", "clear_retirement_request"], "event": "installation.retirement-cancelled.v1", "retryable": false},
+    {"name": "cancel_retirement_to_suspended", "from": ["retirement_pending"], "to": "suspended", "actor": "promotion-coordinator", "guard": "retirement_origin_suspended_and_no_retiring_side_effect", "cas": "match", "effects": ["append_transition", "clear_retirement_request"], "event": "installation.retirement-cancelled.v1", "retryable": false},
+    {"name": "begin_retiring", "from": ["retirement_pending"], "to": "retiring", "actor": "promotion-coordinator", "guard": "retirement_gates_complete", "cas": "match", "effects": ["append_transition", "block_all_new_work", "enqueue_retirement"], "event": "installation.retiring.v1", "retryable": false},
+    {"name": "complete_retirement", "from": ["retiring"], "to": "retired", "actor": "promotion-coordinator", "guard": "retirement_evidence_complete", "cas": "match", "effects": ["append_transition", "append_tombstone"], "event": "installation.retired.v1", "retryable": false}
+  ]
+}

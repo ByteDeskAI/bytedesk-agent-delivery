@@ -1,0 +1,47 @@
+{
+  "contract": "bytedesk.renderer-release/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-release/1.0.0", "digest": "sha256:4742178bd53c03cc5ddf8d8049a97ad0018e5c465e0c3c99a127459c0d520c82" },
+  "harnessId": "native",
+  "rendererId": "native",
+  "version": "1.0.0",
+  "rendererContractVersion": "1.0.0",
+  "source": {
+    "repository": "https://github.com/ByteDeskAI/bytedesk-agent-delivery",
+    "commit": "1111111111111111111111111111111111111111",
+    "treeDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "supportedAgentSpecVersions": ["26.1.2"],
+  "supportedHarnessVersions": ["26.1.2"],
+  "schemas": {
+    "capability": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-release/1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+    "inputParameters": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-release/1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+    "harnessConfiguration": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-release/1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+    "compatibilityResult": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/compatibility-attestation/1.0.0", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" },
+    "renderManifest": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" }
+  },
+  "platforms": [
+    {
+      "os": "linux",
+      "architecture": "amd64",
+      "distribution": { "repository": "registry.example/product/renderers", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "mediaType": "application/vnd.oci.image.manifest.v1+json", "size": 8192, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" } }
+    }
+  ],
+  "builder": { "repository": "registry.example/product/builders", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "mediaType": "application/vnd.oci.image.manifest.v1+json", "size": 8192, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" } },
+  "toolchainDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "dependencyLockDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "productDistributionDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "compiledAllowlistDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+  "evidence": {
+    "sbom": { "repository": "registry.example/product/evidence", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "mediaType": "application/spdx+json", "size": 1024, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" } },
+    "vulnerability": { "repository": "registry.example/product/evidence", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "mediaType": "application/vnd.bytedesk.scan.v1+json", "size": 1024, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" } },
+    "license": { "repository": "registry.example/product/evidence", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "mediaType": "application/vnd.bytedesk.license.v1+json", "size": 1024, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" } },
+    "conformance": { "repository": "registry.example/product/evidence", "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999", "mediaType": "application/vnd.bytedesk.conformance.v1+json", "size": 1024, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" } },
+    "compatibility": { "repository": "registry.example/product/evidence", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "mediaType": "application/vnd.bytedesk.agent.compatibility.v1+json", "size": 1024, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" } },
+    "determinism": { "repository": "registry.example/product/evidence", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "mediaType": "application/vnd.bytedesk.determinism.v1+json", "size": 1024, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" } },
+    "provenance": { "repository": "registry.example/product/evidence", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "mediaType": "application/vnd.in-toto+json", "size": 1024, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" } }
+  },
+  "normalizationProfile": "bytedesk-render-normalization-v1",
+  "publishedAt": "2026-07-17T12:00:00Z",
+  "support": { "status": "current", "endAt": "2028-07-17T12:00:00Z" },
+  "trustPolicy": { "id": "product-release-v1", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" }
+}

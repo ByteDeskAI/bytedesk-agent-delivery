@@ -1,0 +1,21 @@
+{
+  "contract": "bytedesk.file-operations/1",
+  "operations": [
+    {
+      "op": "add",
+      "path": "guidance/name ",
+      "precondition": { "kind": "absent" },
+      "content": {
+        "repository": "registry.example/inputs/files",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "mediaType": "application/octet-stream",
+        "size": 1,
+        "trustPolicy": {
+          "id": "consumer-private-file-v1",
+          "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      },
+      "mode": "0644"
+    }
+  ]
+}

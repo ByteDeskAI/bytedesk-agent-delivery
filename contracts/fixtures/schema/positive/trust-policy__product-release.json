@@ -1,0 +1,50 @@
+{
+  "contract": "bytedesk.trust-policy/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0", "digest": "sha256:027ec4d4e85c447794ddb558a34ef1d6f171dc6b375851c77d4cdf07e9b6707e" },
+  "policyId": "product-release-v1",
+  "version": "1.0.0",
+  "effective": { "notBefore": "2026-07-17T00:00:00Z", "notAfter": "2027-07-17T00:00:00Z" },
+  "scope": {
+    "repositories": ["registry.example/product/releases"],
+    "mediaTypes": ["application/vnd.bytedesk.agent.contract-bundle.v1+json"],
+    "purposes": ["product-release-v1"]
+  },
+  "signers": [
+    {
+      "purpose": "product-release-v1",
+      "keyVersion": "kms://product/release/key/version/1",
+      "algorithm": "ECDSA_P256_SHA256",
+      "workloadIdentity": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:release",
+      "claims": {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audience": "agent-delivery-product-release",
+        "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:release",
+        "repository": "ByteDeskAI/bytedesk-agent-delivery",
+        "workflow": ".github/workflows/release-builder.yml",
+        "ref": "refs/tags/v1.0.0",
+        "environment": "release",
+        "builderDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    }
+  ],
+  "requiredEvidence": ["schema", "provenance", "sbom", "vulnerability", "license", "readiness"],
+  "rules": {
+    "freshnessSeconds": 900,
+    "requireNonce": true,
+    "requirePredecessor": true,
+    "denyDowngrade": true,
+    "withdrawal": "deny_new_use",
+    "outage": "fail_closed_new_work"
+  },
+  "revocations": {
+    "keyVersions": [],
+    "digests": [],
+    "workflows": [],
+    "builders": [],
+    "schemas": [],
+    "renderers": [],
+    "content": []
+  },
+  "failureMode": "fail_closed",
+  "predecessor": { "kind": "none" }
+}

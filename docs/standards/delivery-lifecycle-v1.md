@@ -1,11 +1,13 @@
 # Delivery lifecycle v1
 
 **Profiles:** `bytedesk.target-delivery-state/1`,
-`bytedesk.canary-plan/1`, `bytedesk.canary-evidence/1`, and
-`bytedesk.recovery-plan/1`
+`bytedesk.canary-plan/1`, `bytedesk.canary-evidence/1`,
+`bytedesk.authorization-decision-proof/1`, and `bytedesk.recovery-plan/1`
 
-**Status:** Accepted architecture contract; concrete schemas and transition
-fixtures are release-blocking AD-09/AD-12/AD-14 deliverables
+**Status:** Accepted contract; its lifecycle schemas and contract fixtures are
+frozen by AD-01. Promotion Coordinator, desired-state store, Host Reconciler,
+consumer Adapter, runtime, recovery, and measured operational evidence remain
+AD-09/AD-12/AD-14 and later-task GA gates.
 
 ## Purpose
 
@@ -211,11 +213,25 @@ active, and a retry may be running while the last observation remains valid.
 
 ## Canary plan and evidence
 
-The Coordinator issues a signed/digested `bytedesk.canary-plan/1` challenge
-containing rollout ID, nonce, candidate and desired-revision digests, consumer,
-subject, target, slot/generation, activation mode, current authority/policy
-digests, required checks, expected result classes, expiry, and evidence signer
-policies.
+The Coordinator issues a signed/digested `bytedesk.canary-plan/1` challenge.
+Its validity window is at most 30 minutes; consumer policy may require a
+shorter window. The plan binds rollout, nonce, candidate, desired revision,
+release, deployment, consumer, subject, target, slot/generation, activation
+mode, current authority, policy, grant-set and workload-identity digests, and
+the exact Host Reconciler, Capability Verifier, and authorization-decision
+signer policies.
+
+The plan has one closed expected-check map for each evidence actor. The Host
+Reconciler map contains exactly `artifact_readback`, `file_inventory`,
+`slot_generation`, `service_process`, `resource_thresholds`,
+`harness_readiness`, and `switch_marker`, all expected to pass. The capability
+map is exactly one of:
+
+- `required`, with `workload_login`, `permitted_capability`, and
+  `denied_sentinel`, the exact permitted and sentinel capability IDs and
+  digests, and the exact expected sentinel policy-denial code; or
+- `certified_not_applicable`, with one `certified_not_applicable` result and
+  an exact certification digest and signer policy.
 
 The Host Reconciler returns technical evidence for:
 
@@ -231,24 +247,57 @@ The Consumer Capability Verifier returns separate evidence for:
 - one policy-selected non-destructive permitted capability; and
 - one known forbidden sentinel capability.
 
-The denied check passes only when the normal consumer authorization engine
-returns the exact expected policy-denial class. A timeout, network failure,
-missing endpoint, `404`, parser error, or unavailable tool is not proof of
-denial. Evidence records the authorization decision reference but redacts
-credentials and private response data.
+Each evidence object has an actor-discriminated, closed result object. Host
+evidence contains exactly the seven technical results above. Required
+capability evidence contains exactly the three capability results above. A
+certified no-capability profile contains exactly one non-applicability result.
+Actual results may be `failed` so incidents remain observable, but a failed
+actual result never promotes.
 
-Both evidence objects bind rollout, nonce, desired revision, release and
-deployment digests, consumer, subject, target, slot/generation, actor identity
-and implementation version, policy/grant/workload-identity/canary-plan digests,
-expected and actual result classes, timestamps, expiry, and redacted trace
-digests. They are signed or returned over an equivalently authenticated,
-non-repudiable consumer channel.
+The capability decision results reference exact
+`bytedesk.authorization-decision-proof/1` digests. That consumer-owned proof
+binds the plan digest and nonce; consumer, subject, and target; release and
+deployment; capability ID and digest; current policy, grant-set, and
+workload-identity digests; exact decision class and code; signer identity and
+policy; freshness; and a redacted trace. Its transport is an authenticated,
+completed, parsed, response-digested successful authorization response: HTTPS
+2xx, gRPC OK, or consumer-native success. A network error, timeout, missing
+endpoint, HTTP `404`, parser failure, or unavailable dependency cannot be
+encoded as `policy_denied` proof.
+
+Both evidence objects bind rollout, plan digest, nonce, candidate, desired
+revision, release and deployment digests, consumer, subject, target,
+slot/generation, actor identity and implementation version,
+authority/policy/grant/workload-identity digests, signer policy, timestamps,
+expiry, and redacted trace digests. They are signed or returned over an
+equivalently authenticated, non-repudiable consumer channel.
+
+Promotion verification receives the current plan, consumer authority, policy,
+grant set, workload identity, time, signer expectations, authenticated
+evidence/proof sets, and exact schema digests from independent trusted inputs.
+Each authenticated-set entry is a verification record keyed by the exact
+subject digest and binds the actually verified signer identity, exact signer
+policy, verification-evidence digest, and either a verified signature or a
+verified authenticated non-repudiable channel result. A bare digest membership
+or a signer claim copied from the document is insufficient; the authenticated
+record, independent expectation, plan policy, and document claim must all
+match.
+An authenticated non-applicability certification is paired with its independently
+verified certification policy; an artifact cannot select that policy. The
+verifier resolves each proof by digest, validates it offline against the
+independently pinned schema, recomputes its canonical digest, and checks every
+binding and nested freshness window.
+Missing, unresolvable, unauthenticated, stale, wrong-target, wrong-signer, or
+substituted proofs fail closed. A transport failure remains distinguishable
+from an authorization denial.
 
 Promotion requires fresh matching technical and capability evidence. A
-consumer may return signed `not_applicable` only when its certified profile has
-no external capability plane. Omission is failure. Reference integrations and
-every capability-bearing production profile require positive and negative
-proof.
+consumer may return `not_applicable` only when the exact certification digest
+is independently authenticated under the plan's certification policy.
+Omission is failure. Reference integrations and every capability-bearing
+production profile require positive and negative proof. Canary plans, evidence,
+decision proofs, and certifications are consumer evidence; none grants a
+capability or becomes package authority.
 
 ## Forward recovery selection
 

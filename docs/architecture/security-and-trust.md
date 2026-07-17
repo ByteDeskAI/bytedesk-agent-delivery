@@ -34,6 +34,44 @@ Keys are non-exportable KMS/HSM keys used through short-lived WIF/OIDC. Private
 material never enters repository/CI secrets, product secret stores, artifacts,
 runtime hosts, or workspaces.
 
+### Contract-bundle release trust
+
+Candidate source and every candidate artifact remain untrusted even when they
+come from a protected tag. The contract release caller may execute tag code to
+test and build a deterministic candidate, but that job has no OIDC or signing
+authority. It delegates signing only through an exact-commit reusable-workflow
+reference. The called signer has the protected environment and OIDC authority,
+does not check out the repository, and never executes a candidate file. It
+fetches bounded exact-commit metadata through its own read-only SCM identity,
+validates the precise token-free codeload redirect, and retains the source
+snapshot without extracting it on the host.
+
+Before and after signing, a protected exact-digest verifier image evaluates the
+candidate in a network-disabled, read-only, non-root, capability-dropped,
+resource-bounded container. Before extraction it checks the SCM commit metadata
+and bounded archive profile; safe extraction rejects non-portable/colliding
+paths, links, special files, and member/expanded-size excess. The tool
+reconstructs the Git tree object, matches it to the SCM tree, rebuilds with its
+trusted implementation, and requires exact candidate bundle/manifest bytes. It
+then reconstructs the complete normalized build input; verifies deterministic
+archive bytes, portable paths, inventory, JCS
+roles, offline schema registry, fixtures, lifecycle and operation semantics,
+OpenAPI/AsyncAPI/event closure, trust policy, source claims, and evidence; and
+emits the canonical request and final evidence. The release identity is the
+exact called-workflow commit. Independent policy additionally pins caller
+repository, immutable tag, source commit, workflow trigger, OIDC issuer,
+trusted-root digest, sealed-verifier digest, and Cosign digest.
+
+The repository verifier cannot issue production authority. Its external
+Sigstore path is adapter-conformance evidence, and its local replay ledger is a
+test-only single-host mechanism. Production uses a durable shared uniqueness
+transaction for request ID, nonce, and request digest before authoritative
+evidence is emitted. An unpinned reusable workflow, mutable verifier image,
+missing protected value, candidate-supplied verifier, replay, identity/tool/root
+substitution, authenticated SCM redirect drift, source commit/tree mismatch,
+source archive denial, trusted-rebuild difference, or absent post-sign
+certification fails closed.
+
 ## Purpose separation and consumer sovereignty
 
 V1 uses distinct signer purposes for product releases, public source, public
@@ -107,13 +145,16 @@ bombs, undeclared media types, secret values, and execution requests. Declared
 ordinary executable modes are allowed for regular skill files; setuid, setgid,
 sticky, ownership, and device metadata are not.
 
-Operational defaults cap authoritative JSON at 4 MiB, functional operations at
-10,000, one source/skill at 10,000 files, a deployment at 50,000 files and 10
-GiB expanded, path depth/length at 32 segments/1,024 UTF-8 bytes, one file/blob
-at 4 GiB, archive nesting at three, expansion ratio at 100:1, and renderer
-execution at ten minutes/4 GiB memory/20 GiB temporary disk. Higher limits need
-independent policy, capacity proof, and risk acceptance; artifacts cannot raise
-them.
+Operational defaults cap authoritative JSON at 4 MiB and 100,000 JSON-model
+nodes. Every schema collection declares `maxItems`; a collection without a
+stricter domain limit uses 100,000 as its portable outer ceiling and remains
+subject to the complete object's lower effective node and byte ceilings.
+Functional operations are capped at 10,000, one source/skill at 10,000 files,
+a deployment at 50,000 files and 10 GiB expanded, path depth/length at 32
+segments/1,024 UTF-8 bytes, one file/blob at 4 GiB, archive nesting at three,
+expansion ratio at 100:1, and renderer execution at ten minutes/4 GiB memory/20
+GiB temporary disk. Higher limits need independent policy, capacity proof, and
+risk acceptance; artifacts cannot raise them.
 
 ## Functional customization versus authority
 
@@ -165,6 +206,23 @@ short-lived workload identity and authorization path. It proves workload login,
 one permitted capability, and one sentinel capability denied with the exact
 expected policy class. Timeout, network failure, `404`, parser error, missing
 endpoint, or unavailable tool is not denial proof. Neither actor can promote.
+
+Each capability decision resolves an exact
+`bytedesk.authorization-decision-proof/1` issued by the independently expected
+consumer authorization signer. The closed proof binds the plan and nonce,
+consumer/subject/target, release/deployment, capability, current policy/grants/
+workload identity, exact decision class/code, signer policy, freshness, and an
+authenticated completed and parsed successful transport response. Agent
+Delivery validates and records that consumer evidence; the proof never grants
+the capability and never becomes package authority.
+
+Authentication results are not represented as bare digest allowlists. For
+canary evidence and authorization proofs, the trusted verifier supplies a
+digest-keyed record containing the actually verified signer identity, exact
+signer policy, verification-evidence digest, and verified signature or
+authenticated non-repudiable channel result. Promotion compares that record to
+both the independently configured signer and the signed document claim. A
+correct document authenticated by the wrong identity or policy fails closed.
 
 All canary evidence binds the Coordinator's signed plan, rollout, nonce,
 candidate, desired revision, authority/policy, consumer, subject, target,

@@ -1,0 +1,10 @@
+{
+  "profile": "bytedesk.json-patch/1",
+  "operations": [
+    {
+      "op": "move",
+      "from": "/system_prompt",
+      "path": "/instructions"
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "profile": "bytedesk.json-patch-three-way-rebase-fixtures/1",
+  "cases": [
+    {
+      "name": "unrelated-root-change-is-preserved",
+      "target": "agent-spec",
+      "previous": {
+        "name": "Agent",
+        "instructions": "Old",
+        "metadata": {
+          "owner": "public"
+        }
+      },
+      "proposed": {
+        "name": "Agent v2",
+        "instructions": "Old",
+        "metadata": {
+          "owner": "public"
+        }
+      },
+      "patch": {
+        "profile": "bytedesk.json-patch/1",
+        "operations": [
+          {
+            "op": "replace",
+            "path": "/instructions",
+            "value": "Private"
+          }
+        ]
+      },
+      "valid": true,
+      "expected": {
+        "name": "Agent v2",
+        "instructions": "Private",
+        "metadata": {
+          "owner": "public"
+        }
+      }
+    },
+    {
+      "name": "changed-target-conflicts",
+      "target": "agent-spec",
+      "previous": {
+        "instructions": "Old"
+      },
+      "proposed": {
+        "instructions": "Upstream changed"
+      },
+      "patch": {
+        "profile": "bytedesk.json-patch/1",
+        "operations": [
+          {
+            "op": "replace",
+            "path": "/instructions",
+            "value": "Private"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "changed-ancestor-conflicts",
+      "target": "agent-spec",
+      "previous": {
+        "metadata": {
+          "description": "Old",
+          "label": "Stable"
+        }
+      },
+      "proposed": {
+        "metadata": {
+          "description": "Old",
+          "label": "Upstream changed"
+        }
+      },
+      "patch": {
+        "profile": "bytedesk.json-patch/1",
+        "operations": [
+          {
+            "op": "replace",
+            "path": "/metadata/description",
+            "value": "Private"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "removed-parent-conflicts",
+      "target": "agent-spec",
+      "previous": {
+        "metadata": {
+          "description": "Old"
+        }
+      },
+      "proposed": {},
+      "patch": {
+        "profile": "bytedesk.json-patch/1",
+        "operations": [
+          {
+            "op": "replace",
+            "path": "/metadata/description",
+            "value": "Private"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "changed-containing-array-conflicts",
+      "target": "agent-spec",
+      "previous": {
+        "prompts": [
+          {
+            "text": "Old"
+          },
+          {
+            "text": "Stable"
+          }
+        ]
+      },
+      "proposed": {
+        "prompts": [
+          {
+            "text": "Inserted"
+          },
+          {
+            "text": "Old"
+          },
+          {
+            "text": "Stable"
+          }
+        ]
+      },
+      "patch": {
+        "profile": "bytedesk.json-patch/1",
+        "operations": [
+          {
+            "op": "replace",
+            "path": "/prompts/0/text",
+            "value": "Private"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "sequential-created-parent-rebases-atomically",
+      "target": "agent-spec",
+      "previous": {
+        "name": "Agent"
+      },
+      "proposed": {
+        "name": "Agent v2"
+      },
+      "patch": {
+        "profile": "bytedesk.json-patch/1",
+        "operations": [
+          {
+            "op": "add",
+            "path": "/private",
+            "value": {}
+          },
+          {
+            "op": "add",
+            "path": "/private/instructions",
+            "value": "Private"
+          }
+        ]
+      },
+      "valid": true,
+      "expected": {
+        "name": "Agent v2",
+        "private": {
+          "instructions": "Private"
+        }
+      }
+    },
+    {
+      "name": "new-upstream-add-target-conflicts",
+      "target": "renderer-functional-config",
+      "previous": {
+        "settings": {}
+      },
+      "proposed": {
+        "settings": {
+          "mode": "upstream"
+        }
+      },
+      "patch": {
+        "profile": "bytedesk.json-patch/1",
+        "operations": [
+          {
+            "op": "add",
+            "path": "/settings/mode",
+            "value": "private"
+          }
+        ]
+      },
+      "valid": false
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+  "profile": "bytedesk.target-condition-lifecycle/1",
+  "version": 1,
+  "initialStates": ["idle"],
+  "states": [
+    {"name": "idle", "terminal": false},
+    {"name": "rollout_pending", "terminal": false},
+    {"name": "recovery_planning", "terminal": false},
+    {"name": "operator_required", "terminal": false},
+    {"name": "retired", "terminal": true}
+  ],
+  "transitions": [
+    {"name": "publish_rollout", "from": ["idle"], "to": "rollout_pending", "actor": "promotion-coordinator", "guard": "prepared_candidate_and_all_current_gates_pass", "cas": "absent-or-match", "effects": ["append_target_revision", "set_pending_rollout"], "event": "target.rollout-pending.v1", "retryable": false},
+    {"name": "promote", "from": ["rollout_pending"], "to": "idle", "actor": "promotion-coordinator", "guard": "rollout_promoted_and_evidence_current", "cas": "match", "effects": ["append_target_revision", "replace_active_release", "clear_pending_rollout"], "event": "target.promoted.v1", "retryable": false},
+    {"name": "close_pre_activation_failure", "from": ["rollout_pending"], "to": "idle", "actor": "promotion-coordinator", "guard": "rollout_terminal_before_switch", "cas": "match", "effects": ["append_target_revision", "clear_pending_rollout", "retain_active_release"], "event": "target.rollout-closed.v1", "retryable": false},
+    {"name": "begin_recovery_planning", "from": ["rollout_pending"], "to": "recovery_planning", "actor": "promotion-coordinator", "guard": "rollout_recovery_required", "cas": "match", "effects": ["append_target_revision", "record_failed_rollout", "enqueue_recovery_planning"], "event": "target.recovery-planning.v1", "retryable": false},
+    {"name": "publish_forward_recovery", "from": ["recovery_planning", "operator_required"], "to": "rollout_pending", "actor": "promotion-coordinator", "guard": "new_current_tooling_recovery_candidate_compiled_and_fresh_authority_verified", "cas": "match", "effects": ["append_target_revision", "set_new_recovery_rollout", "record_recovery_source"], "event": "target.rollout-pending.v1", "retryable": false},
+    {"name": "require_operator", "from": ["recovery_planning"], "to": "operator_required", "actor": "promotion-coordinator", "guard": "no_eligible_automatic_recovery_candidate", "cas": "match", "effects": ["append_target_revision", "record_operator_required", "retain_observed_release_without_guessing"], "event": "target.operator-required.v1", "retryable": false},
+    {"name": "retire", "from": ["idle", "operator_required"], "to": "retired", "actor": "promotion-coordinator", "guard": "installation_retired_and_runtime_tombstone_evidence_complete", "cas": "match", "effects": ["append_target_revision", "append_target_tombstone"], "event": "target.retired.v1", "retryable": false}
+  ]
+}

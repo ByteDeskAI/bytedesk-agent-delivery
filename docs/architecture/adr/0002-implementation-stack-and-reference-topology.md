@@ -190,6 +190,60 @@ transparency log by default. Signatures, verification bundles, SBOMs,
 provenance, scanner inputs/results, and trusted-root snapshots are copied to
 the locked evidence archive for offline verification.
 
+The contract-bundle release uses an additional privilege split because source
+at a candidate tag is untrusted with respect to the release identity. The
+caller workflow may check out and execute that source, run the complete
+verification lane, build twice, and upload a closed candidate, but it has no
+OIDC or signing authority. Its only privileged step is a `uses:` call to
+`.github/workflows/contract-release-signer.yml` pinned at an exact reviewed
+commit. The called workflow owns the protected `contract-release` environment
+and OIDC permission, performs no checkout, and never executes candidate code.
+The all-zero bootstrap reference checked into a first content commit is an
+intentional denial state; release remains disabled until a second reviewed
+commit pins that exact signer revision.
+
+The signer accepts only four candidate files plus independently configured
+policy, destination, key-version, trusted-root, Cosign, and verifier-image
+digests. It separately fetches the exact caller commit metadata and source
+snapshot through its own read-only GitHub contents channel. It validates the
+API redirect as the exact commit path on `codeload.github.com`, does not forward
+its Bearer token to that host, bounds both responses, and never extracts source
+on the OIDC-capable host. A protected exact-digest contract-release-tool image performs a full
+bundle-native certification before signing and a second independent
+certification after signing. Both executions are network-disabled, read-only,
+non-root, capability-dropped, resource-bounded containers. Certification covers
+bounded source archive/member/expanded sizes; NFC portable source paths;
+link/special-file denial; pre-extraction commit metadata; a recomputed Git tree
+object equal to the SCM tree; a trusted rebuild byte-identical to the candidate
+bundle and manifest; the deterministic bundle tar encoding and limits, inventory and
+`buildInputDigest`, JCS role profile, exact offline schema descriptors and
+references, indexed fixture outcomes, lifecycle and operation models,
+OpenAPI/AsyncAPI/CloudEvents closure, trust-policy scope/revocation/evidence,
+and exact source metadata. Both sealed phases require source-tree and rebuild
+equality and bind the snapshot, commit, tree, rebuild, and candidate digests in
+evidence. The signer cannot substitute a checkout verifier, PATH build, mutable
+image, generic command, or candidate-provided hook.
+
+For keyless product-release signing, the Fulcio certificate identity is the
+called reusable workflow URL with its exact commit, not the caller workflow or
+token `sub`. Cosign also checks the exact caller repository, immutable release
+tag, source commit, `workflow_dispatch` trigger, OIDC issuer, and independently
+digested trusted root. The sealed verifier-image digest is the release
+`builderDigest`; the Cosign executable has a separate digest. Audience and
+protected-environment constraints are issuance-policy inputs and are not
+asserted as certificate fields when the certificate does not carry them.
+
+Repository `verify_bundle.py` signed mode is an external-Adapter conformance
+harness only. It may prove exact Cosign invocation and denial behavior using an
+owner-only local file ledger, but it always records `authorityIssued: false`
+and cannot produce a permitted verification-result object. The local ledger is
+explicitly test-only and non-global. Production replay authority requires one
+durable shared transaction that uniquely consumes request ID, nonce, and
+request digest before final release evidence is issued. Activating the release
+workflow therefore additionally requires the independently built and certified
+sealed image, every protected immutable value, and environment approval; an
+absent prerequisite fails closed.
+
 Release outputs are:
 
 - reproducible Go binaries for Linux `amd64`/`arm64` servers and Linux, macOS,

@@ -24,9 +24,12 @@ approval. Those are consuming-platform responsibilities.
   arbitrary regular files, but it must not become authority for identity,
   grants, credentials, trust, or mandatory security policy.
 - Use only the closed `bytedesk.json-patch/1` add/replace/remove profile and the
-  separate digest-preconditioned file and skill operations. Every mutation uses
-  `precondition.kind: absent` for create or `match` with both exact revision and
-  digest; omission, `null`, wildcard, force, and digest-only comparison fail.
+  separate digest-preconditioned file and skill operations. Every durable
+  aggregate mutation uses `precondition.kind: absent` for create or `match`
+  with both exact revision and digest; omission, `null`, wildcard, force, and
+  digest-only aggregate comparison fail. Nested file and skill delta items use
+  their documented absent-or-current-item-digest preconditions under that outer
+  aggregate compare-and-swap.
 - Use exact digests for authority. Tags and channels are discovery metadata.
 - Define every Agent Delivery-owned authoritative object with the accepted JSON
   Schema Draft 2020-12 contract, exact schema digest, closed authority-bearing

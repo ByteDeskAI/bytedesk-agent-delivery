@@ -3,8 +3,10 @@
 **Profiles:** `bytedesk.consumer-authority/1`,
 `bytedesk.skill-approval/1`, and `bytedesk.private-signing/1`
 
-**Status:** Accepted architecture contract; concrete schemas and profile
-conformance are release-blocking AD-08/AD-09 deliverables
+**Status:** Accepted contract; its consumer-authority, skill-approval, and
+private-signing schemas and contract fixtures are frozen by AD-01. Consumer
+authority Adapters, isolated production signing and KMS, runtime integration,
+and measured conformance evidence remain AD-08/AD-09 and later-task GA gates.
 
 ## Purpose
 

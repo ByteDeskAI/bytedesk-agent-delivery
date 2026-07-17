@@ -1,0 +1,14 @@
+{
+  "contract": "bytedesk.host-reconciliation-attempt/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/host-reconciliation-attempt/1.0.0", "digest": "sha256:d035d0395cf44f4229d0eb2ad7784eabcb99d85855f3da4cdbd2b665222486e4" },
+  "attemptId": "attempt-01",
+  "consumerId": "consumer-01",
+  "targetId": "target-01",
+  "rolloutId": "rollout-01",
+  "desiredRevisionDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "hostIdentity": "spiffe://agent-delivery.example/consumer/consumer-01/target/target-01/reconciler",
+  "fencingToken": 1,
+  "state": "claimed",
+  "startedAt": "2026-07-17T12:00:00Z",
+  "updatedAt": "2026-07-17T12:00:00Z"
+}

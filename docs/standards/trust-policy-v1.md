@@ -2,8 +2,10 @@
 
 **Logical contract:** `bytedesk.trust-policy/1`
 
-**Status:** Accepted architecture contract; concrete Draft 2020-12 schema,
-profiles, KMS ceremonies, and conformance evidence are release-blocking
+**Status:** Accepted contract; its Draft 2020-12 schema, profile source, and
+contract fixtures are frozen by AD-01. Product and consumer KMS ceremonies,
+trust Adapters, key operations, and measured conformance evidence remain
+later-task GA gates.
 
 ## Purpose
 
@@ -114,6 +116,32 @@ and in-toto/SLSA provenance digests. Renderer releases target SLSA Build Level
 3. A version, source commit, image tag, PATH binary, or local build never
 satisfies execution trust.
 
+For the v1 keyless contract-bundle release profile, policy identifies the exact
+SHA-pinned called reusable signer workflow as the Fulcio certificate identity.
+It separately pins the caller repository, immutable release-tag ref, source
+commit, `workflow_dispatch` trigger, OIDC issuer, destination repository,
+contract trust-policy ID/digest, sealed-verifier image digest, Cosign executable
+digest, and trusted-root bytes/digest. The sealed verifier digest is the
+`builderDigest`; it is not interchangeable with the Cosign digest. OIDC audience
+and protected-environment restrictions are issuance controls and must not be
+claimed as post-hoc certificate evidence unless the accepted certificate
+profile actually carries them.
+
+Candidate code executes only in an unprivileged build job. The OIDC-capable
+signer performs no checkout and accepts only a closed candidate file set plus
+independent protected configuration. Through its own read-only SCM authority it
+must obtain the exact commit metadata and bounded source snapshot without
+forwarding credentials to the snapshot host or extracting on the signer host.
+The exact protected verifier image must safely validate source paths, types and
+resource bounds, validate commit metadata before extraction, recompute and
+match the Git tree, rebuild from source with trusted code, and require exact
+candidate bundle/manifest equality in both the pre- and post-signature phases.
+Evidence binds commit, tree, snapshot, metadata, rebuild, candidate, and tool
+digests. An unpinned called workflow, mutable or absent verifier, caller or
+candidate-provided command, source/tree/rebuild mismatch, missing post-sign
+certification, or mismatch in any identity, source, tool, root, policy, or
+evidence binding is terminal.
+
 The running distribution may restrict its compiled renderer set through
 independent policy. No runtime configuration or artifact may broaden it. A
 withdrawn renderer blocks new render/compile; a revoked renderer or product
@@ -166,6 +194,13 @@ the verifier:
    desired revision, absent-or-match precondition, nonce, and freshness;
 7. rejects any unexpected or stale edge; and
 8. records the exact trust and evidence graph in append-only receipts.
+
+Repository-local replay files are permitted only for explicit test and Adapter
+conformance profiles and never issue production authority. Production signing
+or verification atomically and durably consumes request ID, nonce, and request
+digest under one shared uniqueness boundary before issuing authoritative
+evidence. Reuse of any key, malformed history, or inability to reach that
+boundary fails closed; recovery creates a fresh request and nonce.
 
 The Promotion Coordinator alone may use successful evidence to advance target
 desired state. A Host Reconciler observation, Consumer Capability Verifier

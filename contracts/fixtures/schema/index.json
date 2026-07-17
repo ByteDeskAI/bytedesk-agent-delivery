@@ -1,0 +1,959 @@
+{
+  "profile": "bytedesk.schema-fixtures/1",
+  "fixtures": [
+    {
+      "path": "contracts/fixtures/schema/positive/action__dead-lettered-after-stale-attempt.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/action__running.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/agent-binding__private-functional-delta.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/agent-source__public.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-source/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/application-config__api.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/application-config/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/archive-root__dual-region.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/archive-root/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/authorization-decision-proof__policy-denied.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/authorization-decision-proof/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/canary-evidence__capability.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-evidence/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/canary-evidence__host.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-evidence/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/canary-plan__isolated.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-plan/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/candidate__received.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/catalog-index__one-entry.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/catalog-index/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/command-request__promote.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/common__definitions.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/compatibility-attestation__compatible.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/compatibility-attestation/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/component-lock__minimal.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/component-lock/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/consumer-authority__activate.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-authority/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/consumer-deployment__effective-render.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-deployment/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/contract-bundle__offline.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/deployment-receipt__promoted.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/evaluation-attestation__passed.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/evaluation-attestation/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/event-data-envelope__notification.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/file-operations__regular-files.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/compatibility/functional-customization.v1.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/functional-customization-profile/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/harness-render__tenant-free.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/host-reconciliation-attempt__claimed.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/host-reconciliation-attempt/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/identity-registration-manifest__api.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/identity-registration-manifest/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/installation__active.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/json-patch__functional.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/json-patch/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/observation__technical.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/observation/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/operational-readiness-report__ga-denied.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/operational-readiness-report/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/policy-attestation__permitted.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/policy-attestation/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/precondition__absent.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/precondition__match.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/predecessor__none.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/problem-details__conflict.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/recovery-plan__forward.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/recovery-plan/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/region-fence__promote.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/region-fence/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/renderer-allowlist__compiled.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-allowlist/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/renderer-release__native.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-release/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/rollout__pending.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/rollout/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/runtime-release__prepared.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/runtime-release/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/runtime-slot__allocated.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/runtime-slot/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/schema-descriptor__exact.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/schema-descriptor/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/signing-request__deployment.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/skill-approval__current.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-approval/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/skill-operations__replace.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-operations/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/skill-package__executable-regular-file.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-package/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/target-delivery-state__initial.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/transition-model__minimal.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/lifecycle/candidate.v1.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/lifecycle/durable-action.v1.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/lifecycle/host-reconciliation-attempt.v1.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/lifecycle/installation.v1.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/lifecycle/rollout.v1.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/lifecycle/runtime-slot.v1.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/lifecycle/target-condition.v1.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/trust-policy__product-release.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/verification-result__denied.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/verification-result__permitted.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/action__success-without-result.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "required"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/agent-binding__authority-smuggling.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "additionalProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/agent-source__repository-url.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-source/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "pattern"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/agent-source__repository-port-out-of-range.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-source/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "pattern"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/application-config__password.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/application-config/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "additionalProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/authorization-decision-proof__http-404.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/authorization-decision-proof/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "maximum"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/authorization-decision-proof__unknown-root-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/authorization-decision-proof/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/canary-evidence__transport-is-denial.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-evidence/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "oneOf"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/canary-plan__unknown-root-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-plan/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/command-request__force.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/consumer-authority__raw-credential.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-authority/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "additionalProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/event-data-envelope__authority-payload.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "additionalProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/file-operations__aggregate-revision.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "oneOf"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/file-operations__digest-omitted.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "required"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/file-operations__windows-device.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "not"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/file-operations__windows-forbidden-character.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "not"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/file-operations__alternate-data-stream.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "not"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/file-operations__trailing-dot.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "not"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/file-operations__trailing-space.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "not"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/harness-render__consumer-identifier.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "required"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/json-patch__move.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/json-patch/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "oneOf"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/precondition__digest-only.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "oneOf"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/predecessor__wildcard.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "oneOf"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/region-fence__old-writer-unproven.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/region-fence/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "const"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/renderer-release__plugin-url.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-release/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "required"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/schema-descriptor__wrong-origin.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/schema-descriptor/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "pattern"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/signing-request__invalid-media-type.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "pattern"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/signing-request__public-consumer-scope.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "not"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/signing-request__tagged-repository.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "pattern"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/signing-request__repository-url.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "pattern"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/signing-request__trust-policy-omitted.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "required"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/skill-operations__digest-omitted.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-operations/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "required"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/skill-package__public-consumer-id.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-package/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "not"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/target-delivery-state__caller-writer.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "required"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/transition-model__unknown-effect-authority.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "additionalProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/archive-root__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/archive-root/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/candidate__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/catalog-index__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/catalog-index/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/compatibility-attestation__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/compatibility-attestation/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/component-lock__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/component-lock/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/consumer-deployment__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-deployment/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/contract-bundle__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/deployment-receipt__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/evaluation-attestation__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/evaluation-attestation/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/host-reconciliation-attempt__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/host-reconciliation-attempt/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/identity-registration-manifest__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/identity-registration-manifest/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/installation__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/observation__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/observation/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/operational-readiness-report__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/operational-readiness-report/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/policy-attestation__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/policy-attestation/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/problem-details__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/recovery-plan__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/recovery-plan/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/renderer-allowlist__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-allowlist/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/rollout__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/rollout/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/runtime-release__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/runtime-release/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/runtime-slot__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/runtime-slot/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/skill-approval__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-approval/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/trust-policy__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/verification-result__denied-unknown-reason.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "enum"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/verification-result__denied-without-evidence.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "minItems"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/verification-result__denied-without-reason.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "minItems"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/verification-result__permitted-with-reason.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "maxItems"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/verification-result__permitted-without-evidence.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "minItems"
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/verification-result__unknown-authority-field.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "unevaluatedProperties"
+    },
+    {
+      "path": "contracts/fixtures/schema/boundary/agent-source__ipv6-registry-maximum-port.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-source/1.0.0",
+      "valid": true,
+      "category": "boundary",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/boundary/file-operations__executable-regular-file.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+      "valid": true,
+      "category": "boundary",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/boundary/precondition__max-safe-revision.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0",
+      "valid": true,
+      "category": "boundary",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/boundary/problem-details__status-599.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0",
+      "valid": true,
+      "category": "boundary",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/boundary/runtime-slot__maximum-port.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/runtime-slot/1.0.0",
+      "valid": true,
+      "category": "boundary",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/malicious/action__wrong-schema-digest.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0",
+      "valid": false,
+      "category": "malicious",
+      "expectedKeyword": [],
+      "expectedSemanticError": "schema_digest_mismatch"
+    },
+    {
+      "path": "contracts/fixtures/schema/malicious/action__wrong-schema-id.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0",
+      "valid": false,
+      "category": "malicious",
+      "expectedKeyword": [],
+      "expectedSemanticError": "schema_id_mismatch"
+    },
+    {
+      "path": "contracts/fixtures/schema/malicious/command-request__tag-only-publish.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0",
+      "valid": false,
+      "category": "malicious",
+      "expectedKeyword": "pattern"
+    },
+    {
+      "path": "contracts/fixtures/schema/malicious/file-operations__symlink-type.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+      "valid": false,
+      "category": "malicious",
+      "expectedKeyword": "oneOf"
+    },
+    {
+      "path": "contracts/fixtures/schema/malicious/file-operations__traversal.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/file-operations/1.0.0",
+      "valid": false,
+      "category": "malicious",
+      "expectedKeyword": "oneOf"
+    },
+    {
+      "path": "contracts/fixtures/schema/malicious/functional-customization-profile__security-target.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/functional-customization-profile/1.0.0",
+      "valid": false,
+      "category": "malicious",
+      "expectedKeyword": "const"
+    },
+    {
+      "path": "contracts/fixtures/schema/malicious/json-patch__copy-from.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/json-patch/1.0.0",
+      "valid": false,
+      "category": "malicious",
+      "expectedKeyword": "oneOf"
+    }
+  ]
+}

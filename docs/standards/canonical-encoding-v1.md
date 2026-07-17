@@ -2,8 +2,9 @@
 
 **Profile:** `bytedesk.canonical-json/1`
 
-**Status:** Accepted architecture contract; concrete canonicalization fixtures
-are release-blocking
+**Status:** Accepted contract; its parser and canonicalization sources, schemas,
+and conformance fixtures are frozen by AD-01. Downstream service integration
+and measured runtime and operational evidence remain later-task GA gates.
 
 ## Purpose
 
@@ -53,6 +54,24 @@ contains:
 Implementations MUST NOT use YAML parser behavior, source spelling, comments,
 key order, or presentation style as semantic input. YAML merge behavior cannot
 be obtained through aliases because aliases are rejected.
+
+## Resource limits
+
+The v1 reference parser accepts at most 4 MiB of authored input, a maximum
+JSON-model depth of 64 values (the root is depth one), and at most 100,000
+JSON-model nodes, including object member names. Its
+canonical RFC 8785 output is also limited to 4 MiB. A limit is measured before
+any authoritative digest or signature is produced, applies identically to JSON
+and YAML input, and rejects the complete document when exceeded. These fixed
+limits are part of the v1 interoperability profile; implementations must not
+silently raise them or accept a document that another conforming validator must
+reject.
+
+An integer literal is accepted only in the interoperable range
+`-9007199254740991..9007199254740991`. This check occurs during parsing in both
+the JSON and restricted-YAML lanes, before schema validation or conversion to
+an IEEE 754 value. Larger exact quantities use bounded canonical decimal
+strings defined by their object schema.
 
 ## Normalization and canonical output
 
@@ -117,7 +136,8 @@ Contract fixtures MUST prove:
 - object-key and whitespace variation do not change the digest while array
   reordering does;
 - duplicate keys, aliases, custom tags, non-string keys, non-finite numbers,
-  and non-JSON nodes fail before publication or signing;
+  unsafe integer literals, and non-JSON nodes fail before publication or
+  signing, with both exact safe-integer boundaries accepted;
 - canonical bytes are the bytes covered by digest, signature, cache identity,
   and provenance references;
 - exact schema ID/digest selection and offline contract-bundle validation occur

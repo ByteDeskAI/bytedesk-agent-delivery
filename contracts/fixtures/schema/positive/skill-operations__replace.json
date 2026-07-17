@@ -1,0 +1,23 @@
+{
+  "contract": "bytedesk.skill-operations/1",
+  "operations": [
+    {
+      "op": "replace",
+      "packageId": "consumer-escalation",
+      "precondition": {
+        "kind": "match",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "descriptor": {
+        "repository": "registry.example/skills/escalation",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "mediaType": "application/vnd.bytedesk.agent.skill.v1+json",
+        "size": 4096,
+        "trustPolicy": {
+          "id": "consumer-private-skill-v1",
+          "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+      }
+    }
+  ]
+}

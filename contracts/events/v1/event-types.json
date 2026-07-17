@@ -1,0 +1,44 @@
+{
+  "profile": "bytedesk.event-types/1",
+  "cloudEventsVersion": "1.0.2",
+  "delivery": "at-least-once",
+  "ordering": "per-aggregate-sequence",
+  "authority": "notification-only",
+  "eventTypes": [
+    {
+      "type": "ai.bytedesk.agent-delivery.installation.changed.v1",
+      "aggregateType": "installation",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.action.changed.v1",
+      "aggregateType": "action",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.candidate.changed.v1",
+      "aggregateType": "candidate",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.rollout.changed.v1",
+      "aggregateType": "rollout",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/rollout/1.0.0"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.target-delivery-state.changed.v1",
+      "aggregateType": "target-delivery-state",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.observation.appended.v1",
+      "aggregateType": "target-delivery-state",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/observation/1.0.0"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.receipt.appended.v1",
+      "aggregateType": "target-delivery-state",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0"
+    }
+  ]
+}

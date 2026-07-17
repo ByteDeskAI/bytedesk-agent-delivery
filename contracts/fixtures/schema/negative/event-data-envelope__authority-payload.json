@@ -1,0 +1,13 @@
+{
+  "contract": "bytedesk.event-data/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0", "digest": "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243" },
+  "eventType": "ai.bytedesk.agent-delivery.installation.updated.v1",
+  "dataSchema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+  "aggregate": { "type": "installation", "id": "installation-01", "revisionDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "sequence": 2 },
+  "resource": { "uri": "/v1/installations/installation-01", "etag": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "projectionSchema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" } },
+  "consumerScope": "consumer-01",
+  "correlationId": "corr-01",
+  "causationId": "command-01",
+  "redaction": "consumer-private",
+  "promotionApproved": true
+}

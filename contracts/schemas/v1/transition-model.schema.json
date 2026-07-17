@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+  "title": "Executable closed lifecycle transition model",
+  "type": "object",
+  "required": ["$schema", "profile", "version", "initialStates", "states", "transitions"],
+  "properties": {
+    "$schema": { "const": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0" },
+    "profile": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/contractName" },
+    "version": { "const": 1 },
+    "initialStates": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "uniqueItems": true,
+      "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }
+    },
+    "states": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "required": ["name", "terminal"],
+        "properties": {
+          "name": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "terminal": { "type": "boolean" }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "required": ["name", "from", "to", "actor", "guard", "cas", "effects", "event", "retryable"],
+        "properties": {
+          "name": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "from": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100000,
+            "uniqueItems": true,
+            "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }
+          },
+          "to": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "actor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "guard": { "type": "string", "minLength": 1, "maxLength": 1024 },
+          "cas": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "effects": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100000,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+          },
+          "event": { "type": "string", "minLength": 1, "maxLength": 256 },
+          "retryable": { "type": "boolean" }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

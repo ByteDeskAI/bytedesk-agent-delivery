@@ -1,0 +1,13 @@
+{
+  "contract": "bytedesk.file-operations/1",
+  "operations": [
+    {
+      "op": "remove",
+      "path": "../../etc/passwd",
+      "precondition": {
+        "kind": "match",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    }
+  ]
+}

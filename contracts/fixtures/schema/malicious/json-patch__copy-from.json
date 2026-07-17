@@ -1,0 +1,10 @@
+{
+  "profile": "bytedesk.json-patch/1",
+  "operations": [
+    {
+      "op": "copy",
+      "from": "/secrets",
+      "path": "/system_prompt"
+    }
+  ]
+}

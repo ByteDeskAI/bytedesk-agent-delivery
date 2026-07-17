@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/runtime-slot/1.0.0",
+  "title": "Durable consumer runtime slot mapping",
+  "type": "object",
+  "required": ["contract", "schema", "consumerId", "subjectId", "targetId", "slotId", "harnessProfile", "uid", "gid", "port", "service", "workspace", "generation", "state", "precondition", "predecessor"],
+  "properties": {
+    "contract": { "const": "bytedesk.runtime-slot/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "subjectId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "slotId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "harnessProfile": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "uid": { "type": "integer", "minimum": 1, "maximum": 4294967295 },
+    "gid": { "type": "integer", "minimum": 1, "maximum": 4294967295 },
+    "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+    "service": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "workspace": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/portablePath" },
+    "generation": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "state": { "type": "string", "enum": ["absent", "staging", "staged", "active", "predecessor", "retiring", "tombstoned"] },
+    "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" },
+    "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0" },
+    "tombstoneEvidenceDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "state": { "const": "tombstoned" } }, "required": ["state"] },
+      "then": { "required": ["tombstoneEvidenceDigest"] }
+    },
+    {
+      "if": { "properties": { "state": { "not": { "const": "tombstoned" } } }, "required": ["state"] },
+      "then": { "not": { "required": ["tombstoneEvidenceDigest"] } }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

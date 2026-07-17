@@ -1,7 +1,9 @@
 # OCI media types v1
 
-**Status:** Accepted architecture registry; concrete schemas, manifests, and
-contract fixtures are release-blocking deliverables
+**Status:** Accepted contract registry; its media types, manifest schemas, and
+contract fixtures are frozen by AD-01. Registry publication, OCI and signing
+Adapters, KMS integration, lifecycle services, and measured operational
+evidence remain later-task GA gates.
 
 ## Artifact and evidence types
 
@@ -20,6 +22,7 @@ contract fixtures are release-blocking deliverables
 | Target delivery state | `application/vnd.bytedesk.agent.target-delivery-state.v1+json` |
 | Canary plan | `application/vnd.bytedesk.agent.canary-plan.v1+json` |
 | Canary evidence | `application/vnd.bytedesk.agent.canary-evidence.v1+json` |
+| Authorization decision proof | `application/vnd.bytedesk.agent.authorization-decision-proof.v1+json` |
 | Recovery plan | `application/vnd.bytedesk.agent.recovery-plan.v1+json` |
 | Render compatibility attestation | `application/vnd.bytedesk.agent.compatibility.v1+json` |
 | Evaluation attestation | `application/vnd.bytedesk.agent.evaluation.v1+json` |
@@ -154,9 +157,14 @@ signer policy. Separate canary evidence records:
 - Consumer Capability Verifier workload login, one permitted capability, and
   one exact policy-denied sentinel result.
 
-A timeout, transport failure, `404`, parser error, or unavailable tool is not
-denial evidence. Promotion requires fresh matching evidence from both actors,
-except a signed `not_applicable` from a certified no-capability profile.
+A capability decision references an exact consumer-private authorization
+decision proof. The proof binds the plan, capability, current policy, grants,
+workload identity, exact decision, signer policy, freshness, and an explicitly
+authenticated, completed, parsed successful transport response. A timeout,
+transport failure, `404`, parser error, or unavailable tool is not denial
+evidence. Promotion requires fresh matching evidence from both actors, except
+an independently authenticated `not_applicable` certification from a certified
+no-capability profile.
 
 A recovery plan creates a new forward revision. It records the current
 predecessor, failed rollout, historical `recoverySource`, reused functional

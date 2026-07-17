@@ -97,8 +97,9 @@ The [canonical encoding profile](../standards/canonical-encoding-v1.md) fixes
 the identity bytes. [Machine contracts v1](../standards/machine-contracts-v1.md)
 fixes Draft 2020-12 schema identity, closed fields, constrained JSON Patch,
 file/skill operations, absent-or-match concurrency, OpenAPI 3.2, CloudEvents,
-and AsyncAPI. These are accepted information contracts; concrete signed schema
-artifacts and fixtures remain release-blocking evidence.
+and AsyncAPI. AD-01 freezes these contract sources, concrete schemas, and
+fixtures. Production signing and publication plus downstream Adapter, runtime,
+KMS, and measured operational evidence remain later-task release gates.
 
 ## Dual-control activation
 

@@ -1,0 +1,31 @@
+{
+  "contract": "bytedesk.component-lock/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/component-lock/1.0.0",
+    "digest": "sha256:f6f46c3dd1853eca98b76fa24b6423104f6c634752c17cab6888a87a51ca1851"
+  },
+  "profileId": "reference-production",
+  "profileVersion": "1.0.0",
+  "components": [
+    {
+      "name": "agent-delivery-api",
+      "kind": "image",
+      "version": "1.0.0",
+      "platforms": [
+        {
+          "platform": "linux/amd64",
+          "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "source": "https://github.com/ByteDeskAI/bytedesk-agent-delivery",
+      "configurationDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "configurationDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "generatedAt": "2026-07-17T12:00:00Z",
+  "trustPolicy": {
+    "id": "product-release-v1",
+    "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "unknownAuthority": true
+}

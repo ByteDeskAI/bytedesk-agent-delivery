@@ -1,0 +1,7 @@
+{
+  "type": "https://problems.bytedesk.ai/agent-delivery/precondition-failed",
+  "title": "The exact predecessor did not match",
+  "status": 412,
+  "code": "precondition_failed",
+  "correlationId": "corr-01"
+}

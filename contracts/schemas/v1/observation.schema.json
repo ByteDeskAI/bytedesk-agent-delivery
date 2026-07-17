@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/observation/1.0.0",
+  "title": "Append-only target observation",
+  "type": "object",
+  "required": ["contract", "schema", "observationId", "consumerId", "targetId", "desiredRevisionDigest", "sequence", "actor", "kind", "observedAt", "evidence"],
+  "properties": {
+    "contract": { "const": "bytedesk.observation/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "observationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "desiredRevisionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "sequence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "actor": { "type": "string", "enum": ["host_reconciler", "capability_verifier", "promotion_coordinator", "registry_adapter", "archive_adapter"] },
+    "kind": { "type": "string", "enum": ["technical", "capability", "state_readback", "drift", "dependency", "recovery"] },
+    "observedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "evidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/redactedEvidenceRef" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Observations are evidence and cannot mutate or replace desired state."
+}

@@ -1,0 +1,35 @@
+{
+  "contract": "bytedesk.action/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0",
+    "digest": "sha256:7b751d842207e9d9fe9f3e88edf50abfcc6a5cfdeea1db3b73ae9344ce827b9f"
+  },
+  "actionId": "action-stale-attempt",
+  "consumerId": "consumer-01",
+  "kind": "reconcile",
+  "inputDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "state": "dead_lettered",
+  "progress": 60,
+  "attempt": 5,
+  "cancellable": false,
+  "precondition": {
+    "kind": "match",
+    "revision": 5,
+    "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "predecessor": {
+    "kind": "match",
+    "revision": 4,
+    "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "deadLetterEvidence": {
+    "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "classification": "consumer-private"
+  },
+  "fenceEvidence": {
+    "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "classification": "consumer-private"
+  },
+  "createdAt": "2026-07-17T12:00:00Z",
+  "updatedAt": "2026-07-17T12:05:00Z"
+}

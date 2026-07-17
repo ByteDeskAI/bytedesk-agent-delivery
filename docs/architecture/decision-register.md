@@ -149,9 +149,10 @@ Normative source:
   implicitly.
 - Trust-policy ID is discovery; exact immutable policy digest is authority and
   remains archived for historical receipt verification.
-- `development-plan.json` is an explicitly marked bootstrap planning format
-  until AD-01 either publishes and validates the `plan/2` schema and drift
-  fixtures or removes its schema claim before `CONTRACTS-FROZEN`.
+- `development-plan.json` is explicitly repository-internal planning data,
+  validated by a repository-only schema and Markdown/DAG drift checks. It is
+  excluded from the released product contract bundle and is not a consumer,
+  API, artifact, or runtime contract.
 
 ## Implementation baseline
 

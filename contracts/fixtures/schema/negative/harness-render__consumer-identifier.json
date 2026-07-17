@@ -1,0 +1,5 @@
+{
+  "contract": "bytedesk.harness-render/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0", "digest": "sha256:55f6123e2913b52db2c9b6f8e944a4cb08a6f2202a2a6741b9a3a09d49cb5018" },
+  "consumerId": "consumer-01"
+}

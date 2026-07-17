@@ -1,0 +1,16 @@
+{
+  "contract": "bytedesk.action/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0", "digest": "sha256:7b751d842207e9d9fe9f3e88edf50abfcc6a5cfdeea1db3b73ae9344ce827b9f" },
+  "actionId": "action-01",
+  "consumerId": "consumer-01",
+  "kind": "render",
+  "inputDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "state": "running",
+  "progress": 40,
+  "attempt": 1,
+  "cancellable": true,
+  "precondition": { "kind": "absent" },
+  "predecessor": { "kind": "none" },
+  "createdAt": "2026-07-17T12:00:00Z",
+  "updatedAt": "2026-07-17T12:01:00Z"
+}

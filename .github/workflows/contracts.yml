@@ -1,0 +1,64 @@
+name: contracts
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - develop
+      - "agent/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contracts-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CONTRACT_TRUST_POLICY_ID: contract-test-product-release-v1
+      CONTRACT_TRUST_POLICY_DIGEST: sha256:8205b2d4241555df4d539274a6c8d82356b248ba33e249ad85017a9f4491b992
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Install exact Go toolchain
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version-file: go.mod
+          check-latest: false
+          cache: true
+          cache-dependency-path: go.sum
+
+      - name: Install locked uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: 0.11.21
+          enable-cache: false
+
+      - name: Install exact Python and locked dependencies
+        run: |
+          uv python install 3.13.14
+          uv sync --frozen
+
+      - name: Run complete clean-checkout contract verification
+        run: make verify
+
+      - name: Archive machine-readable contract evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: contract-verification-${{ github.sha }}
+          path: |
+            dist/evidence/
+            dist/contracts-a/agent-delivery-contracts-v1.manifest.json
+            dist/contracts-a/agent-delivery-contracts-v1.manifest.sha256
+          if-no-files-found: error
+          retention-days: 14
