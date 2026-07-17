@@ -63,10 +63,15 @@ def validate_full_history_checkout(workflow: str, workflow_name: str) -> None:
         )
 
 
-def validate_release_workflows(caller: str, signer: str) -> None:
+def validate_release_workflows(
+    caller: str,
+    signer: str,
+    *,
+    verify_activated_pin_bytes: bool = True,
+) -> None:
     validate_full_history_checkout(caller, "release caller")
     pin = reusable_workflow_pin(caller)
-    if pin != ZERO_PIN:
+    if pin != ZERO_PIN and verify_activated_pin_bytes:
         completed = subprocess.run(
             ["git", "show", f"{pin}:.github/workflows/contract-release-signer.yml"],
             cwd=REPOSITORY_ROOT,
@@ -201,7 +206,15 @@ def expect_denial(
 ) -> dict[str, str]:
     mutated_caller, mutated_signer = mutation(caller, signer)
     try:
-        validate_release_workflows(mutated_caller, mutated_signer)
+        # The baseline separately binds the activated pin to the reviewed signer
+        # bytes. Mutation cases disable that outer binding check so each sealed
+        # boundary invariant is exercised instead of being masked by the first
+        # byte mismatch.
+        validate_release_workflows(
+            mutated_caller,
+            mutated_signer,
+            verify_activated_pin_bytes=False,
+        )
     except ContractToolError as error:
         return {"id": case_id, "outcome": "denied", "reason": str(error)}
     raise ContractToolError(f"release workflow mutation unexpectedly passed: {case_id}")
