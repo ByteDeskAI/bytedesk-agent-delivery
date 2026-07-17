@@ -1,0 +1,34 @@
+{
+  "schema": "bytedesk.agent-delivery.plan/1",
+  "plan": "agent-delivery-v1",
+  "created": "2026-07-16",
+  "title": "ByteDesk Agent Delivery v1",
+  "repository": "ByteDeskAI/bytedesk-agent-delivery",
+  "productionMutationAuthorized": false,
+  "coreReleaseGate": {
+    "id": "core-cert",
+    "task": "ad-18",
+    "dependsOn": ["ad-01", "ad-02", "ad-03", "ad-04", "ad-05", "ad-06", "ad-07", "ad-08", "ad-09", "ad-10", "ad-11", "ad-12", "ad-13", "ad-14", "ad-15"],
+    "outcome": "A clean third party validates, renders, packages, verifies, installs, compiles, reconciles, rolls back, and reproduces an agent without ByteDesk Platform."
+  },
+  "tasks": [
+    {"id":"ad-01","historicalJira":"BDP-3302","doc":"tasks/AD-01-architecture.md","dependsOn":[],"phase":"core"},
+    {"id":"ad-02","historicalJira":"BDP-3304","doc":"tasks/AD-02-marketplace-bootstrap.md","dependsOn":["ad-01"],"phase":"core"},
+    {"id":"ad-03","historicalJira":"BDP-3306","doc":"tasks/AD-03-baseline-catalog.md","dependsOn":["ad-02"],"phase":"core"},
+    {"id":"ad-04","historicalJira":"BDP-3307","doc":"tasks/AD-04-renderer-contract.md","dependsOn":["ad-02"],"phase":"core"},
+    {"id":"ad-05","historicalJira":"BDP-3303","doc":"tasks/AD-05-hermes-renderer.md","dependsOn":["ad-03","ad-04"],"phase":"core"},
+    {"id":"ad-06","historicalJira":"BDP-3305","doc":"tasks/AD-06-openclaw-renderer.md","dependsOn":["ad-03","ad-04"],"phase":"core"},
+    {"id":"ad-07","historicalJira":"BDP-3308","doc":"tasks/AD-07-oci-packaging.md","dependsOn":["ad-05","ad-06"],"phase":"core"},
+    {"id":"ad-08","historicalJira":"BDP-3309","doc":"tasks/AD-08-signing-and-attestations.md","dependsOn":["ad-07"],"phase":"core"},
+    {"id":"ad-09","historicalJira":"BDP-3310","doc":"tasks/AD-09-bindings-and-receipts.md","dependsOn":["ad-08"],"phase":"core"},
+    {"id":"ad-10","historicalJira":"BDP-3311","doc":"tasks/AD-10-control-plane-api.md","dependsOn":["ad-09"],"phase":"core"},
+    {"id":"ad-11","historicalJira":"BDP-3312","doc":"tasks/AD-11-git-desired-state.md","dependsOn":["ad-09"],"phase":"core"},
+    {"id":"ad-12","historicalJira":"BDP-3313","doc":"tasks/AD-12-update-promotion.md","dependsOn":["ad-10","ad-11"],"phase":"core"},
+    {"id":"ad-13","historicalJira":"BDP-3314","doc":"tasks/AD-13-private-deployment-compiler.md","dependsOn":["ad-05","ad-06","ad-08","ad-09","ad-11"],"phase":"core"},
+    {"id":"ad-14","historicalJira":"BDP-3315","doc":"tasks/AD-14-runtime-reconciler.md","dependsOn":["ad-10","ad-12","ad-13"],"phase":"core"},
+    {"id":"ad-15","historicalJira":"BDP-3316","doc":"tasks/AD-15-cli.md","dependsOn":["ad-07","ad-10","ad-13"],"phase":"core"},
+    {"id":"ad-16","historicalJira":"BDP-3317","doc":"tasks/AD-16-bytedesk-hermes-cutover.md","dependsOn":["core-cert"],"phase":"deferred-reference-integration"},
+    {"id":"ad-17","historicalJira":"BDP-3318","doc":"tasks/AD-17-bytedesk-openclaw-cutover.md","dependsOn":["core-cert"],"phase":"deferred-reference-integration"},
+    {"id":"ad-18","historicalJira":"BDP-3319","doc":"tasks/AD-18-certification.md","dependsOn":["ad-01","ad-02","ad-03","ad-04","ad-05","ad-06","ad-07","ad-08","ad-09","ad-10","ad-11","ad-12","ad-13","ad-14","ad-15"],"optionalAppendicesDependOn":["ad-16","ad-17"],"phase":"core-certification-with-deferred-reference-appendices"}
+  ]
+}
