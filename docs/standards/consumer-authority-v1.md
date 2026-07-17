@@ -14,6 +14,13 @@ identity, security policy, or business approval. This contract defines the
 signed opaque envelopes and the consumer-sovereign key topology that preserve
 that boundary.
 
+> **Non-normative implementation note:**
+> [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md)
+> fixes AWS KMS as the first product signing Adapter profile and purpose-
+> separated reference workloads. Role 5 remains consumer-owned and is only
+> verified by Agent Delivery; it is never granted to the Agent Delivery API,
+> worker, compiler, Coordinator, renderer, host, or publisher.
+
 ## Consumer authority snapshot
 
 The consumer authority Adapter supplies a signed, short-lived

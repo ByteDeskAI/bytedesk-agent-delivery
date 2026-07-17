@@ -15,6 +15,8 @@ report required for standalone GA.
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - Landed AD-01 and AD-04 through AD-15.
 - Generic Agent and portable SpecializedAgent catalogs, strict operation,
   skill, native, Hermes, OpenClaw, consumer, and runtime fixtures.

@@ -18,6 +18,14 @@ Authority snapshots, approvals, policies, manifests, attestations, desired
 state, and receipts use closed Draft 2020-12 schemas from the signed contract
 bundle; an unknown field, schema digest, or runtime-fetched schema fails closed.
 
+The concrete production controls are fixed by
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md):
+purpose- and consumer-separated non-exportable KMS keys, distinct workload
+identities and database roles, a compiled renderer allowlist, fresh gVisor
+sandboxes with no network or credentials, PostgreSQL transaction/CAS authority,
+and append-only evidence. Vendor-substitute Adapters must pass the same
+negative, isolation, outage, rotation, and recovery evidence.
+
 ## Assets to protect
 
 - integrity and provenance of definitions, tenant-free public renders, private

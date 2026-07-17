@@ -12,6 +12,8 @@ inventing authority or state semantics later.
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - The decisions extracted from historical epic BDP-3301.
 - Agent Spec 26.1.2 language, schema, and official validator.
 - OCI Image and Distribution 1.1 subject/referrer behavior, ORAS artifact conventions, registry capabilities, Cosign KMS signing, and in-toto attestations.

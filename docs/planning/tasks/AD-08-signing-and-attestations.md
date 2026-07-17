@@ -12,6 +12,8 @@ consumer-sovereign private signing, Cosign, and in-toto attestations.
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - OCI artifact graph and media types from AD-07.
 - AD-01 trust roots, signer roles, rotation/revocation, policy, and break-glass decisions.
 - CI workload identity and a supported non-exportable KMS provider; no exported long-lived signing key.

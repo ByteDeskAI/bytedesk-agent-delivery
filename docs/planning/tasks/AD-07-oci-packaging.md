@@ -10,6 +10,8 @@ Publish immutable, content-addressed OCI artifacts for canonical source packages
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - Frozen source, artifact, descriptor, canonical-encoding, and media-type
   schemas from AD-01 plus the native/generic render contract from AD-04.
 - Registry and ORAS capability findings from AD-01.

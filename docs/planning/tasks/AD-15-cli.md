@@ -13,6 +13,8 @@ forward recovery, and receipt inspection without ByteDesk Platform.
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - Marketplace validation, renderer, and OCI command/library surfaces.
 - Agent Delivery catalog, installation, reconciliation, and deployment APIs plus OpenAPI.
 - Trust-policy and transport-neutral authentication contracts.

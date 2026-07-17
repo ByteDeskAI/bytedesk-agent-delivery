@@ -4,6 +4,12 @@ Each linked task is a self-contained implementation contract with outcome,
 inputs, required work, outputs, acceptance criteria, verification, exclusions,
 dependencies, and security amendments.
 
+Core implementation tasks use the production reference profile fixed by
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+Reference-catalog tasks consume released tooling only, and reference-consumer
+tasks implement the portable ports in their own technology rather than
+inheriting the reference stack.
+
 | ID | Historical Jira | Workstream | Product phase |
 |---|---|---|---|
 | [AD-01](tasks/AD-01-architecture.md) | BDP-3302 | Architecture and contracts | Core |

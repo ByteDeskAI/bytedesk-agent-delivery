@@ -8,6 +8,14 @@ core completion and cannot begin cutover until a released core has passed
 `REFERENCE-CATALOG-CERT`; this integration closes only after
 `REFERENCE-CONSUMER-CERT`.
 
+The Agent Delivery core reference stack is fixed by
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md),
+but it is not imposed on ByteDesk Platform. Platform may implement its Consumer
+Authority, Capability Verifier, host, and consumer-native desired-state Adapters
+with its own language, persistence, identity, and runtime services, provided it
+passes the same versioned port contracts and preserves the one-writer,
+purpose-separated authority boundary.
+
 ## Boundary
 
 ByteDesk Platform consumes Agent Delivery through an Adapter. It remains the

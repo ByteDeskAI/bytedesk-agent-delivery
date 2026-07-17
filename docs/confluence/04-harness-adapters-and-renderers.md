@@ -9,6 +9,13 @@ deployment compilation, which then performs a complete deterministic render.
 Rendering is a build operation with explicit compatibility evidence, not an
 opaque template export or a post-render patch.
 
+The production reference realization is defined by
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md):
+compiled Go renderer Strategies plus isolated, digest-pinned Python workers
+where the official Agent Spec ecosystem requires them, each executed once in a
+fresh gVisor sandbox. That realization does not make a container format
+portable authority or permit runtime-loaded renderer plugins.
+
 ## Strategy and Adapter pattern
 
 The renderer boundary uses two established patterns:

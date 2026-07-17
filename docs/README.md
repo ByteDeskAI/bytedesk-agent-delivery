@@ -12,6 +12,7 @@ delivery-planning source of truth.
 ## Architecture
 
 - [ADR-0001: Independent Agent Delivery control plane](architecture/adr/0001-independent-agent-delivery-control-plane.md)
+- [ADR-0002: Implementation stack and reference topology](architecture/adr/0002-implementation-stack-and-reference-topology.md)
 - [Architecture decision register](architecture/decision-register.md)
 - [System overview](architecture/system-overview.md)
 - [C4 model](architecture/c4.md)

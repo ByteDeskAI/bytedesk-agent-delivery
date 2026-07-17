@@ -13,6 +13,8 @@ Git and bots are optional intent producers, not desired-state writers.
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - Catalog release/channel and compatibility metadata.
 - Trust/policy verification and definition-binding state.
 - AD-09 installation/candidate/TargetDeliveryState/receipt schemas and AD-10

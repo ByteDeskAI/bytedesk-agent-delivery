@@ -13,6 +13,8 @@ pinned external compatibility runtime, not a second renderer output format.
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - CONTRACTS-FROZEN renderer identity, machine contracts, canonical encoding,
   operational limits, and exact schema-bundle descriptors from AD-01.
 - Generic valid and invalid Agent/Portable SpecializedAgent fixtures; no

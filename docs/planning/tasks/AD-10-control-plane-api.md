@@ -13,6 +13,8 @@ clients an authority source.
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - Installation, definition-binding, and receipt persistence from AD-09.
 - CONTRACTS-FROZEN OpenAPI 3.2.0, AsyncAPI 3.1.0, CloudEvents 1.0.2,
   JSON Schema, RFC 9457, ETag/CAS, idempotency, pagination, and compatibility

@@ -13,6 +13,8 @@ compiled forward recovery.
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - Prepared consumer deployment artifact and append-only receipt from AD-13.
 - Target-scoped host/reconciler protocol and a compile-time allowlisted harness runtime adapter.
 - Fresh `activate`/`recover` consumer-authority snapshots, signed canary-plan

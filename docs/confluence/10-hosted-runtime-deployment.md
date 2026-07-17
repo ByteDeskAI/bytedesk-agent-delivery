@@ -11,6 +11,13 @@ Hermes is the first hosted reference Adapter. The host protocol remains generic
 enough for another runtime to implement the same verify, stage, activate, and
 observe contract.
 
+The reference host binary, supported platforms, delivery mechanism, workload
+identity, Kubernetes deployment, and production availability profile are fixed
+by [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+A consumer may implement the host and `DesiredStateStore` ports in its own
+technology, but still has exactly one store, exact revision/digest CAS, separate
+Host and Capability Verifier identities, and the same crash/failure evidence.
+
 ## Desired state
 
 The Promotion Coordinator is the sole logical writer of one monotonic

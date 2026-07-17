@@ -7,6 +7,14 @@ activated, observed, failed, rolled forward to known-good content, and restored
 from backup with the same digest evidence. Passing unit tests alone is not
 sufficient for a supply-chain and deployment product.
 
+The concrete production certification target is
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md),
+including PostgreSQL synchronous durability and queues, OCI/object retention,
+KMS/workload separation, Kubernetes high availability, gVisor isolation,
+OpenTelemetry operations, region fencing, and clean restore. Local Compose and
+topology diagrams are not conformance evidence; the stated SLO/RPO/RTO and
+security controls must be measured.
+
 ## Verification layers
 
 ### Contract tests

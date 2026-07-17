@@ -16,6 +16,13 @@ the current consuming platform still decides whether that intent is authorized
 and deployable, and only the Promotion Coordinator may publish the resulting
 target revision through the target's one selected `DesiredStateStore`.
 
+The Git Adapter, durable reconciliation worker, inbox/outbox, retry, and
+fencing reference mechanics are defined in
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+Git-provider and consumer-store alternatives remain Adapter profiles; they do
+not require the consumer to run Go or PostgreSQL and cannot make Git a second
+desired-state authority.
+
 ## Repository binding
 
 A repository connection is identified by immutable provider installation and

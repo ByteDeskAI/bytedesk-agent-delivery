@@ -2,11 +2,15 @@
 
 ## Architectural posture
 
-Agent Delivery is independently deployable and consumer-neutral. Version one
-should favor a modular monolith with explicit domain modules, one public API,
-one worker surface, and one relational persistence boundary unless measured
-scale or isolation needs justify a split. Logical ownership is defined now so a
-future process split does not change contracts.
+Agent Delivery is independently deployable and consumer-neutral. Version one is
+a Go modular monolith with explicit domain modules, one public API, one durable
+worker binary deployed in purpose-separated modes, isolated Python Agent Spec
+workers, and one PostgreSQL 18 persistence boundary. WayFlow runs only in its
+CI compatibility lane. PostgreSQL also owns durable actions and the transactional
+outbox/inbox; notification or work Adapters cannot become authority. Logical
+ownership is defined now so a measured future process split does not change
+contracts. The complete production profile is
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md).
 
 Consumer integrations use Adapters. Product core contains no direct dependency
 on a consumer's user, organization, MCP, credential, or business-work schema.
@@ -292,3 +296,4 @@ left to each implementation to invent after launch.
 - [Consumer authority and private signing v1](../standards/consumer-authority-v1.md)
 - [Delivery lifecycle v1](../standards/delivery-lifecycle-v1.md)
 - [Operational readiness v1](../standards/operational-readiness-v1.md)
+- [ADR-0002: Implementation stack and reference topology](../architecture/adr/0002-implementation-stack-and-reference-topology.md)

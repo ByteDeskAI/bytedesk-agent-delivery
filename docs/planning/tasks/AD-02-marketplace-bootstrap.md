@@ -11,6 +11,10 @@ Create `ByteDeskAI/bytedesk-agent-marketplace` as a public, MIT-licensed, third-
 
 ## Inputs
 
+- [ADR-0002](../../architecture/adr/0002-implementation-stack-and-reference-topology.md)
+  for released CLI/build compatibility only; the catalog remains definition-only
+  and may use independent CI technology.
+
 - Accepted AD-01 architecture and repository/package layout.
 - The exact `CONTRACTS-FROZEN` schema bundle, canonical-encoding profile,
   source-kind rules, strict operation profiles, and generic catalog contract.

@@ -12,6 +12,10 @@ Make marketplace packages and the OpenClaw renderer the canonical source for Byt
 
 ## Inputs
 
+- [ADR-0002](../../architecture/adr/0002-implementation-stack-and-reference-topology.md)
+  for the pinned CORE-CERT host/integration protocol only; the consumer keeps
+  its own implementation technology behind the Adapter.
+
 - Pinned CORE-CERT release with OpenClaw renderer, OCI/trust, control-plane,
   compiler, reconciler, API, CLI, and contract bundles.
 - REFERENCE-CATALOG-CERT when the cutover selects ByteDesk's 34+1 catalog.

@@ -15,6 +15,8 @@ Agent Delivery owns delivery lineage and evidence. A consuming platform remains 
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - AD-01 data model/state machine and consumer-ownership invariants.
 - Consumer integration contract, including opaque installation, subject, target, desired-state, and authorization-policy references.
 - OCI and trust contracts from AD-07 and AD-08.

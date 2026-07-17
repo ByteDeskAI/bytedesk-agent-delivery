@@ -10,6 +10,8 @@ Render canonical marketplace packages into the exact Hermes profile/configuratio
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - Landed renderer contract from AD-04.
 - Current Hermes render scripts, templates, profile files, deployment manifest, and validation/provisioning behavior as compatibility evidence.
 - Generic public/private Agent Spec, strict customization, file, skill, and

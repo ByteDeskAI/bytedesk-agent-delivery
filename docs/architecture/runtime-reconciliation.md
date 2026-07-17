@@ -9,6 +9,15 @@ executing artifact-provided installation logic.
 The normative actor, state, canary, and recovery rules are in
 [Delivery lifecycle v1](../standards/delivery-lifecycle-v1.md).
 
+The reference Host Reconciler is the Go binary and production deployment
+profile defined by
+[ADR-0002](adr/0002-implementation-stack-and-reference-topology.md). The
+reference control plane uses PostgreSQL transactions, durable actions,
+outbox/inbox, leases, fencing tokens, and exact CAS; a consumer-native
+`DesiredStateStore` may use different technology only through its Adapter and
+must remain the one authority for that target. The host never acquires a
+capability-verifier identity or executes package-provided hooks.
+
 ## Identity and permissions
 
 Each Host Reconciler identity is certificate/sender-bound to one consumer and

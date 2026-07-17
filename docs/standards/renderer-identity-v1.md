@@ -12,6 +12,13 @@ version string. This profile gives every renderer implementation an immutable,
 verifiable identity and fixes how it is selected, distributed, executed,
 withdrawn, and recorded in public and private lineage.
 
+> **Non-normative implementation note:**
+> [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md)
+> fixes the production gVisor worker profile and isolated Python Agent Spec
+> compatibility lane. Portable renderer descriptors may still identify an
+> allowlisted binary or image distribution; the reference container substrate
+> does not permit runtime plugins or artifact-selected code.
+
 ## Complete renderer identity
 
 One renderer release is identified by the tuple:

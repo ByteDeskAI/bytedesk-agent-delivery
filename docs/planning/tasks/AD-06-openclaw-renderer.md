@@ -10,6 +10,8 @@ Render canonical marketplace packages into the OpenClaw agent-directory contract
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - Landed renderer contract from AD-04.
 - Current `bytedesk-openclaw/agents/*/{AGENTS.md,SOUL.md,TOOLS.md}` definitions and runtime expectations as compatibility evidence.
 - Generic public/private Agent Spec, strict customization, file, skill, and

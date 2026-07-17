@@ -2,6 +2,12 @@
 
 This is the minimum release evidence set. A task may add stricter checks.
 
+The concrete topology used for core production certification is
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+Its PostgreSQL transaction/queue/outbox, Distribution/object storage, KMS,
+Kubernetes, gVisor, identity, telemetry, migration, and restore claims require
+executable evidence in addition to the portable contract evidence below.
+
 ## Contracts and portable source
 
 | Area | Positive evidence | Negative evidence |

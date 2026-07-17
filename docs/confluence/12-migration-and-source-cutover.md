@@ -9,6 +9,13 @@ identity, MCP grants, business work, or runtime semantics accidentally.
 The migration is a sequence of verified source-of-truth cuts. It is not a
 permanent dual-write system and does not use shadow execution of real work.
 
+Core implementation and deployment use the accepted reference profile in
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+Consumer cutovers integrate through versioned Adapters and may keep their own
+language, database, identity, authorization, and runtime technology. The ADR's
+expand/migrate/contract database procedure is an operational schema technique;
+it does not authorize reverting an old artifact or desired revision.
+
 ## Starting conditions
 
 A consuming platform may begin with definitions spread across runtime profile

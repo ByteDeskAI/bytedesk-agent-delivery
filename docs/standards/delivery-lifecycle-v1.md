@@ -14,6 +14,13 @@ target desired state, host reconciliation, canary verification, promotion, and
 forward recovery. It prevents one ambiguous enum or actor from acquiring
 authority it should not have.
 
+> **Non-normative implementation note:**
+> [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md)
+> realizes the reference lifecycle with PostgreSQL transactions, durable
+> actions, transactional outbox/inbox, revision/digest CAS, database-clock
+> leases, and fencing. A consumer-native store may use other technology but
+> cannot introduce a second writer or weaken these observable semantics.
+
 ## Actors and authority
 
 ### Promotion Coordinator

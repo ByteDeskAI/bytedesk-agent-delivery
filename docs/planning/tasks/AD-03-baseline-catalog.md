@@ -14,6 +14,10 @@ waits for the released core.
 
 ## Inputs
 
+- [ADR-0002](../../architecture/adr/0002-implementation-stack-and-reference-topology.md)
+  for released validator/renderer tooling only; catalog content remains portable
+  and definition-only.
+
 - Landed marketplace repository and schema/policy from AD-02.
 - AD-04 native validator/renderer contract, exact CONTRACTS-FROZEN bundle, and
   generic renderer conformance fixtures.

@@ -8,6 +8,14 @@ consumer authority, a Coordinator-published desired revision, fresh canary
 evidence, and the intended target may become active. No package, customization,
 signer, observation, host, or historical receipt can grant itself authority.
 
+The production reference controls that realize this objective are fixed by
+[ADR-0002](adr/0002-implementation-stack-and-reference-topology.md): distinct
+least-privilege workload identities, non-exportable purpose-separated KMS
+keys, PostgreSQL transaction/CAS authority, default-deny Kubernetes policy,
+fresh gVisor renderer sandboxes, closed configuration, redacted OpenTelemetry,
+and fenced backup/restore. Conforming alternative Adapters may change vendors,
+not the controls or denial evidence.
+
 ## Schema and trust roots
 
 Every Agent Delivery-owned authoritative object is validated by its exact JSON

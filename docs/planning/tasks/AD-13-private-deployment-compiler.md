@@ -14,6 +14,8 @@ remaining harness/consumer-neutral and non-authorizing.
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - Verified source/render descriptors and trust evidence.
 - Active installation definition binding; canonical customization document; declared file add/replace/remove operations; and exact public/private skill descriptors and digests.
 - Prepared candidate/target revision from the Promotion Coordinator and a fresh

@@ -13,6 +13,16 @@
 - Artifact provenance, consumer authority, skill approval, desired state,
   canary evidence, and runtime observation remain distinct evidence planes.
 
+The production reference in
+[ADR-0002](adr/0002-implementation-stack-and-reference-topology.md) synchronously
+pushes and digest-verifies this graph through active and recovery-region Harbor
+HA endpoints. Each endpoint owns one versioned encrypted region-local S3
+backend and an isolated metadata plane; a separate dual-region Object Lock
+archive retains evidence. Distribution 3 is the local/protocol profile.
+Registry and storage remain replaceable Adapters; exact OCI descriptors and
+digests remain authority, and neither storage nor Registry metadata replaces
+PostgreSQL command/CAS state.
+
 ## Graph
 
 ```text

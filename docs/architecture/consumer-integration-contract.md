@@ -16,6 +16,14 @@ The normative details are split across:
 - [Delivery lifecycle v1](../standards/delivery-lifecycle-v1.md); and
 - [Operational readiness v1](../standards/operational-readiness-v1.md).
 
+The Agent Delivery core reference implementation is fixed by
+[ADR-0002](adr/0002-implementation-stack-and-reference-topology.md). Its Go,
+PostgreSQL, Harbor/Distribution, Kubernetes, and gVisor choices do not cross this
+port. A consumer Adapter, consumer-owned Capability Verifier, or
+consumer-native `DesiredStateStore` may use the consumer's technology as long
+as it implements the versioned contract, single-writer/CAS behavior, identity
+separation, and complete conformance suite.
+
 ## Authority and actors
 
 The consumer owns agent identity, lifecycle, target intent, roles, grants,

@@ -16,6 +16,12 @@ It complements [Canonical encoding v1](canonical-encoding-v1.md). Canonical
 encoding decides the bytes that carry identity. This profile decides the shape
 and evolution of the values represented by those bytes.
 
+> **Non-normative implementation note:**
+> [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md)
+> fixes the Go reference verifier, PostgreSQL-backed service, locked toolchain,
+> and offline bundle build used for certification. Those choices do not change
+> this portable contract or make generated Go types authoritative.
+
 ## Normative schema language
 
 Every Agent Delivery-owned authoritative structured object MUST have a JSON

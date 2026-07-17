@@ -152,3 +152,15 @@ Normative source:
 - `development-plan.json` is an explicitly marked bootstrap planning format
   until AD-01 either publishes and validates the `plan/2` schema and drift
   fixtures or removes its schema claim before `CONTRACTS-FROZEN`.
+
+## Implementation baseline
+
+[ADR-0002](adr/0002-implementation-stack-and-reference-topology.md) fixes the
+reference implementation as a Go 1.26 modular monolith and CLI with isolated
+Python 3.13 Agent Spec workers, PostgreSQL 18 authoritative state/durable work,
+active and recovery-region Harbor HA endpoints with synchronous OCI API
+verification, purpose-separated KMS/WIF signing, SPIFFE mTLS, Kubernetes
+1.36/1.35 deployment, staged gVisor renderer isolation, and HA OpenTelemetry.
+Distribution 3 remains the local/protocol Registry profile.
+These are product implementation and certification choices, not fields or
+authority that portable agent packages may select.

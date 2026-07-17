@@ -13,6 +13,12 @@ with their transitive references, fixtures, AsyncAPI 3.1.0 document, and
 CloudEvents 1.0.2 event schemas in the signed offline contract bundle. Generated
 SDKs and documentation are drift-checked outputs, not competing schemas.
 
+The supported `bd-agent` Go client, server build, release platforms, locked
+toolchain, API deployment, and local development profile are fixed by
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+HTTP and event contracts remain language-neutral; third-party clients do not
+need Go and consumer integrations do not inherit the server topology.
+
 ## Client modes
 
 The CLI supports two explicit modes:

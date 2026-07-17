@@ -21,6 +21,15 @@ view and must link back to the repository revision that produced it.
 12. [Migration and source cutover](12-migration-and-source-cutover.md)
 13. [Verification, operations, and disaster recovery](13-verification-operations-and-disaster-recovery.md)
 
+## Reference implementation
+
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md)
+fixes the Go/PostgreSQL/Harbor/S3/Kubernetes/gVisor production reference
+profile used to implement and certify these contracts. That profile is
+deliberately non-portable: consumer integrations and conforming Adapters may
+use different technology without changing the portable definitions, protocols,
+authority boundaries, or verification obligations.
+
 ## Canonical contracts
 
 The pages explain the design; the following documents define its normative

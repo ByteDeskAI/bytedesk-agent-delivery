@@ -10,6 +10,12 @@ it does not define Agent Spec semantics or consumer authorization.
 The normative artifact names, schemas, and content types are defined in
 [OCI media types v1](../standards/oci-media-types-v1.md).
 
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md)
+fixes the first production Registry Adapter, encrypted versioned object profile,
+and separate locked evidence archive. They implement this graph but do not
+replace it: exact OCI digests remain authority, tags remain discovery, and
+object storage never becomes command, desired-state, or approval authority.
+
 ## Digest-first identity
 
 Every authoritative edge names an OCI repository, exact digest, expected media

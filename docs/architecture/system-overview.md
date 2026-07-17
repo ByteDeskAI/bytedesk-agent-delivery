@@ -164,6 +164,19 @@ V1 starts as a modular monolith with explicit ports, a durable store, work
 queue, transactional outbox/inbox, and isolated renderer workers. Logical
 boundaries permit a measured future split without changing contracts.
 
+The accepted reference implementation is defined by
+[ADR-0002](adr/0002-implementation-stack-and-reference-topology.md): Go 1.26
+API/worker/CLI components, isolated Python 3.13 Agent Spec renderer workers,
+PostgreSQL 18 state/actions/outbox, and synchronous OCI API publication to
+active and recovery-region Harbor HA endpoints. Each Harbor endpoint has
+region-local S3 plus a dedicated PostgreSQL 15/Redis Sentinel metadata plane;
+none is product authority. The profile also fixes purpose-separated KMS/WIF,
+SPIFFE mTLS, Kubernetes 1.36/1.35, staged gVisor render sandboxes, and HA
+OpenTelemetry gateways. Distribution 3 is only the local/protocol Registry
+profile. PostgreSQL command transactions atomically append aggregate, action,
+evidence, and outbox state; no required Kafka, NATS, Redis, or cloud queue
+becomes a second authority.
+
 The harness certifies isolated-candidate or guarded-in-place activation. Fresh
 Host Reconciler technical evidence and separate consumer capability evidence
 must match the Coordinator's nonce-bound canary plan before promotion. A

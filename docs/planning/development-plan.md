@@ -163,6 +163,10 @@ GA result.
   signed offline contract bundle; generated code, OpenAPI, AsyncAPI, examples,
   and docs pass drift checks.
 - Use TDD and denial fixtures before implementation for every trust boundary.
+- Implement the reference stack and topology from
+  [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md);
+  an Adapter may add a provider or substrate only through its frozen port and
+  conformance suite.
 - No production registry, KMS, runtime, or consuming-platform mutation is part
   of these tasks without separate authorization.
 - Core code lives here. Catalog content lives in a definition-only Git

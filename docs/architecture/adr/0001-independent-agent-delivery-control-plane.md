@@ -770,6 +770,7 @@ The program cannot close without evidence for:
 
 This ADR is implemented and constrained by the
 [architecture resolution register](../decision-register.md),
+[implementation stack and reference topology](0002-implementation-stack-and-reference-topology.md),
 [system overview](../system-overview.md), [C4 model](../c4.md),
 [consumer integration contract](../consumer-integration-contract.md),
 [OCI artifact model](../oci-artifact-model.md),

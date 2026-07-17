@@ -16,6 +16,13 @@ product must publish and pass the same reference-topology conformance suite. A
 managed service may offer stricter targets and must not silently weaken these
 defaults.
 
+The production reference profile is fixed by
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+Its declared Go/PostgreSQL/Harbor/S3/Kubernetes/gVisor/KMS/SPIFFE topology is
+the first topology that must produce this evidence. Alternative implementations
+may claim conformance only after passing the same externally observable
+contract, failure, capacity, and recovery suite.
+
 ## Service-level indicators and objectives
 
 SLOs are measured monthly at the service boundary, including dependency and

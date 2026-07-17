@@ -7,6 +7,13 @@ observable, retryable, idempotent process whose complete evidence is retained.
 The process separates portable compatibility, consumer evaluation, artifact
 trust, runtime canary, and final promotion.
 
+The production Coordinator, PostgreSQL transaction/CAS, durable-action,
+outbox/inbox, lease/fencing, worker-isolation, and archive topology are fixed by
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+The database transaction is acceptance authority; a lease or wake-up transport
+is not. Recovery always appends a new forward revision even though database
+schema migration uses expand/migrate/contract operationally.
+
 Installation, candidate preparation, target rollout, and host reconciliation
 use separate state machines defined by
 [Delivery lifecycle v1](../standards/delivery-lifecycle-v1.md). Candidate

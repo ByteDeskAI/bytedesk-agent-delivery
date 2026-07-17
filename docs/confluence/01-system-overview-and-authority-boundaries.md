@@ -13,6 +13,12 @@ consumer's identity provider, policy engine, MCP broker, work system, or agent
 runtime.
 
 The governing decision is [ADR-0001](../architecture/adr/0001-independent-agent-delivery-control-plane.md).
+Its production reference implementation is fixed separately by
+[ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md):
+a Go modular monolith and CLI, PostgreSQL transaction/durable-work authority,
+OCI Registry and archive Adapters, isolated render workers, and Kubernetes
+deployment. The stack is not part of an agent definition and creates no
+consumer identity, grant, credential, approval, or runtime authority.
 
 ## Product story
 

@@ -13,6 +13,13 @@ security invariant, and impact. Redact credentials and tenant data.
 
 ## Security-sensitive areas
 
+The production reference implementation and its mandatory identity, secret,
+network, sandbox, storage, KMS, backup, and telemetry controls are fixed by
+[ADR-0002](docs/architecture/adr/0002-implementation-stack-and-reference-topology.md).
+Equivalent Adapter implementations must preserve the normative security
+contracts and pass the same denial and isolation suites; a different vendor or
+deployment substrate is not an exception to those controls.
+
 Reports are especially valuable for:
 
 - Agent Spec or binding authority smuggling;

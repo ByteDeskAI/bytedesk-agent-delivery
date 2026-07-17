@@ -18,8 +18,9 @@ access.
 ## Status
 
 This repository is in the architecture and delivery-planning phase. The product
-boundary and information contracts are accepted architecturally, and the
-implementation workstreams are documented under [`docs/`](docs/README.md).
+boundary, information contracts, implementation stack, and production reference
+topology are accepted architecturally, and the implementation workstreams are
+documented under [`docs/`](docs/README.md).
 Concrete schemas, manifests, conformance fixtures, and measured operational
 evidence remain release-blocking. No production deployment is authorized or
 implied by this repository.
@@ -69,6 +70,7 @@ identity, and call-time authorization controls.
 - [Product story](docs/product/story.md)
 - [Scope and authority boundaries](docs/product/scope-and-boundaries.md)
 - [ADR-0001](docs/architecture/adr/0001-independent-agent-delivery-control-plane.md)
+- [ADR-0002: Implementation stack and reference topology](docs/architecture/adr/0002-implementation-stack-and-reference-topology.md)
 - [Architecture decision register](docs/architecture/decision-register.md)
 - [System overview](docs/architecture/system-overview.md)
 - [Security and trust](docs/architecture/security-and-trust.md)

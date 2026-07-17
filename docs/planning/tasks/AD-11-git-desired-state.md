@@ -13,6 +13,8 @@ runtime desired state or allowing it to bypass the Promotion Coordinator.
 
 ## Inputs
 
+- [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
+
 - AD-09 installation/binding/candidate/TargetDeliveryState contracts and AD-10
   API/event/action resources.
 - Authenticated webhook-receipt and Git-provider adapter contracts. Historical BDP-3282 is reference-consumer ingress evidence, not a core dependency.

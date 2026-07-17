@@ -17,6 +17,12 @@ This contract adopts the consumer-sovereign topology in
 code identity in [Renderer identity v1](renderer-identity-v1.md), and exact
 schema distribution in [Machine contracts v1](machine-contracts-v1.md).
 
+> **Non-normative implementation note:**
+> [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md)
+> fixes the first KMS/workload-identity and production deployment profile.
+> Alternative KMS Adapters remain conforming only with immutable key-version,
+> purpose, workload, consumer-isolation, audit, rotation, and denial evidence.
+
 ## Immutable policy record
 
 Every policy is a closed JSON Schema Draft 2020-12 object with:

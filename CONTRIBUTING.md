@@ -10,6 +10,7 @@ Read:
 - [`AGENTS.md`](AGENTS.md)
 - [`docs/product/scope-and-boundaries.md`](docs/product/scope-and-boundaries.md)
 - [`docs/architecture/adr/0001-independent-agent-delivery-control-plane.md`](docs/architecture/adr/0001-independent-agent-delivery-control-plane.md)
+- [`docs/architecture/adr/0002-implementation-stack-and-reference-topology.md`](docs/architecture/adr/0002-implementation-stack-and-reference-topology.md)
 - [`docs/architecture/security-and-trust.md`](docs/architecture/security-and-trust.md)
 - [`docs/standards/machine-contracts-v1.md`](docs/standards/machine-contracts-v1.md)
 - [`docs/standards/renderer-identity-v1.md`](docs/standards/renderer-identity-v1.md)
@@ -20,6 +21,22 @@ Read:
 Open or amend an ADR before introducing a new trust boundary, authority owner,
 artifact class, renderer-loading model, deployment state authority, or
 cross-consumer data path.
+
+## Reference implementation toolchain
+
+ADR-0002 is authoritative for implementation technology. The control plane,
+CLI, and host protocol use Go 1.26; official Agent Spec validation runs in
+hash-locked Python 3.13 sandbox workers, while WayFlow compatibility is a
+separate CI-only lane. PostgreSQL 18 is the reference authoritative store and
+durable action/outbox boundary. Production conformance uses Kubernetes
+1.36/1.35, synchronous publication to active and recovery-region Harbor HA
+endpoints, non-exportable KMS/WIF signing, SPIFFE mTLS, and gVisor renderer
+isolation.
+
+Use only repository entry points and locked tools. Do not rely on a host Go,
+Python, Node, container, schema, or CLI version that is not declared by the
+repository. Development may use Compose, but production sandbox, multi-zone,
+KMS, restore, and scale claims require their dedicated conformance profiles.
 
 ## Pull requests
 
