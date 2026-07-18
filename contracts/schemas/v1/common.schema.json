@@ -100,8 +100,111 @@
         "size": { "$ref": "#/$defs/nonNegativeSafeInteger" },
         "trustPolicy": { "$ref": "#/$defs/trustPolicyRef" }
       },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mediaType": {
+                "const": "application/vnd.bytedesk.agent.contract-bundle.v1+json"
+              }
+            },
+            "required": ["mediaType"]
+          },
+          "then": {
+            "properties": {
+              "trustPolicy": {
+                "properties": { "id": { "const": "contract-bundle-release-v1" } },
+                "required": ["id"]
+              }
+            }
+          }
+        },
+        {
+          "not": {
+            "properties": {
+              "mediaType": { "const": "application/vnd.bytedesk.agent.contract-bundle.v1+tar" }
+            },
+            "required": ["mediaType"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "trustPolicy": {
+                "properties": { "id": { "const": "contract-bundle-release-v1" } },
+                "required": ["id"]
+              }
+            },
+            "required": ["trustPolicy"]
+          },
+          "then": {
+            "properties": {
+              "mediaType": { "const": "application/vnd.bytedesk.agent.contract-bundle.v1+json" }
+            }
+          }
+        }
+      ],
       "additionalProperties": false,
       "unevaluatedProperties": false
+    },
+    "evidenceBlobDescriptor": {
+      "type": "object",
+      "required": ["repository", "digest", "mediaType", "size"],
+      "properties": {
+        "repository": { "$ref": "#/$defs/ociRepository" },
+        "digest": { "$ref": "#/$defs/sha256" },
+        "mediaType": { "$ref": "#/$defs/mediaType" },
+        "size": { "$ref": "#/$defs/nonNegativeSafeInteger" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false,
+      "description": "Exact non-authoritative blob identity used only inside independently verified evidence. It has no trust-policy reference and acquires no authority from its enclosing artifact; the trusted Adapter must resolve and authenticate its exact bytes."
+    },
+    "contractBundleDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/artifactDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.contract-bundle.v1+json" },
+            "trustPolicy": {
+              "properties": { "id": { "const": "contract-bundle-release-v1" } },
+              "required": ["id"]
+            }
+          },
+          "required": ["mediaType", "trustPolicy"]
+        }
+      ],
+      "description": "Exact descriptor role for the JSON contract bundle signed under the contract-bundle-release-v1 keyless purpose."
+    },
+    "consumerDeploymentDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/artifactDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.consumer-deployment.v1+json" },
+            "trustPolicy": {
+              "properties": { "id": { "const": "consumer-deployment-v1" } },
+              "required": ["id"]
+            }
+          }
+        }
+      ],
+      "description": "Exact descriptor role for a consumer deployment signed under the consumer-deployment-v1 purpose."
+    },
+    "consumerRuntimeReleaseDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/artifactDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.runtime-release.v1+json" },
+            "trustPolicy": {
+              "properties": { "id": { "const": "consumer-runtime-release-v1" } },
+              "required": ["id"]
+            }
+          }
+        }
+      ],
+      "description": "Exact descriptor role for a runtime release signed under the consumer-runtime-release-v1 purpose."
     },
     "contentDescriptor": {
       "$ref": "#/$defs/artifactDescriptor"
@@ -189,6 +292,15 @@
       },
       "additionalProperties": false,
       "unevaluatedProperties": false
+    },
+    "semver": {
+      "type": "string",
+      "maxLength": 128,
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "platform": {
+      "type": "string",
+      "enum": ["linux/amd64", "linux/arm64"]
     },
     "resultClass": {
       "type": "string",

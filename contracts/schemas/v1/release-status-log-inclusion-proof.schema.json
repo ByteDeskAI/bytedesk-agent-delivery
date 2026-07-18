@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status-log-inclusion-proof/1.0.0",
+  "title": "Release-status Merkle head inclusion proof",
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "proofId",
+    "subjectKind",
+    "subject",
+    "treeSize",
+    "leafIndex",
+    "leafDigest",
+    "rootDigest",
+    "algorithm",
+    "auditPath",
+    "trustPolicy"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.release-status-log-inclusion-proof/1" },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "proofId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "subjectKind": {
+      "type": "string",
+      "enum": ["product_release", "renderer_release"]
+    },
+    "subject": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+    },
+    "treeSize": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger"
+    },
+    "leafIndex": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740990
+    },
+    "leafDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "rootDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "algorithm": {
+      "const": "bytedesk-rfc6962-head-inclusion-v1"
+    },
+    "auditPath": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+      }
+    },
+    "trustPolicy": {
+      "type": "object",
+      "required": ["id", "digest"],
+      "properties": {
+        "id": { "const": "release-status-head-v1" },
+        "digest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "A bounded RFC 6962-style audit path proving that the exact current release-status leaf is included at treeSize/rootDigest. It is mathematically verified and its exact descriptor is bound by the signed status-head checkpoint."
+}

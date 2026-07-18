@@ -25,7 +25,7 @@
           "mediaType": { "const": "application/schema+json" },
           "size": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonNegativeSafeInteger" },
           "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
-          "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+          "trustPolicy": { "$ref": "#/$defs/contractBundleTrust" }
         },
         "additionalProperties": false,
         "unevaluatedProperties": false
@@ -42,7 +42,18 @@
     "compatibility": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/fileInventoryEntry" },
     "documentationMap": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/fileInventoryEntry" },
     "buildInputDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
-    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+    "trustPolicy": { "$ref": "#/$defs/contractBundleTrust" }
+  },
+  "$defs": {
+    "contractBundleTrust": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+        {
+          "properties": { "id": { "const": "contract-bundle-release-v1" } },
+          "required": ["id"]
+        }
+      ]
+    }
   },
   "additionalProperties": false,
   "unevaluatedProperties": false

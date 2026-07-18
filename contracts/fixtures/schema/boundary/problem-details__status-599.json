@@ -1,8 +1,0 @@
-{
-  "type": "https://problems.bytedesk.ai/agent-delivery/dependency-failed",
-  "title": "Dependency failed",
-  "status": 599,
-  "code": "dependency_failed",
-  "correlationId": "corr-01",
-  "retryAfterSeconds": 86400
-}

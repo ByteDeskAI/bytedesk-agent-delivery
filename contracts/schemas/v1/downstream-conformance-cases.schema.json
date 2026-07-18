@@ -1,0 +1,600 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/downstream-conformance-cases/1.0.0",
+  "title": "Closed downstream conformance case catalog",
+  "type": "object",
+  "required": [
+    "$schema",
+    "profile",
+    "version",
+    "cases"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://schemas.bytedesk.ai/agent-delivery/v1/downstream-conformance-cases/1.0.0"
+    },
+    "profile": {
+      "const": "bytedesk.downstream-conformance-cases/1"
+    },
+    "version": {
+      "const": 1
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/case"
+      }
+    }
+  },
+  "$defs": {
+    "coverage": {
+      "type": "object",
+      "required": [
+        "portId",
+        "operationId"
+      ],
+      "properties": {
+        "portId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^bytedesk\\.port\\.[a-z0-9-]+/1$"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9-]*$"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "fixture": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "protocolFixtureIds",
+            "protocolMutationIds",
+            "rejectingOperation"
+          ],
+          "properties": {
+            "protocolFixtureIds": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            },
+            "protocolMutationIds": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            },
+            "rejectingOperation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^bytedesk\\.port\\.[a-z0-9-]+/1#[a-z][a-z0-9-]*$"
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "assertion",
+            "fault",
+            "rejectingOperation"
+          ],
+          "properties": {
+            "assertion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "fault": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "rejectingOperation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^bytedesk\\.port\\.[a-z0-9-]+/1#[a-z][a-z0-9-]*$"
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "assertion",
+            "fault"
+          ],
+          "properties": {
+            "assertion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "fault": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "assertion",
+            "fixture"
+          ],
+          "properties": {
+            "assertion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "fixture": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "assertion",
+            "mutation",
+            "rejectingOperation"
+          ],
+          "properties": {
+            "assertion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "mutation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "rejectingOperation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^bytedesk\\.port\\.[a-z0-9-]+/1#[a-z][a-z0-9-]*$"
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "assertion",
+            "mutation"
+          ],
+          "properties": {
+            "assertion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "mutation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "assertion"
+          ],
+          "properties": {
+            "assertion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "assertions",
+            "kind"
+          ],
+          "properties": {
+            "assertions": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "fault",
+            "recovery"
+          ],
+          "properties": {
+            "fault": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "recovery": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "fixture",
+            "rejectingOperation"
+          ],
+          "properties": {
+            "fixture": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "rejectingOperation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^bytedesk\\.port\\.[a-z0-9-]+/1#[a-z][a-z0-9-]*$"
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "fixture"
+          ],
+          "properties": {
+            "fixture": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "mutation",
+            "rejectingOperation"
+          ],
+          "properties": {
+            "mutation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "rejectingOperation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^bytedesk\\.port\\.[a-z0-9-]+/1#[a-z][a-z0-9-]*$"
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "mutation"
+          ],
+          "properties": {
+            "mutation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "mutations",
+            "rejectingOperation"
+          ],
+          "properties": {
+            "mutations": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            },
+            "rejectingOperation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^bytedesk\\.port\\.[a-z0-9-]+/1#[a-z][a-z0-9-]*$"
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "mutations"
+          ],
+          "properties": {
+            "mutations": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      ]
+    },
+    "expected": {
+      "type": "object",
+      "required": [
+        "outcome",
+        "problemCode",
+        "sideEffectState"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "deny",
+            "pass",
+            "recover"
+          ]
+        },
+        "problemCode": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          ]
+        },
+        "sideEffectState": {
+          "type": "string",
+          "enum": [
+            "commit-unknown",
+            "committed-unchanged",
+            "none",
+            "not-committed"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "case": {
+      "type": "object",
+      "required": [
+        "caseId",
+        "suite",
+        "portSuites",
+        "ownerTask",
+        "covers",
+        "category",
+        "fixture",
+        "expected"
+      ],
+      "properties": {
+        "caseId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Z][A-Z0-9-]*-[0-9]{3}-[a-z0-9-]+$"
+        },
+        "suite": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^downstream\\.[a-z0-9.-]+$"
+        },
+        "portSuites": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^downstream\\.[a-z0-9.-]+$"
+          }
+        },
+        "ownerTask": {
+          "type": "string",
+          "maxLength": 5,
+          "pattern": "^AD-(?:0[2-9]|1[0-8])$"
+        },
+        "covers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/coverage"
+          }
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "actor-separation",
+            "authentication-denial",
+            "authority-boundary",
+            "authority-denial",
+            "authority-snapshot-denial",
+            "authorization-denial",
+            "automation-contract",
+            "cas-denial",
+            "client-timeout",
+            "commit-uncertainty",
+            "consumer-isolation-denial",
+            "crash-recovery",
+            "event-gap",
+            "evidence-denial",
+            "exact-binding-denial",
+            "execution-boundary",
+            "external-input-lock-denial",
+            "false-denial-prevention",
+            "fencing",
+            "functional-extension",
+            "ga-gate",
+            "idempotency-collision",
+            "license-evaluation-denial",
+            "lineage-denial",
+            "migration-denial",
+            "oci-config-denial",
+            "oci-layer-denial",
+            "oci-subject-denial",
+            "private-functional-extension",
+            "private-input-canonicalization-denial",
+            "private-input-lock-denial",
+            "protocol-denial",
+            "provenance-denial",
+            "qualification-authority-boundary",
+            "qualification-execution-attestation-denial",
+            "recovery-boundary",
+            "reference-catalog",
+            "reference-cutover",
+            "regional-fencing",
+            "renderer-execution-attestation-denial",
+            "renderer-execution-substitution",
+            "renderer-output-denial",
+            "renderer-release-graph-substitution",
+            "renderer-selection-denial",
+            "renderer-selection-substitution",
+            "request-identity-denial",
+            "sandbox-stream-isolation-denial",
+            "sbom-denial",
+            "scanner-coverage-denial",
+            "scanner-input-denial",
+            "signing-profile-denial",
+            "trust-freshness-denial",
+            "valid-contract-sequence",
+            "worker-framing-denial"
+          ]
+        },
+        "fixture": {
+          "$ref": "#/$defs/fixture"
+        },
+        "expected": {
+          "$ref": "#/$defs/expected"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "expected": {
+                "properties": {
+                  "outcome": {
+                    "const": "deny"
+                  }
+                },
+                "required": [
+                  "outcome"
+                ]
+              }
+            },
+            "required": [
+              "expected"
+            ]
+          },
+          "then": {
+            "properties": {
+              "fixture": {
+                "required": [
+                  "rejectingOperation"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

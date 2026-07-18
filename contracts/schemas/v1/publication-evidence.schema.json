@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/publication-evidence/1.0.0",
+  "title": "Authenticated OCI publication and readback evidence",
+  "x-bytedesk-digestAuthority": {
+    "profile": "bytedesk.publication-evidence-digest/1",
+    "exclude": [
+      "contract",
+      "schema",
+      "evidenceDigest"
+    ]
+  },
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "idempotencyKey",
+    "requestDigest",
+    "authorizationContextDigest",
+    "repository",
+    "rootDescriptor",
+    "configDescriptor",
+    "layerDescriptors",
+    "graphDigest",
+    "artifactType",
+    "subject",
+    "registryIdentity",
+    "registryIdentityDigest",
+    "registryRequestId",
+    "committedDescriptor",
+    "committedRawDigest",
+    "readbackDescriptor",
+    "readbackRawDigest",
+    "publishedAt",
+    "readbackAt",
+    "evidenceDigest"
+  ],
+  "properties": {
+    "contract": {
+      "const": "bytedesk.publication-evidence/1"
+    },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "idempotencyKey": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "requestDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "RFC 8785 JCS SHA-256 digest of the complete closed publish request in the JSON data model, excluding only requestDigest itself; byte fields use the operation wire profile's canonical base64url-no-padding representation."
+    },
+    "authorizationContextDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Exact opaque authorization-context digest supplied to the generic OCI push. For public render publication it binds the publication-stage status-eligibility descriptor, eligibility digest, permitted verification evidence digest, and operationTime; the evidence value must equal the push request value."
+    },
+    "repository": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/ociRepository",
+      "description": "Exact tag-free repository that received the artifact."
+    },
+    "rootDescriptor": {
+      "$ref": "#/$defs/rootDescriptor"
+    },
+    "configDescriptor": {
+      "$ref": "#/$defs/configDescriptor"
+    },
+    "layerDescriptors": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "$ref": "#/$defs/layerDescriptor"
+      }
+    },
+    "graphDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Domain-separated digest of the closed root, config, ordered layers, blobs, artifact type, and optional subject."
+    },
+    "artifactType": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/mediaType"
+    },
+    "subject": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ociDescriptor"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "registryIdentity": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "description": "Canonical authenticated registry service identity, such as a verified SPIFFE ID or TLS subject alternative name; it is evidence, not workload authority."
+    },
+    "registryIdentityDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Digest of the authenticated registry service identity and verification context used for this request."
+    },
+    "registryRequestId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "committedDescriptor": {
+      "$ref": "#/$defs/rootDescriptor"
+    },
+    "committedRawDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "SHA-256 digest recomputed from the exact manifest bytes accepted by the registry."
+    },
+    "readbackDescriptor": {
+      "$ref": "#/$defs/rootDescriptor"
+    },
+    "readbackRawDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "SHA-256 digest recomputed from exact manifest bytes read back after commit."
+    },
+    "publishedAt": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp"
+    },
+    "readbackAt": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp"
+    },
+    "evidenceDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "ociDescriptor": {
+      "type": "object",
+      "required": [
+        "digest",
+        "mediaType",
+        "size"
+      ],
+      "properties": {
+        "digest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        },
+        "mediaType": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/mediaType"
+        },
+        "size": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonNegativeSafeInteger"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "rootDescriptor": {
+      "type": "object",
+      "required": [
+        "repository",
+        "digest",
+        "mediaType",
+        "artifactType",
+        "size",
+        "subjectDigest",
+        "annotationsDigest"
+      ],
+      "properties": {
+        "repository": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/ociRepository"
+        },
+        "digest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        },
+        "mediaType": {
+          "const": "application/vnd.oci.image.manifest.v1+json"
+        },
+        "artifactType": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/mediaType"
+        },
+        "size": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonNegativeSafeInteger"
+        },
+        "subjectDigest": {
+          "oneOf": [
+            {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "annotationsDigest": {
+          "oneOf": [
+            {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "configDescriptor": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ociDescriptor"
+        },
+        {
+          "required": [
+            "digest",
+            "mediaType",
+            "size"
+          ],
+          "properties": {
+            "digest": {
+              "const": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+            },
+            "mediaType": {
+              "const": "application/vnd.oci.empty.v1+json"
+            },
+            "size": {
+              "const": 2
+            }
+          }
+        }
+      ]
+    },
+    "layerDescriptor": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ociDescriptor"
+        },
+        {
+          "required": [
+            "mediaType"
+          ],
+          "properties": {
+            "mediaType": {
+              "const": "application/vnd.oci.image.layer.v1.tar+gzip"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Closed evidence returned only after an authenticated registry commit and exact raw-byte readback. Semantic verification requires authorizationContextDigest to equal the generic OCI push request value; repository and every root descriptor repository to be identical; rootDescriptor, committedDescriptor, and readbackDescriptor to be identical; committedRawDigest and readbackRawDigest to equal the root digest; requestDigest, graphDigest, registryIdentityDigest, and evidenceDigest to recompute exactly under their named profiles; configDescriptor, ordered layerDescriptors, artifactType, and subject to equal the committed manifest; rootDescriptor.subjectDigest to equal subject.digest or null; readbackAt to be no earlier than publishedAt; and an absent subject to be represented by explicit null."
+}

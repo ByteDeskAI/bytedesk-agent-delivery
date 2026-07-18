@@ -29,7 +29,7 @@
       "etag": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
       "projectionSchema": {
         "id": "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0",
-        "digest": "sha256:126bc30d3dd0174be7b5e10261b0874955cad41a7a0d8d80edc68c7c51849cfc"
+        "digest": "sha256:5ea7f494cd955eb19f1a89c6e640ed963426b40eaf3eab42b6f58f446d7b64b6"
       }
     },
     "consumerScope": "consumer-example",

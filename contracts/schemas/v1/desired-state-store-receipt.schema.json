@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/desired-state-store-receipt/1.0.0",
+  "title": "Authenticated DesiredStateStore operation receipt",
+  "type": "object",
+  "required": ["contract", "schema", "storeId", "operation", "requestId", "idempotencyKey", "inputDigest", "consumerId", "targetId", "regionEpoch", "writerFencingToken", "outcome", "precondition", "storeEvidence", "recordedAt"],
+  "properties": {
+    "contract": { "const": "bytedesk.desired-state-store-receipt/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "storeId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "operation": { "type": "string", "enum": ["read", "compare_and_swap", "resolve_idempotency"] },
+    "requestId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "idempotencyKey": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "inputDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "regionEpoch": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "writerFencingToken": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "outcome": { "type": "string", "enum": ["found", "absent", "not_modified", "applied", "replayed", "conflict", "commit_unknown"] },
+    "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" },
+    "committed": {
+      "type": "object",
+      "required": ["revision", "digest", "etag"],
+      "properties": {
+        "revision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "etag": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "storeEvidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/redactedEvidenceRef" },
+    "recordedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome": { "enum": ["found", "applied", "replayed"] } }, "required": ["outcome"] },
+      "then": { "required": ["committed"] }
+    },
+    {
+      "if": { "properties": { "outcome": { "enum": ["absent", "not_modified", "conflict", "commit_unknown"] } }, "required": ["outcome"] },
+      "then": { "not": { "required": ["committed"] } }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Store-authenticated persistence evidence only. A commit_unknown response requires idempotency resolution and an authoritative reread before retry; it is never treated as conflict or denial."
+}

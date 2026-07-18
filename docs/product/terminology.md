@@ -112,14 +112,17 @@ A private OCI artifact binding verified public source/render lineage, the
 consumer customization delta, approved public/private skill descriptors, and
 the exact compilation authority snapshot plus current opaque authority
 subdigests to one installation and runtime target. It contains the complete
-effective render bundle and manifest. It is not itself the call-time
+effective render manifest, exact runtime-file payload descriptor, and
+authenticated renderer execution lineage. It is not itself the call-time
 authorization decision.
 
 ## Runtime release
 
-A signed manifest aggregating the exact deployment subdigests intended for one
-runtime target. It is prepared content and becomes desired only through a
-Promotion Coordinator compare-and-swap transition.
+A `consumer-runtime-release-v1`-signed manifest aggregating, for every subject,
+the exact canonical deployment descriptor and its separate exact private-
+compilation-evidence descriptor intended for one runtime target. It is prepared
+content and becomes desired only through a Promotion Coordinator compare-and-
+swap transition.
 
 ## Consumer authority snapshot
 

@@ -2,10 +2,11 @@
 
 **Profile:** `bytedesk.machine-contracts/1`
 
-**Status:** Accepted contract; its language-neutral sources, 49 product
-schemas, projections, and conformance fixtures are frozen by AD-01. Generated
+**Status:** Accepted contract; the v1 language-neutral sources, 112 product
+schemas, projections, and 312 indexed conformance fixtures—159 valid and 153
+invalid—are frozen by the accepted AD-01 through AD-18 contracts. Generated
 language bindings and downstream service, runtime, and operational evidence
-remain later-task GA gates.
+remain implementation and GA gates.
 
 ## Purpose
 
@@ -46,6 +47,12 @@ Each schema MUST:
   `enum` inherently bounds them, bound directly typed integers on both sides
   within the interoperable range, and either close objects to a fixed property
   set or declare `maxProperties`;
+- allow the 5,592,406-character ceiling only for the exact
+  `base64url-no-padding` byte profile, where canonical decoding independently
+  enforces at most 4 MiB of decoded bytes and rejects padding, non-alphabet
+  characters, and non-zero unused tail bits; ordinary strings remain capped at
+  4 MiB and this wire expansion does not raise the complete product-object
+  parser limit;
 - bound JSON integers to the interoperable range
   `-9007199254740991..9007199254740991`; larger exact quantities and
   identifiers use canonical decimal strings;
@@ -89,7 +96,7 @@ The exact product-schema set is independently closed by
 profile `bytedesk.contract-schema-inventory/1`. Its only root fields are
 `profile` and `schemas`; each schema entry has only its stable `id`, canonical
 repository `path`, and RFC 8785 digest, and entries are ordered by ID. The
-current v1 inventory contains 49 schemas. The Go and Python validators, bundle
+current v1 inventory contains 112 schemas. The Go and Python validators, bundle
 builder, and offline verifier MUST compare the complete discovered or bundled
 registry to these exact triples. An omitted or added schema, path rename, ID
 substitution, digest drift, duplicate, unknown field, or reordered entry fails
@@ -109,6 +116,14 @@ The `$id` remains stable for discovery and reference resolution. Published
 schema bytes are immutable. Correcting any byte creates a new schema version
 and digest; historical schemas remain available for receipt verification.
 
+Before the first production-authoritative publication of a major, draft bytes
+may be replaced only by an explicit readiness decision that proves no
+`authorityIssued: true` bundle or receipt exists, invalidates every prior
+generated fixture, manifest, digest, and conformance report, and reruns the
+complete freeze gate. Test-only or conformance artifacts do not publish a
+schema. This narrow pre-publication reset is not a compatibility mechanism and
+ceases permanently for that major after its first authoritative release.
+
 The API, CLI, manifests, attestations, and receipts expose the exact schema
 `$id` and digest used to validate an object. Implementations MUST NOT fetch a
 new schema merely because an artifact names it. The schema must already be
@@ -123,6 +138,61 @@ schema's `$id`, and `schema.digest` equals the selected source schema's RFC
 names a different ID or digest fails closed. Structural validation alone is
 not evidence of this binding because a schema cannot normatively assert its
 own canonical digest.
+
+## Downstream integration control catalogs
+
+The downstream adapter boundary is closed by ten additional Draft 2020-12
+product schemas and their root-bound control documents:
+
+- `action-catalog`, `problem-catalog`, and `event-types` define the stable
+  action, failure, and notification vocabulary shared by API, CLI, worker,
+  reconciler, storage, registry, signing, and consumer adapters;
+- `downstream-port-registry` defines every port, operation, owner, request and
+  response contract, protocol profile, failure mapping, and conformance suite;
+- `protocol-profiles` and `downstream-conformance-cases` define the closed
+  adapter requirements and permitted/denied behavior, while
+  `downstream-conformance-plan` deterministically compiles all nine machine
+  authorities into adapter-executable steps and closed oracles;
+- `protocol-fixtures` binds the byte-exact OCI, supply-chain, and capability
+  protocol corpus, complete material set, cross-document chains, and
+  single-fault denial mutations used as conformance evidence; and
+- `port-type-catalog` and `port-contract-fixtures` contain the complete offline
+  field/operation schemas and their valid and structural-denial instances.
+
+The source controls live under `contracts/ports/v1/`, except the notification
+registry under `contracts/events/v1/`. Every control MUST carry its accepted
+root `$schema`, validate as an indexed positive fixture, and ship in the same
+offline bundle as its exact schema. Unknown root or nested fields, omitted
+required suites, unresolved contract references, mutable selectors, incomplete
+fixture coverage, or source-schema digest drift fail closed.
+
+`type-catalog.json` and `contract-fixtures.json` are deterministically
+generated from the reviewed port registry, action/problem/event controls, and
+the accepted product-schema set. Their generator is a build mechanism, not a
+second contract authority. Once released, the generated catalogs' exact bytes,
+embedded schema IDs, and digests are the distributed control. Each embedded
+port schema remains bounded and closed, resolves only from the offline catalog,
+and cannot expand the 112-entry product-schema inventory or substitute a source
+schema. A generated valid fixture proves structural compatibility only; it is
+never authentication, authorization, consumer approval, or deployment
+authority.
+
+The port catalogs describe Agent Delivery's headless integration surfaces.
+They MUST NOT encode consumer users, roles, grants, provider credentials,
+workload identity, business approval, or mandatory runtime security policy.
+Adapters treat all requests, responses, evidence, payload files, skill files,
+and generated instances as untrusted input and apply current call-time
+consumer/runtime authorization outside these contracts.
+
+Descriptor roles are closed rather than inferred from a field name. The shared
+`artifactDescriptor` binds repository, exact digest, media type, size, and
+trust-policy reference; canonical contract-bundle JSON and the fixed
+`contract-bundle-release-v1` policy must occur together, and legacy
+contract-bundle tar media is invalid. A named contract-bundle role uses the stricter
+`contractBundleDescriptor`. The separate `evidenceBlobDescriptor` contains only
+repository, exact digest, media type, and size. It is valid only as subordinate
+input to an independently verified receipt, carries no trust or authority, and
+requires the trusted Adapter to resolve and authenticate its exact bytes.
 
 ## Signing and verification-result contract
 

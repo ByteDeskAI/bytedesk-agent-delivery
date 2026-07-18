@@ -11,6 +11,8 @@
     {"name": "rollout-backward", "model": "rollout.v1.json", "from": "activating", "to": "staged", "actor": "promotion-coordinator", "transition": "retry", "valid": false},
     {"name": "rollout-switch-committed-before-readback", "model": "rollout.v1.json", "from": "activating", "to": "recovery_required", "actor": "promotion-coordinator", "transition": "fail_after_switch", "valid": true},
     {"name": "host-switch", "model": "host-reconciliation-attempt.v1.json", "from": "preflight_passed", "to": "switching", "actor": "host-reconciler", "transition": "begin_switch", "valid": true},
+    {"name": "host-fence-after-intent-enters-resolution", "model": "host-reconciliation-attempt.v1.json", "from": "switching", "to": "indeterminate", "actor": "host-reconciler", "transition": "fence_or_crash_after_switch_intent", "valid": true},
+    {"name": "host-fence-after-intent-cannot-discard", "model": "host-reconciliation-attempt.v1.json", "from": "switching", "to": "fenced", "actor": "host-reconciler", "transition": "fence_before_switch_intent", "valid": false},
     {"name": "host-cancel-after-switch", "model": "host-reconciliation-attempt.v1.json", "from": "verifying", "to": "cancelled", "actor": "host-reconciler", "transition": "cancel_before_switch", "valid": false},
     {"name": "slot-reactivate-predecessor", "model": "runtime-slot.v1.json", "from": "predecessor", "to": "active", "actor": "host-reconciler", "transition": "activate_initial", "valid": false},
     {"name": "slot-tombstone", "model": "runtime-slot.v1.json", "from": "retiring", "to": "tombstoned", "actor": "host-reconciler", "transition": "write_tombstone", "valid": true},

@@ -1,5 +1,20 @@
 {
   "contract": "bytedesk.harness-render/1",
-  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0", "digest": "sha256:55f6123e2913b52db2c9b6f8e944a4cb08a6f2202a2a6741b9a3a09d49cb5018" },
-  "consumerId": "consumer-01"
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0",
+    "digest": "sha256:68fe1a718f9e5210c0ba4d10095f049983499243b69ae565a826155b949525cf"
+  },
+  "consumerId": "consumer-01",
+  "productRelease": {
+    "repository": "registry.example/product/agent-delivery",
+    "digest": "sha256:dfa4a106daf8ac9fbfd25c36358d7a731ca9b56390becf7b3d9fcb79fac80683",
+    "mediaType": "application/vnd.bytedesk.agent.product-release-manifest.v1+json",
+    "size": 8598,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:a80850c38ad05f095146c0075910ced54b678a2975bb92611a83b810292de757"
+    }
+  },
+  "productDistributionDigest": "sha256:1af51b278afdda7c0918bb8138a35cb099f842896b5dd6e1d618eb7d816ef146",
+  "compiledAllowlistDigest": "sha256:721f6fd733c4869522baaa4badeb8a3cdf25236b2a82660e1682e10f54245864"
 }

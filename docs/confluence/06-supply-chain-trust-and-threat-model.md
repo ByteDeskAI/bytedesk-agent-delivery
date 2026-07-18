@@ -20,11 +20,12 @@ bundle; an unknown field, schema digest, or runtime-fetched schema fails closed.
 
 The concrete production controls are fixed by
 [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md):
-purpose- and consumer-separated non-exportable KMS keys, distinct workload
-identities and database roles, a compiled renderer allowlist, fresh gVisor
-sandboxes with no network or credentials, PostgreSQL transaction/CAS authority,
-and append-only evidence. Vendor-substitute Adapters must pass the same
-negative, isolation, outage, rotation, and recovery evidence.
+purpose- and consumer-separated KMS credentials, a separate contract-release
+Sigstore keyless identity, distinct workload identities and database roles, a
+compiled renderer allowlist, fresh gVisor sandboxes with no network or
+credentials, PostgreSQL transaction/CAS authority, and append-only evidence.
+Vendor-substitute Adapters must pass the same negative, isolation, outage,
+rotation, and recovery evidence.
 
 ## Assets to protect
 
@@ -43,7 +44,7 @@ negative, isolation, outage, rotation, and recovery evidence.
 
 1. Contributor workstation to source control.
 2. Source control to isolated publication build.
-3. Build workload identity to signing KMS.
+3. Build or signer workload identity to purpose-specific KMS or Sigstore trust.
 4. Publisher to public registry.
 5. Public registry to consumer import and private compilation.
 6. Consumer policy systems to deployment compiler.
@@ -57,18 +58,28 @@ grant access at the next.
 
 ## Signer separation
 
-Production uses six purpose-separated signing roles:
+Production uses six organizational ownership domains implemented as 22
+closed signing purposes:
 
-1. `product-release-v1` for product distributions, contract bundles,
-   allowlists, and renderer releases;
-2. `public-source-v1` for catalogs, public sources, and public skills;
-3. `public-render-v1` for public render outputs;
-4. `consumer-private-skill-v1` for consumer-private skill publication;
-5. `consumer-authority-v1` for authority snapshots and skill/business
-   approvals; and
-6. `consumer-deployment-v1` for private deployments and runtime releases.
+1. product/publication: `product-release-v1`,
+   `contract-bundle-release-v1`, `public-source-v1`, and `public-render-v1`;
+2. consumer-private: `consumer-private-skill-v1`, `consumer-authority-v1`,
+   `consumer-deployment-v1`, `consumer-runtime-release-v1`,
+   `consumer-release-status-eligibility-v1`, and
+   `consumer-activation-authorization-v1`;
+3. qualification: `release-qualification-policy-v1`,
+   `release-qualification-attempt-v1`,
+   `release-qualification-receipt-v1`,
+   `release-qualification-evidence-v1`, and
+   `release-qualification-decision-v1`;
+4. current eligibility: `release-status-v1`,
+   `release-status-head-v1`, and `release-status-eligibility-v1`;
+5. renderer execution: `renderer-attempt-v1` and
+   `renderer-execution-v1`; and
+6. private compilation: `consumer-compilation-input-v1` and
+   `consumer-compilation-evidence-v1`.
 
-Roles 4 through 6 are isolated per consumer, and authority/approval uses a
+Consumer-private purposes are isolated per consumer, and authority/approval uses a
 different key and workload identity from deployment signing. The preferred
 private key is a non-exportable KMS key in the consumer's security boundary. An
 explicitly opted-in managed profile may use a tenant-dedicated KMS/HSM key, but
@@ -76,10 +87,11 @@ a shared cross-consumer private signer or provider-controlled trust root is
 forbidden.
 
 Agent Delivery build/compiler/publication workloads may invoke only the narrow
-role-4 or role-6 sign operation; the Consumer Authority Adapter alone invokes
-role 5. An independent supplier signature is upstream provenance only. The
-unchanged private-skill digest still needs the consumer-isolated role-4
-publication signature and separate current role-5 approval.
+private-artifact or compilation sign operation assigned to their workload; the
+Consumer Authority Adapter alone invokes `consumer-authority-v1`. An independent
+supplier signature is upstream provenance only. The unchanged private-skill
+digest still needs the consumer-isolated `consumer-private-skill-v1`
+publication signature and separate current `consumer-authority-v1` approval.
 
 Consumer login, workload tokens, business messages, and MCP authorization use
 the consumer's separate identity and policy systems. Artifact keys must not be
@@ -87,15 +99,25 @@ reused for those purposes.
 
 Each signer policy is an immutable canonical object identified by stable ID,
 logical version, schema digest, policy digest, and effective window. It
-identifies the KMS algorithm and immutable key version, the
-allowed workload identity, repository/workflow/environment claims, allowed
-artifact repository and media types, current and next key set, rotation
+identifies the credential kind and algorithm. KMS signers use immutable
+`keyVersion` plus `publicKeyDigest`. Sigstore keyless signers use exact
+`signerIdentityDigest` plus an independently pinned `trustedRootDigest` and
+forbid `keyVersion` and a static leaf `publicKeyDigest`. Policy also identifies
+the allowed workload identity, repository/workflow/environment claims, allowed
+artifact repository and media types, current and next trust set, rotation
 ceremony, revocation path, and fail-closed behavior.
 
-Private keys are non-exportable. They are not committed, stored in ordinary
-secret managers, written to hosts, or exposed to agents. CI authenticates to
-KMS through short-lived workload federation or an equivalent platform
-identity.
+The `product-release-v1` policy is KMS-only and accepts product distributions,
+compiled allowlists, and renderer releases. The distinct
+`contract-bundle-release-v1` policy is Sigstore-keyless-only and accepts only
+the exact contract-bundle repository and media type. Mixing the two purposes,
+credential kinds, signer sets, repositories, or media types in either policy
+is a fail-closed configuration error.
+
+KMS private keys are non-exportable and are not committed, stored in ordinary
+secret managers, written to hosts, or exposed to agents. Sigstore leaf keys are
+ephemeral and never persisted. CI and signer workloads authenticate through
+short-lived workload federation to the exact KMS or keyless purpose.
 
 ## Attestations
 
@@ -117,6 +139,24 @@ In-toto-style provenance records, as appropriate to the artifact, include:
 Private tenant identifiers and policy evidence remain in private repositories.
 They are not sent to a public transparency service without a separate privacy
 decision.
+
+## Release qualification and current status
+
+A valid product/renderer signature is necessary but not sufficient. The product
+release pins one exact qualification policy, suite, and minimum coverage
+digest. Qualification produces purpose-signed attempts, receipts, typed
+evidence leaves and predicates, an evidence tree, and a final decision for every
+required renderer release and executable platform. Predicate schemas resolve
+offline by exact descriptor; a compatible substitute schema cannot reinterpret
+evidence.
+
+Current eligibility is a separate append-only signed status chain. Each
+selection or execution supplies a fresh caller nonce and operation time and
+verifies an authenticated status-head checkpoint. Advancement requires an
+exact consistency proof from the caller's accepted subject/sequence/epoch/head/
+root to the returned state. Wrong nonce, expiry, future time, rollback, fork,
+withdrawal, revocation, or end of support fails closed. The exact contract is
+[Release qualification and status v1](../standards/release-qualification-v1.md).
 
 ## Package-content defenses
 
@@ -166,9 +206,12 @@ embedded grants, hooks, and unsafe entries are rejected.
 | Skill script/binary executes during delivery or without approval at runtime | Delivery pipeline never executes content; changed digests quarantine; runtime requires exact-digest approval, sandbox, and current authorization |
 | Public render leaks tenant customization | Public endpoints reject customization/private skills/opaque references; tenant-free conformance fixtures |
 | Private deployment is patched after rendering | Full effective rerender before deployment packaging; signed embedded bundle/manifest; no post-render patch path |
-| CI credential theft | Short-lived workload identity and non-exportable KMS keys |
+| CI credential theft | Short-lived workload identity, non-exportable KMS keys, ephemeral keyless leaf keys, and exact policy separation |
 | Artifact-supplied trust root | Independent verifier trust policy; unknown signers fail closed |
 | Cross-repository edge confusion | Explicit signed upstream descriptors and independent verification per repository; OCI `subject` is not used across repositories |
+| Signed but unqualified renderer or missing platform | Product-pinned qualification policy/suite, complete typed role/subject/platform matrix, and signed decision |
+| Stale, rolled-back, or forked release status | Fresh caller-nonce/time-bound authenticated head checkpoint and exact append-only consistency proof |
+| Partial or cyclic OCI graph | Recursive exact manifest/config/layer/blob closure, closed media/role map, resource bounds, and cycle denial |
 | Cross-tenant private artifact use | Repository scope plus consumer, tenant, profile, runtime, and slot binding |
 | Stale policy restored by rollback | New forward compile from current consumer authority |
 | Host promotes arbitrary content | Engine-scoped desired-state read and observation write only; no promotion permission |
@@ -199,7 +242,7 @@ evidence for every effective skill. Compilation, activation, and recovery use
 fresh operation-specific snapshots; approval and deployment signing keys are
 separate. The compiler does not query another consumer's state or copy reusable
 credentials into an OCI layer. At activation and token issuance, the consumer
-can re-check that the deployment subdigest and runtime release remain current.
+can re-check that the exact canonical deployment descriptor and runtime release remain current.
 
 ## Host identity
 

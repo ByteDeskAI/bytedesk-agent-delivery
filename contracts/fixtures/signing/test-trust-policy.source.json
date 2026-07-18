@@ -2,9 +2,9 @@
   "contract": "bytedesk.trust-policy/1",
   "schema": {
     "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
-    "digest": "sha256:027ec4d4e85c447794ddb558a34ef1d6f171dc6b375851c77d4cdf07e9b6707e"
+    "digest": "sha256:ea53b4814c96282ba5812c2573b4adf45a026340b1022503e25b9f391dcd1509"
   },
-  "policyId": "contract-test-product-release-v1",
+  "policyId": "contract-bundle-release-v1",
   "version": "1.0.0",
   "effective": {
     "notBefore": "2026-07-16T00:00:00Z",
@@ -18,13 +18,14 @@
       "application/vnd.bytedesk.agent.contract-bundle.v1+json"
     ],
     "purposes": [
-      "product-release-v1"
+      "contract-bundle-release-v1"
     ]
   },
   "signers": [
     {
-      "purpose": "product-release-v1",
-      "keyVersion": "test-ephemeral-memory",
+      "purpose": "contract-bundle-release-v1",
+      "credentialKind": "sigstore_keyless",
+      "trustedRootDigest": "sha256:7b36fb1a51ce5b85a9f4e20267217522013022c72c56910d5ec28509e6d3520a",
       "algorithm": "ECDSA_P256_SHA256",
       "workloadIdentity": "https://github.com/ByteDeskAI/bytedesk-agent-delivery/.github/workflows/contract-release-signer.yml@1111111111111111111111111111111111111111",
       "claims": {
@@ -34,13 +35,24 @@
         "repository": "ByteDeskAI/bytedesk-agent-delivery",
         "workflow": ".github/workflows/contract-release-signer.yml@1111111111111111111111111111111111111111",
         "ref": "refs/tags/v0.1.0-contract-test",
-        "environment": "contract-test"
+        "environment": "contract-test",
+        "builderDigest": "sha256:ea6c8887c1bc52b293418e489e735af8a7ad9bf2af9469863d9d1b181f0355a9"
       }
     }
   ],
   "requiredEvidence": [
     "schema",
-    "compatibility"
+    "provenance",
+    "sbom",
+    "vulnerability",
+    "license",
+    "compatibility",
+    "conformance",
+    "determinism",
+    "malware",
+    "secret_scan",
+    "executed_distribution",
+    "scan_completeness"
   ],
   "rules": {
     "freshnessSeconds": 300,

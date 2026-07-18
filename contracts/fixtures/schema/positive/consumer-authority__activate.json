@@ -2,7 +2,7 @@
   "contract": "bytedesk.consumer-authority/1",
   "schema": {
     "id": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-authority/1.0.0",
-    "digest": "sha256:47b8862043293d93a29252e9963f3de0947065764a00c62a7d483cf59039a5ba"
+    "digest": "sha256:d0d76ce005d8c6765c95083dfd6f40a76584a7fd93b2ace9f2537e2e4c3da84e"
   },
   "consumerId": "consumer-01",
   "subjectId": "subject-01",
@@ -28,7 +28,10 @@
     "approvalPolicy": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
     "targetBinding": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
   },
-  "activationDecision": "permitted",
+  "decision": {
+    "class": "permitted",
+    "code": "consumer_policy_permitted"
+  },
   "signerPolicy": {
     "id": "consumer-authority-v1",
     "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"

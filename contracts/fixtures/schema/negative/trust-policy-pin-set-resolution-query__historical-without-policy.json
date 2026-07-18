@@ -1,0 +1,20 @@
+{
+  "contract": "bytedesk.trust-policy-pin-set-resolution-query/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-resolution-query/1.0.0",
+    "digest": "sha256:d17c9805fe850354d5c11e0d0dec9cdf17a17dbbf49053074b532129b5f51810"
+  },
+  "requestNonce": "trust_pin_history_nonce_0123456789abcdef",
+  "requestDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+  "kind": "historical_verification",
+  "pinSetId": "product-trust-pins",
+  "scope": "product",
+  "consumerId": null,
+  "clientPriorState": null,
+  "idempotencyKey": null,
+  "activationRequestDigest": null,
+  "purpose": "public-render-v1",
+  "trustPolicy": null,
+  "signingTime": "2026-07-16T12:00:00Z",
+  "operationTime": "2026-07-17T12:00:02Z"
+}

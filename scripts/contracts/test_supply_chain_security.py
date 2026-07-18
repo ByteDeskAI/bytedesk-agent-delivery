@@ -18,6 +18,7 @@ from typing import Any, Callable
 
 import bundle_profile
 import contractlib
+import generate_private_compilation_graph_fixtures as private_fixture_generator
 from bundle_profile import (
     MAX_BUNDLE_MEMBER_BYTES,
     BundleProfileError,
@@ -47,6 +48,11 @@ from verify_bundle import (
     read_archive_snapshot,
     verify_sigstore_signature,
 )
+from release_evidence import (
+    release_evidence_subject,
+    validate_release_evidence,
+    validate_release_evidence_schema,
+)
 
 
 def expect_denial(case_id: str, operation: Callable[[], Any]) -> dict[str, str]:
@@ -63,6 +69,7 @@ def mutation_denial(
     request: dict[str, Any],
     manifest: dict[str, Any],
     verification_time: str,
+    available_evidence: set[str],
     mutate: Callable[[dict[str, Any]], None],
 ) -> dict[str, str]:
     candidate = deepcopy(policy)
@@ -75,10 +82,15 @@ def mutation_denial(
             candidate,
             payload,
             expected_policy=expected,
+            expected_repository=request["repository"],
             request=request,
             manifest=manifest,
             verification_time=verification_time,
-            available_evidence={"schema", "compatibility"},
+            available_evidence=available_evidence,
+            authenticated_builder_digest=request["builderDigest"],
+            authenticated_pre_sign_certification_digest=(
+                request["preSignCertificationDigest"]
+            ),
         ),
     )
 
@@ -144,13 +156,17 @@ def main() -> int:
     parser.add_argument("--expected-request-id", required=True)
     parser.add_argument("--expected-repository", required=True)
     parser.add_argument("--expected-purpose", required=True)
-    parser.add_argument("--expected-key-version", required=True)
+    parser.add_argument("--expected-credential-kind", required=True)
+    parser.add_argument("--expected-signer-identity-digest", required=True)
+    parser.add_argument("--expected-builder-digest", required=True)
     parser.add_argument("--expected-nonce", required=True)
     parser.add_argument("--expected-issued-at", required=True)
     parser.add_argument("--expected-expires-at", required=True)
     parser.add_argument("--verification-time", required=True)
     parser.add_argument("--expected-trust-policy-id", required=True)
     parser.add_argument("--expected-trust-policy-digest", required=True)
+    parser.add_argument("--release-evidence-attestation", type=Path, required=True)
+    parser.add_argument("--release-evidence-dir", type=Path, required=True)
     parser.add_argument("--evidence", type=Path)
     args = parser.parse_args()
 
@@ -162,6 +178,9 @@ def main() -> int:
         raise ContractToolError("test detached manifest differs from archive snapshot")
     policy, policy_bytes = load_canonical_trust_policy(args.trust_policy.absolute())
     request, request_bytes = load_canonical_request(args.request.absolute())
+    _, release_attestation_bytes = load_json_bytes(
+        args.release_evidence_attestation.absolute()
+    )
     expected_policy = {
         "id": args.expected_trust_policy_id,
         "digest": args.expected_trust_policy_digest,
@@ -170,30 +189,67 @@ def main() -> int:
         "requestId": args.expected_request_id,
         "repository": args.expected_repository,
         "purpose": args.expected_purpose,
-        "keyVersion": args.expected_key_version,
+        "credentialKind": args.expected_credential_kind,
+        "signerIdentityDigest": args.expected_signer_identity_digest,
+        "builderDigest": args.expected_builder_digest,
+        "preSignCertificationDigest": sha256_bytes(release_attestation_bytes),
         "nonce": args.expected_nonce,
         "issuedAt": args.expected_issued_at,
         "expiresAt": args.expected_expires_at,
         "trustPolicy": expected_policy,
     }
+    release_evidence = validate_release_evidence(
+        args.release_evidence_attestation.absolute(),
+        args.release_evidence_dir.absolute(),
+        repo_root=Path(__file__).resolve().parents[2],
+        subject=release_evidence_subject(
+            repository=args.expected_repository,
+            digest=snapshot.digest,
+            size=snapshot.size,
+            trust_policy=expected_policy,
+        ),
+        policy=policy,
+        policy_bytes=policy_bytes,
+        expected_policy=expected_policy,
+        manifest=manifest,
+        manifest_bytes=manifest_bytes,
+        members=snapshot.members,
+        verification_time=args.verification_time,
+    )
+    available_evidence = set(release_evidence.available_evidence)
     evaluation = preflight_trust_policy(
         policy,
         policy_bytes,
         expected_policy=expected_policy,
+        expected_repository=args.expected_repository,
         request=request,
         manifest=manifest,
         verification_time=args.verification_time,
-        available_evidence={"schema", "compatibility"},
+        available_evidence=available_evidence,
+        authenticated_builder_digest=release_evidence.builder_digest,
+        authenticated_pre_sign_certification_digest=(
+            release_evidence.attestation_digest
+        ),
     )
     registry, schemas = build_bundle_registry(manifest, snapshot.members, expected_policy)
+    validate_release_evidence_schema(
+        release_evidence,
+        registry=registry,
+        schemas=schemas,
+    )
     if evaluate_trust_policy(
         policy,
         policy_bytes,
         expected_policy=expected_policy,
+        expected_repository=args.expected_repository,
         request=request,
         manifest=manifest,
         verification_time=args.verification_time,
-        available_evidence={"schema", "compatibility"},
+        available_evidence=available_evidence,
+        authenticated_builder_digest=release_evidence.builder_digest,
+        authenticated_pre_sign_certification_digest=(
+            release_evidence.attestation_digest
+        ),
         registry=registry,
         schemas=schemas,
     ) != evaluation:
@@ -202,6 +258,61 @@ def main() -> int:
     cases: list[dict[str, str]] = [
         {"id": "baseline-independent-trust-policy", "outcome": "pass"}
     ]
+
+    mixed_policy = deepcopy(policy)
+    mixed_policy["scope"]["purposes"].append("product-release-v1")
+    kms_signer = {
+        "purpose": "product-release-v1",
+        "credentialKind": "kms_key",
+        "keyVersion": "kms://product/product-release-v1/versions/1",
+        "publicKeyDigest": "sha256:" + "9" * 64,
+        "algorithm": "ECDSA_P256_SHA256",
+        "workloadIdentity": "spiffe://bytedesk.ai/agent-delivery/product-release",
+        "claims": {
+            "issuer": "https://token.actions.githubusercontent.com",
+            "audience": "agent-delivery-product-release-v1",
+            "subject": (
+                "repo:ByteDeskAI/bytedesk-agent-delivery:"
+                "environment:product-release-v1"
+            ),
+            "repository": "ByteDeskAI/bytedesk-agent-delivery",
+            "workflow": ".github/workflows/product-release-v1.yml",
+            "ref": "refs/tags/v1.0.0",
+            "environment": "product-release-v1",
+            "builderDigest": release_evidence.builder_digest,
+        },
+    }
+    mixed_policy["signers"].append(kms_signer)
+    mixed_policy_bytes = canonical_json(mixed_policy)
+    mixed_policy_ref = {
+        "id": mixed_policy["policyId"],
+        "digest": sha256_bytes(mixed_policy_bytes),
+    }
+    mixed_request = deepcopy(request)
+    mixed_request["trustPolicy"] = mixed_policy_ref
+    mixed_manifest = deepcopy(manifest)
+    mixed_manifest["trustPolicy"] = mixed_policy_ref
+    cases.append(
+        expect_denial(
+            "mixed-product-contract-policy",
+            lambda: evaluate_trust_policy(
+                mixed_policy,
+                mixed_policy_bytes,
+                expected_policy=mixed_policy_ref,
+                expected_repository=args.expected_repository,
+                request=mixed_request,
+                manifest=mixed_manifest,
+                verification_time=args.verification_time,
+                available_evidence=available_evidence,
+                authenticated_builder_digest=release_evidence.builder_digest,
+                authenticated_pre_sign_certification_digest=(
+                    release_evidence.attestation_digest
+                ),
+                registry=registry,
+                schemas=schemas,
+            ),
+        )
+    )
 
     path_denials = {
         "path-parent-segment": "contracts/../manifest.json",
@@ -324,6 +435,28 @@ def main() -> int:
             raise ContractToolError("exclusive atomic publication did not select exactly one winner")
         cases.append({"id": "exclusive-atomic-publication-concurrency", "outcome": "pass"})
 
+        private_output = Path(directory) / "private-fixtures.json"
+        private_victim = Path(directory) / "private-fixtures-victim.json"
+        private_victim.write_bytes(b"do-not-overwrite")
+        predictable_temporary = private_output.with_name(
+            f".{private_output.name}.{os.getpid()}.tmp"
+        )
+        predictable_temporary.symlink_to(private_victim)
+        try:
+            private_fixture_generator.write_atomic(private_output, b"fixture-bytes")
+        except (ContractToolError, OSError):
+            pass
+        if private_victim.read_bytes() != b"do-not-overwrite":
+            raise ContractToolError(
+                "private fixture writer followed a predictable temporary symlink"
+            )
+        cases.append(
+            {
+                "id": "private-fixture-writer-rejects-predictable-symlink",
+                "outcome": "pass",
+            }
+        )
+
     request_digest = sha256_bytes(request_bytes)
     with TemporaryDirectory(prefix="bytedesk-replay-ledger-") as directory:
         ledger = Path(directory) / "ledger.jsonl"
@@ -372,6 +505,7 @@ def main() -> int:
                 request,
                 manifest,
                 args.verification_time,
+                available_evidence,
                 lambda candidate: candidate["signers"][0]["claims"].update(
                     {"workflow": ".github/workflows/contract-release-signer.yml"}
                 ),
@@ -382,6 +516,7 @@ def main() -> int:
                 request,
                 manifest,
                 args.verification_time,
+                available_evidence,
                 lambda candidate: candidate["signers"][0]["claims"].update(
                     {"ref": "refs/heads/main"}
                 ),
@@ -392,18 +527,95 @@ def main() -> int:
                 request,
                 manifest,
                 args.verification_time,
+                available_evidence,
                 lambda candidate: candidate["scope"].update(
                     {"repositories": ["registry.example.invalid/other/contracts"]}
                 ),
             ),
             mutation_denial(
-                "trust-policy-revoked-key-version",
+                "trust-policy-additional-repository",
                 policy,
                 request,
                 manifest,
                 args.verification_time,
-                lambda candidate: candidate["revocations"]["keyVersions"].append(
-                    args.expected_key_version
+                available_evidence,
+                lambda candidate: candidate["scope"]["repositories"].append(
+                    "registry.example.invalid/other/contracts"
+                ),
+            ),
+            mutation_denial(
+                "trust-policy-additional-media-type",
+                policy,
+                request,
+                manifest,
+                args.verification_time,
+                available_evidence,
+                lambda candidate: candidate["scope"]["mediaTypes"].append(
+                    "application/vnd.bytedesk.agent.product-distribution.v1+json"
+                ),
+            ),
+            mutation_denial(
+                "trust-policy-additional-purpose",
+                policy,
+                request,
+                manifest,
+                args.verification_time,
+                available_evidence,
+                lambda candidate: candidate["scope"]["purposes"].append(
+                    "product-release-v1"
+                ),
+            ),
+            mutation_denial(
+                "trust-policy-consumer-scope-forbidden",
+                policy,
+                request,
+                manifest,
+                args.verification_time,
+                available_evidence,
+                lambda candidate: candidate["scope"].update(
+                    {"consumers": ["consumer-test"]}
+                ),
+            ),
+            mutation_denial(
+                "trust-policy-additional-kms-signer",
+                policy,
+                request,
+                manifest,
+                args.verification_time,
+                available_evidence,
+                lambda candidate: candidate["signers"].append(deepcopy(kms_signer)),
+            ),
+            mutation_denial(
+                "trust-policy-malformed-kms-signer-variant",
+                policy,
+                request,
+                manifest,
+                args.verification_time,
+                available_evidence,
+                lambda candidate: candidate.update(
+                    {"signers": [{"credentialKind": "kms_key"}]}
+                ),
+            ),
+            mutation_denial(
+                "trust-policy-revoked-trusted-root",
+                policy,
+                request,
+                manifest,
+                args.verification_time,
+                available_evidence,
+                lambda candidate: candidate["revocations"]["digests"].append(
+                    candidate["signers"][0]["trustedRootDigest"]
+                ),
+            ),
+            mutation_denial(
+                "trust-policy-keyless-carries-public-key-digest",
+                policy,
+                request,
+                manifest,
+                args.verification_time,
+                available_evidence,
+                lambda candidate: candidate["signers"][0].update(
+                    {"publicKeyDigest": "sha256:" + "a" * 64}
                 ),
             ),
             mutation_denial(
@@ -412,7 +624,8 @@ def main() -> int:
                 request,
                 manifest,
                 args.verification_time,
-                lambda candidate: candidate["requiredEvidence"].append("provenance"),
+                available_evidence,
+                lambda candidate: candidate["requiredEvidence"].append("evaluation"),
             ),
             mutation_denial(
                 "trust-policy-revoked-manifest",
@@ -420,6 +633,7 @@ def main() -> int:
                 request,
                 manifest,
                 args.verification_time,
+                available_evidence,
                 lambda candidate: candidate["revocations"]["digests"].append(
                     sha256_bytes(canonical_json(manifest))
                 ),
@@ -430,11 +644,79 @@ def main() -> int:
                 request,
                 manifest,
                 args.verification_time,
+                available_evidence,
                 lambda candidate: candidate["revocations"]["schemas"].append(
                     manifest["schemas"][0]["digest"]
                 ),
             ),
+            mutation_denial(
+                "trust-policy-malformed-schema-revocation",
+                policy,
+                request,
+                manifest,
+                args.verification_time,
+                available_evidence,
+                lambda candidate: candidate["revocations"]["schemas"].append({}),
+            ),
         ]
+    )
+
+    wrong_request_builder = deepcopy(request)
+    wrong_request_builder["builderDigest"] = "sha256:" + "b" * 64
+    cases.append(
+        expect_denial(
+            "signed-request-builder-policy-mismatch",
+            lambda: preflight_trust_policy(
+                policy,
+                policy_bytes,
+                expected_policy=expected_policy,
+                expected_repository=args.expected_repository,
+                request=wrong_request_builder,
+                manifest=manifest,
+                verification_time=args.verification_time,
+                available_evidence=available_evidence,
+                authenticated_builder_digest=release_evidence.builder_digest,
+                authenticated_pre_sign_certification_digest=(
+                    release_evidence.attestation_digest
+                ),
+            ),
+        )
+    )
+    cases.append(
+        expect_denial(
+            "executed-builder-policy-mismatch",
+            lambda: preflight_trust_policy(
+                policy,
+                policy_bytes,
+                expected_policy=expected_policy,
+                expected_repository=args.expected_repository,
+                request=request,
+                manifest=manifest,
+                verification_time=args.verification_time,
+                available_evidence=available_evidence,
+                authenticated_builder_digest="sha256:" + "c" * 64,
+                authenticated_pre_sign_certification_digest=(
+                    release_evidence.attestation_digest
+                ),
+            ),
+        )
+    )
+    cases.append(
+        expect_denial(
+            "pre-sign-certification-request-mismatch",
+            lambda: preflight_trust_policy(
+                policy,
+                policy_bytes,
+                expected_policy=expected_policy,
+                expected_repository=args.expected_repository,
+                request=request,
+                manifest=manifest,
+                verification_time=args.verification_time,
+                available_evidence=available_evidence,
+                authenticated_builder_digest=release_evidence.builder_digest,
+                authenticated_pre_sign_certification_digest="sha256:" + "d" * 64,
+            ),
+        )
     )
 
     wrong_descriptor = deepcopy(policy)
@@ -450,10 +732,15 @@ def main() -> int:
                     "id": wrong_descriptor["policyId"],
                     "digest": sha256_bytes(wrong_descriptor_bytes),
                 },
+                expected_repository=args.expected_repository,
                 request=request,
                 manifest=manifest,
                 verification_time=args.verification_time,
-                available_evidence={"schema", "compatibility"},
+                available_evidence=available_evidence,
+                authenticated_builder_digest=release_evidence.builder_digest,
+                authenticated_pre_sign_certification_digest=(
+                    release_evidence.attestation_digest
+                ),
                 registry=registry,
                 schemas=schemas,
             ),
@@ -575,6 +862,10 @@ def main() -> int:
                 args.expected_trust_policy_digest,
                 "--trust-policy",
                 str(args.trust_policy.absolute()),
+                "--release-evidence-attestation",
+                str(args.release_evidence_attestation.absolute()),
+                "--release-evidence-dir",
+                str(args.release_evidence_dir.absolute()),
                 "--external-signing-request",
                 str(args.request.absolute()),
                 "--sigstore-bundle",
@@ -598,8 +889,12 @@ def main() -> int:
                 args.expected_repository,
                 "--expected-purpose",
                 args.expected_purpose,
-                "--expected-key-version",
-                args.expected_key_version,
+                "--expected-credential-kind",
+                args.expected_credential_kind,
+                "--expected-signer-identity-digest",
+                args.expected_signer_identity_digest,
+                "--expected-builder-digest",
+                args.expected_builder_digest,
                 "--expected-nonce",
                 args.expected_nonce,
                 "--expected-issued-at",
@@ -637,6 +932,42 @@ def main() -> int:
             }
             if any(cli_result.get(key) != value for key, value in expected_cli_evidence.items()):
                 raise ContractToolError("external Adapter CLI authority evidence is ambiguous")
+            cli_trust_evaluation = cli_result.get("trustPolicyEvaluation")
+            expected_cli_trust_pins = {
+                "policyDigest": args.expected_trust_policy_digest,
+                "credentialKind": evaluation.credential_kind,
+                "signerIdentityDigest": evaluation.signer_identity_digest,
+            }
+            if not isinstance(cli_trust_evaluation, dict) or any(
+                cli_trust_evaluation.get(key) != value
+                for key, value in expected_cli_trust_pins.items()
+            ):
+                raise ContractToolError(
+                    "external Adapter CLI omitted the exact keyless signer binding"
+                )
+            cli_builder = cli_trust_evaluation.get("builderBinding")
+            cli_anchor = cli_trust_evaluation.get("keylessVerificationAnchor")
+            if (
+                not isinstance(cli_builder, dict)
+                or cli_builder.get("digest") != evaluation.builder_digest
+                or cli_builder.get("builderExecutionAuthenticated") is not False
+                or not isinstance(cli_anchor, dict)
+                or cli_anchor.get("trustedRootDigest") != evaluation.trusted_root_digest
+                or cli_anchor.get("independentlySuppliedBytesAuthenticated") is not True
+            ):
+                raise ContractToolError(
+                    "external Adapter CLI confused policy bindings with authenticated execution"
+                )
+            cli_release_evidence = cli_result.get("releaseEvidence")
+            if (
+                not isinstance(cli_release_evidence, dict)
+                or cli_release_evidence.get("authorityIssued") is not False
+                or set(cli_release_evidence.get("availableEvidence", []))
+                != available_evidence
+            ):
+                raise ContractToolError(
+                    "external Adapter CLI did not derive exact non-authoritative release evidence"
+                )
             if not cli_input.is_file() or not cli_output.is_file():
                 raise ContractToolError("external Adapter CLI omitted conformance outputs")
             cases.append(

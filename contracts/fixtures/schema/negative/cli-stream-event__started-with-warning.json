@@ -1,0 +1,5 @@
+{
+  "contract": "bytedesk.cli-stream-event/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/cli-stream-event/1.0.0", "digest": "sha256:033bb971ec944086630d0174cddaa878b2c1888eaa2304d7f6e04744807eb869" },
+  "invocationId": "cli-invocation-01", "sequence": 1, "kind": "started", "correlationId": "correlation-01", "warning": "unexpected_warning", "emittedAt": "2026-07-17T12:00:00Z"
+}

@@ -90,6 +90,43 @@ Graphical marketplace UI, consumer identity/grant administration, or a productio
 
 Blocked by AD-04, AD-07, AD-10, AD-13, and AD-14.
 
+## Normative contracts and conformance
+
+- **Ports and operations.** `bytedesk.port.cli-automation/1` (`execute-local`,
+  `execute-remote`, `watch-action`, `verify-receipt`),
+  `bytedesk.port.control-plane-api-events/1` (`submit-command`, `read-resource`,
+  `subscribe-events`, `resynchronize-events`), `bytedesk.port.catalog/1`
+  (`list-catalog-releases`, `resolve-catalog-release`,
+  `fetch-catalog-object`), and `bytedesk.port.oci-registry/1`
+  (`pull-artifact`, `push-artifact`, `verify-artifact-graph`) are registered in
+  `contracts/ports/v1/port-registry.json`. Exact field-value and closed
+  request/result schemas are distributed in
+  `contracts/ports/v1/type-catalog.json`; canonical valid and structural-denial
+  payloads are in `contracts/ports/v1/contract-fixtures.json`.
+- **Schemas, artifacts, and profiles.** CLI JSON binds the exact result schemas
+  selected by `https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0`, and
+  `https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0`, plus
+  `https://schemas.bytedesk.ai/agent-delivery/v1/cli-result/1.0.0` and
+  `https://schemas.bytedesk.ai/agent-delivery/v1/cli-stream-event/1.0.0`, under
+  `contracts/schemas/v1/`. The command tree, JSON output, stdout/stderr,
+  redaction, confirmation, asynchronous action, and exit-code profiles are in
+  `contracts/ports/v1/protocol-profiles.json` and
+  `contracts/ports/v1/problem-catalog.json`.
+- **Conformance owner.** AD-15 owns command/JSON/exit-code snapshots, clean
+  install and upgrade, public offline flow, remote action polling/cancellation,
+  cross-platform behavior, redaction, and receipt verification. Run
+  `make verify-downstream-ports`; the task-specific suite is
+  `downstream.cli-automation.v1` in
+  `contracts/ports/v1/conformance-cases.json`. Execute the suite's exact harness
+  steps and closed oracles from `contracts/ports/v1/conformance-plan.json`;
+  schema-valid structural fixtures alone are not semantic implementation goldens.
+- **Boundary.** The CLI is a client, not an alternate authority path. It cannot
+  bypass authentication, consumer scope, preconditions, the Promotion
+  Coordinator, desired-state CAS, current authority/approval, or separate
+  canary actors, and it never persists or prints secret values by default.
+
 ## Architecture review amendments
 
 - Long-running render, evaluate, publish, import, and deploy commands consume the core asynchronous operation status, progress, cancellation, correlation, and terminal-evidence contract instead of holding a synchronous request. A consumer adapter may project it into its own job model.

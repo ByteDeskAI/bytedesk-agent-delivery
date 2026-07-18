@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/cli-stream-event/1.0.0",
+  "title": "Stable bd-agent JSON Lines stream event",
+  "type": "object",
+  "required": ["contract", "schema", "invocationId", "sequence", "kind", "correlationId", "emittedAt"],
+  "properties": {
+    "contract": { "const": "bytedesk.cli-stream-event/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "invocationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "sequence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "kind": { "type": "string", "enum": ["started", "progress", "warning", "result"] },
+    "correlationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "action": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0" },
+    "warning": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "result": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/cli-result/1.0.0" },
+    "emittedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+  },
+  "allOf": [
+    { "if": { "properties": { "kind": { "const": "started" } }, "required": ["kind"] }, "then": { "not": { "anyOf": [{ "required": ["action"] }, { "required": ["warning"] }, { "required": ["result"] }] } } },
+    { "if": { "properties": { "kind": { "const": "progress" } }, "required": ["kind"] }, "then": { "required": ["action"], "not": { "anyOf": [{ "required": ["warning"] }, { "required": ["result"] }] } } },
+    { "if": { "properties": { "kind": { "const": "warning" } }, "required": ["kind"] }, "then": { "required": ["warning"], "not": { "anyOf": [{ "required": ["action"] }, { "required": ["result"] }] } } },
+    { "if": { "properties": { "kind": { "const": "result" } }, "required": ["kind"] }, "then": { "required": ["result"], "not": { "anyOf": [{ "required": ["action"] }, { "required": ["warning"] }] } } }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "One canonical JSON object per LF-terminated line. A client wait timeout or interrupt does not implicitly cancel server work."
+}

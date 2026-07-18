@@ -1,0 +1,55 @@
+{
+  "contract": "bytedesk.renderer-execution-authentication-evidence/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-execution-authentication-evidence/1.0.0",
+    "digest": "sha256:23a5b139d269b11ccd3c361089519b90eec26ff720435f93a4354500aabd6229"
+  },
+  "purpose": "renderer-execution-v1",
+  "receiptDigest": "sha256:5e1a6d6cfd0f5d4e1c6fecd9430d8d7652ca58cbb441ef8e9f4e452c50c263e0",
+  "attemptAuthorityDigest": "sha256:544f36d29713de5152dfecfe224a74e004b6f2f531121108fe3ed929badefc78",
+  "rendererSelectionDigest": "sha256:7b1ba66ff1e6b7c4584556b01037687a343c948e439cd63e752f9bbfb8c46798",
+  "launcherIdentityDigest": "sha256:7bdfec5c657aaa1f5acfa2fe8e673785a56c8bc8f52ab44dd7b174b0b86d58a0",
+  "signingResult": {
+    "contract": "bytedesk.signing-result/1",
+    "schema": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0",
+      "digest": "sha256:a64e23f1ae5a04e0c26c67085a41e8d0d70a9df9d45b1ec789c72c7634543ede"
+    },
+    "requestId": "sign-native-linux-amd64-selection-execution-renderer-execution",
+    "requestDigest": "sha256:9d4a75da16a5b52ee29817e4ef24bf1cdcd62c040c664d7b56217c81e6f5a6a6",
+    "purpose": "renderer-execution-v1",
+    "keyVersion": "kms://product/renderer-execution-v1/versions/1",
+    "algorithm": "ECDSA_P256_SHA256",
+    "publicKeyDigest": "sha256:1e25e409e03e0a9a46b19973c340537a1e5b852eae6dcc88644609389ae21f6f",
+    "repository": "registry.example/product/renderer-execution-evidence",
+    "subjectDigest": "sha256:5e1a6d6cfd0f5d4e1c6fecd9430d8d7652ca58cbb441ef8e9f4e452c50c263e0",
+    "subjectMediaType": "application/vnd.bytedesk.agent.renderer-execution-receipt.v1+json",
+    "signatureBundle": {
+      "repository": "registry.example/product/renderer-execution-evidence",
+      "digest": "sha256:f968b75474c30674ee5a7125f82cea2660657313a4137c5807c9320303017b48",
+      "mediaType": "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "size": 2238,
+      "trustPolicy": {
+        "id": "renderer-execution-v1",
+        "digest": "sha256:0d61547e2423d55c6598d22056501c907aa6f813cf76dbdb3ee16a9863b237b3"
+      }
+    },
+    "trustPolicy": {
+      "id": "renderer-execution-v1",
+      "digest": "sha256:0d61547e2423d55c6598d22056501c907aa6f813cf76dbdb3ee16a9863b237b3"
+    },
+    "providerAuditEvidence": {
+      "repository": "registry.example/product/renderer-execution-evidence",
+      "digest": "sha256:2b079ba84ebd455ef5a5f4dc1290b3ffd187c006be2deb59e47c554db17461dc",
+      "mediaType": "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "size": 1804,
+      "trustPolicy": {
+        "id": "renderer-execution-v1",
+        "digest": "sha256:0d61547e2423d55c6598d22056501c907aa6f813cf76dbdb3ee16a9863b237b3"
+      }
+    },
+    "signedAt": "2026-07-17T12:00:01Z"
+  },
+  "evidenceDigest": "sha256:3ec479d1516ae62cfdda6da3a1d76abbb2516fc7a9734a1f33d3381a6b284f54",
+  "__unknown": true
+}

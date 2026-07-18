@@ -295,7 +295,8 @@ Resolution:
 7. verifies a current consumer-authority snapshot independently;
 8. resolves the exact renderer release through the compiled allowlist and
    performs a complete sandboxed render from the beginning;
-9. embeds the effective render bundle and full manifest in a consumer-private,
+9. embeds the effective render manifest, exact payload descriptor, and closed
+   renderer execution lineage in a consumer-private,
    per-consumer-signed deployment; and
 10. records every schema, source, binding, customization, skill, renderer
     release, actual executing distribution, authority, compatibility, file, and

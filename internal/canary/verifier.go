@@ -34,18 +34,72 @@ const (
 	CodeSignerMismatch           ErrorCode = "signer_mismatch"
 	CodeStaleEvidence            ErrorCode = "stale_evidence"
 	CodeUnauthenticatedEvidence  ErrorCode = "unauthenticated_evidence"
-	CodeMissingProof             ErrorCode = "missing_authorization_proof"
+	CodePermitProofMissing       ErrorCode = "permit_authorization_proof_missing"
+	CodeDenialNotProven          ErrorCode = "capability_denial_not_proven"
 	CodeUnauthenticatedProof     ErrorCode = "unauthenticated_authorization_proof"
 	CodeTransportFailure         ErrorCode = "authorization_transport_failure"
-	CodeAuthorizationMismatch    ErrorCode = "authorization_decision_mismatch"
-	CodeCheckFailed              ErrorCode = "canary_check_failed"
+	CodePermitDecisionMismatch   ErrorCode = "permit_authorization_decision_mismatch"
+	CodeHostCheckFailed          ErrorCode = "host_canary_check_failed"
+	CodeWorkloadLoginFailed      ErrorCode = "workload_login_failed"
+	CodeNotApplicableCheckFailed ErrorCode = "not_applicable_check_failed"
 	CodeUncertifiedNotApplicable ErrorCode = "uncertified_not_applicable"
 )
 
+var verificationErrorCodes = [...]ErrorCode{
+	CodeInvalidInputs,
+	CodeInvalidContract,
+	CodeBindingMismatch,
+	CodeSignerMismatch,
+	CodeStaleEvidence,
+	CodeUnauthenticatedEvidence,
+	CodePermitProofMissing,
+	CodeDenialNotProven,
+	CodeUnauthenticatedProof,
+	CodeTransportFailure,
+	CodePermitDecisionMismatch,
+	CodeHostCheckFailed,
+	CodeWorkloadLoginFailed,
+	CodeNotApplicableCheckFailed,
+	CodeUncertifiedNotApplicable,
+}
+
+// StableProblemCode is the public problem-catalog code emitted at a port
+// boundary. Internal verifier diagnostics remain more specific, while every
+// diagnostic has exactly one stable public representation.
+type StableProblemCode string
+
+const (
+	ProblemEvidenceInvalid           StableProblemCode = "evidence_invalid"
+	ProblemCapabilityDenialNotProven StableProblemCode = "capability_denial_not_proven"
+	ProblemCapabilityTransportFailed StableProblemCode = "capability_transport_failed"
+	ProblemTrustVerificationFailed   StableProblemCode = "trust_verification_failed"
+)
+
+// StableProblemForErrorCode returns the sole public problem-catalog code for a
+// closed internal verifier error code. Unknown codes are deliberately rejected
+// so new diagnostics cannot escape without an explicit compatibility decision.
+func StableProblemForErrorCode(code ErrorCode) (StableProblemCode, bool) {
+	switch code {
+	case CodeInvalidInputs, CodeInvalidContract, CodeBindingMismatch, CodeStaleEvidence,
+		CodePermitProofMissing, CodePermitDecisionMismatch, CodeHostCheckFailed,
+		CodeWorkloadLoginFailed, CodeNotApplicableCheckFailed, CodeUncertifiedNotApplicable:
+		return ProblemEvidenceInvalid, true
+	case CodeSignerMismatch, CodeUnauthenticatedEvidence, CodeUnauthenticatedProof:
+		return ProblemTrustVerificationFailed, true
+	case CodeDenialNotProven:
+		return ProblemCapabilityDenialNotProven, true
+	case CodeTransportFailure:
+		return ProblemCapabilityTransportFailed, true
+	default:
+		return "", false
+	}
+}
+
 type VerificationError struct {
-	Code   ErrorCode
-	Detail string
-	Cause  error
+	Code        ErrorCode
+	ProblemCode StableProblemCode
+	Detail      string
+	Cause       error
 }
 
 func (e *VerificationError) Error() string {
@@ -57,7 +111,11 @@ func (e *VerificationError) Error() string {
 func (e *VerificationError) Unwrap() error { return e.Cause }
 
 func fail(code ErrorCode, detail string, cause error) error {
-	return &VerificationError{Code: code, Detail: detail, Cause: cause}
+	problemCode, ok := StableProblemForErrorCode(code)
+	if !ok {
+		panic(fmt.Sprintf("canary verifier error code %q has no stable public problem mapping", code))
+	}
+	return &VerificationError{Code: code, ProblemCode: problemCode, Detail: detail, Cause: cause}
 }
 
 type SchemaResolver interface {
@@ -96,6 +154,7 @@ type CurrentInputs struct {
 	CurrentPolicyDigest           string
 	CurrentGrantSetDigest         string
 	CurrentWorkloadIdentityDigest string
+	CurrentCapabilityDispatch     CapabilityDispatchBinding
 	Now                           time.Time
 	EvidenceSigners               map[string]SignerExpectation
 	AuthorizationSigner           SignerExpectation
@@ -246,8 +305,26 @@ type CanaryPlan struct {
 }
 
 type ExpectedChecks struct {
-	Host       map[string]string        `json:"host_reconciler"`
+	Host       HostExpectedChecks       `json:"host_reconciler"`
 	Capability CapabilityExpectedChecks `json:"consumer_capability_verifier"`
+}
+type HostExpectedChecks struct {
+	CandidateReady CandidateReadyExpectedChecks `json:"candidate_ready"`
+	ActiveReadback ActiveReadbackExpectedChecks `json:"active_readback"`
+}
+type CandidateReadyExpectedChecks struct {
+	ArtifactReadback   string `json:"artifact_readback"`
+	FileInventory      string `json:"file_inventory"`
+	SlotGeneration     string `json:"slot_generation"`
+	ServiceProcess     string `json:"service_process"`
+	ResourceThresholds string `json:"resource_thresholds"`
+	HarnessReadiness   string `json:"harness_readiness"`
+}
+type ActiveReadbackExpectedChecks struct {
+	SwitchMarker   string `json:"switch_marker"`
+	ActivePointer  string `json:"active_pointer"`
+	FileInventory  string `json:"file_inventory"`
+	ServiceProcess string `json:"service_process"`
 }
 type CapabilityExpectedChecks struct {
 	Mode                string               `json:"mode"`
@@ -268,44 +345,59 @@ type EvidenceSignerPolicies struct {
 }
 
 type CanaryEvidence struct {
-	Contract               string           `json:"contract"`
-	Schema                 SchemaDescriptor `json:"schema"`
-	EvidenceID             string           `json:"evidenceId"`
-	Actor                  string           `json:"actor"`
-	RolloutID              string           `json:"rolloutId"`
-	PlanDigest             string           `json:"planDigest"`
-	Nonce                  string           `json:"nonce"`
-	CandidateDigest        string           `json:"candidateDigest"`
-	DesiredRevisionDigest  string           `json:"desiredRevisionDigest"`
-	ReleaseDigest          string           `json:"releaseDigest"`
-	DeploymentDigest       string           `json:"deploymentDigest"`
-	ConsumerID             string           `json:"consumerId"`
-	SubjectID              string           `json:"subjectId"`
-	TargetID               string           `json:"targetId"`
-	SlotID                 string           `json:"slotId"`
-	Generation             int64            `json:"generation"`
-	AuthorityDigest        string           `json:"authorityDigest"`
-	PolicyDigest           string           `json:"policyDigest"`
-	GrantSetDigest         string           `json:"grantSetDigest"`
-	WorkloadIdentityDigest string           `json:"workloadIdentityDigest"`
-	ActorIdentity          string           `json:"actorIdentity"`
-	ActorVersion           string           `json:"actorVersion"`
-	SignerPolicy           TrustPolicyRef   `json:"signerPolicy"`
-	Results                json.RawMessage  `json:"results"`
-	IssuedAt               string           `json:"issuedAt"`
-	ExpiresAt              string           `json:"expiresAt"`
+	Contract               string                     `json:"contract"`
+	Schema                 SchemaDescriptor           `json:"schema"`
+	EvidenceID             string                     `json:"evidenceId"`
+	Actor                  string                     `json:"actor"`
+	RolloutID              string                     `json:"rolloutId"`
+	PlanDigest             string                     `json:"planDigest"`
+	Nonce                  string                     `json:"nonce"`
+	CandidateDigest        string                     `json:"candidateDigest"`
+	DesiredRevisionDigest  string                     `json:"desiredRevisionDigest"`
+	ReleaseDigest          string                     `json:"releaseDigest"`
+	DeploymentDigest       string                     `json:"deploymentDigest"`
+	ConsumerID             string                     `json:"consumerId"`
+	SubjectID              string                     `json:"subjectId"`
+	TargetID               string                     `json:"targetId"`
+	SlotID                 string                     `json:"slotId"`
+	Generation             int64                      `json:"generation"`
+	AuthorityDigest        string                     `json:"authorityDigest"`
+	PolicyDigest           string                     `json:"policyDigest"`
+	GrantSetDigest         string                     `json:"grantSetDigest"`
+	WorkloadIdentityDigest string                     `json:"workloadIdentityDigest"`
+	ActorIdentity          string                     `json:"actorIdentity"`
+	ActorVersion           string                     `json:"actorVersion"`
+	SignerPolicy           TrustPolicyRef             `json:"signerPolicy"`
+	CapabilityDispatch     *CapabilityDispatchBinding `json:"capabilityDispatch,omitempty"`
+	Results                json.RawMessage            `json:"results"`
+	IssuedAt               string                     `json:"issuedAt"`
+	ExpiresAt              string                     `json:"expiresAt"`
+}
+
+type CapabilityDispatchBinding struct {
+	RequestDigest               string `json:"requestDigest"`
+	ReceiptDigest               string `json:"receiptDigest"`
+	CheckProfileDigest          string `json:"checkProfileDigest"`
+	AuthorizationDecisionDigest string `json:"authorizationDecisionDigest"`
 }
 type TechnicalResult struct {
 	Actual string `json:"actual"`
 }
-type HostResults struct {
+type HostCandidateReadyResults struct {
+	Phase              string          `json:"phase"`
 	ArtifactReadback   TechnicalResult `json:"artifact_readback"`
 	FileInventory      TechnicalResult `json:"file_inventory"`
 	SlotGeneration     TechnicalResult `json:"slot_generation"`
 	ServiceProcess     TechnicalResult `json:"service_process"`
 	ResourceThresholds TechnicalResult `json:"resource_thresholds"`
 	HarnessReadiness   TechnicalResult `json:"harness_readiness"`
-	SwitchMarker       TechnicalResult `json:"switch_marker"`
+}
+type HostActiveReadbackResults struct {
+	Phase          string          `json:"phase"`
+	SwitchMarker   TechnicalResult `json:"switch_marker"`
+	ActivePointer  TechnicalResult `json:"active_pointer"`
+	FileInventory  TechnicalResult `json:"file_inventory"`
+	ServiceProcess TechnicalResult `json:"service_process"`
 }
 type AuthorizationDecisionResult struct {
 	Outcome       string `json:"outcome"`
@@ -337,6 +429,7 @@ type AuthorizationDecisionProof struct {
 	ConsumerID             string               `json:"consumerId"`
 	SubjectID              string               `json:"subjectId"`
 	TargetID               string               `json:"targetId"`
+	CandidateDigest        string               `json:"candidateDigest"`
 	ReleaseDigest          string               `json:"releaseDigest"`
 	DeploymentDigest       string               `json:"deploymentDigest"`
 	Capability             CapabilityDescriptor `json:"capability"`
@@ -354,11 +447,11 @@ type AuthorizationDecisionProof struct {
 }
 
 func (v *Verifier) VerifyPromotion(ctx context.Context, request PromotionRequest, inputs CurrentInputs) (VerificationResult, error) {
-	if inputs.Now.IsZero() || inputs.CurrentPlanDigest == "" || inputs.CurrentAuthorityDigest == "" || inputs.CurrentPolicyDigest == "" || inputs.CurrentGrantSetDigest == "" || inputs.CurrentWorkloadIdentityDigest == "" {
-		return VerificationResult{}, fail(CodeInvalidInputs, "current plan, authority, policy, grant set, workload identity, and time are required", nil)
+	if inputs.Now.IsZero() || inputs.CurrentPlanDigest == "" || inputs.CurrentAuthorityDigest == "" || inputs.CurrentPolicyDigest == "" || inputs.CurrentGrantSetDigest == "" || inputs.CurrentWorkloadIdentityDigest == "" || !validCapabilityDispatchBinding(inputs.CurrentCapabilityDispatch) {
+		return VerificationResult{}, fail(CodeInvalidInputs, "current plan, authority, policy, grant set, workload identity, capability dispatch, and time are required", nil)
 	}
-	if len(request.Evidence) != 2 {
-		return VerificationResult{}, fail(CodeInvalidContract, "exactly two actor evidence objects are required", nil)
+	if len(request.Evidence) != 3 {
+		return VerificationResult{}, fail(CodeInvalidContract, "exactly two host-phase evidence objects and one capability evidence object are required", nil)
 	}
 	var plan CanaryPlan
 	planDigest, err := v.validate(CanaryPlanSchemaID, request.Plan, &plan)
@@ -383,7 +476,7 @@ func (v *Verifier) VerifyPromotion(ctx context.Context, request PromotionRequest
 	}
 
 	result := VerificationResult{PlanDigest: planDigest}
-	seen := make(map[string]struct{}, 2)
+	seen := make(map[string]struct{}, 3)
 	for _, document := range request.Evidence {
 		var evidence CanaryEvidence
 		digest, err := v.validate(CanaryEvidenceSchemaID, document, &evidence)
@@ -393,10 +486,6 @@ func (v *Verifier) VerifyPromotion(ctx context.Context, request PromotionRequest
 		if err := v.requireSchemaHeader(evidence.Schema, CanaryEvidenceSchemaID); err != nil {
 			return VerificationResult{}, err
 		}
-		if _, duplicate := seen[evidence.Actor]; duplicate {
-			return VerificationResult{}, fail(CodeInvalidContract, "duplicate evidence actor "+evidence.Actor, nil)
-		}
-		seen[evidence.Actor] = struct{}{}
 		if err := bindEvidence(plan, planDigest, evidence); err != nil {
 			return VerificationResult{}, err
 		}
@@ -417,10 +506,23 @@ func (v *Verifier) VerifyPromotion(ctx context.Context, request PromotionRequest
 		result.EvidenceDigests = append(result.EvidenceDigests, digest)
 		switch evidence.Actor {
 		case "host_reconciler":
-			if err := verifyHostResults(evidence.Results); err != nil {
+			phase, err := verifyHostResults(evidence.Results)
+			if err != nil {
 				return VerificationResult{}, err
 			}
+			key := evidence.Actor + ":" + phase
+			if _, duplicate := seen[key]; duplicate {
+				return VerificationResult{}, fail(CodeInvalidContract, "duplicate host evidence phase "+phase, nil)
+			}
+			seen[key] = struct{}{}
 		case "consumer_capability_verifier":
+			if _, duplicate := seen[evidence.Actor]; duplicate {
+				return VerificationResult{}, fail(CodeInvalidContract, "duplicate capability evidence", nil)
+			}
+			seen[evidence.Actor] = struct{}{}
+			if evidence.CapabilityDispatch == nil || *evidence.CapabilityDispatch != inputs.CurrentCapabilityDispatch {
+				return VerificationResult{}, fail(CodeBindingMismatch, "capability evidence does not match the independently trusted dispatch binding", nil)
+			}
 			proofDigests, err := v.verifyCapabilityResults(ctx, plan, planDigest, evidence, expires, inputs)
 			if err != nil {
 				return VerificationResult{}, err
@@ -430,13 +532,20 @@ func (v *Verifier) VerifyPromotion(ctx context.Context, request PromotionRequest
 			return VerificationResult{}, fail(CodeInvalidContract, "unknown evidence actor", nil)
 		}
 	}
-	if _, ok := seen["host_reconciler"]; !ok {
-		return VerificationResult{}, fail(CodeInvalidContract, "host evidence is required", nil)
+	for _, phase := range []string{"candidate_ready", "active_readback"} {
+		if _, ok := seen["host_reconciler:"+phase]; !ok {
+			return VerificationResult{}, fail(CodeInvalidContract, "host evidence phase "+phase+" is required", nil)
+		}
 	}
 	if _, ok := seen["consumer_capability_verifier"]; !ok {
 		return VerificationResult{}, fail(CodeInvalidContract, "capability evidence is required", nil)
 	}
 	return result, nil
+}
+
+func validCapabilityDispatchBinding(binding CapabilityDispatchBinding) bool {
+	return validSHA256(binding.RequestDigest) && validSHA256(binding.ReceiptDigest) &&
+		validSHA256(binding.CheckProfileDigest) && validSHA256(binding.AuthorizationDecisionDigest)
 }
 
 func (v *Verifier) validate(id string, payload []byte, out any) (string, error) {
@@ -521,18 +630,36 @@ func activeWindow(issuedText, expiresText string, now time.Time) (time.Time, tim
 	return issued, expires, nil
 }
 
-func verifyHostResults(raw json.RawMessage) error {
-	var results HostResults
-	if err := json.Unmarshal(raw, &results); err != nil {
-		return fail(CodeInvalidContract, "decode host results", err)
+func verifyHostResults(raw json.RawMessage) (string, error) {
+	var discriminator struct {
+		Phase string `json:"phase"`
 	}
-	checks := []TechnicalResult{results.ArtifactReadback, results.FileInventory, results.SlotGeneration, results.ServiceProcess, results.ResourceThresholds, results.HarnessReadiness, results.SwitchMarker}
+	if err := json.Unmarshal(raw, &discriminator); err != nil {
+		return "", fail(CodeInvalidContract, "decode host result phase", err)
+	}
+	var checks []TechnicalResult
+	switch discriminator.Phase {
+	case "candidate_ready":
+		var results HostCandidateReadyResults
+		if err := json.Unmarshal(raw, &results); err != nil {
+			return "", fail(CodeInvalidContract, "decode candidate-ready host results", err)
+		}
+		checks = []TechnicalResult{results.ArtifactReadback, results.FileInventory, results.SlotGeneration, results.ServiceProcess, results.ResourceThresholds, results.HarnessReadiness}
+	case "active_readback":
+		var results HostActiveReadbackResults
+		if err := json.Unmarshal(raw, &results); err != nil {
+			return "", fail(CodeInvalidContract, "decode active-readback host results", err)
+		}
+		checks = []TechnicalResult{results.SwitchMarker, results.ActivePointer, results.FileInventory, results.ServiceProcess}
+	default:
+		return "", fail(CodeInvalidContract, "unknown host result phase", nil)
+	}
 	for _, check := range checks {
 		if check.Actual != "passed" {
-			return fail(CodeCheckFailed, "technical check did not pass", nil)
+			return "", fail(CodeHostCheckFailed, "technical check did not pass", nil)
 		}
 	}
-	return nil
+	return discriminator.Phase, nil
 }
 
 func (v *Verifier) verifyCapabilityResults(ctx context.Context, plan CanaryPlan, planDigest string, evidence CanaryEvidence, evidenceExpires time.Time, inputs CurrentInputs) ([]string, error) {
@@ -552,7 +679,7 @@ func (v *Verifier) verifyCapabilityResults(ctx context.Context, plan CanaryPlan,
 			return nil, fail(CodeInvalidContract, "decode required capability results", err)
 		}
 		if results.WorkloadLogin.Actual != "passed" {
-			return nil, fail(CodeCheckFailed, "workload login did not pass", nil)
+			return nil, fail(CodeWorkloadLoginFailed, "workload login did not pass", nil)
 		}
 		permitted, err := v.verifyDecision(ctx, plan, planDigest, evidence, evidenceExpires, plan.ExpectedChecks.Capability.PermittedCapability, "permitted", "", results.Permitted, inputs)
 		if err != nil {
@@ -570,7 +697,7 @@ func (v *Verifier) verifyCapabilityResults(ctx context.Context, plan CanaryPlan,
 			return nil, fail(CodeInvalidContract, "decode not-applicable result", err)
 		}
 		if results.Result.Actual != "not_applicable" {
-			return nil, fail(CodeCheckFailed, "not-applicable certification check failed", nil)
+			return nil, fail(CodeNotApplicableCheckFailed, "not-applicable certification check failed", nil)
 		}
 		expected := plan.ExpectedChecks.Capability
 		if results.Result.CertificationDigest != expected.CertificationDigest || results.Result.CertificationPolicy != expected.CertificationPolicy {
@@ -587,15 +714,21 @@ func (v *Verifier) verifyCapabilityResults(ctx context.Context, plan CanaryPlan,
 }
 
 func (v *Verifier) verifyDecision(ctx context.Context, plan CanaryPlan, planDigest string, evidence CanaryEvidence, evidenceExpires time.Time, expectedCapability CapabilityDescriptor, expectedClass, expectedCode string, result AuthorizationDecisionResult, inputs CurrentInputs) (string, error) {
+	mismatchCode := CodePermitDecisionMismatch
+	missingProofCode := CodePermitProofMissing
+	if expectedClass == "policy_denied" {
+		mismatchCode = CodeDenialNotProven
+		missingProofCode = CodeDenialNotProven
+	}
 	if result.Outcome == "failed" {
 		return "", fail(CodeTransportFailure, "authorization probe failed before an authenticated decision: "+result.FailureClass, nil)
 	}
 	if result.Outcome != "decision" || result.DecisionClass != expectedClass || (expectedCode != "" && result.DecisionCode != expectedCode) {
-		return "", fail(CodeAuthorizationMismatch, "capability result does not match the exact expected decision", nil)
+		return "", fail(mismatchCode, "capability result does not match the exact expected decision", nil)
 	}
 	payload, err := v.proofs.ResolveAuthorizationDecisionProof(ctx, result.ProofDigest)
 	if err != nil {
-		return "", fail(CodeMissingProof, "authorization proof cannot be resolved", err)
+		return "", fail(missingProofCode, "authorization proof cannot be resolved", err)
 	}
 	var proof AuthorizationDecisionProof
 	digest, err := v.validate(AuthorizationDecisionProofSchemaID, payload, &proof)
@@ -613,7 +746,7 @@ func (v *Verifier) verifyDecision(ctx context.Context, plan CanaryPlan, planDige
 		return "", err
 	}
 	if proof.PlanDigest != planDigest || proof.Nonce != plan.Nonce || proof.ConsumerID != plan.ConsumerID || proof.SubjectID != plan.SubjectID ||
-		proof.TargetID != plan.TargetID || proof.ReleaseDigest != plan.ReleaseDigest || proof.DeploymentDigest != plan.DeploymentDigest ||
+		proof.TargetID != plan.TargetID || proof.CandidateDigest != plan.CandidateDigest || proof.ReleaseDigest != plan.ReleaseDigest || proof.DeploymentDigest != plan.DeploymentDigest ||
 		proof.Capability != expectedCapability || proof.PolicyDigest != plan.PolicyDigest || proof.GrantSetDigest != plan.GrantSetDigest ||
 		proof.WorkloadIdentityDigest != plan.WorkloadIdentityDigest {
 		return "", fail(CodeBindingMismatch, "authorization proof does not match every plan/capability binding", nil)
@@ -630,7 +763,7 @@ func (v *Verifier) verifyDecision(ctx context.Context, plan CanaryPlan, planDige
 		return "", fail(CodeStaleEvidence, "authorization proof freshness window escapes plan/evidence", nil)
 	}
 	if proof.Decision.Class != result.DecisionClass || proof.Decision.Code != result.DecisionCode {
-		return "", fail(CodeAuthorizationMismatch, "authorization proof decision does not match evidence", nil)
+		return "", fail(mismatchCode, "authorization proof decision does not match evidence", nil)
 	}
 	return digest, nil
 }

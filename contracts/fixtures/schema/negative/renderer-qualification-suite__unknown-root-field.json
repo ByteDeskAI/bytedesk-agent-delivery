@@ -1,0 +1,309 @@
+{
+  "contract": "bytedesk.renderer-qualification-suite/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-qualification-suite/1.0.0",
+    "digest": "sha256:e954bea3f2eefd89836b1d621708eba2f0b02f665ccb53438f1fa52622dcfd7c"
+  },
+  "suiteId": "renderer-release-qualification",
+  "version": "1.0.0",
+  "requiredRoles": [
+    "provenance",
+    "sbom",
+    "vulnerability",
+    "malware",
+    "secret_scan",
+    "scan_completeness",
+    "license",
+    "conformance",
+    "compatibility",
+    "determinism",
+    "sandbox",
+    "executed_distribution"
+  ],
+  "requiredCoverage": [
+    {
+      "requirementId": "product-release-provenance",
+      "role": "provenance",
+      "subjectScope": "product_release",
+      "subjectRole": "product_release"
+    },
+    {
+      "requirementId": "product-release-conformance",
+      "role": "conformance",
+      "subjectScope": "product_release",
+      "subjectRole": "product_release"
+    },
+    {
+      "requirementId": "product-release-compatibility",
+      "role": "compatibility",
+      "subjectScope": "product_release",
+      "subjectRole": "product_release"
+    },
+    {
+      "requirementId": "product-distribution-provenance",
+      "role": "provenance",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "product-distribution-sbom",
+      "role": "sbom",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "product-distribution-vulnerability",
+      "role": "vulnerability",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "product-distribution-malware",
+      "role": "malware",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "product-distribution-secret-scan",
+      "role": "secret_scan",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "product-distribution-scan-completeness",
+      "role": "scan_completeness",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "product-distribution-license",
+      "role": "license",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "product-distribution-conformance",
+      "role": "conformance",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "product-distribution-compatibility",
+      "role": "compatibility",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "product-distribution-determinism",
+      "role": "determinism",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "product-distribution-sandbox",
+      "role": "sandbox",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "product-distribution-executed-distribution",
+      "role": "executed_distribution",
+      "subjectScope": "product_distribution",
+      "subjectRole": "product_distribution"
+    },
+    {
+      "requirementId": "contract-bundle-provenance",
+      "role": "provenance",
+      "subjectScope": "contract_bundle",
+      "subjectRole": "contract_bundle"
+    },
+    {
+      "requirementId": "contract-bundle-vulnerability",
+      "role": "vulnerability",
+      "subjectScope": "contract_bundle",
+      "subjectRole": "contract_bundle"
+    },
+    {
+      "requirementId": "contract-bundle-malware",
+      "role": "malware",
+      "subjectScope": "contract_bundle",
+      "subjectRole": "contract_bundle"
+    },
+    {
+      "requirementId": "contract-bundle-secret-scan",
+      "role": "secret_scan",
+      "subjectScope": "contract_bundle",
+      "subjectRole": "contract_bundle"
+    },
+    {
+      "requirementId": "contract-bundle-scan-completeness",
+      "role": "scan_completeness",
+      "subjectScope": "contract_bundle",
+      "subjectRole": "contract_bundle"
+    },
+    {
+      "requirementId": "contract-bundle-license",
+      "role": "license",
+      "subjectScope": "contract_bundle",
+      "subjectRole": "contract_bundle"
+    },
+    {
+      "requirementId": "contract-bundle-conformance",
+      "role": "conformance",
+      "subjectScope": "contract_bundle",
+      "subjectRole": "contract_bundle"
+    },
+    {
+      "requirementId": "contract-bundle-compatibility",
+      "role": "compatibility",
+      "subjectScope": "contract_bundle",
+      "subjectRole": "contract_bundle"
+    },
+    {
+      "requirementId": "contract-bundle-determinism",
+      "role": "determinism",
+      "subjectScope": "contract_bundle",
+      "subjectRole": "contract_bundle"
+    },
+    {
+      "requirementId": "every-renderer-release-provenance",
+      "role": "provenance",
+      "subjectScope": "every_renderer_release",
+      "subjectRole": "renderer_release"
+    },
+    {
+      "requirementId": "every-renderer-release-conformance",
+      "role": "conformance",
+      "subjectScope": "every_renderer_release",
+      "subjectRole": "renderer_release"
+    },
+    {
+      "requirementId": "every-renderer-release-compatibility",
+      "role": "compatibility",
+      "subjectScope": "every_renderer_release",
+      "subjectRole": "renderer_release"
+    },
+    {
+      "requirementId": "every-renderer-executable-provenance",
+      "role": "provenance",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    },
+    {
+      "requirementId": "every-renderer-executable-sbom",
+      "role": "sbom",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    },
+    {
+      "requirementId": "every-renderer-executable-vulnerability",
+      "role": "vulnerability",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    },
+    {
+      "requirementId": "every-renderer-executable-malware",
+      "role": "malware",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    },
+    {
+      "requirementId": "every-renderer-executable-secret-scan",
+      "role": "secret_scan",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    },
+    {
+      "requirementId": "every-renderer-executable-scan-completeness",
+      "role": "scan_completeness",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    },
+    {
+      "requirementId": "every-renderer-executable-license",
+      "role": "license",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    },
+    {
+      "requirementId": "every-renderer-executable-conformance",
+      "role": "conformance",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    },
+    {
+      "requirementId": "every-renderer-executable-compatibility",
+      "role": "compatibility",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    },
+    {
+      "requirementId": "every-renderer-executable-determinism",
+      "role": "determinism",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    },
+    {
+      "requirementId": "every-renderer-executable-sandbox",
+      "role": "sandbox",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    },
+    {
+      "requirementId": "every-renderer-executable-executed-distribution",
+      "role": "executed_distribution",
+      "subjectScope": "every_renderer_executable",
+      "subjectRole": "renderer_executable"
+    }
+  ],
+  "conformancePlan": {
+    "repository": "registry.example/product/qualification",
+    "digest": "sha256:02553fcdb228176babeafc445489685c040278e74fe8bcb2c3e4556d1d25fbaf",
+    "mediaType": "application/vnd.bytedesk.agent.renderer-qualification-plan.v1+json",
+    "size": 5836,
+    "trustPolicy": {
+      "id": "release-qualification-policy-v1",
+      "digest": "sha256:a06d60512fb61f5e9aa1c9b5815a13ac122b29d0ae081d74b6fe95dec2bf5670"
+    }
+  },
+  "inputCorpus": {
+    "repository": "registry.example/product/qualification",
+    "digest": "sha256:36d2ace03f79ea1827d60db53341635989941c7163c197a215b56938e1a80bf2",
+    "mediaType": "application/vnd.bytedesk.agent.renderer-qualification-corpus.v1+tar",
+    "size": 42,
+    "trustPolicy": {
+      "id": "release-qualification-policy-v1",
+      "digest": "sha256:a06d60512fb61f5e9aa1c9b5815a13ac122b29d0ae081d74b6fe95dec2bf5670"
+    }
+  },
+  "evaluatorDistribution": {
+    "repository": "registry.example/product/qualification",
+    "digest": "sha256:146c5b8a1faa79183e822a1b8cfd5d8cbaf0b1b2ccb60502eb78b0c0dd4a816d",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "size": 331,
+    "trustPolicy": {
+      "id": "release-qualification-policy-v1",
+      "digest": "sha256:a06d60512fb61f5e9aa1c9b5815a13ac122b29d0ae081d74b6fe95dec2bf5670"
+    }
+  },
+  "contractBundle": {
+    "repository": "registry.example/product/contracts",
+    "digest": "sha256:245d144e29abd3cc8023a43a6cd8366484ffd8550311cce18d42282d8b46d7c2",
+    "mediaType": "application/vnd.bytedesk.agent.contract-bundle.v1+json",
+    "size": 1940,
+    "trustPolicy": {
+      "id": "contract-bundle-release-v1",
+      "digest": "sha256:c02ce83cb387f9d51b97b3bee467157a217e4cf3ed79c8710183f9f3623bf4f5"
+    }
+  },
+  "qualificationWorkerProfileDigest": "sha256:c4d654a66a90705f63c460fc725354866827f0186bee49fd7ae235643302c384",
+  "qualificationProtocolProfileDigest": "sha256:135ad2dd7dec9cc416f3272c495521580b5972cfde50ea9876020a239b992f42",
+  "sandboxProfileDigest": "sha256:bae8babbab7c350f637eece710c26874dc98aa90ad8f75f6c87adb3be9cfd804",
+  "resourceProfileDigest": "sha256:a8ea63935f5ef460ec6a9db7a16303084da85e62bd3e5128c341cb5a8a897a89",
+  "timeoutProfileDigest": "sha256:776ec5b10927a8c66a9d1655e02076a7cbbf6669458c81657d5380822a911000",
+  "trustPolicy": {
+    "id": "release-qualification-policy-v1",
+    "digest": "sha256:a06d60512fb61f5e9aa1c9b5815a13ac122b29d0ae081d74b6fe95dec2bf5670"
+  },
+  "__unknown": true
+}

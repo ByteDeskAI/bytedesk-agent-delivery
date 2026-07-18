@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/protocol-fixtures/1.0.0",
+  "profile": "bytedesk.protocol-fixtures/1",
+  "version": 1,
+  "fixtures": [
+    {
+      "fixtureId": "sample-config",
+      "kind": "capability-authorization-proof",
+      "mediaType": "application/json",
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "size": 2,
+      "contentBase64url": "e30"
+    }
+  ],
+  "materials": [
+    {
+      "materialId": "sample-source",
+      "kind": "source-commit-and-tree",
+      "uri": "https://example.invalid/materials/sample-source",
+      "mediaType": "application/json",
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "size": 2,
+      "contentBase64url": "e30"
+    }
+  ],
+  "chains": [
+    {
+      "chainId": "sample-chain",
+      "documents": [
+        {
+          "role": "dispatch-authorization-proof",
+          "fixtureId": "sample-config"
+        }
+      ]
+    }
+  ],
+  "mutations": [
+    {
+      "mutationId": "TEST-001-sample-mutation",
+      "baseFixtureId": "sample-config",
+      "rejectingOperation": "bytedesk.port.capability-verifier/1#verify-capability-result",
+      "expectedProblemCode": "evidence_invalid",
+      "mutatedFixture": {
+        "fixtureId": "sample-config",
+        "kind": "capability-authorization-proof",
+        "mediaType": "application/json",
+        "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "size": 2,
+        "contentBase64url": "e30"
+      }
+    }
+  ]
+}

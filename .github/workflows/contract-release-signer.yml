@@ -32,7 +32,7 @@ jobs:
       CONTRACT_RELEASE_TRUST_POLICY_ID: ${{ vars.CONTRACT_RELEASE_TRUST_POLICY_ID }}
       CONTRACT_RELEASE_TRUST_POLICY_DIGEST: ${{ vars.CONTRACT_RELEASE_TRUST_POLICY_DIGEST }}
       CONTRACT_RELEASE_TRUST_POLICY_B64: ${{ vars.CONTRACT_RELEASE_TRUST_POLICY_B64 }}
-      CONTRACT_RELEASE_KEY_VERSION: ${{ vars.CONTRACT_RELEASE_KEY_VERSION }}
+      CONTRACT_RELEASE_SIGNER_IDENTITY_DIGEST: ${{ vars.CONTRACT_RELEASE_SIGNER_IDENTITY_DIGEST }}
       CONTRACT_RELEASE_VERIFIER_IMAGE: ${{ vars.CONTRACT_RELEASE_VERIFIER_IMAGE }}
       CONTRACT_RELEASE_COSIGN_DIGEST: ${{ vars.CONTRACT_RELEASE_COSIGN_DIGEST }}
       CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_B64: ${{ vars.CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_B64 }}
@@ -51,7 +51,7 @@ jobs:
           [[ "$CONTRACT_RELEASE_REPOSITORY" =~ ^[^@[:space:]]+/[^@[:space:]]+$ ]]
           [[ "$CONTRACT_RELEASE_TRUST_POLICY_ID" =~ ^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$ ]]
           [[ "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]
-          [[ "$CONTRACT_RELEASE_KEY_VERSION" =~ ^[A-Za-z0-9][A-Za-z0-9._:/@+-]{0,2047}$ ]]
+          [[ "$CONTRACT_RELEASE_SIGNER_IDENTITY_DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]
           [[ "$CONTRACT_RELEASE_VERIFIER_IMAGE" =~ ^ghcr\.io/bytedesk/agent-delivery-contract-release-tool@sha256:[a-f0-9]{64}$ ]]
           [[ "$CONTRACT_RELEASE_COSIGN_DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]
           [[ "$CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]
@@ -232,7 +232,9 @@ jobs:
             --expected-trust-policy-id "$CONTRACT_RELEASE_TRUST_POLICY_ID" \
             --expected-trust-policy-digest "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST" \
             --expected-repository "$CONTRACT_RELEASE_REPOSITORY" \
-            --expected-key-version "$CONTRACT_RELEASE_KEY_VERSION" \
+            --expected-credential-kind sigstore_keyless \
+            --expected-signer-identity-digest "$CONTRACT_RELEASE_SIGNER_IDENTITY_DIGEST" \
+            --expected-trusted-root-digest "$CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_DIGEST" \
             --expected-source-repository "$GITHUB_REPOSITORY" \
             --expected-source-ref "$CALLER_SOURCE_REF" \
             --expected-source-commit "$CALLER_SOURCE_COMMIT" \
@@ -280,6 +282,13 @@ jobs:
           require_regular_bounded signed/agent-delivery-contracts-v1.signing-request.json 4194304
           require_regular_bounded signed/signer-binding.json 4194304
           require_regular_bounded signed/pre-sign-certification.json 4194304
+          PRE_SIGN_CERTIFICATION_DIGEST="sha256:$(sha256sum signed/pre-sign-certification.json | cut -d' ' -f1)"
+          jq -e \
+            --arg signerIdentityDigest "$CONTRACT_RELEASE_SIGNER_IDENTITY_DIGEST" \
+            --arg builderDigest "$VERIFIER_DIGEST" \
+            --arg certificationDigest "$PRE_SIGN_CERTIFICATION_DIGEST" \
+            '.contract == "bytedesk.signing-request/1" and .purpose == "contract-bundle-release-v1" and .credentialKind == "sigstore_keyless" and .signerIdentityDigest == $signerIdentityDigest and .builderDigest == $builderDigest and .preSignCertificationDigest == $certificationDigest and (has("keyVersion") | not)' \
+            signed/agent-delivery-contracts-v1.signing-request.json > /dev/null
           jq -e \
             --arg repository "$GITHUB_REPOSITORY" \
             --arg ref "$CALLER_SOURCE_REF" \
@@ -395,6 +404,9 @@ jobs:
             --require-source-tree-object-match \
             --expected-cosign-digest "$CONTRACT_RELEASE_COSIGN_DIGEST" \
             --expected-builder-digest "$VERIFIER_DIGEST" \
+            --expected-credential-kind sigstore_keyless \
+            --expected-signer-identity-digest "$CONTRACT_RELEASE_SIGNER_IDENTITY_DIGEST" \
+            --expected-trusted-root-digest "$CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_DIGEST" \
             --require-trusted-source-rebuild-match \
             --output /output/release-signing-evidence.json
           require_regular_bounded() {
@@ -411,7 +423,7 @@ jobs:
           [[ "${FINAL_OUTPUTS[0]}" == release-signing-evidence.json ]]
           require_regular_bounded final/release-signing-evidence.json 4194304
           jq -e \
-            '.profile == "bytedesk.contract-release-signing-evidence/1" and .verificationMode == "sigstore_product_release" and .signatureAuthenticated == true and .productReleaseSignatureIssued == true and .consumerPermitIssued == false and .fullBundleNativeSemantics == true and .sourceLineageVerified == true and .byteForByteSourceRebuildMatch == true and .outcome == "signed_and_verified"' \
+            '.profile == "bytedesk.contract-bundle-release-signing-evidence/1" and .verificationMode == "sigstore_contract_bundle_release" and .signatureAuthenticated == true and .contractBundleSignatureIssued == true and .consumerPermitIssued == false and .fullBundleNativeSemantics == true and .sourceLineageVerified == true and .byteForByteSourceRebuildMatch == true and .outcome == "signed_and_verified"' \
             final/release-signing-evidence.json > /dev/null
 
       - name: Publish only the signed release candidate and verification evidence

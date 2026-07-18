@@ -13,7 +13,53 @@
     "subjectId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
     "installationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
     "targetClass": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
-    "useScope": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "useScope": {
+      "type": "object",
+      "required": ["target", "harnesses", "operations"],
+      "properties": {
+        "target": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": ["kind", "targetId"],
+              "properties": {
+                "kind": { "const": "exact_target" },
+                "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }
+              },
+              "additionalProperties": false,
+              "unevaluatedProperties": false
+            },
+            {
+              "type": "object",
+              "required": ["kind", "targetClass", "targetClassDigest"],
+              "properties": {
+                "kind": { "const": "target_class" },
+                "targetClass": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+                "targetClassDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+              },
+              "additionalProperties": false,
+              "unevaluatedProperties": false
+            }
+          ]
+        },
+        "harnesses": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }
+        },
+        "operations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["render", "compile", "activate", "recover", "runtime_execute"] }
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
     "evidenceDigests": {
       "type": "object",
       "required": ["scan", "sbom", "license", "evaluation", "riskDecision"],
@@ -45,6 +91,20 @@
     },
     "signerPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
   },
+  "allOf": [
+    {
+      "if": { "properties": { "revocation": { "properties": { "status": { "const": "active" } }, "required": ["status"] } }, "required": ["revocation"] },
+      "then": { "properties": { "revocation": { "not": { "anyOf": [{ "required": ["at"] }, { "required": ["replacementDigest"] }] } } } }
+    },
+    {
+      "if": { "properties": { "revocation": { "properties": { "status": { "const": "revoked" } }, "required": ["status"] } }, "required": ["revocation"] },
+      "then": { "properties": { "revocation": { "required": ["at"], "not": { "required": ["replacementDigest"] } } } }
+    },
+    {
+      "if": { "properties": { "revocation": { "properties": { "status": { "const": "replaced" } }, "required": ["status"] } }, "required": ["revocation"] },
+      "then": { "properties": { "revocation": { "required": ["at", "replacementDigest"] } } }
+    }
+  ],
   "additionalProperties": false,
   "unevaluatedProperties": false
 }

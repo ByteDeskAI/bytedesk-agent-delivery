@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-16
 
-**Last amended:** 2026-07-17
+**Last amended:** 2026-07-18
 
 **Status:** Accepted
 
@@ -214,6 +214,30 @@ complete official effective Agent Spec. A full effective copy exists only in
 deterministic build output; the public source plus canonical private delta remain
 the authoring lineage.
 
+Before compiling, the consumer-scoped compiler freezes one closed
+`bytedesk.private-compilation-input/1` lock. It binds consumer, subject,
+installation, harness, target, candidate, desired revision, predecessor,
+runtime slot/generation, activation mode, reproducible epoch,
+public/binding/customization inputs, canonical effective
+skills and every approval descriptor, the current authority snapshot and its
+authorized-input digest, the exact contract bundle and renderer selection, and
+every current consumer policy/security-control subdigest. The caller and
+compiler independently compute a domain-separated `compilationInputDigest` and
+`compileRequestDigest`; the latter binds consumer ID, idempotency key, and the
+complete input digest without including itself. The consumer-signed authorized
+input digest additionally binds `lock.contract` and the exact `lock.schema`
+descriptor before the inputs that omit only the circular authority fields.
+Success returns exact role-constrained lock, deployment, and compilation-
+evidence artifact descriptors; the request digest addresses lost-response
+resolution. A changed expanded input under the same key is an idempotency
+collision, never a retry with partially re-resolved state.
+
+Deployment identity is deterministic: `deploymentId` is domain-separated from
+the locked consumer, subject, target, candidate/revision digests, and complete
+compilation-input digest. Compilation evidence uses the locked reproducible
+epoch as both its statement epoch and completion time. Runtime timing remains
+append-only telemetry, so an idempotent replay is byte-identical.
+
 The exact field, operation, path, predecessor, source-resolution, failure, and
 compatibility rules are normative in
 [Machine contracts v1](../../standards/machine-contracts-v1.md).
@@ -250,6 +274,17 @@ distribution and allowlist digests, locked toolchain/dependencies, SBOM,
 vulnerability/license results, deterministic conformance, and SLSA Build Level
 3 provenance. One version permanently maps to one manifest digest.
 
+Strategy selection returns one closed, domain-separated renderer-selection
+object binding the requested platform, exact renderer-release and executable
+distribution descriptors, product distribution, compiled allowlist, renderer
+schemas, and worker profile. That object is carried unchanged through Strategy,
+Adapter, and sandbox execution. The signed launcher returns an authenticated
+actual-execution receipt binding the selection, attempt fence, platform,
+executed distribution, input/output digests, and sandbox/worker profiles;
+Adapter validation must match the receipt and its authentication evidence to
+the render manifest before output is accepted. Ambient host architecture or a
+later executable lookup can never revise a selection.
+
 Every render emits a manifest containing source digest, Agent Spec version,
 renderer-release manifest digest, actual executed distribution/worker digest
 and platform, embedded allowlist and schema digests, normalized parameters,
@@ -269,11 +304,28 @@ consumer bindings, private skills, and customizations. Binding-aware preview and
 compilation are available only through an authenticated private path or a local
 private workflow that does not publish private inputs or outputs.
 
+Public-render and release-qualification finalizers are pure construction,
+validation, and purpose-separated signing operations. They emit exact finalized
+objects and a complete deterministic OCI root/config/layer graph but hold no
+registry commit authority. A dedicated purpose-separated public-render
+publisher independently requires new `public_render_publication` status
+eligibility, verifies the exact signed harness render and deterministic graph,
+and computes an opaque authorization-context digest over that fresh evidence.
+Only then may it delegate the exact graph and opaque context to the
+status-agnostic Registry Adapter's idempotent `push-artifact` operation. The
+Adapter returns typed publication/readback evidence that explicitly echoes the
+authorization-context digest. A finalizer cannot manufacture publication
+evidence, and a published artifact never becomes part of its own signed render
+preimage.
+
 The private deployment compiler reconstructs the full effective Agent Spec,
 resolves the exact consumer-approved skill set, and performs a complete render
 with the same exact resolved Adapter implementation recorded by the public-
-render lineage. It embeds the effective render bundle and full manifest in the
-signed private deployment. It never patches a public render, and
+render lineage. It embeds the full effective render manifest, its exact payload
+descriptor, and the closed issued-attempt/authenticated-execution evidence in
+the signed private deployment. The payload hashes runtime files only and
+excludes the manifest, evidence envelopes, deployment, compilation evidence,
+and enclosing OCI metadata. It never patches a public render, and
 v1 defines no separate private-render artifact type. Verified public output may
 be reused only when the customization is empty, the effective skill set exactly
 matches the declared public set, and every normalized source, skill, renderer,
@@ -312,10 +364,13 @@ V1 defines:
 | Agent source | Public | Canonical manifest and deterministic source layer |
 | Skill package | Public catalog or private consumer scope | Canonical manifest, deterministic regular-file layer, file inventory, SBOM/scan evidence, and exact digest |
 | Harness render | Public | Tenant-free source descriptor, exact declared public skill descriptors, renderer descriptor, deterministic render bundle |
-| Consumer deployment | Private to consumer/tenant | Public lineage, binding/customization and approved skill descriptors, embedded effective render bundle/manifest, and separate policy, authority, identity, and target subdigests |
+| Consumer deployment | Private to consumer/tenant | Exact input-lock descriptor, public lineage, binding/customization and approved skill descriptors, embedded effective render manifest/payload and renderer execution preimages, plus separate policy, authority, identity, and target subdigests |
+| Private compilation evidence | Private to consumer/tenant | Purpose-signed request/lock/deployment/render/compiler statement; exact descriptor resolves the complete envelope and is never embedded by the deployment |
 | Consumer authority, skill approval, canary, and recovery evidence | Private to consumer/tenant | Exact candidate/target/revision binding, signer-policy digest, freshness, decisions, and redacted evidence references |
 | Signature, attestation, SBOM | Same repository as subject | OCI referrer to the exact local subject |
-| Runtime release manifest | Private to consumer/runtime | Exact deployment subdigests and system-package digest |
+| Runtime release manifest | Private to consumer/runtime | Exact canonical consumer-deployment/private-compilation-evidence descriptor pairs and system-package digest |
+| Release-status eligibility and activation authorization | Product or private consumer scope by stage | Fresh nonce-authenticated product/renderer status heads; activation additionally binds the exact runtime-release/deployment graph, consumer authority, host attempt, generations, fencing, epoch, and expiry |
+| Registry publication evidence | Same scope as the committed subject | Idempotency/request identity, exact root/config/ordered layers/graph, authenticated registry request, committed and read-back descriptors/raw digests, and timestamps |
 
 The media-type namespace is `application/vnd.bytedesk.agent.*.v1`. The v1 names
 are reserved by the accepted media registry; their closed schemas, schema
@@ -341,11 +396,13 @@ audit, and legal-hold digests are garbage-collection roots.
 
 ### 7. Supply-chain trust
 
-Cosign signatures use non-exportable KMS keys through exact workload identity.
-Private key material is never exported, committed, logged, placed in a secret
-store, or delivered to a runtime.
+KMS-backed Cosign signatures use non-exportable keys through exact workload
+identity. The contract-bundle release instead uses a purpose-separated Sigstore
+keyless identity with an independently pinned trusted root and no static leaf
+key. Private key material is never exported, committed, logged, placed in a
+secret store, or delivered to a runtime.
 
-Purpose-separated signer roles cover:
+Six organizational signer domains cover:
 
 1. product distribution, contract bundle, allowlist, and renderer release;
 2. public source/catalog/skill publication;
@@ -354,12 +411,31 @@ Purpose-separated signer roles cover:
 5. consumer authority, skill approval, and business approval; and
 6. private deployment/release authority.
 
-Roles 4 through 6 are isolated per consumer. Authority/approval and deployment
+Those domains expand into 22 closed wire purposes for product release,
+contract-bundle release, public source, public render, consumer-private skill,
+consumer authority, consumer deployment, consumer runtime release,
+qualification policy, qualification attempt, qualification receipt,
+qualification evidence, qualification decision, release status, status-head
+checkpoint, public status eligibility, renderer attempt, renderer execution,
+private-compilation input, private-compilation evidence, consumer-private
+status eligibility, and consumer activation authorization. A purpose is not
+interchangeable merely because two purposes share an
+organizational owner. Exact purpose, subject, and credential-aware signer
+identity are verified independently: immutable `keyVersion` plus
+`publicKeyDigest` for KMS, or exact `signerIdentityDigest` plus independently
+pinned `trustedRootDigest` and no static leaf or `keyVersion` for Sigstore
+keyless. Workload identity, repository, workflow, environment, audience, and
+trust-policy bindings are also verified independently. Qualification/status,
+attempt/execution, and deployment/runtime-release purposes cannot collapse into
+an umbrella release signature.
+
+Domains 4 through 6 are isolated per consumer. Authority/approval and deployment
 use different keys and workload identities. The preferred production topology
 uses non-exportable consumer-owned KMS keys. Agent Delivery build/compiler/
-publication workloads may receive narrow role-4 private-skill or role-6
-deployment signing only; they never receive role-5 authority/approval signing,
-which belongs to the independently authenticated Consumer Authority Adapter. A
+publication workloads may receive only the narrow private-skill, deployment,
+runtime-release, or compilation purpose explicitly assigned to that workload;
+they never receive `consumer-authority-v1` signing, which belongs to the
+independently authenticated Consumer Authority Adapter. A
 hosted service may use an explicitly opted-in tenant-dedicated KMS/HSM key whose
 immutable version is independently pinned and revocable by the consumer. A
 shared cross-consumer private signer or provider-controlled consumer trust root
@@ -372,17 +448,59 @@ Delivery verifies and records that evidence but cannot issue or infer it.
 Every signer policy is an immutable canonical object identified by stable ID,
 logical version, exact schema digest, policy digest, and effective window. A
 descriptor carries both policy ID and digest, while the verifier obtains policy
-independently. Every policy defines the KMS algorithm, immutable key-version resource,
-allowed WIF/OIDC principal, repository/workflow/environment claims, least IAM
-permissions, current/next trust set, rotation ceremony, revocation, compromise
-response, and fail-closed behavior. An artifact-supplied key or policy cannot
-bootstrap trust; runtimes receive trust policy independently.
+independently. Every policy defines the credential kind and algorithm. KMS
+signers define an immutable `keyVersion` resource and `publicKeyDigest`;
+Sigstore keyless signers define an exact `signerIdentityDigest` and independently
+pinned `trustedRootDigest`, and forbid `keyVersion` and a static leaf
+`publicKeyDigest`. Every policy also defines the allowed WIF/OIDC principal,
+repository/workflow/environment claims, least IAM permissions, current/next
+trust set, rotation ceremony, revocation, compromise response, and fail-closed
+behavior. An artifact-supplied key or policy cannot bootstrap trust; runtimes
+receive trust policy independently.
+
+The `product-release-v1` policy is KMS-only and scopes product distributions,
+compiled allowlists, renderer releases, and exact product-owned evaluator/build-
+tool distributions. Each evaluator descriptor carries that independently
+resolved product-policy ID and digest and never inherits the policy of the
+subject it evaluates. Contract bundles use a separate
+`contract-bundle-release-v1` policy that is Sigstore-keyless-only and scopes the
+exact contract repository and media type. Neither policy may include the
+other's purpose, signer credential kind, repository, or media type; a combined
+product/contract policy fails closed.
+
+This separation is schema-closed at every descriptor boundary, not only at
+fields named `contractBundle`. A generic artifact descriptor selects
+`contract-bundle-release-v1` if and only if it carries the canonical
+contract-bundle JSON media type, and the legacy tar media type is invalid for
+every artifact descriptor. Named contract-bundle roles use the stricter shared
+`contractBundleDescriptor`, and the contract-bundle manifest root and every
+schema member repeat the same fixed policy ID. Exact signing-request and
+signature-bundle payloads inside an
+independent verification receipt use the closed, four-field
+`evidenceBlobDescriptor`: it deliberately carries no trust-policy reference and
+acquires no authority from its enclosing artifact. The trusted Adapter resolves
+and authenticates those exact bytes. The legacy tar representation is therefore
+classification/denial input, never signable artifact authority.
+
+Every product release carries the exact non-authority-issuing
+`contractBundleVerification` receipt for its contract-bundle descriptor, and
+that receipt is inside the product-release authority preimage. Acceptance does
+not treat the surrounding KMS product signature as proof of the bundle's
+keyless signature. Each downstream and private verifier independently resolves
+the bundle bytes, contract policy, signing-request bytes, and Sigstore bundle,
+replays the trusted keyless Adapter against the exact signer identity, root,
+workflow/claims, builder, and certification bindings, and requires the result
+to equal the embedded receipt.
 
 The consumer supplies signed short-lived authority snapshots bound to consumer,
 subject, installation, candidate, desired revision, target, operation, current
 policy/grant/credential/workload-identity/lifecycle/security-control subdigests,
-nonce, predecessor, and expiry. Compilation and activation verify fresh
-snapshots independently; no credential values are embedded. The exact topology
+nonce, predecessor, and expiry. A compile snapshot additionally signs the exact
+complete authorized-private-input digest; the field is required only for
+compile and forbidden for activate or recover. Verification succeeds only for
+a permitted snapshot whose signed digest matches the independently recomputed
+input. Compilation and activation verify fresh snapshots independently; no
+credential values are embedded. The exact topology
 and envelopes are defined by
 [Consumer authority and private signing v1](../../standards/consumer-authority-v1.md).
 
@@ -398,6 +516,38 @@ Unknown or revoked keys, wrong workflow/repository/subject/media type, missing
 evidence, withdrawal, downgrade, stale policy, or a substituted source fail
 closed. A registry or catalog outage may leave an already active, locally
 verified release running, but blocks new import, compilation, and activation.
+
+A signed release is not automatically eligible. Before a product release or
+renderer executable can be selected, a purpose-separated qualification
+protocol proves the exact product distribution, renderer release, executable
+platform, contract bundle, conformance inputs, evaluator, sandbox, provenance,
+SBOM, vulnerability, malware, secret-scan, license, compatibility,
+determinism, executed-distribution, and product-distribution evidence required
+by an immutable policy and suite. Every evidence leaf and predicate is typed,
+signed, bound to its exact subject and schema, and covered by a signed final
+decision. Every declared renderer release and both supported server platforms
+must be represented.
+
+Qualification is immutable historical evidence; current eligibility is a
+separate append-only signed status chain. Selection and execution require a
+fresh caller-nonce-bound authenticated status-head checkpoint. First contact,
+unchanged refresh, and advancement have distinct rules; advancement requires an
+exact append-only consistency proof, while rollback, fork, stale/future time,
+wrong nonce, or a non-current head fails closed. The complete contract is
+[Release qualification and status v1](../../standards/release-qualification-v1.md).
+
+Freshness is proved independently at each authority-bearing stage; selection or
+render evidence is never reused as compilation or activation freshness. A
+closed, signed `bytedesk.release-status-eligibility-evidence/1` binds the stage,
+operation time, externally pinned policy set, one exact product release, and
+the canonical complete set of every renderer release actually used. Before a
+physical switch, the Promotion Coordinator resolves the immutable runtime
+release and its full `RR -> CE -> D -> L/render` closure, obtains new
+activation-stage status checkpoints, and signs one short-lived
+`bytedesk.activation-authorization/1` under a consumer-scoped KMS purpose. The
+Host receives and verifies that complete object and graph at operation time; a
+naked authorization digest, a stale eligibility object, or a Host-generated
+policy conclusion is never activation authority.
 
 ### 8. Installation and deployment records
 
@@ -419,15 +569,40 @@ A deployment records:
 
 - source, public render, binding/customization, approved public/private skill,
   trust, policy, consumer-authority, and runtime-target descriptors;
-- the embedded effective render bundle, manifest, and complete file inventory;
-- per-agent deployment subdigest;
+- the embedded effective render manifest, exact runtime-file payload descriptor,
+  and closed renderer attempt/authentication/execution preimages;
+- the exact canonical consumer-deployment artifact descriptor as its sole identity;
 - stable runtime slot where a harness needs one;
-- release manifest aggregating the exact active subdigests;
+- release manifest aggregating each exact active deployment descriptor with its
+  separate exact compilation-evidence descriptor;
 - exact revision-and-digest predecessor and compare-and-swap precondition;
 - staging, canary, activation, failure, and forward-recovery evidence; and
 - desired versus observed state.
 
-An agent-definition update changes only that agent's subdigest. Unchanged
+The deployment never embeds compilation evidence or a runtime-release backlink.
+After deployment commit, a separately signed compilation-evidence statement
+binds the request, exact input-lock and deployment descriptors, complete render
+lineage, payload, actual compiler/renderer distributions, outcome, and signer
+policy. Its signing result signs a statement digest; the exact evidence
+descriptor binds the envelope, avoiding a digest cycle.
+
+The separately signed runtime release contains, for every subject, the exact
+canonical deployment descriptor and the exact compilation-evidence descriptor.
+It is signed under `consumer-runtime-release-v1`, not the deployment purpose.
+
+Promotion remains one target-level CAS after the atomic target-wide switch, but
+its authority is complete per subject. The signed promotion decision carries a
+canonical sorted unique evidence entry for every runtime-release deployment,
+binding the subject, deployment, common target slot/generation, consumer
+authority, target-wide activation authorization, candidate-ready evidence,
+active readback, and capability result. It also binds a canonical sorted unique
+reference to every per-subject deployment receipt. Each receipt repeats the
+exact activation-authorization descriptor and raw digest so audit can traverse
+from the subject deployment through the signed target-wide graph authority.
+Missing, duplicate, reordered, or substituted subject evidence or receipts
+blocks the desired-state CAS.
+
+An agent-definition update changes only that agent's deployment descriptor. Unchanged
 agents retain their identity and credentials. A system-package change is
 explicitly runtime-wide.
 
@@ -562,8 +737,10 @@ deployments, promotion, forward recovery, status, and receipts.
 The normative description is signed OpenAPI 3.2.0 and references the exact
 Draft 2020-12 source schemas. Mutations use strong ETags, HTTP preconditions,
 domain revision-and-digest CAS, and idempotency key plus canonical input digest.
-Errors use RFC 9457 problem details. Long work returns `202`, `Location`, and a
-durable action resource. Events use CloudEvents 1.0.2 structured JSON,
+Errors use RFC 9457 problem details, identify the exact port operation, and
+carry that operation's closed side-effect state for the stable code; a code has
+no global mutation conclusion independent of its operation. Long work returns
+`202`, `Location`, and a durable action resource. Events use CloudEvents 1.0.2 structured JSON,
 AsyncAPI 3.1.0, exact data-schema digests, at-least-once delivery, per-aggregate
 sequence, inbox deduplication, and API resynchronization on gaps. Events are
 notifications, never authority.
@@ -726,7 +903,7 @@ The program cannot close without evidence for:
   syntax while byte-exact binary handling prevents payload mutation.
 - Consumer customization remains reviewable without acquiring runtime
   authority.
-- Per-agent subdigests and stable slots reduce unrelated deployment churn.
+- Per-agent canonical deployment descriptors and stable slots reduce unrelated deployment churn.
 - Consumers retain identity and authorization sovereignty.
 - Forward recovery cannot resurrect revoked credentials or grants.
 - Closed signed schemas, exact renderer releases, and one target-state writer
@@ -782,6 +959,7 @@ This ADR is implemented and constrained by the
 [implementation stack and reference topology](0002-implementation-stack-and-reference-topology.md),
 [system overview](../system-overview.md), [C4 model](../c4.md),
 [consumer integration contract](../consumer-integration-contract.md),
+[integration ports v1](../../standards/integration-ports-v1.md),
 [OCI artifact model](../oci-artifact-model.md),
 [runtime reconciliation contract](../runtime-reconciliation.md), and
 [security and trust model](../security-and-trust.md). The normative standards

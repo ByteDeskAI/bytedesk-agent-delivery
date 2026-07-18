@@ -2,6 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-07-17
+- **Last amended:** 2026-07-18
 - **Decision owners:** ByteDesk Agent Delivery maintainers
 - **Supersedes:** No prior implementation-stack decision
 - **Depends on:** [ADR-0001](0001-independent-agent-delivery-control-plane.md)
@@ -203,8 +204,8 @@ intentional denial state; release remains disabled until a second reviewed
 commit pins that exact signer revision.
 
 The signer accepts only four candidate files plus independently configured
-policy, destination, key-version, trusted-root, Cosign, and verifier-image
-digests. It separately fetches the exact caller commit metadata and source
+policy, destination, keyless signer-identity, trusted-root, Cosign, and
+verifier-image digests. It separately fetches the exact caller commit metadata and source
 snapshot through its own read-only GitHub contents channel. It validates the
 API redirect as the exact commit path on `codeload.github.com`, does not forward
 its Bearer token to that host, bounds both responses, and never extracts source
@@ -224,14 +225,19 @@ equality and bind the snapshot, commit, tree, rebuild, and candidate digests in
 evidence. The signer cannot substitute a checkout verifier, PATH build, mutable
 image, generic command, or candidate-provided hook.
 
-For keyless product-release signing, the Fulcio certificate identity is the
-called reusable workflow URL with its exact commit, not the caller workflow or
-token `sub`. Cosign also checks the exact caller repository, immutable release
-tag, source commit, `workflow_dispatch` trigger, OIDC issuer, and independently
-digested trusted root. The sealed verifier-image digest is the release
+For `contract-bundle-release-v1` keyless signing, the Fulcio certificate
+identity is the called reusable workflow URL with its exact commit, not the
+caller workflow or token `sub`. Cosign also checks the exact caller repository,
+immutable release tag, source commit, `workflow_dispatch` trigger, OIDC issuer,
+and independently digested trusted root. The sealed verifier-image digest is the release
 `builderDigest`; the Cosign executable has a separate digest. Audience and
 protected-environment constraints are issuance-policy inputs and are not
-asserted as certificate fields when the certificate does not carry them.
+asserted as certificate fields when the certificate does not carry them. The
+keyless request forbids KMS `keyVersion`, binds the exact policy signer by
+`signerIdentityDigest`, and signs both `builderDigest` and the pre-sign
+certification digest. Finalization resolves that certification and requires the
+same sealed-verifier digest before it can claim authenticated builder execution.
+The repository harness proves only a non-authoritative conformance binding.
 
 Repository `verify_bundle.py` signed mode is an external-Adapter conformance
 harness only. It may prove exact Cosign invocation and denial behavior using an
@@ -243,6 +249,26 @@ request digest before final release evidence is issued. Activating the release
 workflow therefore additionally requires the independently built and certified
 sealed image, every protected immutable value, and environment approval; an
 absent prerequisite fails closed.
+
+The generated repository graph models this boundary with a trusted keyless
+Adapter vector, not with repository-owned cryptography. The product release
+binds the Adapter's exact non-authority receipt, while renderer and private
+conformance independently resolve the contract bundle, selected policy,
+signing request, and Sigstore bundle and require a byte-for-byte matching
+outcome. Production must obtain that outcome from independent Fulcio
+certificate-chain, Rekor transparency-log, and Cosign signature/bundle
+verification; a valid KMS product-release signature cannot replace those
+checks.
+
+The same conformance boundary applies to release prerequisites. The repository
+harness derives evidence availability only from a closed evaluation attestation
+whose unique passing checks bind the exact bundle repository, digest, media
+type, size, trust policy, evidence bytes, and exact test evaluator
+distribution. Its SPDX inventory, SLSA subject/materials, scanner coverage,
+license result, determinism, compatibility, conformance, and scan-completeness
+links are revalidated procedurally and the result remains non-authoritative.
+Production never substitutes these test-local files for authenticated OCI
+evidence/referrers resolved by the sealed verifier.
 
 Release outputs are:
 
@@ -575,33 +601,43 @@ and neither replaces PostgreSQL command/CAS state or the OCI manifest graph.
 ### 6. Signing, KMS, and workload identity
 
 The reference cryptographic profile uses Cosign-compatible signatures and
-ECDSA P-256/SHA-256 non-exportable keys. Product/public purposes use dedicated
-product keys; roles 4 through 6 remain isolated per consumer as required by the
-consumer-authority standard. **Role 5 (`consumer-authority-v1`) is never granted
-to any Agent Delivery component.** The Consumer Authority Adapter verifies the
-consumer's role-5 evidence; the API, Coordinator, compiler, renderer controller,
+ECDSA P-256/SHA-256. KMS-backed product/public purposes use dedicated
+non-exportable product keys. `contract-bundle-release-v1` is the sole keyless
+contract-bundle purpose and uses an ephemeral Sigstore leaf under its separately
+pinned trusted root. Every consumer-private purpose remains isolated per
+consumer as required by the consumer-authority standard.
+**`consumer-authority-v1` is never
+granted to any Agent Delivery component.** The Consumer Authority Adapter
+verifies that evidence; the API, Coordinator, compiler, renderer controller,
 publisher, host, and Agent Delivery signers cannot issue it.
 
 The first provider conformance profile is AWS KMS plus GitHub/Kubernetes OIDC
 federation. Azure Key Vault and Google Cloud KMS are Adapter profiles, not
-weaker fallback modes. Role-4 private-skill and role-6 deployment signers are
-separate deployment modes, database roles, queues, and autoscaling/rate-limit
-domains. Within each mode, every signing execution runs in an ephemeral
+weaker fallback modes. Private-skill, compilation-input, deployment,
+compilation-evidence, and runtime-release signers are separate
+purpose-constrained deployment modes, database roles, queues, and
+autoscaling/rate-limit domains. Within each mode, every signing execution runs in an ephemeral
 consumer-and-purpose cell with its own Kubernetes service account, SPIFFE ID,
 cloud workload role, and KMS grant restricted to that consumer's one immutable
 key purpose. Cells are created from product-controlled templates, process only
 one consumer and purpose, and scale to zero; an identity or grant is never
-reused across consumers or roles 4 and 6. A shared dispatcher may validate and
+reused across consumers or prohibited purpose pairs. A shared dispatcher may validate and
 route an opaque signed request, but has no `Sign`, key-administration, or
 assume-signer-role permission. No continuously running generic signer can reach
 multiple consumers' keys. Product release, Registry publisher, Coordinator
 desired writer, compiler/renderer controller, event publisher, backup, and
 evidence archive identities are also distinct.
 
-Every sign request identifies purpose, immutable key version, expected public
-key/claims, exact digest, consumer scope where applicable, and a unique audited
-request. Workloads receive only `sign` permission for the exact purpose/key and
-cannot export, create, rotate, disable, schedule deletion, or edit policy. A
+Every KMS sign request identifies purpose, `credentialKind: kms_key`, immutable
+key version, exact signer-identity digest, expected public key/claims, exact
+subject digest, consumer scope where applicable, and a unique audited request.
+Every Sigstore keyless `contract-bundle-release-v1` request instead uses
+`credentialKind: sigstore_keyless`, forbids `keyVersion`, and binds the exact
+policy signer, builder, and pre-sign certification digests. Its exact policy is
+separate from the KMS-only `product-release-v1` policy and cannot share purpose,
+signer, repository, or media-type scope with it. Workloads receive
+only `sign` permission for the exact purpose/key and cannot export, create,
+rotate, disable, schedule deletion, or edit policy. A
 hosted consumer key is tenant-dedicated. Local development uses a process-local
 ephemeral key generated for each test run; private key bytes are never written
 to the repository or accepted as production conformance.
@@ -615,6 +651,14 @@ consumer from exhausting another's signing capacity. Rotation overlaps
 immutable public-key versions for verification; it never rewrites prior
 signatures. Signing keys, SPIFFE trust-domain keys, database TLS keys, and S3
 encryption keys are purpose-distinct.
+
+The schema changes that introduce the explicit credential discriminator and
+keyless request binding are a pre-publication correction within the Task 4
+freeze branch. Task 3 artifacts were test/conformance outputs with
+`authorityIssued: false`; no production-authoritative v1 schema bundle was
+published. The prior generated bytes and evidence are invalidated in full and
+cannot verify a release. After the first authoritative v1 publication, the
+normal immutable-major rule applies without exception.
 
 ### 7. Production deployment substrate
 
@@ -819,7 +863,9 @@ A connected Go renderer controller owns the data plane:
    container stdout/stderr, runs the digest-pinned renderer once, and exits;
 4. only after Pod termination, a collector with the same current fencing token
    mounts output read-only, checks the closed inventory, schemas, sizes, modes,
-   and digests, and moves verified bytes to staging; and
+   and digests, verifies the launcher's authenticated execution receipt against
+   the unchanged renderer selection and actual platform/distribution readback,
+   and moves verified bytes to staging; and
 5. publication commits only after staging and dual-region object verification;
    the per-attempt volumes are cryptographically erased/deleted on success,
    failure, cancellation, timeout, or lease loss.

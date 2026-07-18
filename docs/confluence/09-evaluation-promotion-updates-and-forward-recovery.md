@@ -51,6 +51,10 @@ Before evaluation, the candidate must pass:
 - non-authority and package safety policy;
 - source, binding/customization, renderer, and public/private skill digest
   integrity;
+- exact product/renderer qualification policy, suite, complete typed evidence
+  matrix, and signed final decision;
+- fresh caller-nonce/time-bound authenticated current product/renderer status
+  heads plus append-only consistency proof when the accepted head advances;
 - withdrawal and revocation checks;
 - consumer, tenant, target, and predecessor scope; and
 - schema compatibility with the installed binding.
@@ -172,6 +176,8 @@ when the catalog candidate first appeared. It binds:
 
 - exact public source, tenant-free public-render lineage, and accepted
   binding/customization;
+- the public render's complete `public-render-v1` signature, qualification, and
+  fresh product/renderer status evidence;
 - exact public and private skills plus signed approval evidence for every
   effective digest;
 - current organizational profile and lifecycle;
@@ -190,9 +196,18 @@ when the catalog candidate first appeared. It binds:
 The compiler applies the functional Agent Spec delta and safe regular-file
 operations, resolves and verifies the approved skills, constructs the complete
 effective package, and performs a full deterministic render. It embeds the
-effective render bundle and manifest in the resulting private deployment, which
-is signed under the private deployment trust purpose. There is no post-render
+effective render manifest, exact runtime-file payload descriptor, and
+authenticated execution lineage in the resulting private deployment, which is
+signed under the private deployment trust purpose. There is no post-render
 patch and no separate private-render artifact in v1.
+
+Before execution it freezes the complete input-authentication bundle and private
+input lock. The consumer signs the authorized-input digest; a distinct
+compilation-input signer authenticates the exact lock. The deployment carries
+that full signing result. Separate signed compilation evidence binds the lock,
+deployment, renderer lineage, payload, compiler distribution, and outcome. The
+runtime release then binds each exact deployment/evidence pair under
+`consumer-runtime-release-v1`; no object points backward in a digest cycle.
 
 The exact tenant-free public render may be reused only when customization has no
 operations, the effective skill set exactly equals the source-declared public

@@ -34,6 +34,15 @@ from verify_bundle import (
 )
 
 
+PRIVATE_CASE_PATH = (
+    "contracts/fixtures/operations/private-compilation-graph.cases.json"
+)
+PRIVATE_CAS_PREFIX = (
+    "contracts/fixtures/operations/private-compilation-cas/blobs/sha256/"
+)
+RENDERER_CAS_PREFIX = "contracts/fixtures/operations/renderer-cas/blobs/sha256/"
+
+
 def expect_denial(case_id: str, operation: Callable[[], Any]) -> dict[str, str]:
     try:
         operation()
@@ -70,6 +79,121 @@ def replace_document(
     raise ContractToolError(f"test bundle does not contain document {path}")
 
 
+def verify_private_cas_inventory(
+    case_catalog: Any,
+    members: dict[str, bytes],
+) -> tuple[list[dict[str, Any]], set[str], dict[str, Any], list[dict[str, Any]]]:
+    if not isinstance(case_catalog, dict):
+        raise ContractToolError("private compilation case catalog is not an object")
+    cas_inventory = case_catalog.get("casInventory")
+    if not isinstance(cas_inventory, list) or not cas_inventory:
+        raise ContractToolError("private compilation CAS inventory is absent or empty")
+    inventory_digests: list[str] = []
+    inventory_paths: list[str] = []
+    for index, entry in enumerate(cas_inventory):
+        if not isinstance(entry, dict) or set(entry) != {
+            "digest",
+            "size",
+            "blobPath",
+            "source",
+        }:
+            raise ContractToolError(
+                f"private compilation CAS inventory entry is malformed: {index}"
+            )
+        digest = entry["digest"]
+        size = entry["size"]
+        blob_path = entry["blobPath"]
+        source = entry["source"]
+        if (
+            not isinstance(digest, str)
+            or len(digest) != 71
+            or not digest.startswith("sha256:")
+            or any(character not in "0123456789abcdef" for character in digest[7:])
+            or not isinstance(size, int)
+            or isinstance(size, bool)
+            or size < 0
+            or not isinstance(blob_path, str)
+            or blob_path != PRIVATE_CAS_PREFIX + digest[7:]
+            or source not in {"private-graph", "renderer-closure"}
+        ):
+            raise ContractToolError(
+                f"private compilation CAS inventory entry is invalid: {index}"
+            )
+        inventory_digests.append(digest)
+        inventory_paths.append(blob_path)
+    if inventory_digests != sorted(inventory_digests):
+        raise ContractToolError("private compilation CAS inventory is not sorted")
+    if (
+        len(inventory_digests) != len(set(inventory_digests))
+        or len(inventory_paths) != len(set(inventory_paths))
+    ):
+        raise ContractToolError("private compilation CAS inventory contains duplicates")
+
+    private_graph = case_catalog.get("positiveGraph")
+    if not isinstance(private_graph, dict):
+        raise ContractToolError("private compilation positive graph is not an object")
+    artifacts = private_graph.get("artifacts")
+    supporting_artifacts = private_graph.get("supportingArtifacts")
+    supporting_digests = private_graph.get("supportingDigests")
+    if not all(
+        isinstance(value, list)
+        for value in (artifacts, supporting_artifacts, supporting_digests)
+    ):
+        raise ContractToolError("private compilation positive graph catalogs are invalid")
+    descriptor_artifacts = [*artifacts, *supporting_artifacts]
+    positive_graph_blobs: set[str] = set()
+    for index, artifact in enumerate(descriptor_artifacts):
+        if not isinstance(artifact, dict) or not isinstance(
+            artifact.get("blobPath"), str
+        ):
+            raise ContractToolError(
+                f"private compilation artifact entry is invalid: {index}"
+            )
+        positive_graph_blobs.add(artifact["blobPath"])
+    for index, entry in enumerate(supporting_digests):
+        if not isinstance(entry, dict) or not isinstance(entry.get("blobPath"), str):
+            raise ContractToolError(
+                f"private compilation supporting digest is invalid: {index}"
+            )
+        positive_graph_blobs.add(entry["blobPath"])
+
+    expected_private_blobs = set(inventory_paths)
+    if not positive_graph_blobs.issubset(expected_private_blobs):
+        raise ContractToolError(
+            "private compilation positive graph references blobs outside its CAS inventory"
+        )
+    actual_private_blobs = {
+        path for path in members if path.startswith(PRIVATE_CAS_PREFIX)
+    }
+    if actual_private_blobs != expected_private_blobs:
+        raise ContractToolError(
+            "private compilation CAS is not the exact closed catalog: "
+            f"missing={sorted(expected_private_blobs-actual_private_blobs)} "
+            f"extra={sorted(actual_private_blobs-expected_private_blobs)}"
+        )
+    for entry in cas_inventory:
+        payload = members[entry["blobPath"]]
+        if entry["digest"] != sha256_bytes(payload) or entry["size"] != len(payload):
+            raise ContractToolError(
+                "private compilation CAS inventory object mismatch: "
+                f"{entry['digest']}"
+            )
+        if entry["source"] == "private-graph":
+            if entry["blobPath"] not in positive_graph_blobs:
+                raise ContractToolError(
+                    "private-graph CAS inventory entry has no positive-graph reference: "
+                    f"{entry['digest']}"
+                )
+        else:
+            renderer_path = RENDERER_CAS_PREFIX + entry["digest"][7:]
+            if members.get(renderer_path) != payload:
+                raise ContractToolError(
+                    "renderer-closure CAS inventory entry has no byte-identical "
+                    f"renderer member: {entry['digest']}"
+                )
+    return cas_inventory, expected_private_blobs, private_graph, descriptor_artifacts
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--bundle", type=Path, required=True)
@@ -83,6 +207,43 @@ def main() -> int:
     policy = manifest.get("trustPolicy")
     if not isinstance(policy, dict):
         raise ContractToolError("test bundle manifest has no trust policy")
+    verify_inventory(manifest, members)
+    private_cases = strict_json_bytes(members[PRIVATE_CASE_PATH], PRIVATE_CASE_PATH)
+    cas_inventory, expected_private_blobs, private_graph, descriptor_artifacts = (
+        verify_private_cas_inventory(private_cases, members)
+    )
+    for artifact in descriptor_artifacts:
+        descriptor = artifact["descriptor"]
+        blob_path = artifact["blobPath"]
+        payload = members[blob_path]
+        if (
+            descriptor["digest"] != sha256_bytes(payload)
+            or descriptor["size"] != len(payload)
+            or blob_path.rsplit("/", 1)[-1]
+            != descriptor["digest"].removeprefix("sha256:")
+        ):
+            raise ContractToolError(
+                f"private compilation CAS descriptor mismatch: {artifact['role']}"
+            )
+        projection_path = artifact["projectionPath"]
+        if projection_path is not None:
+            projection = strict_json_bytes(members[projection_path], projection_path)
+            if canonical_json(projection) != payload:
+                raise ContractToolError(
+                    f"private compilation projection/CAS mismatch: {artifact['role']}"
+                )
+    for digest_entry in private_graph["supportingDigests"]:
+        payload = members[digest_entry["blobPath"]]
+        if (
+            digest_entry["digest"] != sha256_bytes(payload)
+            or digest_entry["size"] != len(payload)
+            or digest_entry["blobPath"].rsplit("/", 1)[-1]
+            != digest_entry["digest"].removeprefix("sha256:")
+        ):
+            raise ContractToolError(
+                "private compilation CAS digest object mismatch: "
+                f"{digest_entry['role']}"
+            )
     registry, schemas = build_bundle_registry(manifest, members, policy)
     errors = sorted(
         Draft202012Validator(
@@ -95,8 +256,125 @@ def main() -> int:
     if errors:
         raise ContractToolError(f"baseline bundled manifest rejected: {errors[0].message}")
     cases: list[dict[str, str]] = [
-        {"id": "baseline-bundle-registry", "outcome": "permitted"}
+        {"id": "baseline-bundle-registry", "outcome": "permitted"},
+        {"id": "private-compilation-cas-closed-and-resolvable", "outcome": "permitted"},
     ]
+
+    def record_private_cas_denial(
+        case_id: str,
+        catalog: dict[str, Any],
+        archive_members: dict[str, bytes] = members,
+    ) -> None:
+        cases.append(
+            expect_denial(
+                case_id,
+                lambda: verify_private_cas_inventory(catalog, archive_members),
+            )
+        )
+
+    unsorted_catalog = deepcopy(private_cases)
+    unsorted_catalog["casInventory"][0], unsorted_catalog["casInventory"][1] = (
+        unsorted_catalog["casInventory"][1],
+        unsorted_catalog["casInventory"][0],
+    )
+    record_private_cas_denial(
+        "private-compilation-cas-inventory-unsorted", unsorted_catalog
+    )
+
+    duplicate_catalog = deepcopy(private_cases)
+    duplicate_catalog["casInventory"].append(
+        deepcopy(duplicate_catalog["casInventory"][-1])
+    )
+    record_private_cas_denial(
+        "private-compilation-cas-inventory-duplicate", duplicate_catalog
+    )
+
+    unknown_member_catalog = deepcopy(private_cases)
+    unknown_member_catalog["casInventory"][0]["authority"] = "forged"
+    record_private_cas_denial(
+        "private-compilation-cas-inventory-unknown-member",
+        unknown_member_catalog,
+    )
+
+    unknown_source_catalog = deepcopy(private_cases)
+    unknown_source_catalog["casInventory"][0]["source"] = "untrusted-extension"
+    record_private_cas_denial(
+        "private-compilation-cas-inventory-unknown-source",
+        unknown_source_catalog,
+    )
+
+    path_substitution_catalog = deepcopy(private_cases)
+    substituted_entry = path_substitution_catalog["casInventory"][0]
+    substituted_hex = substituted_entry["digest"][7:]
+    substituted_hex = ("1" if substituted_hex[0] == "0" else "0") + substituted_hex[1:]
+    substituted_entry["blobPath"] = PRIVATE_CAS_PREFIX + substituted_hex
+    record_private_cas_denial(
+        "private-compilation-cas-inventory-path-digest-substitution",
+        path_substitution_catalog,
+    )
+
+    positive_graph_paths = {
+        entry["blobPath"]
+        for entry in [
+            *private_graph["artifacts"],
+            *private_graph["supportingArtifacts"],
+            *private_graph["supportingDigests"],
+        ]
+    }
+    omitted_catalog = deepcopy(private_cases)
+    omitted_entry = next(
+        entry
+        for entry in omitted_catalog["casInventory"]
+        if entry["blobPath"] not in positive_graph_paths
+    )
+    omitted_catalog["casInventory"].remove(omitted_entry)
+    record_private_cas_denial(
+        "private-compilation-cas-inventory-member-omitted", omitted_catalog
+    )
+
+    extra_catalog = deepcopy(private_cases)
+    inventory_digest_set = {
+        entry["digest"] for entry in extra_catalog["casInventory"]
+    }
+    extra_hex = "f" * 64
+    if f"sha256:{extra_hex}" in inventory_digest_set:
+        extra_hex = "e" * 64
+    extra_catalog["casInventory"].append(
+        {
+            "digest": f"sha256:{extra_hex}",
+            "size": 0,
+            "blobPath": PRIVATE_CAS_PREFIX + extra_hex,
+            "source": "renderer-closure",
+        }
+    )
+    extra_catalog["casInventory"].sort(key=lambda entry: entry["digest"])
+    record_private_cas_denial(
+        "private-compilation-cas-inventory-unbacked-entry", extra_catalog
+    )
+
+    graph_reference_catalog = deepcopy(private_cases)
+    graph_entry = next(
+        entry
+        for entry in graph_reference_catalog["casInventory"]
+        if entry["blobPath"] in positive_graph_paths
+    )
+    graph_reference_catalog["casInventory"].remove(graph_entry)
+    record_private_cas_denial(
+        "private-compilation-positive-graph-reference-outside-inventory",
+        graph_reference_catalog,
+    )
+
+    tampered_cas_members = dict(members)
+    tampered_path = sorted(expected_private_blobs)[0]
+    tampered_payload = bytearray(tampered_cas_members[tampered_path])
+    tampered_payload[0] ^= 1
+    tampered_cas_members[tampered_path] = bytes(tampered_payload)
+    cases.append(
+        expect_denial(
+            "private-compilation-cas-byte-substitution",
+            lambda: verify_inventory(manifest, tampered_cas_members),
+        )
+    )
 
     authoritative_manifest = deepcopy(manifest)
     authoritative_members = dict(members)

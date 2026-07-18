@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status-append-resolution/1.0.0",
+  "title": "Release-status append attempt resolution",
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "disposition",
+    "idempotencyKey",
+    "requestDigest",
+    "appendResult",
+    "resolvedAt"
+  ],
+  "properties": {
+    "contract": {
+      "const": "bytedesk.release-status-append-resolution/1"
+    },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "disposition": {
+      "type": "string",
+      "enum": [
+        "committed",
+        "pending",
+        "not-found"
+      ]
+    },
+    "idempotencyKey": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier",
+      "description": "The original append lookup key echoed exactly; for committed or pending it must also equal the authoritative journal reservation."
+    },
+    "requestDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "The original canonical append request digest echoed exactly; for committed or pending it must also equal the digest bound to the authoritative journal reservation."
+    },
+    "appendResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/appendResult"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolvedAt": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp"
+    }
+  },
+  "$defs": {
+    "appendResult": {
+      "type": "object",
+      "required": [
+        "releaseStatus",
+        "releaseStatusDescriptor",
+        "authorityDigest",
+        "signingResult",
+        "publicationEvidence",
+        "resultDigest"
+      ],
+      "properties": {
+        "releaseStatus": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status/1.0.0"
+        },
+        "releaseStatusDescriptor": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+        },
+        "authorityDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        },
+        "signingResult": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0"
+        },
+        "publicationEvidence": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/publication-evidence/1.0.0"
+        },
+        "resultDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "RFC 8785 JCS SHA-256 digest of this append-result object excluding resultDigest."
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false,
+      "description": "The exact immutable result returned by append-release-status. The release-status descriptor and publication-evidence root descriptor must bind the same repository, digest, media type, and size; signingResult must have purpose release-status-v1 and subjectDigest equal the release-status digest."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "disposition": {
+            "const": "committed"
+          }
+        },
+        "required": [
+          "disposition"
+        ]
+      },
+      "then": {
+        "properties": {
+          "appendResult": {
+            "$ref": "#/$defs/appendResult"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "appendResult": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Linearizable resolution of one append-release-status idempotency reservation. committed returns the exact original terminal append result and never reconstructs or republishes it. pending means the matching durable reservation exists and callers must poll this operation rather than retry append; a pending reservation never degrades to not-found. not-found means no reservation exists in the authoritative journal at the linearization point and retrying append with the same key and request digest is safe. Committed reservations, request-digest bindings, and terminal results are retained for the lifetime of the append-only release-status log, so pruning can never turn a historical key into not-found. If the key exists with a different request digest the operation returns idempotency_collision and no resolution object."
+}

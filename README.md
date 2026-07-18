@@ -19,11 +19,11 @@ access.
 
 The product boundary, information contracts, implementation stack, and
 production reference topology are accepted architecturally. AD-01 freezes the
-language-neutral contract sources, 49 product schemas, manifests, projections,
-and positive, denial, boundary, parser, operation, and bundle fixtures in this
-repository. Their independent validators and deterministic offline bundle are
-implemented; the remaining workstreams are documented under
-[`docs/`](docs/README.md).
+language-neutral product and downstream-port contract sources, manifests,
+transport projections, and positive, denial, boundary, parser, operation, and
+bundle fixtures in this repository. Their independent validators and
+deterministic offline bundle are implemented; the remaining workstreams are
+documented under [`docs/`](docs/README.md).
 
 This is not a claim that the delivery product is complete. Runtime services,
 renderer, registry, KMS, and consumer Adapters, lifecycle controllers,
@@ -79,8 +79,10 @@ identity, and call-time authorization controls.
 - [Architecture decision register](docs/architecture/decision-register.md)
 - [System overview](docs/architecture/system-overview.md)
 - [Security and trust](docs/architecture/security-and-trust.md)
+- [Downstream contract coverage](docs/architecture/downstream-contract-coverage.md)
 - [Canonical encoding v1](docs/standards/canonical-encoding-v1.md)
 - [Machine contracts v1](docs/standards/machine-contracts-v1.md)
+- [Integration ports v1](docs/standards/integration-ports-v1.md)
 - [Renderer identity v1](docs/standards/renderer-identity-v1.md)
 - [Consumer authority and private signing v1](docs/standards/consumer-authority-v1.md)
 - [Delivery lifecycle v1](docs/standards/delivery-lifecycle-v1.md)

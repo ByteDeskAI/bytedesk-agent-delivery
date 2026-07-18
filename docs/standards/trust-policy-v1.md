@@ -17,7 +17,9 @@ weaken the policy that validates it.
 This contract adopts the consumer-sovereign topology in
 [Consumer authority and private signing v1](consumer-authority-v1.md), product
 code identity in [Renderer identity v1](renderer-identity-v1.md), and exact
-schema distribution in [Machine contracts v1](machine-contracts-v1.md).
+schema distribution in [Machine contracts v1](machine-contracts-v1.md). Release
+eligibility, evidence roles, and fresh status-head verification are defined in
+[Release qualification and status v1](release-qualification-v1.md).
 
 > **Non-normative implementation note:**
 > [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md)
@@ -33,7 +35,9 @@ Every policy is a closed JSON Schema Draft 2020-12 object with:
 - exact schema `$id` and digest;
 - RFC 8785 canonical policy digest and effective window;
 - allowed repositories, media types, consumers, targets, and artifact scopes;
-- immutable KMS key-version resources and accepted algorithms;
+- an explicit signer `credentialKind`: immutable KMS key-version and public-key
+  digests for `kms_key`, or exact Sigstore trusted-root bytes/digest for
+  `sigstore_keyless`, plus accepted algorithms;
 - exact workload identities plus WIF/OIDC issuer, audience, subject, repository,
   workflow, ref, environment, builder, and subject constraints;
 - required schema, provenance, SBOM, vulnerability/license, compatibility,
@@ -61,25 +65,41 @@ provenance-only storage checksum but never policy or activation authority.
 
 ## Required purpose profiles
 
-Production v1 has six purpose-separated roles:
+Production v1 has six organizational ownership domains implemented as 22
+closed wire purposes:
 
-1. `product-release-v1` signs Agent Delivery product distributions, signed
-   contract bundles, compiled renderer allowlists, and renderer releases.
-2. `public-source-v1` signs catalogs, public Agent Spec sources, and public
-   skill packages.
-3. `public-render-v1` signs tenant-free public render outputs.
-4. `consumer-private-skill-v1` signs consumer-private skill publication.
-5. `consumer-authority-v1` signs consumer authority snapshots, exact skill
-   approvals, and consumer business-approval evidence.
-6. `consumer-deployment-v1` signs private deployments and runtime releases.
+1. Product/publication ownership uses `product-release-v1`,
+   `contract-bundle-release-v1`, `public-source-v1`, and `public-render-v1`.
+2. Consumer-private ownership uses `consumer-private-skill-v1`,
+   `consumer-authority-v1`, `consumer-deployment-v1`, and the distinct
+   `consumer-runtime-release-v1` root, plus
+   `consumer-release-status-eligibility-v1` for private compilation/activation
+   freshness and `consumer-activation-authorization-v1` for the Coordinator's
+   exact-graph activation capability.
+3. Qualification ownership uses `release-qualification-policy-v1`,
+   `release-qualification-attempt-v1`,
+   `release-qualification-receipt-v1`,
+   `release-qualification-evidence-v1`, and
+   `release-qualification-decision-v1`.
+4. Current-eligibility ownership uses `release-status-v1` for the append-only
+   status revision and `release-status-head-v1` for the fresh, nonce-bound head
+   checkpoint, plus `release-status-eligibility-v1` for product-owned
+   qualification, finalization, and publication stages.
+5. Renderer execution ownership uses `renderer-attempt-v1` and the distinct
+   `renderer-execution-v1` receipt.
+6. Private compilation ownership uses `consumer-compilation-input-v1` for the
+   exact locked input and `consumer-compilation-evidence-v1` for the separate
+   compiler evidence statement.
 
 One signature is valid only for its configured purpose, media type, repository,
 consumer, subject, target, workflow, and evidence set. A cryptographically valid
 signature from another purpose does not satisfy policy.
 
-Roles 4 through 6 are isolated per consumer. Authority/approval and deployment
-signing use different keys and workload identities so a compromised compiler
-cannot approve itself. A shared provider key for multiple consumers, exported
+Consumer-private purposes are isolated per consumer. Authority/approval,
+private-skill publication, deployment, runtime release, private-stage status
+eligibility, activation authorization, compilation input, and compilation
+evidence signing use different keys and workload identities so a compromised
+compiler or Coordinator cannot approve itself. A shared provider key for multiple consumers, exported
 CI key, runtime-held private key, or provider-controlled mutable private trust
 root is forbidden.
 
@@ -88,8 +108,9 @@ root is forbidden.
 The preferred private topology uses non-exportable asymmetric KMS keys in the
 consumer's cloud account or security boundary. The consumer owns key lifecycle
 and policy. An Agent Delivery build/compiler/publication workload may receive
-only the exact role-4 private-skill or role-6 deployment sign operation. It
-never receives role-5 authority/approval signing; only the independently
+only the exact private-skill, deployment, runtime-release, or compilation
+purpose explicitly granted to that workload. It never receives
+`consumer-authority-v1` signing; only the independently
 authenticated Consumer Authority Adapter may issue that evidence. Short-lived
 WIF/OIDC federation supplies identity, and Agent Delivery cannot administer,
 export, rotate, or change policy for the key.
@@ -103,21 +124,47 @@ An independent private-skill supplier may add its own provenance signature only
 when the consumer independently configures a policy for the exact repository,
 key, media type, evidence, and scope. A supplier signature never satisfies
 `consumer-private-skill-v1`: the exact unchanged digest must also be published
-or mirrored with the consumer's isolated role-4 signature. Current role-5
-consumer-issued skill-approval evidence is independently mandatory; neither
-publication signature authorizes execution.
+or mirrored with the consumer's isolated private-skill signature. Current
+`consumer-authority-v1` consumer-issued skill-approval evidence is independently
+mandatory; neither publication signature authorizes execution.
 
-## Product and renderer trust
+## Product, contract-bundle, and renderer trust
 
-`product-release-v1` binds product distributions and renderer releases to exact
-source, build, dependency, toolchain, schema, platform, executable, embedded
-allowlist, normalization, SBOM, vulnerability/license, deterministic-output,
-and in-toto/SLSA provenance digests. Renderer releases target SLSA Build Level
-3. A version, source commit, image tag, PATH binary, or local build never
-satisfies execution trust.
+`product-release-v1` binds product distributions, renderer releases, and
+product-owned evaluator/build-tool distributions to exact source, build,
+dependency, toolchain, schema, platform, executable, embedded allowlist,
+normalization, SBOM, vulnerability/license, deterministic-output, and
+in-toto/SLSA provenance digests. Renderer releases target SLSA Build Level 3.
+A version, source commit, image tag, PATH binary, or local build never satisfies
+execution trust.
 
-For the v1 keyless contract-bundle release profile, policy identifies the exact
-SHA-pinned called reusable signer workflow as the Fulcio certificate identity.
+`product-release-v1` and `contract-bundle-release-v1` always select separate
+immutable policy records. The product policy is `kms_key`-only and scopes
+product distributions, compiled allowlists, renderer releases, and exact
+product-owned evaluator/build-tool media. An evaluator descriptor carries that
+independently resolved product-policy ID and digest; it never inherits the
+trust policy of the subject it evaluates. The
+contract-bundle policy is `sigstore_keyless`-only and scopes only the exact
+contract repository and `application/vnd.bytedesk.agent.contract-bundle.v1+json`
+media type. A policy that includes both purposes, both credential kinds, or the
+other policy's repository/media scope is invalid for either release path.
+
+The product release pins an immutable release-qualification policy and suite.
+That policy requires provenance, SBOM, vulnerability, license, compatibility,
+conformance, determinism, malware, secret-scan, scan-completeness, sandbox,
+executed-distribution, and product-distribution evidence for the applicable
+product, renderer, executable, contract, and platform subjects. A requirement
+becomes available only after one unique `passed`, typed, purpose-signed evidence
+leaf resolves to the exact bytes and its subject, policy, inventory, coverage,
+material, evaluator, and cross-report bindings validate. Missing, duplicate,
+failed, inapplicable where required, stale, incomplete, or digest-mismatched
+evidence fails closed. The repository harness is conformance only and cannot
+issue authority; production qualification evidence, predicates, trees,
+receipts, decisions, and status heads are independently authenticated and
+resolved by exact descriptors.
+
+For the v1 keyless `contract-bundle-release-v1` profile, policy identifies the
+exact SHA-pinned called reusable signer workflow as the Fulcio certificate identity.
 It separately pins the caller repository, immutable release-tag ref, source
 commit, `workflow_dispatch` trigger, OIDC issuer, destination repository,
 contract trust-policy ID/digest, sealed-verifier image digest, Cosign executable
@@ -126,6 +173,26 @@ digest, and trusted-root bytes/digest. The sealed verifier digest is the
 and protected-environment restrictions are issuance controls and must not be
 claimed as post-hoc certificate evidence unless the accepted certificate
 profile actually carries them.
+
+This profile uses `credentialKind: sigstore_keyless`. It has no KMS
+`keyVersion` and does not pin the ephemeral Fulcio leaf public key. Instead,
+the signed request binds the exact domain-separated `signerIdentityDigest`,
+the sealed-verifier `builderDigest`, and the digest of the complete pre-sign
+certification. Verification obtains trusted-root bytes independently, matches
+their digest to the selected policy signer, authenticates the request through
+that root and exact certificate identity, resolves the pre-sign certification,
+and requires its executed-distribution builder digest to match both policy and
+request. Policy text alone is never reported as authenticated signer or
+builder-execution evidence.
+
+The product-release manifest embeds the resulting closed
+`contractBundleVerification` receipt and its exact signing-request and Sigstore
+bundle evidence-blob descriptors. The receipt has `authorityIssued: false` and
+is covered by the later product-release authority digest. Every downstream and
+private verifier must resolve the contract bytes and policy independently,
+replay the keyless Adapter over the complete identity/root/workflow/claims/
+builder/certification/request/bundle context, and require the exact receipt.
+The enclosing KMS product signature is not contract-bundle signature evidence.
 
 Candidate code executes only in an unprivileged build job. The OIDC-capable
 signer performs no checkout and accepts only a closed candidate file set plus
@@ -164,9 +231,12 @@ authorization remains mandatory after activation.
 
 ## Key lifecycle
 
-- Keys are non-exportable KMS/HSM asymmetric signing keys.
+- KMS credentials use non-exportable KMS/HSM asymmetric signing keys. Policy
+  pins immutable `keyVersion` and `publicKeyDigest`, never an alias.
+- Sigstore keyless credentials bind the exact `signerIdentityDigest` and an
+  independently pinned `trustedRootDigest`; they forbid `keyVersion` and a
+  static leaf `publicKeyDigest`.
 - Workloads authenticate through short-lived WIF/OIDC federation.
-- Policies pin immutable key versions, not aliases.
 - Private material never enters secret managers, CI variables, build output,
   runtime hosts, agent workspaces, or logs.
 - Rotation publishes a distinct `next` snapshot, verifies intended overlap,
@@ -185,15 +255,21 @@ the verifier:
 
 1. resolves exact repository/digest/media-type/size and policy ID/digest;
 2. validates the exact offline schema and RFC 8785 object identity;
-3. verifies purpose, consumer isolation, immutable key version, claims,
+3. verifies purpose, consumer isolation, and the credential-aware signer
+   identity: immutable `keyVersion` plus `publicKeyDigest` for KMS, or exact
+   `signerIdentityDigest` plus independently pinned `trustedRootDigest` and no
+   static leaf or `keyVersion` for Sigstore keyless; it then verifies claims,
    signature, effective window, withdrawal, and revocation;
-4. verifies required provenance, SBOM, compatibility, evaluation, authority,
-   skill approval, canary, and readiness predicates;
-5. follows every explicit cross-repository descriptor and repeats validation;
-6. checks consumer, subject, installation, target, slot/generation, candidate,
+4. verifies the exact qualification policy, suite, complete evidence tree,
+   predicates, final decision, and required product/renderer/platform matrix;
+5. obtains and verifies a caller-nonce-bound, time-valid, authenticated current
+   status-head checkpoint and any required append-only consistency proof;
+6. verifies authority, skill approval, canary, and readiness predicates;
+7. follows every explicit cross-repository descriptor and repeats validation;
+8. checks consumer, subject, installation, target, slot/generation, candidate,
    desired revision, absent-or-match precondition, nonce, and freshness;
-7. rejects any unexpected or stale edge; and
-8. records the exact trust and evidence graph in append-only receipts.
+9. rejects any unexpected or stale edge; and
+10. records the exact trust and evidence graph in append-only receipts.
 
 Repository-local replay files are permitted only for explicit test and Adapter
 conformance profiles and never issue production authority. Production signing
@@ -210,8 +286,9 @@ result, signature, approval, or receipt cannot promote itself.
 
 Unknown or revoked keys, wrong purpose, shared private signer, wrong consumer,
 repository, workflow, environment, subject, media type, target, schema, renderer,
-policy digest, missing evidence, stale snapshot, replay, downgrade, withdrawal,
-or content substitution is terminal for new work. Verification never falls back
+policy digest, missing evidence, stale snapshot or status checkpoint, wrong
+status nonce, status rollback/fork, replay, downgrade, withdrawal, revocation,
+end of support, or content substitution is terminal for new work. Verification never falls back
 to authored YAML, a mutable alias, old authority, another installed renderer,
 or an artifact-supplied policy.
 

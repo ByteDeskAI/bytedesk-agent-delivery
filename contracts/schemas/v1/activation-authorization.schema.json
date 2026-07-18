@@ -1,0 +1,397 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/activation-authorization/1.0.0",
+  "title": "Signed activation authorization with exact deployable lineage and fresh release eligibility",
+  "x-bytedesk-digestAuthority": {
+    "profile": "bytedesk.activation-authorization-statement/1",
+    "exclude": ["contract", "schema", "authorizationDigest", "signingResult"]
+  },
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "authorizationId",
+    "rolloutId",
+    "attemptId",
+    "consumerId",
+    "targetId",
+    "runtimeRelease",
+    "activationMode",
+    "deployableGraph",
+    "deployableGraphDigest",
+    "candidateReadyEvidence",
+    "authoritySnapshots",
+    "authorizationDecisionProofs",
+    "releaseEligibility",
+    "releaseEligibilityDigest",
+    "releaseEligibilityVerificationEvidenceDigest",
+    "trustPolicyPinSetDigest",
+    "trustPolicyPinSetProviderEvidenceDigest",
+    "authorizationNonce",
+    "slotId",
+    "expectedActiveGeneration",
+    "nextSlotGeneration",
+    "fencingToken",
+    "regionEpoch",
+    "authorizedAt",
+    "expiresAt",
+    "trustPolicy",
+    "authorizationDigest",
+    "signingResult"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.activation-authorization/1" },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "authorizationId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "rolloutId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "attemptId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "consumerId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "targetId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "runtimeRelease": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerRuntimeReleaseDescriptor",
+      "description": "Exact runtime-release candidate. The Coordinator and Host resolve this descriptor and verify its complete RR to CE to D to L/render graph offline."
+    },
+    "activationMode": {
+      "type": "string",
+      "enum": ["isolated_candidate", "guarded_in_place"]
+    },
+    "deployableGraph": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/deployableSubject" },
+      "description": "Complete runtime-release deployment set, strictly increasing by subjectId UTF-8 bytes. Each entry must equal the corresponding resolved runtime-release entry and its deployment and compilation-evidence identities. Every entry must use the same target slotId and generation selected by this one atomic authorization."
+    },
+    "deployableGraphDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "SHA-256 of RFC 8785 JCS bytes for {profile:'bytedesk.activation-deployable-graph/1',runtimeRelease,deployableGraph}."
+    },
+    "candidateReadyEvidence": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/candidateReadyEvidenceEntry"
+      },
+      "description": "Canonical per-subject candidate-ready set, strictly increasing by subjectId UTF-8 bytes and exactly covering deployableGraph. Every resolved evidence object must be current, unexpired, host_reconciler candidate_ready evidence for the same rollout, runtime release, target, deployment, slot, and generation."
+    },
+    "authoritySnapshots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/consumerAuthorityEntry"
+      },
+      "description": "Canonical per-subject consumer authority set, strictly increasing by subjectId UTF-8 bytes and exactly covering deployableGraph. Each authority independently permits activate for its subject and carries its own consumer nonce and validity window."
+    },
+    "authorizationDecisionProofs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/authorizationDecisionProofEntry"
+      },
+      "description": "Canonical per-subject successful authorization-decision set, strictly increasing by subjectId UTF-8 bytes and exactly covering deployableGraph. Each proof binds its subject's deployment and its own consumer request nonce; distinct subject requests are not required to share a nonce."
+    },
+    "releaseEligibility": {
+      "$ref": "#/$defs/releaseEligibilityDescriptor",
+      "description": "Fresh activation-stage evidence for the one product release and every distinct renderer release reachable from deployableGraph."
+    },
+    "releaseEligibilityDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Must equal eligibilityDigest in the complete resolved releaseEligibility object. The artifact descriptor digest independently binds its raw RFC 8785 JCS bytes."
+    },
+    "releaseEligibilityVerificationEvidenceDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Exact permitted bytedesk.verification-result/1 digest produced when the Coordinator verifies the releaseEligibility purpose-separated signature and complete stage-bound evidence at authorizedAt. The Host resolves and recomputes this historical result for integrity, then emits a new use-time verification result at its own operationTime; that fresh result normally has a different digest."
+    },
+    "trustPolicyPinSetDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Exact active consumer trust-policy pin-set digest resolved for activation; it must equal the resolved releaseEligibility pinSetDigest."
+    },
+    "trustPolicyPinSetProviderEvidenceDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Exact trusted provider activation/readback evidence digest for trustPolicyPinSetDigest; it must equal the resolved releaseEligibility pinSetProviderEvidence.evidenceDigest."
+    },
+    "authorizationNonce": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonce",
+      "description": "Fresh Coordinator authorize-activation request nonce bound into the request and idempotency preimage. It is distinct from every per-subject consumer authority, decision, and canary nonce."
+    },
+    "slotId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier",
+      "description": "Single target slot selected for the atomic switch. Every deployableGraph and candidate-ready entry must use this exact slot."
+    },
+    "expectedActiveGeneration": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonNegativeSafeInteger"
+    },
+    "nextSlotGeneration": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger"
+    },
+    "fencingToken": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger"
+    },
+    "regionEpoch": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger"
+    },
+    "authorizedAt": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp",
+      "description": "Must exactly equal the authorize-activation request operationTime and the resolved activation-stage release eligibility operationTime."
+    },
+    "expiresAt": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp",
+      "description": "Must be later than authorizedAt and no later than the earliest authority, candidate-ready, release-status checkpoint, or signing-policy expiry."
+    },
+    "trustPolicy": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef"
+        },
+        {
+          "properties": {
+            "id": { "const": "consumer-activation-authorization-v1" }
+          },
+          "required": ["id"]
+        }
+      ]
+    },
+    "authorizationDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Digest of the bytedesk.activation-authorization-statement/1 preimage declared by x-bytedesk-digestAuthority."
+    },
+    "signingResult": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0"
+        },
+        {
+          "properties": {
+            "purpose": { "const": "consumer-activation-authorization-v1" },
+            "subjectMediaType": {
+              "const": "application/vnd.bytedesk.agent.activation-authorization-statement.v1+json"
+            }
+          },
+          "required": ["purpose", "subjectMediaType"]
+        }
+      ],
+      "description": "Consumer-scoped trusted-KMS result whose subjectDigest equals authorizationDigest and whose verification remains valid at Host activation time."
+    }
+  },
+  "$defs": {
+    "deployableSubject": {
+      "type": "object",
+      "required": [
+        "subjectId",
+        "deployment",
+        "compilationEvidence",
+        "slotId",
+        "generation"
+      ],
+      "properties": {
+        "subjectId": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+        },
+        "deployment": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerDeploymentDescriptor"
+        },
+        "compilationEvidence": {
+          "allOf": [
+            {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+            },
+            {
+              "properties": {
+                "mediaType": {
+                  "const": "application/vnd.bytedesk.agent.private-compilation-evidence.v1+json"
+                },
+                "trustPolicy": {
+                  "properties": {
+                    "id": { "const": "consumer-compilation-evidence-v1" }
+                  },
+                  "required": ["id"]
+                }
+              },
+              "required": ["mediaType", "trustPolicy"]
+            }
+          ]
+        },
+        "slotId": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+        },
+        "generation": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "candidateReadyEvidenceEntry": {
+      "type": "object",
+      "required": [
+        "subjectId",
+        "evidence",
+        "verificationEvidenceDigest"
+      ],
+      "properties": {
+        "subjectId": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+        },
+        "evidence": {
+          "$ref": "#/$defs/candidateReadyEvidenceDescriptor"
+        },
+        "verificationEvidenceDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "Exact permitted consumer-platform Host Evidence Adapter verification-result digest at authorizedAt."
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "consumerAuthorityEntry": {
+      "type": "object",
+      "required": [
+        "subjectId",
+        "authority",
+        "verificationEvidenceDigest"
+      ],
+      "properties": {
+        "subjectId": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+        },
+        "authority": {
+          "$ref": "#/$defs/consumerAuthorityDescriptor"
+        },
+        "verificationEvidenceDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "Exact permitted consumer authority Adapter verification-result digest at authorizedAt."
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "authorizationDecisionProofEntry": {
+      "type": "object",
+      "required": [
+        "subjectId",
+        "proof",
+        "verificationEvidenceDigest"
+      ],
+      "properties": {
+        "subjectId": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+        },
+        "proof": {
+          "$ref": "#/$defs/authorizationDecisionProofDescriptor"
+        },
+        "verificationEvidenceDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "Exact permitted consumer authorization Adapter verification-result digest at authorizedAt."
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "candidateReadyEvidenceDescriptor": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+        },
+        {
+          "properties": {
+            "mediaType": {
+              "const": "application/vnd.bytedesk.agent.canary-evidence.v1+json"
+            },
+            "trustPolicy": {
+              "properties": {
+                "id": { "const": "host-technical-evidence-v1" }
+              },
+              "required": ["id"]
+            }
+          },
+          "required": ["mediaType", "trustPolicy"]
+        }
+      ]
+    },
+    "consumerAuthorityDescriptor": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+        },
+        {
+          "properties": {
+            "mediaType": {
+              "const": "application/vnd.bytedesk.agent.consumer-authority.v1+json"
+            },
+            "trustPolicy": {
+              "properties": {
+                "id": { "const": "consumer-authority-v1" }
+              },
+              "required": ["id"]
+            }
+          },
+          "required": ["mediaType", "trustPolicy"]
+        }
+      ]
+    },
+    "authorizationDecisionProofDescriptor": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+        },
+        {
+          "properties": {
+            "mediaType": {
+              "const": "application/vnd.bytedesk.agent.authorization-decision-proof.v1+json"
+            },
+            "trustPolicy": {
+              "properties": {
+                "id": { "const": "authorization-decision-v1" }
+              },
+              "required": ["id"]
+            }
+          },
+          "required": ["mediaType", "trustPolicy"]
+        }
+      ]
+    },
+    "releaseEligibilityDescriptor": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+        },
+        {
+          "properties": {
+            "mediaType": {
+              "const": "application/vnd.bytedesk.agent.release-status-eligibility-evidence.v1+json"
+            },
+            "trustPolicy": {
+              "properties": {
+                "id": { "const": "consumer-release-status-eligibility-v1" }
+              },
+              "required": ["id"]
+            }
+          },
+          "required": ["mediaType", "trustPolicy"]
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "The Coordinator issues this short-lived target-wide consumer-private capability only after resolving and verifying canonical per-subject authority, decision, and candidate-ready evidence sets that exactly cover the runtime-release graph, plus fresh nonce-bound release-status heads, the current consumer pin-set provider readback, and the exact permitted eligibility verification result. Every deployment shares one target slot/generation. The Host verifies the signed historical Coordinator result, performs a distinct fresh verification at Host operation time, and writes one atomic target switch journal entry bound to runtimeRelease and deployableGraphDigest; a digest alone is never sufficient."
+}

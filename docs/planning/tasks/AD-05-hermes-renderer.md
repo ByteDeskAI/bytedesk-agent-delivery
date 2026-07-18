@@ -13,7 +13,12 @@ Render canonical marketplace packages into the exact Hermes profile/configuratio
 - [ADR-0002 reference implementation stack and topology](../../architecture/adr/0002-implementation-stack-and-reference-topology.md).
 
 - Landed renderer contract from AD-04.
-- Current Hermes render scripts, templates, profile files, deployment manifest, and validation/provisioning behavior as compatibility evidence.
+- An exact `bytedesk.external-input-lock/1` artifact for the Hermes render
+  scripts, templates, profile files, deployment manifest, validators, and
+  validation/provisioning behavior used as compatibility evidence. The lock
+  binds repository URL, immutable commit, source-tree digest, sorted path/digest
+  inventory, and `compatibilityEvidenceOnly: true`; an unpinned checkout or
+  mutable branch is not an input or authority.
 - Generic public/private Agent Spec, strict customization, file, skill, and
   unsupported-semantics fixtures from AD-04.
 
@@ -70,6 +75,39 @@ Hosted deployment, ByteDesk source cutover, issuing Hermes workload identity, or
 ## Dependencies
 
 Blocked by AD-04 only.
+
+## Normative contracts and conformance
+
+- **Ports and operations.** `bytedesk.port.renderer-strategy/1`
+  (`describe-capabilities`, `select-renderer`, `render`),
+  `bytedesk.port.renderer-adapter/1` (`render`, `validate-output`), and
+  `bytedesk.port.renderer-sandbox/1` (`execute-renderer`) define the Hermes
+  renderer boundary in `contracts/ports/v1/port-registry.json`. Exact
+  field-value and closed request/result schemas are distributed in
+  `contracts/ports/v1/type-catalog.json`; canonical valid and structural-denial
+  payloads are in `contracts/ports/v1/contract-fixtures.json`.
+- **Schemas, artifacts, and profiles.** Hermes uses the exact renderer-owned
+  schema IDs `https://schemas.bytedesk.ai/agent-delivery/v1/renderer-capability/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/renderer-input-parameters/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/harness-configuration/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/renderer-compatibility-result/1.0.0`,
+  and `https://schemas.bytedesk.ai/agent-delivery/v1/render-manifest/1.0.0`, plus
+  renderer-release and harness-render schemas under `contracts/schemas/v1/`.
+  The Hermes and external-input-lock profiles are in
+  `contracts/ports/v1/protocol-profiles.json`.
+- **Conformance owner.** AD-05 owns the consumer-neutral Hermes Adapter,
+  deterministic golden corpus, semantic-loss matrix, and pinned static-validator
+  evidence. Run `make verify-downstream-ports`; the task-specific suite is
+  `downstream.hermes-renderer.v1` in
+  `contracts/ports/v1/conformance-cases.json`. Execute the suite's exact harness
+  steps and closed oracles from `contracts/ports/v1/conformance-plan.json`;
+  schema-valid structural fixtures alone are not semantic implementation goldens.
+  AD-16 owns ByteDesk-specific cutover proof.
+- **Boundary.** Hermes compatibility inputs are locked evidence, never core
+  authority. The renderer may extend functional capabilities in a complete
+  private rerender but cannot create consumer identity, grants, credentials,
+  approval, trust, or mandatory security policy, and no ByteDesk detail may
+  enter the generic Hermes contract.
 
 ## Architecture review amendments
 

@@ -1,0 +1,45 @@
+{
+  "contract": "bytedesk.host-switch-journal-entry/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/host-switch-journal-entry/1.0.0",
+    "digest": "sha256:ef969c9fd05a38bc404643be1f9e21ee2443754ef77d93356b74ebc68a577ed3"
+  },
+  "consumerId": "consumer-01",
+  "targetId": "target-01",
+  "slotId": "slot-01",
+  "slotGeneration": 2,
+  "sequence": 5,
+  "previousEntry": {
+    "kind": "digest",
+    "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "attemptId": "attempt-01",
+  "fencingToken": 7,
+  "regionEpoch": 3,
+  "rolloutId": "rollout-01",
+  "targetRevision": 9,
+  "targetDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "deployableGraphDigest": "sha256:2323232323232323232323232323232323232323232323232323232323232323",
+  "predecessorGeneration": 1,
+  "candidateGeneration": 2,
+  "releaseDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "activationAuthorizationDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+  "hostEligibilityVerificationEvidenceDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+  "phase": "readback_verified",
+  "switchMarker": {
+    "predecessorGeneration": 1,
+    "predecessorReleaseDigest": "sha256:3434343434343434343434343434343434343434343434343434343434343434",
+    "candidateGeneration": 2,
+    "candidateReleaseDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "activePointerDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "durableAt": "2026-07-17T12:01:59Z"
+  },
+  "readback": {
+    "activePointerDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "processIdentityDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+    "fileInventoryDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+    "serving": true,
+    "readbackAt": "2026-07-17T12:02:00Z"
+  },
+  "recordedAt": "2026-07-17T12:02:00Z"
+}

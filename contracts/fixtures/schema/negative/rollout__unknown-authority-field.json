@@ -2,7 +2,7 @@
   "contract": "bytedesk.rollout/1",
   "schema": {
     "id": "https://schemas.bytedesk.ai/agent-delivery/v1/rollout/1.0.0",
-    "digest": "sha256:1dfb93051147cf66884d788a19da4158bc579327c168297b2d1ebd07cffb7e36"
+    "digest": "sha256:a3fef06c3c2b3967279f4e572dfb0730dea1dac953d2e672d1bd8c2f146eb200"
   },
   "rolloutId": "rollout-01",
   "consumerId": "consumer-01",
@@ -10,10 +10,10 @@
   "candidate": {
     "repository": "registry.example/consumer/candidates",
     "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "mediaType": "application/vnd.bytedesk.agent.release.v1+json",
+    "mediaType": "application/vnd.bytedesk.agent.runtime-release.v1+json",
     "size": 8192,
     "trustPolicy": {
-      "id": "consumer-deployment-v1",
+      "id": "consumer-runtime-release-v1",
       "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
     }
   },

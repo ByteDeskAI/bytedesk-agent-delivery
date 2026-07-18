@@ -28,22 +28,38 @@ PostgreSQL command/CAS state.
 ```text
 signed product release
   +--> contract bundle digest
+  |      +--> non-authority keyless verification receipt
+  |              +--> exact signing-request and Sigstore-bundle blobs
   +--> compiled renderer allowlist digest
   +--> renderer-release digest(s) --> exact worker/platform digest(s)
+  +--> qualification policy + suite + minimum coverage digest
+  +--> signed release-qualification decision
+          +--> typed evidence/predicates/tree/attempt/receipt for every
+               renderer release and required platform
+
+append-only signed release status
+  +--> fresh nonce-bound authenticated head checkpoint
+  +--> exact consistency proof when the accepted head advances
 
 signed catalog index
   +--> public Agent/ SpecializedAgent source digest
   |      +--> exact public skill digest(s)
   +--> public render digest
           +--> source/skills
-          +--> renderer release + actual execution digest + schemas
+          +--> product/renderer releases + qualification/current status
+          +--> selection + issued attempt + authenticated actual execution
+          +--> render manifest + archive/layer + schemas
+          +--> schema-owned authority digest + public-render signing result
 
 private binding + exact skill approvals + current authority snapshot
   +--> per-consumer private deployment digest
-          +--> embedded effective render bundle/manifest
+          +--> embedded effective render manifest + exact payload descriptor
+          +--> issued-attempt and authenticated-execution preimages
+  +--> separate signed private-compilation-evidence digest
 
 per-consumer runtime release digest
-  +--> exact private deployment digest(s)
+  +--> exact canonical private deployment descriptor(s)
+  +--> one exact private-compilation-evidence descriptor per deployment
   +--> target identity, system-package membership, and activation constraints
 
 one TargetDeliveryState revision
@@ -76,6 +92,18 @@ determinism, and SLSA/in-toto evidence. Every render additionally records the
 actual executing distribution/platform digest. A semantic version, source
 commit, image tag, or PATH binary is not renderer authority.
 
+The signed product release is not eligible solely because that signature
+verifies. It pins the exact qualification policy, suite, and required coverage.
+It also binds a non-authority keyless verification receipt for the exact
+contract bundle. Consumers resolve and replay that receipt through their
+trusted verifier; the product-release KMS signature authenticates the receipt's
+inclusion but does not prove the underlying Fulcio/Rekor/Cosign result.
+The signed qualification decision reaches every typed evidence leaf,
+predicate, evidence tree, attempt, receipt, renderer release, and executable
+platform. Current eligibility is a separate append-only status chain verified
+through a fresh caller-nonce-bound authenticated head checkpoint and an exact
+consistency proof on advancement.
+
 ## Determinism and payload identity
 
 Builders validate accepted JSON or constrained YAML through the exact contract
@@ -88,7 +116,15 @@ arbitrary `.yaml`, `.json`, and binary payloads preserve exact raw bytes.
 Two clean builds with identical schema, source, skill, renderer release,
 execution variant, allowlist, parameter, authority-relevant, and normalized
 inputs must produce the same declared output. Cross-platform renderer variants
-under one release must emit byte-identical logical files and artifact digests.
+under one release use distinct platform selection keys and exact executable
+descriptors but must emit byte-identical logical files and deterministic archive
+bytes from the same platform-independent functional input. Their file inventory,
+tree digest, archive digest, archive size, and payload bytes are equal. Their
+platform, executed-distribution descriptor, platform-bound effective-input and
+compatibility identities, reproducibility identity, and complete render-
+manifest digest are distinct and remain in lineage. A release cannot erase
+those execution differences by substituting the logical tree digest for the
+platform-bound manifest.
 
 ## Public source, skill, and render
 
@@ -105,7 +141,18 @@ requires separate current consumer approval of each exact skill digest.
 A public render derives only from unchanged source and its declared public
 skills. It records the complete renderer-release descriptor, actual executing
 distribution/platform, allowlist, renderer schemas, parameters, compatibility,
-output layer, and file inventory.
+output archive/layer, and file inventory. It also binds the exact product
+release and qualification decision, unchanged renderer selection, issued
+attempt, authenticated execution, and complete render manifest. Its
+schema-owned authority digest and `public-render-v1` signing result authenticate
+the complete tenant-free lineage.
+
+Verification walks every descriptor plus every OCI manifest, config, layer,
+and blob recursively by exact repository, digest, size, media type, semantic
+role, schema, trust policy, and signature. Repository prefixes and tags do not
+classify objects. Missing content, duplicate roles, cycles, an unregistered
+media/role pair, or a graph that exceeds the declared traversal limits fails
+closed.
 
 ## Consumer-private artifacts
 
@@ -121,11 +168,20 @@ operation, nonce, predecessor, and time. Each skill has separate consumer
 approval evidence. These envelopes are opaque to Agent Delivery and contain no
 reusable credential.
 
-The private deployment binds exact public lineage, binding/customization,
-approved skills, compilation authority snapshot, current consumer subdigests,
-renderer execution evidence, installation, subject, target, and slot. It embeds
-the complete effective render bundle and manifest and is signed under a
-purpose-separated key isolated to that consumer.
+The private deployment binds the exact canonical private-input lock, exact
+public lineage, binding/customization, approved skills, compilation authority
+snapshot, current consumer subdigests, issued-attempt and authenticated-renderer
+execution evidence, installation, subject, target, and slot. It embeds the
+complete effective render manifest and an exact payload descriptor and is
+signed under a purpose-separated key isolated to that consumer. The payload
+contains only rendered runtime files: it excludes the manifest, evidence,
+deployment, compilation evidence, and enclosing OCI metadata.
+
+The canonical consumer-deployment artifact descriptor is the sole deployment
+identity. A separately signed private-compilation-evidence artifact binds the
+request, lock, deployment descriptor, render lineage, payload, actual compiler
+and renderer distributions, and compiler signer policy. The deployment does
+not reference that evidence or a runtime release, so the graph is acyclic.
 
 The compiler reconstructs and revalidates the complete effective Agent Spec and
 fully rerenders with the same exact current trusted renderer release as public
@@ -133,9 +189,14 @@ lineage. It never patches public output. V1 has no private-render artifact.
 Public bytes are reusable only for empty customization when every input and
 identity matches.
 
-A runtime release aggregates deployments for one target. It is prepared
-content, not desired state. Only the Promotion Coordinator can reference it from
-the target aggregate through exact CAS.
+A runtime release aggregates, for each subject, the exact canonical deployment
+descriptor and the separate exact private-compilation-evidence descriptor for
+one target. It has no parallel deployment subdigest and must equal each resolved
+deployment/evidence pair's target, revision, candidate, predecessor, epoch,
+subject, slot, and generation. It is signed with
+`consumer-runtime-release-v1` and is prepared content, not desired state. Only
+the Promotion Coordinator can reference it from the target aggregate through
+exact CAS.
 
 ## Desired-state and evidence artifacts
 
@@ -187,5 +248,6 @@ as one graph before signing or promotion resumes.
 
 See [OCI media types v1](../standards/oci-media-types-v1.md),
 [Renderer identity v1](../standards/renderer-identity-v1.md),
+[Release qualification and status v1](../standards/release-qualification-v1.md),
 [Consumer authority and private signing v1](../standards/consumer-authority-v1.md),
 and [Delivery lifecycle v1](../standards/delivery-lifecycle-v1.md).

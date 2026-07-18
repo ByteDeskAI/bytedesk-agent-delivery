@@ -32,10 +32,12 @@ complete digest graph that was verified and activated.
 |---|---|---|
 | Catalog index | Public | Signed discovery, channel, withdrawal, and source descriptors |
 | Agent source | Public | Canonical Agent Spec package and declared optional attachments |
-| Harness render | Public | Tenant-free deterministic output for one public source, public skill set, exact renderer release/executed distribution, and parameter set |
+| Qualification decision/evidence | Public | Product-pinned typed proof for every renderer release and executable platform |
+| Release status/head | Public | Append-only status plus fresh nonce-bound authenticated current-head proof |
+| Harness render | Public | Purpose-signed tenant-free source/skill/qualification/selection/execution/output lineage |
 | Consumer binding | Private | Digest-pinned functional customization delta and exact public/private skill selection; never security authority |
 | Deployment | Private per consumer/tenant | Effective render bundle and manifest plus binding, signed current consumer authority/skill approvals, and target |
-| Runtime release manifest | Private per consumer/runtime | Exact desired deployment set and activation order |
+| Runtime release manifest | Private per consumer/runtime | Exact deployment/private-compilation-evidence pairs and activation order |
 | Signature | Same repository as subject | Cryptographic statement over the local subject digest |
 | Provenance attestation | Same repository as subject | Builder, source revision, workflow, inputs, and output evidence |
 | Compatibility/evaluation attestation | Same repository as subject | Renderer result and consumer-approved evaluation evidence |
@@ -56,9 +58,12 @@ signed catalog
        -> local source signature / provenance / SBOM
   -> tenant-free public render digest
        -> explicit public source descriptor
-       -> explicit renderer descriptor
+       -> explicit product/renderer/qualification descriptors
+       -> fresh authenticated product/renderer status heads
        -> exact public skill descriptors
-       -> local render signature / provenance / compatibility
+       -> selection + issued attempt + authenticated actual execution
+       -> render manifest + exact archive/layer/files
+       -> `public-render-v1` signature / provenance / compatibility
 
 private deployment digest
   -> explicit public source descriptor
@@ -68,14 +73,19 @@ private deployment digest
   -> signed consumer-authority snapshot and exact skill approvals
   -> current policy, grant, profile, and target subdigests
   -> renderer-release manifest, executed distribution, allowlist, and schema digests
-  -> embedded effective render bundle and manifest
+  -> embedded effective render manifest and exact runtime-file payload descriptor
+  -> issued-attempt and authenticated-execution preimages
   -> explicit reuse decision and evidence when public render bytes were reused
   -> local deployment signature / provenance / linked approval evidence
 
+private compilation-evidence digest
+  -> exact input-lock and private-deployment descriptors
+
 private runtime release digest
-  -> exact private deployment digests
+  -> exact canonical private-deployment descriptors
+  -> one exact private-compilation-evidence descriptor per deployment
   -> target identity, system-package membership, and activation constraints
-  -> local release signature
+  -> `consumer-runtime-release-v1` signature
 
 TargetDeliveryState digest
   -> active runtime release descriptor and at most one pending rollout descriptor
@@ -167,21 +177,26 @@ Before activation, the verifier:
 3. Resolves the exact allowed schema ID/digest from the signed contract bundle,
    validates the closed Draft 2020-12 schema without network access, and
    verifies the RFC 8785 bytes for authoritative structured contracts.
-4. Walks every explicit descriptor and local required referrer.
-5. Verifies repository scope, digest, size, media type, signer, provenance,
+4. Recursively walks every explicit descriptor, OCI manifest/config/layer/blob,
+   and local required referrer.
+5. Verifies repository scope, digest, size, media type, semantic role, signer, provenance,
    revocation, and withdrawal.
-6. Recomputes binding, selected-skill, embedded effective-render, and consumer
+6. Verifies the complete pinned qualification matrix and fresh nonce/time-bound
+   authenticated current status heads, including any exact consistency proof.
+7. Recomputes binding, selected-skill, embedded effective-render, and consumer
    state subdigests where the consumer contract requires it.
-7. Confirms that the public-render lineage is tenant-free and that any byte
+8. Confirms that the signed public-render lineage is tenant-free and that any byte
    reuse satisfied the exact empty-customization/input-match rule.
-8. Confirms the target aggregate revision/digest precondition, immutable
+9. Confirms the target aggregate revision/digest precondition, immutable
    predecessor lineage, target runtime, consumer/tenant, profile, and stable
    slot bindings.
-9. Rejects extra undeclared layers and incomplete evidence.
+10. Rejects missing/extra layers, duplicate semantic roles, unregistered
+    media/role pairs, tag-only edges, cycles, and incomplete evidence.
 
-Traversal has depth, node-count, byte, and time limits. Cycles and repeated
-descriptors are handled deterministically; a cycle in a schema that requires a
-DAG is invalid.
+Traversal has depth, node-count, byte, and time limits. Every resolved byte
+sequence is hashed before parsing. Repeated acyclic descriptors are handled
+deterministically; every cycle is invalid, and a repository-name prefix never
+classifies an artifact.
 
 ## Tags, channels, and immutability
 

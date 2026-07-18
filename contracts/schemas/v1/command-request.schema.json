@@ -8,7 +8,7 @@
     "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
     "command": {
       "type": "string",
-      "enum": ["source_validate", "render", "import", "installation_create", "installation_update_binding", "update_proposal", "promote", "forward_recover", "action_cancel", "publish"]
+      "enum": ["source_validate", "render", "import", "installation_create", "installation_update_binding", "update_proposal", "compile", "rollout_start", "rollout_cancel", "promotion_evaluate", "promote", "forward_recover", "action_cancel", "publish"]
     },
     "idempotencyKey": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }
   },
@@ -93,15 +93,55 @@
       }
     },
     {
-      "required": ["command", "consumerId", "targetId", "candidate", "authority", "technicalEvidence", "capabilityEvidence", "precondition"],
+      "required": ["command", "consumerId", "installationId", "targetId", "candidate", "desiredRevision", "precondition"],
+      "properties": {
+        "command": { "const": "compile" },
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "installationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "desiredRevision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+        "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
+      }
+    },
+    {
+      "required": ["command", "consumerId", "targetId", "candidate", "activationMode", "precondition"],
+      "properties": {
+        "command": { "const": "rollout_start" },
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "activationMode": { "type": "string", "enum": ["isolated_candidate", "guarded_in_place"] },
+        "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
+      }
+    },
+    {
+      "required": ["command", "consumerId", "targetId", "rolloutId", "precondition"],
+      "properties": {
+        "command": { "const": "rollout_cancel" },
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "rolloutId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
+      }
+    },
+    {
+      "required": ["command", "consumerId", "targetId", "rolloutId", "precondition"],
+      "properties": {
+        "command": { "const": "promotion_evaluate" },
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "rolloutId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
+      }
+    },
+    {
+      "required": ["command", "consumerId", "targetId", "rolloutId", "precondition"],
       "properties": {
         "command": { "const": "promote" },
         "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
         "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
-        "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
-        "authority": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
-        "technicalEvidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
-        "capabilityEvidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "rolloutId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
         "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
       }
     },
@@ -131,7 +171,11 @@
         "command": { "const": "publish" },
         "subject": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
         "targetRepository": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/ociRepository" },
-        "purpose": { "type": "string", "enum": ["product-release-v1", "public-source-v1", "public-render-v1", "consumer-private-skill-v1", "consumer-deployment-v1"] },
+        "purpose": {
+          "type": "string",
+          "enum": ["public-source-v1", "public-render-v1", "consumer-private-skill-v1"],
+          "description": "The generic artifact publication surface is limited to content-publication purposes. Product release, consumer authority, compilation, deployment, runtime release, qualification, status-head, and renderer execution evidence flow only through their dedicated owner ports and cannot be selected by this command."
+        },
         "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" }
       }
     }

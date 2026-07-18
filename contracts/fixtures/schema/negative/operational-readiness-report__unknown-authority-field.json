@@ -2,7 +2,7 @@
   "contract": "bytedesk.operational-readiness-report/1",
   "schema": {
     "id": "https://schemas.bytedesk.ai/agent-delivery/v1/operational-readiness-report/1.0.0",
-    "digest": "sha256:fa3057b8349a82746cdfea9200eca83656c5f017786c0a91e820f533ca66e3ca"
+    "digest": "sha256:5e29b6ac6b6de1f7d7fe2d5cb732664e0ab1f75382cda08da77c90f85a45cf23"
   },
   "reportId": "readiness-01",
   "product": {
@@ -53,8 +53,8 @@
     "mediaType": "application/vnd.bytedesk.agent.contract-bundle.v1+json",
     "size": 8192,
     "trustPolicy": {
-      "id": "product-release-v1",
-      "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      "id": "contract-bundle-release-v1",
+      "digest": "sha256:c02ce83cb387f9d51b97b3bee467157a217e4cf3ed79c8710183f9f3623bf4f5"
     }
   },
   "infrastructureProfile": {

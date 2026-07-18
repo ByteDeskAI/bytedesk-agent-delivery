@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/port-contract-fixtures/1.0.0",
+  "title": "Closed downstream port contract fixture catalog",
+  "type": "object",
+  "required": [
+    "$schema",
+    "profile",
+    "version",
+    "registryDigest",
+    "contracts"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://schemas.bytedesk.ai/agent-delivery/v1/port-contract-fixtures/1.0.0"
+    },
+    "profile": {
+      "const": "bytedesk.port-contract-fixtures/1"
+    },
+    "version": {
+      "const": 1
+    },
+    "registryDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "contracts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/contractFixture"
+      }
+    }
+  },
+  "$defs": {
+    "jsonValue": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "string",
+          "maxLength": 4194304
+        },
+        {
+          "type": "array",
+          "maxItems": 1024,
+          "items": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        },
+        {
+          "type": "object",
+          "maxProperties": 1024,
+          "propertyNames": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        }
+      ]
+    },
+    "payloadObject": {
+      "type": "object",
+      "maxProperties": 256,
+      "propertyNames": {
+        "type": "string",
+        "maxLength": 256
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/jsonValue"
+      }
+    },
+    "denial": {
+      "type": "object",
+      "required": [
+        "kind",
+        "instance",
+        "expectedKeyword"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "absence-returned-as-success",
+            "committed-without-complete-artifacts",
+            "committed-without-digests",
+            "committed-without-receipt",
+            "continuation-without-snapshot",
+            "denied-returned-as-authorized-success",
+            "denied-without-problem",
+            "found-without-resource",
+            "gap-returned-with-changes",
+            "illegal-null",
+            "missing-required",
+            "non-compile-with-authorized-input-digest",
+            "permitted-with-missing-evidence",
+            "signed-without-envelope",
+            "terminal-failure-with-cancelled-exit",
+            "unknown-field"
+          ]
+        },
+        "instance": {
+          "$ref": "#/$defs/payloadObject"
+        },
+        "expectedKeyword": {
+          "type": "string",
+          "enum": [
+            "additionalProperties",
+            "enum",
+            "not",
+            "oneOf",
+            "required",
+            "type"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "contractFixture": {
+      "type": "object",
+      "required": [
+        "contractId",
+        "valid",
+        "structuralDenials",
+        "semanticDenials"
+      ],
+      "properties": {
+        "contractId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^bytedesk\\.port\\.[a-z0-9-]+\\.[a-z0-9-]+\\.(?:request|result)/1$"
+        },
+        "valid": {
+          "$ref": "#/$defs/payloadObject"
+        },
+        "structuralDenials": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/denial"
+          }
+        },
+        "semanticDenials": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/denial"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

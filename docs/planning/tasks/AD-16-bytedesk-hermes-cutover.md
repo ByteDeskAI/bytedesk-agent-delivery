@@ -19,7 +19,11 @@ Integrate ByteDesk Platform as a reference consumer and remove `ops/hermes-nativ
 - Pinned CORE-CERT release with Hermes renderer, OCI/trust, control-plane,
   compiler, reconciler, API, CLI, and contract bundles.
 - REFERENCE-CATALOG-CERT when the cutover selects ByteDesk's 34+1 catalog.
-- Current Platform `ops/hermes-native` inventory and ADR-0180/ADR-0182 behavior.
+- An exact `bytedesk.external-input-lock/1` artifact for the Platform
+  `ops/hermes-native` inventory and ADR-0180/ADR-0182 behavior. The lock binds
+  repository URL, immutable commit, source-tree digest, sorted path/digest
+  inventory, and `compatibilityEvidenceOnly: true`; an unpinned checkout or
+  mutable branch is not an input or authority.
 - Proven last-known-good Agent Delivery deployment receipts.
 - A separately approved ByteDesk Platform integration task/worktree; no changes are implemented in the Agent Delivery repository alone.
 
@@ -88,13 +92,66 @@ Production release, unrelated ByteDesk Platform refactoring, changes to Platform
 Blocked by CORE-CERT only. REFERENCE-CONSUMER-CERT additionally requires
 REFERENCE-CATALOG-CERT when this integration selects the ByteDesk catalog.
 
+## Normative contracts and conformance
+
+- **Ports and operations.** The reference integration uses
+  `bytedesk.port.consumer-authority-approval/1`
+  (`resolve-authority-snapshot`, `resolve-skill-approval`,
+  `verify-private-authority`), `bytedesk.port.consumer-projection/1`
+  (`resolve-consumer-subject`, `project-consumer-receipt`),
+  `bytedesk.port.private-compiler/1` (`compile-private-deployment`,
+  `resolve-compile-attempt`), `bytedesk.port.renderer-strategy/1`
+  (`select-renderer`, `render`), `bytedesk.port.desired-state-store/1`
+  (`read-target-state`, `watch-target-state`,
+  `compare-and-swap-target-state`, `resolve-idempotency`),
+  `bytedesk.port.host-reconciler/1` (`stage-candidate`,
+  `preflight-candidate`, `activate-candidate`, `readback-active-state`,
+  `append-host-observation`, `recover-attempt-journal`, `cleanup-candidate`), and
+  `bytedesk.port.capability-verifier/1` (`dispatch-capability-check`,
+  `verify-capability-result`) as registered in
+  `contracts/ports/v1/port-registry.json`. Exact field-value and closed
+  request/result schemas are distributed in
+  `contracts/ports/v1/type-catalog.json`; canonical valid and structural-denial
+  payloads are in `contracts/ports/v1/contract-fixtures.json`.
+- **Schemas, artifacts, and profiles.** Exact schema IDs include
+  `https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/consumer-authority/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/skill-approval/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/consumer-deployment/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/runtime-release/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/host-reconciliation-attempt/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/canary-evidence/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/authorization-decision-proof/1.0.0`,
+  and `https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0`,
+  under `contracts/schemas/v1/`. The Hermes renderer, Platform consumer Adapter,
+  desired-store, capability, cutover, and `bytedesk.external-input-lock/1`
+  profiles are in `contracts/ports/v1/protocol-profiles.json`.
+- **Conformance owner.** AD-16 owns ByteDesk Hermes 34+1 parity, locked-input
+  migration, single-writer cutover, projection, full private rerender, distinct
+  canary actors, runtime, drift, and current-tooling recovery evidence. Run
+  `make verify-downstream-ports`; the task-specific suite is
+  `downstream.bytedesk-hermes.v1` in
+  `contracts/ports/v1/conformance-cases.json`. Execute the suite's exact harness
+  steps and closed oracles from `contracts/ports/v1/conformance-plan.json`;
+  schema-valid structural fixtures alone are not semantic implementation goldens.
+- **Boundary.** Platform remains authoritative for organization identity, roles,
+  grants, MCP/tool/provider access, credentials, workload identity, approval,
+  and mandatory security policy. The Promotion Coordinator alone writes desired
+  state and triggers capability verification. ByteDesk-specific fields, models,
+  and policies stay in the reference integration and never leak into core.
+
 ## Architecture review amendments
 
 - Remove the compatibility write path for ByteDesk `AgentInstructions`, `HermesAgentId`, `LastSoulHash`, `LastDeployedAt`, and `DeployStatus` after backfill/read migration. Update every affected DTO, service, router, and lifecycle consumer so no second definition source remains.
 - Shadow work is limited to deterministic artifact/output comparison; there is never shadow execution or dual activation writers.
-- Preserve existing engine/profile slots and Platform workload principals while rebinding them to per-profile deployment subdigests plus the engine release.
+- Preserve the engine/profile slots and Platform workload principals identified
+  by the accepted external-input lock while rebinding them to per-profile
+  canonical deployment descriptors plus the engine release.
 - Recovery is a new signed forward rollout built from eligible historical
   functional content with current trusted renderer/compiler, Platform grants,
   lifecycle, approval, slot, credential binding, workload identity, and canary
   evidence. It never uses mutable legacy files or reactivated history.
-- The ByteDesk adapter projects Agent Delivery receipts into the existing Platform `AgentDeploymentRevision` and observation model; it must not create a duplicate Platform receipt aggregate.
+- The ByteDesk adapter projects Agent Delivery receipts into the locked Platform
+  `AgentDeploymentRevision` and observation model; it must not create a
+  duplicate Platform receipt aggregate.

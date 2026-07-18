@@ -16,7 +16,7 @@
     "activeRelease": {
       "oneOf": [
         { "type": "null" },
-        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" }
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerRuntimeReleaseDescriptor" }
       ]
     },
     "pendingRollout": {
@@ -24,11 +24,12 @@
         { "type": "null" },
         {
           "type": "object",
-          "required": ["rolloutId", "candidate", "desiredRevisionDigest"],
+          "required": ["rolloutId", "rolloutDigest", "candidate", "proposalInputDigest"],
           "properties": {
             "rolloutId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
-            "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
-            "desiredRevisionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+            "rolloutDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+            "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerRuntimeReleaseDescriptor" },
+            "proposalInputDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
           },
           "additionalProperties": false,
           "unevaluatedProperties": false
@@ -62,7 +63,7 @@
   "allOf": [
     {
       "if": { "properties": { "condition": { "const": "rollout_pending" } }, "required": ["condition"] },
-      "then": { "properties": { "pendingRollout": { "type": "object", "maxProperties": 3 } } }
+      "then": { "properties": { "pendingRollout": { "type": "object", "maxProperties": 4 } } }
     },
     {
       "if": {
@@ -80,5 +81,5 @@
   ],
   "additionalProperties": false,
   "unevaluatedProperties": false,
-  "description": "Only the Promotion Coordinator may create this object. Git, compilers, bots, hosts, observations, and consumer applications may not write it."
+  "description": "Only the Promotion Coordinator may create this object. pendingRollout.proposalInputDigest binds the canonical proposal input and is deliberately not the impossible self-digest of the containing target state; callers compute the authoritative target-state digest over the complete accepted object. Git, compilers, bots, hosts, observations, and consumer applications may not write it."
 }

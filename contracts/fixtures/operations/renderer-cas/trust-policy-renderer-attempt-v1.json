@@ -1,0 +1,75 @@
+{
+  "contract": "bytedesk.trust-policy/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+    "digest": "sha256:ea53b4814c96282ba5812c2573b4adf45a026340b1022503e25b9f391dcd1509"
+  },
+  "policyId": "renderer-attempt-v1",
+  "version": "1.0.0",
+  "effective": {
+    "notBefore": "2026-07-17T00:00:00Z",
+    "notAfter": "2027-07-17T00:00:00Z"
+  },
+  "scope": {
+    "repositories": [
+      "registry.example/product/renderer-attempt-evidence",
+      "registry.example/product/renderer-selections"
+    ],
+    "mediaTypes": [
+      "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "application/vnd.bytedesk.agent.renderer-attempt-authority.v1+json",
+      "application/vnd.bytedesk.agent.renderer-attempt-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.renderer-selection.v1+json",
+      "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.signing-result.v1+json"
+    ],
+    "purposes": [
+      "renderer-attempt-v1"
+    ]
+  },
+  "signers": [
+    {
+      "purpose": "renderer-attempt-v1",
+      "credentialKind": "kms_key",
+      "keyVersion": "kms://product/renderer-attempt-v1/versions/1",
+      "publicKeyDigest": "sha256:b0017d9a7d2cb561521fb94d3c0990d43b38da555d1fd8d0f419727183bdf1ec",
+      "algorithm": "ECDSA_P256_SHA256",
+      "workloadIdentity": "spiffe://bytedesk.ai/agent-delivery/renderer-attempt",
+      "claims": {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audience": "agent-delivery-renderer-attempt-v1",
+        "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:renderer-attempt-v1",
+        "repository": "ByteDeskAI/bytedesk-agent-delivery",
+        "workflow": ".github/workflows/renderer-attempt-v1.yml",
+        "ref": "refs/tags/v1.0.0",
+        "environment": "renderer-attempt-v1",
+        "builderDigest": "sha256:9750a4a6e652b64fd927af78b5de13f91f6dfea8b8540fdb6fb47dee64526967"
+      }
+    }
+  ],
+  "requiredEvidence": [
+    "schema",
+    "authority"
+  ],
+  "rules": {
+    "freshnessSeconds": 900,
+    "requireNonce": true,
+    "requirePredecessor": true,
+    "denyDowngrade": true,
+    "withdrawal": "deny_new_use",
+    "outage": "fail_closed_new_work"
+  },
+  "revocations": {
+    "keyVersions": [],
+    "digests": [],
+    "workflows": [],
+    "builders": [],
+    "schemas": [],
+    "renderers": [],
+    "content": []
+  },
+  "failureMode": "fail_closed",
+  "predecessor": {
+    "kind": "none"
+  }
+}

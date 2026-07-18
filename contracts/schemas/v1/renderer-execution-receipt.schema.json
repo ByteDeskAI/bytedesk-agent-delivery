@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-execution-receipt/1.0.0",
+  "title": "Renderer sandbox actual-execution receipt",
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "attemptId",
+    "attemptFencingToken",
+    "attemptAuthorityDigest",
+    "attemptAuthenticationEvidenceDigest",
+    "selectionDigest",
+    "productReleaseDigest",
+    "releaseQualificationDigest",
+    "productReleaseStatusDigest",
+    "rendererReleaseStatusDigest",
+    "rendererReleaseDigest",
+    "platform",
+    "executedDistribution",
+    "productDistributionDigest",
+    "compiledAllowlistDigest",
+    "inputTreeDigest",
+    "contractBundleDigest",
+    "framedRequestDigest",
+    "framedResponseDigest",
+    "outputTreeDigest",
+    "outputArchiveDigest",
+    "outputArchiveSize",
+    "renderManifestDigest",
+    "sandboxProfileDigest",
+    "workerProfileDigest",
+    "launcherIdentityDigest",
+    "completedAt"
+  ],
+  "properties": {
+    "contract": {
+      "const": "bytedesk.renderer-execution-receipt/1"
+    },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "attemptId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "attemptFencingToken": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger"
+    },
+    "attemptAuthorityDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Must equal the canonical authorityDigest of the unchanged caller-issued renderer-attempt-authority object."
+    },
+    "attemptAuthenticationEvidenceDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Digest of the independently verified renderer-attempt-authentication-evidence object over T."
+    },
+    "selectionDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "productReleaseDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Must equal the digest member of the selected productRelease descriptor."
+    },
+    "releaseQualificationDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "productReleaseStatusDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "rendererReleaseStatusDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "rendererReleaseDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Must equal the digest member of the selected rendererRelease descriptor."
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "linux/amd64",
+        "linux/arm64"
+      ]
+    },
+    "executedDistribution": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor",
+      "description": "Authenticated readback of the exact selected renderer executable distribution actually executed."
+    },
+    "productDistributionDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "compiledAllowlistDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "inputTreeDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "contractBundleDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "framedRequestDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "framedResponseDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "outputTreeDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "outputArchiveDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Digest of the exact deterministic archive bytes collected by the trusted launcher/collector from the assigned output directory."
+    },
+    "outputArchiveSize": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonNegativeSafeInteger"
+    },
+    "renderManifestDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Digest of the exact RFC 8785 render-manifest bytes emitted by the trusted collector and returned with the archive."
+    },
+    "sandboxProfileDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "workerProfileDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "launcherIdentityDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Digest of the independently authenticated launcher workload-identity evidence."
+    },
+    "completedAt": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp"
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "The signed launcher emits this receipt after process exit and exact output collection. The operation separately returns its canonical digest and an exact authentication-evidence descriptor; output validation accepts none of the three in isolation."
+}

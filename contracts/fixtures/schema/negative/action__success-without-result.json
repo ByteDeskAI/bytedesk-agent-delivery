@@ -1,6 +1,6 @@
 {
   "contract": "bytedesk.action/1",
-  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0", "digest": "sha256:7b751d842207e9d9fe9f3e88edf50abfcc6a5cfdeea1db3b73ae9344ce827b9f" },
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0", "digest": "sha256:ddf0e484b8d35195f984204e130c9f3e88b5e347581722437aa763e28b2c346a" },
   "actionId": "action-01",
   "consumerId": "consumer-01",
   "kind": "render",

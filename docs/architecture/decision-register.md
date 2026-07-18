@@ -34,7 +34,8 @@ exact-digest operations. HTTP uses OpenAPI 3.2.0 and RFC 9457. Events use
 CloudEvents 1.0.2 and AsyncAPI 3.1.0 and are notifications, never authority.
 
 Normative sources: [Canonical encoding v1](../standards/canonical-encoding-v1.md),
-[Machine contracts v1](../standards/machine-contracts-v1.md).
+[Machine contracts v1](../standards/machine-contracts-v1.md),
+[Integration ports v1](../standards/integration-ports-v1.md).
 
 ## 3. Immutable renderer and execution identity
 
@@ -84,7 +85,13 @@ uses current trusted tooling. If nothing qualifies, it fails closed.
 Normative sources: [Machine contracts v1](../standards/machine-contracts-v1.md),
 [Delivery lifecycle v1](../standards/delivery-lifecycle-v1.md).
 
-## 7. Private signing and consumer sovereignty
+## 7. Signing purpose separation and consumer sovereignty
+
+Product distributions, compiled allowlists, and renderer releases use the
+KMS-only `product-release-v1` policy. Contract bundles use the separate
+Sigstore-keyless `contract-bundle-release-v1` policy scoped only to the exact
+contract repository and media type. A mixed product/contract policy or a signer
+from the other purpose fails closed.
 
 Consumer-private skill, consumer authority/approval, and private deployment
 signing use separate non-exportable keys and workloads isolated per consumer.
@@ -94,7 +101,7 @@ consumer private signing is forbidden. Trust policies are immutable exact-
 digest objects. The consumer, not Agent Delivery or a supplier, issues skill
 and business approval.
 
-Normative source:
+Normative sources: [Trust policy v1](../standards/trust-policy-v1.md),
 [Consumer authority and private signing v1](../standards/consumer-authority-v1.md).
 
 ## 8. Dependencies and milestones
@@ -143,8 +150,8 @@ Normative source:
   forms; private customization is applied once and adds no new inheritance.
 - Changed skill publication and consumer runtime approval are separate. A
   supplier signature is upstream provenance only; a private skill still needs
-  the per-consumer role-4 publication signature and exact role-5 consumer
-  approval for every effective digest.
+  the per-consumer `consumer-private-skill-v1` publication signature and exact
+  `consumer-authority-v1` approval for every effective digest.
 - The CLI has explicit `package` and `publish` commands. Render never publishes
   implicitly.
 - Trust-policy ID is discovery; exact immutable policy digest is authority and
@@ -160,7 +167,8 @@ Normative source:
 reference implementation as a Go 1.26 modular monolith and CLI with isolated
 Python 3.13 Agent Spec workers, PostgreSQL 18 authoritative state/durable work,
 active and recovery-region Harbor HA endpoints with synchronous OCI API
-verification, purpose-separated KMS/WIF signing, SPIFFE mTLS, Kubernetes
+verification, purpose-separated KMS/WIF and contract-release Sigstore keyless
+signing, SPIFFE mTLS, Kubernetes
 1.36/1.35 deployment, staged gVisor renderer isolation, and HA OpenTelemetry.
 Distribution 3 remains the local/protocol Registry profile.
 These are product implementation and certification choices, not fields or

@@ -53,6 +53,23 @@ func TestValidateRepositoryAcceptsClosedReferencesAndExpectedDenials(t *testing.
 	}
 }
 
+func TestValidateRepositoryAcceptsCheckedInContractSet(t *testing.T) {
+	repository, err := filepath.Abs(filepath.Join("..", "..", ".."))
+	if err != nil {
+		t.Fatal(err)
+	}
+	report, err := ValidateRepository(
+		repository,
+		filepath.Join(repository, "contracts/fixtures/schema/index.json"),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if report.SchemaCount != 112 || report.FixtureCount != 312 || report.Outcome != "pass" {
+		t.Fatalf("unexpected checked-in contract report: %+v", report)
+	}
+}
+
 func TestValidateRepositoryFailsClosed(t *testing.T) {
 	tests := []struct {
 		name    string

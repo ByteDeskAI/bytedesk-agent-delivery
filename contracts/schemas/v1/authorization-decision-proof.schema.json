@@ -5,7 +5,7 @@
   "type": "object",
   "required": [
     "contract", "schema", "proofId", "actor", "planDigest", "nonce",
-    "consumerId", "subjectId", "targetId", "releaseDigest", "deploymentDigest",
+    "consumerId", "subjectId", "targetId", "candidateDigest", "releaseDigest", "deploymentDigest",
     "capability", "policyDigest", "grantSetDigest", "workloadIdentityDigest",
     "decision", "signerIdentity", "signerPolicy", "transport", "issuedAt",
     "expiresAt", "trace"
@@ -20,6 +20,7 @@
     "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
     "subjectId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
     "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "candidateDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
     "releaseDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
     "deploymentDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
     "capability": {

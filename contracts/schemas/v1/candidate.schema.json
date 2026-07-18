@@ -17,7 +17,7 @@
     "revision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
     "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" },
     "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0" },
-    "preparedRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "preparedRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerRuntimeReleaseDescriptor" },
     "failure": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0" },
     "createdAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
     "updatedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }

@@ -2,7 +2,7 @@
   "contract": "bytedesk.recovery-plan/1",
   "schema": {
     "id": "https://schemas.bytedesk.ai/agent-delivery/v1/recovery-plan/1.0.0",
-    "digest": "sha256:94649f9d4fcb5e7dca3aaefd4a01f81f7fb6ec7ab8963b3c71184bc26688c1b1"
+    "digest": "sha256:15c95ed8c5f31982fe76e92bfef675830dcba98e4078261b961679e515c76829"
   },
   "recoveryId": "recovery-01",
   "consumerId": "consumer-01",
@@ -98,7 +98,7 @@
     "deployment": {
       "repository": "registry.example/consumer/deployments",
       "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "mediaType": "application/vnd.bytedesk.agent.deployment.v1+json",
+      "mediaType": "application/vnd.bytedesk.agent.consumer-deployment.v1+json",
       "size": 8192,
       "trustPolicy": {
         "id": "consumer-deployment-v1",
@@ -108,10 +108,10 @@
     "runtimeRelease": {
       "repository": "registry.example/consumer/releases",
       "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-      "mediaType": "application/vnd.bytedesk.agent.release.v1+json",
+      "mediaType": "application/vnd.bytedesk.agent.runtime-release.v1+json",
       "size": 8192,
       "trustPolicy": {
-        "id": "consumer-deployment-v1",
+        "id": "consumer-runtime-release-v1",
         "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
       }
     }

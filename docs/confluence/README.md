@@ -75,7 +75,8 @@ opts a payload into contract parsing or canonicalization.
 - **Public render**: deterministic, tenant-free harness output derived only from
   public inputs.
 - **Deployment**: private, consumer-specific desired content that embeds the
-  effective render bundle and manifest plus its evidence.
+  effective render manifest, exact runtime-file payload descriptor, and
+  authenticated execution lineage.
 - **Release manifest**: the exact set of deployments desired for one runtime.
 - **Consumer**: the platform or organization that supplies identity, policy,
   grants, credentials, and runtime targets.

@@ -3,6 +3,12 @@
   "title": "The exact predecessor did not match",
   "status": 412,
   "code": "precondition_failed",
+  "portId": "bytedesk.port.control-plane-api-events/1",
+  "operationId": "submit-command",
   "correlationId": "corr-01",
+  "retryable": false,
+  "sideEffectState": "not-committed",
+  "violations": [],
+  "documentation": "https://docs.bytedesk.ai/agent-delivery/problems/precondition-failed",
   "unknownAuthority": true
 }

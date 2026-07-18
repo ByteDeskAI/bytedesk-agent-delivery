@@ -130,7 +130,10 @@ Activation requires two independent decisions:
 1. Agent Delivery proves **what content** is being activated: exact source,
    renderer-release manifest, executed product distribution, binding,
    selected skills, embedded effective render, deployment, release, signer,
-   schema, and provenance digests.
+   schema, and provenance digests. That proof independently requires trusted
+   signatures, complete pinned qualification for every selected
+   renderer/platform, and fresh nonce-bound authenticated current release
+   status.
 2. The consumer proves **what the workload may do** through a fresh signed
    `bytedesk.consumer-authority/1` snapshot and exact
    `bytedesk.skill-approval/1` evidence. Activation rechecks those inputs; a
@@ -146,7 +149,8 @@ The main boundaries are:
 
 - untrusted author input into the validator;
 - public Git into publication CI;
-- CI workload identity into non-exportable signing keys;
+- CI or signer workload identity into purpose-specific non-exportable KMS keys
+  or the separately pinned contract-release Sigstore trust service;
 - public registry artifacts into private consumer compilation;
 - signed consumer authority and skill approval into deployment compilation;
 - the sole Promotion Coordinator writer into one selected desired-state store;
@@ -164,6 +168,9 @@ OpenAPI 3.2.0 over those same schemas; integration events use AsyncAPI 3.1.0
 and CloudEvents 1.0.2 and remain notifications rather than authority. Exact
 contract rules are in
 [Machine contracts v1](../standards/machine-contracts-v1.md).
+Release qualification, typed evidence, append-only status, and fresh head
+verification are defined by
+[Release qualification and status v1](../standards/release-qualification-v1.md).
 
 Declared structured contract objects cross these boundaries in one authority
 representation: the JSON data model serialized as RFC 8785 JCS bytes. Contract-

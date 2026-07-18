@@ -1,6 +1,9 @@
 {
   "contract": "bytedesk.runtime-slot/1",
-  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/runtime-slot/1.0.0", "digest": "sha256:35fe0383f96326e4cceed37c31ce6521ded3564f93b8a74144c3865a989612d2" },
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/runtime-slot/1.0.0",
+    "digest": "sha256:f805904577c5e729542394efea4f6c4f19d90518e7e31512dc6563665bde139c"
+  },
   "consumerId": "consumer-01",
   "subjectId": "subject-01",
   "targetId": "target-01",
@@ -13,6 +16,20 @@
   "workspace": "agents/subject-01",
   "generation": 9007199254740991,
   "state": "staging",
-  "precondition": { "kind": "absent" },
-  "predecessor": { "kind": "none" }
+  "release": {
+    "repository": "registry.example/consumer/releases",
+    "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "mediaType": "application/vnd.bytedesk.agent.runtime-release.v1+json",
+    "size": 8192,
+    "trustPolicy": {
+      "id": "consumer-runtime-release-v1",
+      "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  },
+  "precondition": {
+    "kind": "absent"
+  },
+  "predecessor": {
+    "kind": "none"
+  }
 }

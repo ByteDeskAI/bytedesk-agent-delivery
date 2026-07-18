@@ -24,10 +24,116 @@ func TestVerifyPromotionAcceptsExactRequiredCapabilityEvidence(t *testing.T) {
 
 	result, err := fixture.verifier.VerifyPromotion(context.Background(), fixture.request, fixture.inputs)
 	if err != nil {
+		t.Fatalf("%v: %v", err, errors.Unwrap(err))
+	}
+	if result.PlanDigest != fixture.inputs.CurrentPlanDigest || len(result.EvidenceDigests) != 3 || len(result.AuthorizationProofDigests) != 2 {
+		t.Fatalf("unexpected result: %+v", result)
+	}
+}
+
+func TestEveryCanaryErrorCodeHasOneStablePublicProblem(t *testing.T) {
+	want := map[ErrorCode]StableProblemCode{
+		CodeInvalidInputs:            ProblemEvidenceInvalid,
+		CodeInvalidContract:          ProblemEvidenceInvalid,
+		CodeBindingMismatch:          ProblemEvidenceInvalid,
+		CodeSignerMismatch:           ProblemTrustVerificationFailed,
+		CodeStaleEvidence:            ProblemEvidenceInvalid,
+		CodeUnauthenticatedEvidence:  ProblemTrustVerificationFailed,
+		CodePermitProofMissing:       ProblemEvidenceInvalid,
+		CodeDenialNotProven:          ProblemCapabilityDenialNotProven,
+		CodeUnauthenticatedProof:     ProblemTrustVerificationFailed,
+		CodeTransportFailure:         ProblemCapabilityTransportFailed,
+		CodePermitDecisionMismatch:   ProblemEvidenceInvalid,
+		CodeHostCheckFailed:          ProblemEvidenceInvalid,
+		CodeWorkloadLoginFailed:      ProblemEvidenceInvalid,
+		CodeNotApplicableCheckFailed: ProblemEvidenceInvalid,
+		CodeUncertifiedNotApplicable: ProblemEvidenceInvalid,
+	}
+	if len(verificationErrorCodes) != len(want) {
+		t.Fatalf("verificationErrorCodes=%d, want %d", len(verificationErrorCodes), len(want))
+	}
+	seen := make(map[ErrorCode]struct{}, len(verificationErrorCodes))
+	for _, code := range verificationErrorCodes {
+		if _, duplicate := seen[code]; duplicate {
+			t.Fatalf("duplicate verification error code %q", code)
+		}
+		seen[code] = struct{}{}
+		got, ok := StableProblemForErrorCode(code)
+		if !ok || got != want[code] {
+			t.Fatalf("StableProblemForErrorCode(%q)=(%q,%t), want (%q,true)", code, got, ok, want[code])
+		}
+	}
+	if got, ok := StableProblemForErrorCode(ErrorCode("unknown_internal_code")); ok || got != "" {
+		t.Fatalf("unknown internal code mapped to (%q,%t)", got, ok)
+	}
+}
+
+func TestStableProblemMappingMatchesFrozenCapabilityProfile(t *testing.T) {
+	payload, err := os.ReadFile(filepath.Join(repositoryRoot(t), "contracts/ports/v1/protocol-profiles.json"))
+	if err != nil {
 		t.Fatal(err)
 	}
-	if result.PlanDigest != fixture.inputs.CurrentPlanDigest || len(result.EvidenceDigests) != 2 || len(result.AuthorizationProofDigests) != 2 {
-		t.Fatalf("unexpected result: %+v", result)
+	var catalog struct {
+		Profiles []struct {
+			ProfileID    string `json:"profileId"`
+			Requirements struct {
+				FailureMapping map[string]string `json:"failureMapping"`
+			} `json:"requirements"`
+		} `json:"profiles"`
+	}
+	if err := json.Unmarshal(payload, &catalog); err != nil {
+		t.Fatal(err)
+	}
+	var frozen map[string]string
+	for _, profile := range catalog.Profiles {
+		if profile.ProfileID == "bytedesk.capability-verification/1" {
+			frozen = profile.Requirements.FailureMapping
+			break
+		}
+	}
+	if len(frozen) != len(verificationErrorCodes) {
+		t.Fatalf("frozen failure mapping has %d entries, want %d", len(frozen), len(verificationErrorCodes))
+	}
+	for _, code := range verificationErrorCodes {
+		want, ok := StableProblemForErrorCode(code)
+		if !ok {
+			t.Fatalf("internal error code %q is not mapped", code)
+		}
+		if got := frozen[string(code)]; got != string(want) {
+			t.Fatalf("frozen failure mapping[%q]=%q, want %q", code, got, want)
+		}
+	}
+}
+
+func TestVerificationErrorCarriesStablePublicProblem(t *testing.T) {
+	err := fail(CodeTransportFailure, "consumer verifier unavailable", errors.New("timeout"))
+	var typed *VerificationError
+	if !errors.As(err, &typed) {
+		t.Fatalf("error=%v, want *VerificationError", err)
+	}
+	if typed.ProblemCode != ProblemCapabilityTransportFailed {
+		t.Fatalf("ProblemCode=%q, want %q", typed.ProblemCode, ProblemCapabilityTransportFailed)
+	}
+}
+
+func TestVerifyPromotionRequiresDistinctHostEvidencePhases(t *testing.T) {
+	tests := []struct {
+		name        string
+		targetIndex int
+		sourceIndex int
+	}{
+		{name: "candidate ready substituted for active readback", targetIndex: 2, sourceIndex: 0},
+		{name: "active readback substituted for candidate ready", targetIndex: 0, sourceIndex: 2},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			fixture := newPromotionFixture(t, "required")
+			copyEvidenceResults(t, &fixture.request.Evidence[test.targetIndex], fixture.request.Evidence[test.sourceIndex])
+			fixture.reauthenticateEvidence(t)
+
+			_, err := fixture.verifier.VerifyPromotion(context.Background(), fixture.request, fixture.inputs)
+			assertErrorCode(t, err, CodeInvalidContract)
+		})
 	}
 }
 
@@ -143,6 +249,13 @@ func TestVerifyPromotionFailsClosedOnAdversarialEvidence(t *testing.T) {
 			code:   CodeBindingMismatch,
 		},
 		{
+			name: "mismatched capability dispatch receipt",
+			mutate: func(f *promotionFixture) {
+				mutateNestedJSON(t, &f.request.Evidence[1], []string{"capabilityDispatch", "receiptDigest"}, digestF)
+			},
+			code: CodeBindingMismatch,
+		},
+		{
 			name: "wrong evidence actor identity",
 			mutate: func(f *promotionFixture) {
 				mutateJSON(t, &f.request.Evidence[1], "actorIdentity", "spiffe://consumer/wrong")
@@ -164,9 +277,9 @@ func TestVerifyPromotionFailsClosedOnAdversarialEvidence(t *testing.T) {
 			code: CodeUnauthenticatedEvidence,
 		},
 		{
-			name:   "proof is missing",
+			name:   "permitted proof is missing",
 			mutate: func(f *promotionFixture) { f.proofs.documents = map[string][]byte{} },
-			code:   CodeMissingProof,
+			code:   CodePermitProofMissing,
 		},
 		{
 			name: "proof is not independently authenticated",
@@ -188,6 +301,11 @@ func TestVerifyPromotionFailsClosedOnAdversarialEvidence(t *testing.T) {
 		{
 			name:   "proof target mismatch",
 			mutate: func(f *promotionFixture) { f.replaceProofField(t, "targetId", "target-other") },
+			code:   CodeBindingMismatch,
+		},
+		{
+			name:   "proof candidate mismatch",
+			mutate: func(f *promotionFixture) { f.replaceProofField(t, "candidateDigest", digestF) },
 			code:   CodeBindingMismatch,
 		},
 		{
@@ -330,13 +448,108 @@ func TestVerifyPromotionRequiresCurrentAuthorityDigest(t *testing.T) {
 	assertErrorCode(t, err, CodeInvalidInputs)
 }
 
-func TestVerifyPromotionRejectsFailedActualTechnicalCheck(t *testing.T) {
+func TestVerifyPromotionRequiresIndependentlyTrustedCapabilityDispatch(t *testing.T) {
 	fixture := newPromotionFixture(t, "required")
-	mutateNestedJSON(t, &fixture.request.Evidence[0], []string{"results", "service_process", "actual"}, "failed")
-	fixture.reauthenticateEvidence(t)
+	fixture.inputs.CurrentCapabilityDispatch = CapabilityDispatchBinding{}
 
 	_, err := fixture.verifier.VerifyPromotion(context.Background(), fixture.request, fixture.inputs)
-	assertErrorCode(t, err, CodeCheckFailed)
+	assertErrorCode(t, err, CodeInvalidInputs)
+}
+
+func TestVerifyPromotionRejectsFailedActualTechnicalCheck(t *testing.T) {
+	tests := []struct {
+		name          string
+		evidenceIndex int
+		check         string
+	}{
+		{name: "candidate ready", evidenceIndex: 0, check: "service_process"},
+		{name: "active readback", evidenceIndex: 2, check: "active_pointer"},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			fixture := newPromotionFixture(t, "required")
+			mutateNestedJSON(t, &fixture.request.Evidence[test.evidenceIndex], []string{"results", test.check, "actual"}, "failed")
+			fixture.reauthenticateEvidence(t)
+
+			_, err := fixture.verifier.VerifyPromotion(context.Background(), fixture.request, fixture.inputs)
+			assertErrorCode(t, err, CodeHostCheckFailed)
+		})
+	}
+}
+
+func TestVerifyPromotionUsesSpecificCapabilityCheckFailures(t *testing.T) {
+	t.Run("workload login", func(t *testing.T) {
+		fixture := newPromotionFixture(t, "required")
+		mutateNestedJSON(t, &fixture.request.Evidence[1], []string{"results", "workload_login", "actual"}, "failed")
+		fixture.reauthenticateEvidence(t)
+
+		_, err := fixture.verifier.VerifyPromotion(context.Background(), fixture.request, fixture.inputs)
+		assertErrorCode(t, err, CodeWorkloadLoginFailed)
+	})
+
+	t.Run("certified not applicable", func(t *testing.T) {
+		fixture := newPromotionFixture(t, "certified_not_applicable")
+		mutateNestedJSON(t, &fixture.request.Evidence[1], []string{"results", "certified_not_applicable", "actual"}, "failed")
+		fixture.reauthenticateEvidence(t)
+
+		_, err := fixture.verifier.VerifyPromotion(context.Background(), fixture.request, fixture.inputs)
+		assertErrorCode(t, err, CodeNotApplicableCheckFailed)
+	})
+}
+
+func TestVerifyPromotionDistinguishesPermitAndDenialFailures(t *testing.T) {
+	tests := []struct {
+		name    string
+		mutate  func(*promotionFixture)
+		code    ErrorCode
+		problem StableProblemCode
+	}{
+		{
+			name: "missing permitted proof is invalid evidence",
+			mutate: func(f *promotionFixture) {
+				delete(f.proofs.documents, f.permittedProofDigest)
+			},
+			code:    CodePermitProofMissing,
+			problem: ProblemEvidenceInvalid,
+		},
+		{
+			name: "missing denied-sentinel proof is not a proven denial",
+			mutate: func(f *promotionFixture) {
+				delete(f.proofs.documents, f.deniedProofDigest)
+			},
+			code:    CodeDenialNotProven,
+			problem: ProblemCapabilityDenialNotProven,
+		},
+		{
+			name: "mismatched permitted result is invalid evidence",
+			mutate: func(f *promotionFixture) {
+				mutateNestedJSON(t, &f.request.Evidence[1], []string{"results", "permitted_capability", "decisionClass"}, "policy_denied")
+				mutateNestedJSON(t, &f.request.Evidence[1], []string{"results", "permitted_capability", "decisionCode"}, "sentinel_denied")
+			},
+			code:    CodePermitDecisionMismatch,
+			problem: ProblemEvidenceInvalid,
+		},
+		{
+			name: "mismatched denied-sentinel result is not a proven denial",
+			mutate: func(f *promotionFixture) {
+				mutateNestedJSON(t, &f.request.Evidence[1], []string{"results", "denied_sentinel", "decisionClass"}, "permitted")
+				mutateNestedJSON(t, &f.request.Evidence[1], []string{"results", "denied_sentinel", "decisionCode"}, "allow_policy_match")
+			},
+			code:    CodeDenialNotProven,
+			problem: ProblemCapabilityDenialNotProven,
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			fixture := newPromotionFixture(t, "required")
+			test.mutate(fixture)
+			fixture.reauthenticateEvidence(t)
+
+			_, err := fixture.verifier.VerifyPromotion(context.Background(), fixture.request, fixture.inputs)
+			assertErrorCode(t, err, test.code)
+			assertStableProblemCode(t, err, test.problem)
+		})
+	}
 }
 
 func TestVerifyPromotionRejectsWrongAuthenticatedEvidenceSigner(t *testing.T) {
@@ -437,11 +650,27 @@ func newPromotionFixture(t *testing.T, capabilityMode string) *promotionFixture 
 		t.Fatal(err)
 	}
 
-	hostEvidence := evidenceBase(verifier, "host_reconciler", planDigest)
-	hostEvidence["results"] = hostResults()
-	hostBytes := marshalJSON(t, hostEvidence)
+	candidateReadyEvidence := evidenceBase(verifier, "host_reconciler", planDigest)
+	candidateReadyEvidence["evidenceId"] = "evidence-host-candidate-ready"
+	candidateReadyEvidence["results"] = candidateReadyResults()
+	candidateReadyBytes := marshalJSON(t, candidateReadyEvidence)
+
+	activeReadbackEvidence := evidenceBase(verifier, "host_reconciler", planDigest)
+	activeReadbackEvidence["evidenceId"] = "evidence-host-active-readback"
+	activeReadbackEvidence["results"] = activeReadbackResults()
+	activeReadbackBytes := marshalJSON(t, activeReadbackEvidence)
 
 	capabilityEvidence := evidenceBase(verifier, "consumer_capability_verifier", planDigest)
+	capabilityDispatch := CapabilityDispatchBinding{
+		RequestDigest:               digestA,
+		ReceiptDigest:               digestB,
+		CheckProfileDigest:          digestC,
+		AuthorizationDecisionDigest: digestF,
+	}
+	capabilityEvidence["capabilityDispatch"] = map[string]any{
+		"requestDigest": capabilityDispatch.RequestDigest, "receiptDigest": capabilityDispatch.ReceiptDigest,
+		"checkProfileDigest": capabilityDispatch.CheckProfileDigest, "authorizationDecisionDigest": capabilityDispatch.AuthorizationDecisionDigest,
+	}
 	var permittedDigest, deniedDigest string
 	if capabilityMode == "required" {
 		permittedProof := authorizationProof(verifier, planDigest, "capability.read", digestA, "permitted", "allow_policy_match")
@@ -472,7 +701,8 @@ func newPromotionFixture(t *testing.T, capabilityMode string) *promotionFixture 
 		}
 	}
 	capabilityBytes := marshalJSON(t, capabilityEvidence)
-	hostDigest, _ := CanonicalDigest(hostBytes)
+	candidateReadyDigest, _ := CanonicalDigest(candidateReadyBytes)
+	activeReadbackDigest, _ := CanonicalDigest(activeReadbackBytes)
 	capabilityDigest, _ := CanonicalDigest(capabilityBytes)
 	inputs := CurrentInputs{
 		CurrentPlanDigest:             planDigest,
@@ -480,6 +710,7 @@ func newPromotionFixture(t *testing.T, capabilityMode string) *promotionFixture 
 		CurrentPolicyDigest:           digestC,
 		CurrentGrantSetDigest:         digestD,
 		CurrentWorkloadIdentityDigest: digestE,
+		CurrentCapabilityDispatch:     capabilityDispatch,
 		Now:                           now,
 		EvidenceSigners: map[string]SignerExpectation{
 			"host_reconciler":              {Identity: "spiffe://consumer/host", Policy: TrustPolicyRef{ID: "host-evidence-v1", Digest: digestA}},
@@ -487,8 +718,9 @@ func newPromotionFixture(t *testing.T, capabilityMode string) *promotionFixture 
 		},
 		AuthorizationSigner: SignerExpectation{Identity: "spiffe://consumer/authorization", Policy: TrustPolicyRef{ID: "authorization-decision-v1", Digest: digestF}},
 		AuthenticatedEvidenceDigests: map[string]AuthenticatedVerificationRecord{
-			hostDigest:       authenticatedRecord(SignerExpectation{Identity: "spiffe://consumer/host", Policy: TrustPolicyRef{ID: "host-evidence-v1", Digest: digestA}}, digestA),
-			capabilityDigest: authenticatedRecord(SignerExpectation{Identity: "spiffe://consumer/capability-verifier", Policy: TrustPolicyRef{ID: "capability-evidence-v1", Digest: digestB}}, digestB),
+			candidateReadyDigest: authenticatedRecord(SignerExpectation{Identity: "spiffe://consumer/host", Policy: TrustPolicyRef{ID: "host-evidence-v1", Digest: digestA}}, digestA),
+			activeReadbackDigest: authenticatedRecord(SignerExpectation{Identity: "spiffe://consumer/host", Policy: TrustPolicyRef{ID: "host-evidence-v1", Digest: digestA}}, digestA),
+			capabilityDigest:     authenticatedRecord(SignerExpectation{Identity: "spiffe://consumer/capability-verifier", Policy: TrustPolicyRef{ID: "capability-evidence-v1", Digest: digestB}}, digestB),
 		},
 		AuthenticatedProofDigests:   map[string]AuthenticatedVerificationRecord{},
 		AuthenticatedCertifications: map[string]TrustPolicyRef{digestC: {ID: "capability-na-cert-v1", Digest: digestD}},
@@ -496,7 +728,7 @@ func newPromotionFixture(t *testing.T, capabilityMode string) *promotionFixture 
 	for digest := range proofs.documents {
 		inputs.AuthenticatedProofDigests[digest] = authenticatedRecord(inputs.AuthorizationSigner, digestC)
 	}
-	return &promotionFixture{verifier: verifier, proofs: proofs, request: PromotionRequest{Plan: planBytes, Evidence: [][]byte{hostBytes, capabilityBytes}}, inputs: inputs, permittedProofDigest: permittedDigest, deniedProofDigest: deniedDigest}
+	return &promotionFixture{verifier: verifier, proofs: proofs, request: PromotionRequest{Plan: planBytes, Evidence: [][]byte{candidateReadyBytes, capabilityBytes, activeReadbackBytes}}, inputs: inputs, permittedProofDigest: permittedDigest, deniedProofDigest: deniedDigest}
 }
 
 func requiredPlan(verifier *Verifier, capabilityMode string) map[string]any {
@@ -553,7 +785,7 @@ func authorizationProof(verifier *Verifier, planDigest, capabilityID, capability
 	return map[string]any{
 		"contract": "bytedesk.authorization-decision-proof/1", "schema": schemaHeader(AuthorizationDecisionProofSchemaID, verifier.SchemaDigest(AuthorizationDecisionProofSchemaID)),
 		"proofId": "proof-" + capabilityID, "actor": "consumer_authorization_system", "planDigest": planDigest, "nonce": "canary-nonce-0001",
-		"consumerId": "consumer-01", "subjectId": "agent-01", "targetId": "target-01", "releaseDigest": digestC, "deploymentDigest": digestD,
+		"consumerId": "consumer-01", "subjectId": "agent-01", "targetId": "target-01", "candidateDigest": digestA, "releaseDigest": digestC, "deploymentDigest": digestD,
 		"capability":   map[string]any{"id": capabilityID, "digest": capabilityDigest},
 		"policyDigest": digestC, "grantSetDigest": digestD, "workloadIdentityDigest": digestE,
 		"decision":       map[string]any{"class": decisionClass, "code": decisionCode},
@@ -564,14 +796,38 @@ func authorizationProof(verifier *Verifier, planDigest, capabilityID, capability
 }
 
 func expectedHostChecks() map[string]any {
-	return map[string]any{"artifact_readback": "passed", "file_inventory": "passed", "slot_generation": "passed", "service_process": "passed", "resource_thresholds": "passed", "harness_readiness": "passed", "switch_marker": "passed"}
-}
-func hostResults() map[string]any {
-	result := map[string]any{}
-	for key := range expectedHostChecks() {
-		result[key] = map[string]any{"actual": "passed", "trace": trace()}
+	return map[string]any{
+		"candidate_ready": map[string]any{
+			"artifact_readback": "passed", "file_inventory": "passed", "slot_generation": "passed",
+			"service_process": "passed", "resource_thresholds": "passed", "harness_readiness": "passed",
+		},
+		"active_readback": map[string]any{
+			"switch_marker": "passed", "active_pointer": "passed", "file_inventory": "passed", "service_process": "passed",
+		},
 	}
-	return result
+}
+func candidateReadyResults() map[string]any {
+	return map[string]any{
+		"phase":               "candidate_ready",
+		"artifact_readback":   technicalResult("passed"),
+		"file_inventory":      technicalResult("passed"),
+		"slot_generation":     technicalResult("passed"),
+		"service_process":     technicalResult("passed"),
+		"resource_thresholds": technicalResult("passed"),
+		"harness_readiness":   technicalResult("passed"),
+	}
+}
+func activeReadbackResults() map[string]any {
+	return map[string]any{
+		"phase":           "active_readback",
+		"switch_marker":   technicalResult("passed"),
+		"active_pointer":  technicalResult("passed"),
+		"file_inventory":  technicalResult("passed"),
+		"service_process": technicalResult("passed"),
+	}
+}
+func technicalResult(actual string) map[string]any {
+	return map[string]any{"actual": actual, "trace": trace()}
 }
 func trace() map[string]any {
 	return map[string]any{"digest": digestA, "classification": "consumer-private"}
@@ -657,7 +913,23 @@ func assertErrorCode(t *testing.T, err error, expected ErrorCode) {
 	if !errors.As(err, &typed) || typed.Code != expected {
 		t.Fatalf("error=%v, want code %s", err, expected)
 	}
+	wantProblem, ok := StableProblemForErrorCode(expected)
+	if !ok {
+		t.Fatalf("test expected unmapped internal error code %q", expected)
+	}
+	if typed.ProblemCode != wantProblem {
+		t.Fatalf("error=%v has stable problem code %q, want %q", err, typed.ProblemCode, wantProblem)
+	}
 }
+
+func assertStableProblemCode(t *testing.T, err error, expected StableProblemCode) {
+	t.Helper()
+	var typed *VerificationError
+	if !errors.As(err, &typed) || typed.ProblemCode != expected {
+		t.Fatalf("error=%v, want stable problem code %s", err, expected)
+	}
+}
+
 func marshalJSON(t *testing.T, value any) []byte {
 	t.Helper()
 	payload, err := json.Marshal(value)
@@ -700,6 +972,20 @@ func deleteNestedJSON(t *testing.T, payload *[]byte, path []string) {
 	}
 	delete(current, path[len(path)-1])
 	*payload = marshalJSON(t, root)
+}
+
+func copyEvidenceResults(t *testing.T, target *[]byte, source []byte) {
+	t.Helper()
+	var targetRoot map[string]any
+	if err := json.Unmarshal(*target, &targetRoot); err != nil {
+		t.Fatal(err)
+	}
+	var sourceRoot map[string]any
+	if err := json.Unmarshal(source, &sourceRoot); err != nil {
+		t.Fatal(err)
+	}
+	targetRoot["results"] = sourceRoot["results"]
+	*target = marshalJSON(t, targetRoot)
 }
 
 type filesystemSchemaResolver struct{ root string }

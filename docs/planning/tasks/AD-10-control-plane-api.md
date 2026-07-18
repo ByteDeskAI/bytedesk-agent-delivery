@@ -96,6 +96,50 @@ Marketplace UI, a specific consumer's employee/profile API implementation, issui
 
 Blocked by AD-09 only.
 
+## Normative contracts and conformance
+
+- **Ports and operations.** `bytedesk.port.control-plane-api-events/1`
+  (`submit-command`, `read-resource`, `append-host-observation`,
+  `append-capability-evidence`, `subscribe-events`, `resynchronize-events`),
+  `bytedesk.port.catalog/1` (`list-catalog-releases`,
+  `resolve-catalog-release`, `fetch-catalog-object`),
+  `bytedesk.port.renderer-strategy/1` (`describe-capabilities`, `render`),
+  `bytedesk.port.consumer-projection/1` (`resolve-consumer-subject`,
+  `project-consumer-receipt`), and
+  `bytedesk.port.consumer-authority-approval/1`
+  (`verify-private-authority`) are registered in
+  `contracts/ports/v1/port-registry.json`. Exact field-value and closed
+  request/result schemas are distributed in
+  `contracts/ports/v1/type-catalog.json`; canonical valid and structural-denial
+  payloads are in `contracts/ports/v1/contract-fixtures.json`.
+- **Schemas, artifacts, and profiles.** Exact schema IDs include
+  `https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0`, and
+  `https://schemas.bytedesk.ai/agent-delivery/v1/observation/1.0.0`. Versioned
+  transport projections are `contracts/openapi/v1/agent-delivery.openapi.json`
+  and `contracts/asyncapi/v1/agent-delivery.asyncapi.json`; they are derived from
+  and drift-checked against the normative product and port schemas. Durable
+  action, problem, and event authority is in
+  `contracts/ports/v1/action-catalog.json`,
+  `contracts/ports/v1/problem-catalog.json`, and
+  `contracts/events/v1/event-types.json`. Authentication, pagination, and
+  idempotency profiles are in `contracts/ports/v1/protocol-profiles.json`.
+- **Conformance owner.** AD-10 owns HTTP/event topology, authentication,
+  conditional requests, idempotency, durable actions, stable problems,
+  pagination, replay/resync, generated-client drift, and compatibility fixtures.
+  Run `make verify-downstream-ports`; the task-specific suite is
+  `downstream.api-events.v1` in
+  `contracts/ports/v1/conformance-cases.json`. Execute the suite's exact harness
+  steps and closed oracles from `contracts/ports/v1/conformance-plan.json`;
+  schema-valid structural fixtures alone are not semantic implementation goldens.
+- **Boundary.** The API accepts intent and evidence but cannot bypass the
+  Promotion Coordinator, create consumer identity directly, or make an event a
+  desired-state/authorization source. Public results remain tenant-free; private
+  results are consumer-scoped and redacted.
+
 ## Architecture review amendments
 
 - Catalog responses derive from a signed content-addressed index; cached metadata is never deployment authority.

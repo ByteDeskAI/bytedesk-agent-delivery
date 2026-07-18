@@ -68,14 +68,49 @@ PINNED_VENDOR_FILES = {
     ),
 }
 EVENT_TYPE_ROOT_FIELDS = {
+    "$schema",
     "profile",
     "cloudEventsVersion",
     "delivery",
     "ordering",
     "authority",
     "eventTypes",
+    "registryCompatibility",
+    "resynchronization",
 }
-EVENT_TYPE_ENTRY_FIELDS = {"type", "aggregateType", "resourceSchemaId"}
+EVENT_TYPE_ENTRY_FIELDS = {
+    "type",
+    "aggregateType",
+    "resourceSchemaId",
+    "resourceSchemaDigest",
+    "resourceUriTemplate",
+    "resynchronizeOperationId",
+    "redaction",
+}
+EVENT_REGISTRY_COMPATIBILITY = (
+    "Event type, resource schema ID and digest, URI template, redaction class, and "
+    "resynchronization operation are immutable within v1."
+)
+EVENT_REGISTRY_RESYNCHRONIZATION = {
+    "authority": "authenticated-api-read",
+    "on": [
+        "unknown-event-type",
+        "unknown-schema-id-or-digest",
+        "aggregate-sequence-gap",
+        "etag-mismatch",
+    ],
+    "resumeAfter": "exact-resource-schema-and-etag-verified",
+}
+EVENT_REDACTION_CLASSES = {"consumer-private", "restricted"}
+AGENT_DELIVERY_EVENT_TYPE_ENUM = [
+    "ai.bytedesk.agent-delivery.installation.changed.v1",
+    "ai.bytedesk.agent-delivery.action.changed.v1",
+    "ai.bytedesk.agent-delivery.candidate.changed.v1",
+    "ai.bytedesk.agent-delivery.rollout.changed.v1",
+    "ai.bytedesk.agent-delivery.target-delivery-state.changed.v1",
+    "ai.bytedesk.agent-delivery.observation.appended.v1",
+    "ai.bytedesk.agent-delivery.receipt.appended.v1",
+]
 COMMAND_AUTHORIZATION_PROFILE = {
     "discriminator": "command",
     "publicPurposeCommands": ["source_validate", "render"],
@@ -102,6 +137,41 @@ OBSERVATION_CONDITIONAL_REQUEST_PROFILE = {
     "requiredValueFrom": "requestBody.desiredRevisionDigest",
     "valueEncoding": "quoted-strong-etag",
     "missingOrMismatch": "deny",
+}
+CAPABILITY_EVIDENCE_CONDITIONAL_REQUEST_PROFILE = {
+    "requiredHeader": "If-None-Match",
+    "requiredValue": "*",
+    "forbiddenHeader": "If-Match",
+    "missingOrMismatch": "deny",
+}
+CAPABILITY_EVIDENCE_AUTHORITY_PROFILE = {
+    "profile": "bytedesk.capability-evidence-intake/1",
+    "effect": "append-only-evidence",
+    "desiredStateWrite": False,
+    "promotionAuthority": False,
+    "capabilityGrantAuthority": False,
+    "absenceOrTransportFailureIsDenial": False,
+}
+TARGET_EVENT_SSE_PROFILE = {
+    "profile": "bytedesk.target-events-sse/1",
+    "itemMediaType": "application/cloudevents+json",
+    "delivery": "at-least-once",
+    "ordering": "per-aggregate-sequence",
+    "resumeHeader": "Last-Event-ID",
+    "eventId": "CloudEvent.id",
+    "heartbeat": "comment-frame",
+    "initialGap": "409-event_sequence_gap",
+    "streamGap": "close-and-resynchronize",
+    "resynchronizeOperationId": "resynchronizeTargetEvents",
+    "authority": "notification-only",
+    "durableActionDisconnect": "continues-until-terminal-or-explicit-cancel-command",
+}
+TARGET_EVENT_RESYNCHRONIZATION_PROFILE = {
+    "profile": "bytedesk.target-event-resynchronization/1",
+    "triggers": ["event_sequence_gap", "unknown_schema", "resume_token_rejected"],
+    "result": "authoritative-target-state-plus-sequence-and-resume-token",
+    "resume": "reconnect-watchTargetEvents-with-returned-token",
+    "authority": "read-only",
 }
 ACCEPTED_ACTION_HEADERS = {
     "ETag",
@@ -236,6 +306,34 @@ OPENAPI_OPERATION_TOPOLOGY = {
             "default": "#/components/responses/Problem",
         },
     },
+    ("/v1/targets/{targetId}/events", "get"): {
+        "operationId": "watchTargetEvents",
+        "security": [{"targetReconcilerBearer": []}],
+        "responses": {"200", "409", "default"},
+        "responseRefs": {
+            "200": "#/components/responses/TargetEventStream",
+            "409": "#/components/responses/Problem",
+            "default": "#/components/responses/Problem",
+        },
+    },
+    ("/v1/targets/{targetId}/events/resync", "get"): {
+        "operationId": "resynchronizeTargetEvents",
+        "security": [{"targetReconcilerBearer": []}],
+        "responses": {"200", "default"},
+        "responseRefs": {
+            "200": "#/components/responses/TargetEventResynchronization",
+            "default": "#/components/responses/Problem",
+        },
+    },
+    ("/v1/targets/{targetId}/capability-evidence", "post"): {
+        "operationId": "appendCapabilityEvidence",
+        "security": [{"capabilityVerifierMtls": []}],
+        "responses": {"201", "default"},
+        "responseRefs": {
+            "201": "#/components/responses/CapabilityEvidenceReceipt",
+            "default": "#/components/responses/Problem",
+        },
+    },
     ("/v1/targets/{targetId}/rollouts/{rolloutId}", "get"): {
         "operationId": "getRollout",
         "security": [{"consumerBearer": []}],
@@ -359,9 +457,31 @@ OPENAPI_OPERATION_INPUT_TOPOLOGY = {
         "parameters": [
             "#/components/parameters/TargetId",
             "#/components/parameters/IfNoneMatch",
+        ],
+        "requestSchema": None,
+    },
+    "watchTargetEvents": {
+        "parameters": [
+            "#/components/parameters/TargetId",
             "#/components/parameters/LastEventId",
         ],
         "requestSchema": None,
+    },
+    "resynchronizeTargetEvents": {
+        "parameters": [
+            "#/components/parameters/TargetId",
+            "#/components/parameters/KnownAggregateSequence",
+        ],
+        "requestSchema": None,
+    },
+    "appendCapabilityEvidence": {
+        "parameters": [
+            "#/components/parameters/TargetId",
+            "#/components/parameters/RequiredIfNoneMatch",
+            "#/components/parameters/IdempotencyKey",
+            "#/components/parameters/CanonicalRequestDigest",
+        ],
+        "requestSchema": "#/components/schemas/CapabilityEvidenceIntake",
     },
     "getRollout": {
         "parameters": [
@@ -467,11 +587,27 @@ OPENAPI_PARAMETER_COMPONENT_TOPOLOGY = {
         True,
         OPENAPI_DIGEST_SCHEMA,
     ),
+    "RequiredIfNoneMatch": (
+        "If-None-Match",
+        "header",
+        True,
+        {"const": "*"},
+    ),
+    "KnownAggregateSequence": (
+        "knownAggregateSequence",
+        "query",
+        True,
+        {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+        },
+    ),
     "LastEventId": (
         "Last-Event-ID",
         "header",
         False,
-        {"type": "string", "maxLength": 256},
+        {"type": "string", "minLength": 1, "maxLength": 256},
     ),
 }
 OPENAPI_HEADER_COMPONENT_TOPOLOGY = {
@@ -502,7 +638,7 @@ OPENAPI_SCHEMA_COMPONENT_TOPOLOGY = {
     "Action": (
         "../../schemas/v1/action.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0",
-        "sha256:7b751d842207e9d9fe9f3e88edf50abfcc6a5cfdeea1db3b73ae9344ce827b9f",
+        "sha256:ddf0e484b8d35195f984204e130c9f3e88b5e347581722437aa763e28b2c346a",
     ),
     "AgentSource": (
         "../../schemas/v1/agent-source.schema.json",
@@ -512,7 +648,7 @@ OPENAPI_SCHEMA_COMPONENT_TOPOLOGY = {
     "Candidate": (
         "../../schemas/v1/candidate.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0",
-        "sha256:009cf8bfacdc403752cb578a5c3896c2a88645ee93014ceed29da261efcfbea3",
+        "sha256:07964d57f89136a95950250c8790179a8765fd54788d81a7d1148d0cc8b8c2e5",
     ),
     "CatalogIndex": (
         "../../schemas/v1/catalog-index.schema.json",
@@ -522,22 +658,27 @@ OPENAPI_SCHEMA_COMPONENT_TOPOLOGY = {
     "CommandRequest": (
         "../../schemas/v1/command-request.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0",
-        "sha256:ef166e871e6bbe4ecef05907b1201e7962c5e93d29e61d996926f803fad40b6f",
+        "sha256:fdb077eb05d7943580f299461e91360c3630075e95bd68918e4bb600b5dd02fd",
+    ),
+    "EventDataEnvelope": (
+        "../../schemas/v1/event-data-envelope.schema.json",
+        EVENT_DATA_SCHEMA_ID,
+        "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243",
     ),
     "ConsumerDeployment": (
         "../../schemas/v1/consumer-deployment.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-deployment/1.0.0",
-        "sha256:60fb29bb8b8c3dd01056fc3b4bd35ca494c37ea40bb9451e9a99fb53e7a50e74",
+        "sha256:24c4e7aecf25d16cf7d3aa768fe09ca9508e6db667e0a282b95c9dd68370fea0",
     ),
     "DeploymentReceipt": (
         "../../schemas/v1/deployment-receipt.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0",
-        "sha256:8fac6eb977a10c0eb275f930e00c247b8cfaecab1e0e9b4751ca79c3272b879a",
+        "sha256:a32cd43cf6e566da849f23f0d0a8ef6cec269f60387b8d019bcdfece4c36bd1a",
     ),
     "HarnessRender": (
         "../../schemas/v1/harness-render.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0",
-        "sha256:55f6123e2913b52db2c9b6f8e944a4cb08a6f2202a2a6741b9a3a09d49cb5018",
+        "sha256:68fe1a718f9e5210c0ba4d10095f049983499243b69ae565a826155b949525cf",
     ),
     "Installation": (
         "../../schemas/v1/installation.schema.json",
@@ -552,38 +693,139 @@ OPENAPI_SCHEMA_COMPONENT_TOPOLOGY = {
     "ProblemDetails": (
         "../../schemas/v1/problem-details.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0",
-        "sha256:8da584af6e0f3d0d09a8ad356fbd81d2945f083a591cfd900d8bed8f95791bde",
+        "sha256:73c47dbc705fa5c7b19f51d012711ef5f9d82f67ef87defe7c751172767131b1",
     ),
     "RecoveryPlan": (
         "../../schemas/v1/recovery-plan.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/recovery-plan/1.0.0",
-        "sha256:94649f9d4fcb5e7dca3aaefd4a01f81f7fb6ec7ab8963b3c71184bc26688c1b1",
+        "sha256:15c95ed8c5f31982fe76e92bfef675830dcba98e4078261b961679e515c76829",
     ),
     "RendererRelease": (
         "../../schemas/v1/renderer-release.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-release/1.0.0",
-        "sha256:4742178bd53c03cc5ddf8d8049a97ad0018e5c465e0c3c99a127459c0d520c82",
+        "sha256:fec8fe534d7d51129cca211fa12583410c58bc47c9c1b90ec00b77299a64e80b",
     ),
     "Rollout": (
         "../../schemas/v1/rollout.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/rollout/1.0.0",
-        "sha256:1dfb93051147cf66884d788a19da4158bc579327c168297b2d1ebd07cffb7e36",
+        "sha256:a3fef06c3c2b3967279f4e572dfb0730dea1dac953d2e672d1bd8c2f146eb200",
     ),
     "Sha256Digest": (
         "../../schemas/v1/common.schema.json#/$defs/sha256",
         "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0",
-        "sha256:7e821fb269cccb656b897741c1c0dd27ea66249d92fed49f62526153bf543796",
+        "sha256:088eb2aa7604a5ae581595d931dd539ee84c0ce4d4b7413c5c4400619f3ebb4d",
     ),
     "TargetDeliveryState": (
         "../../schemas/v1/target-delivery-state.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0",
-        "sha256:126bc30d3dd0174be7b5e10261b0874955cad41a7a0d8d80edc68c7c51849cfc",
+        "sha256:5ea7f494cd955eb19f1a89c6e640ed963426b40eaf3eab42b6f58f446d7b64b6",
     ),
     "VerificationResult": (
         "../../schemas/v1/verification-result.schema.json",
         "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
-        "sha256:e7a125abfede2f5b71b10f72b03f9ac57ed61a5f5008ce8d3835c34b0314499f",
+        "sha256:0acdbdbfeb5c84af9ab26a32b9d5a5e49dba4a1dd45189ac1e82a635bb5ab9b6",
     ),
+}
+OPENAPI_PROTOCOL_SCHEMA_COMPONENT_TOPOLOGY = {
+    "AgentDeliveryCloudEvent": {
+        "type": "object",
+        "required": [
+            "specversion",
+            "id",
+            "source",
+            "type",
+            "subject",
+            "time",
+            "datacontenttype",
+            "dataschema",
+            "data",
+        ],
+        "properties": {
+            "specversion": {"const": "1.0"},
+            "id": {"type": "string", "minLength": 1, "maxLength": 256},
+            "source": {
+                "type": "string",
+                "format": "uri-reference",
+                "maxLength": 2048,
+            },
+            "type": {"type": "string", "enum": AGENT_DELIVERY_EVENT_TYPE_ENUM},
+            "subject": {"type": "string", "minLength": 1, "maxLength": 256},
+            "time": {"type": "string", "format": "date-time"},
+            "datacontenttype": {"const": "application/json"},
+            "dataschema": {"const": EVENT_DATA_SCHEMA_ID},
+            "data": {"$ref": "../../schemas/v1/event-data-envelope.schema.json"},
+        },
+        "additionalProperties": False,
+        "unevaluatedProperties": False,
+        "x-bytedesk-cloudevents-version": "1.0.2",
+        "x-bytedesk-data-schema-id": EVENT_DATA_SCHEMA_ID,
+        "x-bytedesk-data-schema-digest": (
+            "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243"
+        ),
+    },
+    "CapabilityEvidenceIntake": {
+        "type": "object",
+        "required": [
+            "verificationResult",
+            "dispatchNonce",
+            "authorizationDecisionDigest",
+        ],
+        "properties": {
+            "verificationResult": {
+                "$ref": "../../schemas/v1/verification-result.schema.json"
+            },
+            "dispatchNonce": {
+                "$ref": "../../schemas/v1/common.schema.json#/$defs/nonce"
+            },
+            "authorizationDecisionDigest": {
+                "$ref": "../../schemas/v1/common.schema.json#/$defs/sha256"
+            },
+        },
+        "additionalProperties": False,
+        "unevaluatedProperties": False,
+        "x-bytedesk-port-contract": (
+            "bytedesk.port.control-plane-api-events."
+            "append-capability-evidence.request/1"
+        ),
+    },
+    "CapabilityEvidenceReceipt": {
+        "type": "object",
+        "required": ["evidenceDigest", "acceptedAt"],
+        "properties": {
+            "evidenceDigest": {
+                "$ref": "../../schemas/v1/common.schema.json#/$defs/sha256"
+            },
+            "acceptedAt": {
+                "$ref": "../../schemas/v1/common.schema.json#/$defs/timestamp"
+            },
+        },
+        "additionalProperties": False,
+        "unevaluatedProperties": False,
+        "x-bytedesk-port-contract": (
+            "bytedesk.port.control-plane-api-events."
+            "append-capability-evidence.result/1"
+        ),
+    },
+    "TargetEventResynchronization": {
+        "type": "object",
+        "required": ["targetState", "aggregateSequence", "resumeToken"],
+        "properties": {
+            "targetState": {
+                "$ref": "../../schemas/v1/target-delivery-state.schema.json"
+            },
+            "aggregateSequence": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+            },
+            "resumeToken": {"type": "string", "minLength": 1, "maxLength": 256},
+        },
+        "additionalProperties": False,
+        "unevaluatedProperties": False,
+        "x-bytedesk-port-contract": (
+            "bytedesk.port.control-plane-api-events.resynchronize-events.result/1"
+        ),
+    },
 }
 OPENAPI_RESPONSE_COMPONENT_TOPOLOGY = {
     name: (
@@ -627,8 +869,27 @@ OPENAPI_RESPONSE_COMPONENT_TOPOLOGY.update(
             "#/components/schemas/ProblemDetails",
             {},
         ),
+        "CapabilityEvidenceReceipt": (
+            "application/json",
+            "#/components/schemas/CapabilityEvidenceReceipt",
+            {"ETag": {"$ref": "#/components/headers/ETag"}},
+        ),
+        "TargetEventResynchronization": (
+            "application/json",
+            "#/components/schemas/TargetEventResynchronization",
+            {"ETag": {"$ref": "#/components/headers/ETag"}},
+        ),
     }
 )
+OPENAPI_SPECIAL_RESPONSE_COMPONENT_TOPOLOGY = {
+    "TargetEventStream": {
+        "content": {
+            "text/event-stream": {
+                "itemSchema": {"$ref": "#/components/schemas/AgentDeliveryCloudEvent"}
+            }
+        }
+    }
+}
 OPENAPI_SECURITY_SCHEME_TOPOLOGY = {
     "consumerBearer": {
         "type": "http",
@@ -636,6 +897,7 @@ OPENAPI_SECURITY_SCHEME_TOPOLOGY = {
         "bearerFormat": "consumer-issued short-lived sender-bound token",
     },
     "targetReconcilerBearer": {"type": "mutualTLS"},
+    "capabilityVerifierMtls": {"type": "mutualTLS"},
 }
 OPENAPI_SERVER_TOPOLOGY = [
     {
@@ -704,15 +966,7 @@ ASYNCAPI_SCHEMA_COMPONENT_TOPOLOGY = {
         "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243",
     )
 }
-ASYNCAPI_EVENT_TYPE_ENUM = [
-    "ai.bytedesk.agent-delivery.installation.changed.v1",
-    "ai.bytedesk.agent-delivery.action.changed.v1",
-    "ai.bytedesk.agent-delivery.candidate.changed.v1",
-    "ai.bytedesk.agent-delivery.rollout.changed.v1",
-    "ai.bytedesk.agent-delivery.target-delivery-state.changed.v1",
-    "ai.bytedesk.agent-delivery.observation.appended.v1",
-    "ai.bytedesk.agent-delivery.receipt.appended.v1",
-]
+ASYNCAPI_EVENT_TYPE_ENUM = AGENT_DELIVERY_EVENT_TYPE_ENUM
 ASYNCAPI_MESSAGE_COMPONENT_TOPOLOGY = {
     "AgentDeliveryNotification": {
         "name": "AgentDeliveryNotification",
@@ -905,9 +1159,11 @@ def check_schema_component_topology(
     components: Any,
     expected: dict[str, tuple[str, str, str]],
     projection_name: str,
+    additional_names: set[str] | None = None,
 ) -> None:
     schemas = components.get("schemas") if isinstance(components, dict) else None
-    if not isinstance(schemas, dict) or set(schemas) != set(expected):
+    expected_names = set(expected) | (additional_names or set())
+    if not isinstance(schemas, dict) or set(schemas) != expected_names:
         raise ContractToolError(f"{projection_name} schema component topology drift")
     for name, (reference, schema_id, schema_digest) in expected.items():
         if schemas[name] != {
@@ -932,8 +1188,23 @@ def check_openapi_component_topology(components: Any) -> None:
     }:
         raise ContractToolError("OpenAPI component topology drift")
     check_schema_component_topology(
-        components, OPENAPI_SCHEMA_COMPONENT_TOPOLOGY, "OpenAPI"
+        components,
+        OPENAPI_SCHEMA_COMPONENT_TOPOLOGY,
+        "OpenAPI",
+        set(OPENAPI_PROTOCOL_SCHEMA_COMPONENT_TOPOLOGY),
     )
+    schemas = components["schemas"]
+    for name, expected in OPENAPI_PROTOCOL_SCHEMA_COMPONENT_TOPOLOGY.items():
+        schema = schemas[name]
+        semantic_fields = (
+            {key: value for key, value in schema.items() if key != "description"}
+            if isinstance(schema, dict)
+            else None
+        )
+        if semantic_fields != expected:
+            raise ContractToolError(
+                f"OpenAPI protocol schema component topology drift for {name}"
+            )
 
     parameters = components.get("parameters")
     if not isinstance(parameters, dict) or set(parameters) != set(
@@ -977,9 +1248,10 @@ def check_openapi_component_topology(components: Any) -> None:
             raise ContractToolError(f"OpenAPI header component topology drift for {name}")
 
     responses = components.get("responses")
-    if not isinstance(responses, dict) or set(responses) != set(
-        OPENAPI_RESPONSE_COMPONENT_TOPOLOGY
-    ):
+    expected_response_names = set(OPENAPI_RESPONSE_COMPONENT_TOPOLOGY) | set(
+        OPENAPI_SPECIAL_RESPONSE_COMPONENT_TOPOLOGY
+    )
+    if not isinstance(responses, dict) or set(responses) != expected_response_names:
         raise ContractToolError("OpenAPI response component topology drift")
     for name, (media_type, schema_reference, response_headers) in (
         OPENAPI_RESPONSE_COMPONENT_TOPOLOGY.items()
@@ -999,6 +1271,17 @@ def check_openapi_component_topology(components: Any) -> None:
         }
         if response_headers:
             expected_fields["headers"] = response_headers
+        if semantic_fields != expected_fields:
+            raise ContractToolError(
+                f"OpenAPI response component topology drift for {name}"
+            )
+    for name, expected_fields in OPENAPI_SPECIAL_RESPONSE_COMPONENT_TOPOLOGY.items():
+        response = responses[name]
+        semantic_fields = (
+            {key: value for key, value in response.items() if key != "description"}
+            if isinstance(response, dict)
+            else None
+        )
         if semantic_fields != expected_fields:
             raise ContractToolError(
                 f"OpenAPI response component topology drift for {name}"
@@ -1124,6 +1407,26 @@ def check_openapi_topology(document: Any) -> None:
                 allowed_operation_fields.update(
                     {"requestBody", "x-bytedesk-conditional-request"}
                 )
+            elif expected["operationId"] == "appendCapabilityEvidence":
+                allowed_operation_fields.update(
+                    {
+                        "requestBody",
+                        "x-bytedesk-port-operation",
+                        "x-bytedesk-authority",
+                        "x-bytedesk-conditional-request",
+                    }
+                )
+            elif expected["operationId"] == "watchTargetEvents":
+                allowed_operation_fields.update(
+                    {"x-bytedesk-port-operations", "x-bytedesk-sse"}
+                )
+            elif expected["operationId"] == "resynchronizeTargetEvents":
+                allowed_operation_fields.update(
+                    {
+                        "x-bytedesk-port-operations",
+                        "x-bytedesk-resynchronization",
+                    }
+                )
             if set(operation) - allowed_operation_fields:
                 raise ContractToolError(
                     f"OpenAPI operation semantic topology drift for {expected['operationId']}"
@@ -1183,6 +1486,76 @@ def check_openapi_topology(document: Any) -> None:
                         f"OpenAPI operation response topology drift for "
                         f"{expected['operationId']} status 304"
                     )
+            if expected["operationId"] == "watchTargetEvents":
+                if operation.get("x-bytedesk-port-operations") != [
+                    "bytedesk.port.desired-state-store/1#watch-target-state",
+                    "bytedesk.port.control-plane-api-events/1#subscribe-events",
+                ]:
+                    raise ContractToolError(
+                        "OpenAPI target event watch port binding drift"
+                    )
+                if operation.get("x-bytedesk-sse") != TARGET_EVENT_SSE_PROFILE:
+                    raise ContractToolError("OpenAPI target event SSE profile drift")
+            if expected["operationId"] == "resynchronizeTargetEvents":
+                if operation.get("x-bytedesk-port-operations") != [
+                    "bytedesk.port.desired-state-store/1#read-target-state",
+                    "bytedesk.port.control-plane-api-events/1#resynchronize-events",
+                ]:
+                    raise ContractToolError(
+                        "OpenAPI target event resynchronization port binding drift"
+                    )
+                if (
+                    operation.get("x-bytedesk-resynchronization")
+                    != TARGET_EVENT_RESYNCHRONIZATION_PROFILE
+                ):
+                    raise ContractToolError(
+                        "OpenAPI target event resynchronization profile drift"
+                    )
+            if expected["operationId"] == "appendCapabilityEvidence":
+                if operation.get("x-bytedesk-port-operation") != (
+                    "bytedesk.port.control-plane-api-events/1#"
+                    "append-capability-evidence"
+                ):
+                    raise ContractToolError(
+                        "OpenAPI capability evidence port binding drift"
+                    )
+                if (
+                    operation.get("x-bytedesk-authority")
+                    != CAPABILITY_EVIDENCE_AUTHORITY_PROFILE
+                ):
+                    raise ContractToolError(
+                        "OpenAPI capability evidence authority boundary drift"
+                    )
+                if (
+                    operation.get("x-bytedesk-conditional-request")
+                    != CAPABILITY_EVIDENCE_CONDITIONAL_REQUEST_PROFILE
+                ):
+                    raise ContractToolError(
+                        "OpenAPI capability evidence conditional request drift"
+                    )
+
+    last_event_uses = [
+        (path, method)
+        for (path, method), expected in OPENAPI_OPERATION_TOPOLOGY.items()
+        if {"$ref": "#/components/parameters/LastEventId"}
+        in document["paths"][path][method].get("parameters", [])
+    ]
+    if last_event_uses != [("/v1/targets/{targetId}/events", "get")]:
+        raise ContractToolError(
+            "OpenAPI Last-Event-ID is not exclusive to the authenticated SSE watch"
+        )
+    capability_verifier_uses = [
+        (path, method)
+        for (path, method), expected in OPENAPI_OPERATION_TOPOLOGY.items()
+        if {"capabilityVerifierMtls": []}
+        in document["paths"][path][method].get("security", [])
+    ]
+    if capability_verifier_uses != [
+        ("/v1/targets/{targetId}/capability-evidence", "post")
+    ]:
+        raise ContractToolError(
+            "OpenAPI capability verifier mTLS identity is not intake-only"
+        )
 
     components = document.get("components")
     check_openapi_component_topology(components)
@@ -1554,12 +1927,14 @@ def check_schema_projection_digests(
     document_path: Path,
     document: Any,
     expected_topology: dict[str, tuple[str, str, str]],
+    additional_names: set[str] | None = None,
 ) -> dict[str, dict[str, str]]:
     components = document.get("components", {})
     schemas = components.get("schemas", {})
     if not isinstance(schemas, dict) or not schemas:
         raise ContractToolError(f"{repository_path(document_path)} has no schema projections")
-    if set(schemas) != set(expected_topology):
+    expected_names = set(expected_topology) | (additional_names or set())
+    if set(schemas) != expected_names:
         raise ContractToolError(
             f"{repository_path(document_path)} schema component topology drift"
         )
@@ -1725,10 +2100,30 @@ def check_openapi(path: Path) -> dict[str, Any]:
                     raise ContractToolError(
                         "appendObservation must require only the exact If-Match condition"
                     )
+            if operation_id == "appendCapabilityEvidence":
+                if operation.get("security") != [{"capabilityVerifierMtls": []}]:
+                    raise ContractToolError(
+                        "appendCapabilityEvidence must require capabilityVerifierMtls"
+                    )
+                if set(header_parameters).intersection(
+                    {"If-Match", "If-None-Match"}
+                ) != {"If-None-Match"} or header_parameters[
+                    "If-None-Match"
+                ].get(
+                    "schema"
+                ) != {
+                    "const": "*"
+                }:
+                    raise ContractToolError(
+                        "appendCapabilityEvidence must require create-only If-None-Match star"
+                    )
     referenced = check_references(path, document)
     header_object_count = check_openapi_headers(path, document)
     schema_components = check_schema_projection_digests(
-        path, document, OPENAPI_SCHEMA_COMPONENT_TOPOLOGY
+        path,
+        document,
+        OPENAPI_SCHEMA_COMPONENT_TOPOLOGY,
+        set(OPENAPI_PROTOCOL_SCHEMA_COMPONENT_TOPOLOGY),
     )
     return {
         "path": repository_path(path),
@@ -1811,11 +2206,15 @@ def validate_event_type_registry(document: Any) -> dict[str, dict[str, Any]]:
         raise ContractToolError(f"event type registry root lacks fields: {missing}")
     event_type_entries = document["eventTypes"]
     if (
-        document["profile"] != "bytedesk.event-types/1"
+        document["$schema"]
+        != "https://schemas.bytedesk.ai/agent-delivery/v1/event-types/1.0.0"
+        or document["profile"] != "bytedesk.event-types/1"
         or document["cloudEventsVersion"] != "1.0.2"
         or document["delivery"] != "at-least-once"
         or document["ordering"] != "per-aggregate-sequence"
         or document["authority"] != "notification-only"
+        or document["registryCompatibility"] != EVENT_REGISTRY_COMPATIBILITY
+        or document["resynchronization"] != EVENT_REGISTRY_RESYNCHRONIZATION
         or not isinstance(event_type_entries, list)
         or not event_type_entries
     ):
@@ -1830,27 +2229,145 @@ def validate_event_type_registry(document: Any) -> dict[str, dict[str, Any]]:
             )
         if not all(isinstance(entry[key], str) and entry[key] for key in EVENT_TYPE_ENTRY_FIELDS):
             raise ContractToolError("event type registry entry is malformed")
+        if entry["redaction"] not in EVENT_REDACTION_CLASSES:
+            raise ContractToolError(
+                f"event type registry has unknown redaction class: {entry['type']}"
+            )
         if entry["type"] in event_types:
             raise ContractToolError(f"duplicate event type: {entry['type']}")
         event_types[entry["type"]] = entry
     return event_types
 
 
+def resource_uri_matches_template(template: str, uri: str) -> bool:
+    if not template.startswith("/v1/") or not uri.startswith("/v1/"):
+        return False
+    template_segments = template.strip("/").split("/")
+    resource_segments = uri.strip("/").split("/")
+    if len(template_segments) != len(resource_segments):
+        return False
+    for template_segment, resource_segment in zip(
+        template_segments, resource_segments, strict=True
+    ):
+        if template_segment.startswith("{") and template_segment.endswith("}"):
+            parameter_name = template_segment[1:-1]
+            if not parameter_name or not re.fullmatch(
+                r"[A-Za-z][A-Za-z0-9]*", parameter_name
+            ):
+                return False
+            if not re.fullmatch(OPENAPI_IDENTIFIER_PATTERN, resource_segment):
+                return False
+        elif template_segment != resource_segment:
+            return False
+    return True
+
+
+def openapi_json_response_schema_descriptor(
+    document: dict[str, Any], operation: dict[str, Any], operation_id: str
+) -> dict[str, str]:
+    try:
+        response_ref = operation["responses"]["200"]["$ref"]
+        if not isinstance(response_ref, str) or not response_ref.startswith(
+            "#/components/responses/"
+        ):
+            raise KeyError("response reference")
+        response_name = response_ref.removeprefix("#/components/responses/")
+        response = document["components"]["responses"][response_name]
+        schema_ref = response["content"]["application/json"]["schema"]["$ref"]
+        if not isinstance(schema_ref, str) or not schema_ref.startswith(
+            "#/components/schemas/"
+        ):
+            raise KeyError("schema reference")
+        schema_name = schema_ref.removeprefix("#/components/schemas/")
+        projection = document["components"]["schemas"][schema_name]
+        schema_id = projection["x-bytedesk-schema-id"]
+        schema_digest = projection["x-bytedesk-schema-digest"]
+    except (KeyError, TypeError) as error:
+        raise ContractToolError(
+            f"event resynchronization operation has no exact JSON schema: {operation_id}"
+        ) from error
+    if not isinstance(schema_id, str) or not isinstance(schema_digest, str):
+        raise ContractToolError(
+            f"event resynchronization operation has no exact JSON schema: {operation_id}"
+        )
+    return {"id": schema_id, "digest": schema_digest}
+
+
+def check_event_registry_bindings(
+    event_types_document: Any, openapi_document: Any
+) -> dict[str, dict[str, Any]]:
+    event_types = validate_event_type_registry(event_types_document)
+    if not isinstance(openapi_document, dict) or not isinstance(
+        openapi_document.get("paths"), dict
+    ):
+        raise ContractToolError("OpenAPI projection has no paths for event resynchronization")
+    known_schema_digests: dict[str, str] = {}
+    for schema_path in sorted(SCHEMAS_ROOT.glob("*.schema.json")):
+        schema = load_json(schema_path)
+        schema_id = schema.get("$id") if isinstance(schema, dict) else None
+        if not isinstance(schema_id, str) or schema_id in known_schema_digests:
+            raise ContractToolError(
+                f"invalid or duplicate live schema identity: {repository_path(schema_path)}"
+            )
+        known_schema_digests[schema_id] = canonical_digest(schema)
+    get_operations: dict[str, tuple[str, dict[str, Any]]] = {}
+    for template, path_item in openapi_document["paths"].items():
+        operation = path_item.get("get") if isinstance(path_item, dict) else None
+        operation_id = operation.get("operationId") if isinstance(operation, dict) else None
+        if isinstance(operation_id, str):
+            if operation_id in get_operations:
+                raise ContractToolError(
+                    f"duplicate OpenAPI GET operationId: {operation_id}"
+                )
+            get_operations[operation_id] = (template, operation)
+    for entry in event_types.values():
+        schema_id = entry["resourceSchemaId"]
+        expected_digest = known_schema_digests.get(schema_id)
+        if expected_digest is None:
+            raise ContractToolError(
+                f"event type references unknown resource schema: {schema_id}"
+            )
+        if entry["resourceSchemaDigest"] != expected_digest:
+            raise ContractToolError(
+                f"event type resource schema digest drift: {entry['type']}"
+            )
+        operation_binding = get_operations.get(entry["resynchronizeOperationId"])
+        if operation_binding is None:
+            raise ContractToolError(
+                f"event type references unknown resynchronization operation: {entry['type']}"
+            )
+        template, operation = operation_binding
+        if template != entry["resourceUriTemplate"]:
+            raise ContractToolError(
+                f"event type resource URI template drift: {entry['type']}"
+            )
+        if not operation.get("security"):
+            raise ContractToolError(
+                f"event resynchronization operation is not authenticated: {entry['type']}"
+            )
+        descriptor = openapi_json_response_schema_descriptor(
+            openapi_document, operation, entry["resynchronizeOperationId"]
+        )
+        if descriptor != {
+            "id": entry["resourceSchemaId"],
+            "digest": entry["resourceSchemaDigest"],
+        }:
+            raise ContractToolError(
+                f"event resynchronization operation schema drift: {entry['type']}"
+            )
+    return event_types
+
+
 def check_event_examples() -> dict[str, Any]:
     event_types_document = load_json(EVENT_TYPES_PATH)
-    event_types = validate_event_type_registry(event_types_document)
+    openapi_document = load_json(OPENAPI_PATH)
+    event_types = check_event_registry_bindings(
+        event_types_document, openapi_document
+    )
 
     registry, schemas = build_registry()
     event_schema = schemas[EVENT_DATA_SCHEMA_ID][1]
     event_schema_digest = canonical_digest(event_schema)
-    known_schema_digests = {
-        schema_id: canonical_digest(schema) for schema_id, (_, schema) in schemas.items()
-    }
-    for entry in event_types.values():
-        if entry["resourceSchemaId"] not in known_schema_digests:
-            raise ContractToolError(
-                f"event type references unknown resource schema: {entry['resourceSchemaId']}"
-            )
 
     example_paths = sorted(EVENT_EXAMPLES_ROOT.glob("*.json"))
     if not example_paths:
@@ -1869,9 +2386,6 @@ def check_event_examples() -> dict[str, Any]:
     results: list[dict[str, Any]] = []
     observed_event_types: set[str] = set()
     observed_event_ids: set[str] = set()
-    api_paths = load_json(OPENAPI_PATH).get("paths", {})
-    if not isinstance(api_paths, dict):
-        raise ContractToolError("OpenAPI projection has no paths for event resynchronization")
     for path in example_paths:
         event = load_json(path)
         if not isinstance(event, dict) or set(event) != required:
@@ -1907,39 +2421,31 @@ def check_event_examples() -> dict[str, Any]:
             raise ContractToolError(f"CloudEvent outer/data type mismatch: {path.name}")
         if data["aggregate"]["type"] != event_type["aggregateType"]:
             raise ContractToolError(f"CloudEvent aggregate type mismatch: {path.name}")
+        if data["redaction"] != event_type["redaction"]:
+            raise ContractToolError(
+                f"CloudEvent redaction class differs from registry: {path.name}"
+            )
         if data["resource"]["etag"] != data["aggregate"]["revisionDigest"]:
             raise ContractToolError(f"CloudEvent resource ETag/revision mismatch: {path.name}")
         projection = data["resource"]["projectionSchema"]
-        expected_projection_id = event_type["resourceSchemaId"]
         if projection != {
-            "id": expected_projection_id,
-            "digest": known_schema_digests[expected_projection_id],
+            "id": event_type["resourceSchemaId"],
+            "digest": event_type["resourceSchemaDigest"],
         }:
             raise ContractToolError(f"CloudEvent resource projection descriptor is stale: {path.name}")
-        resource_segments = data["resource"]["uri"].strip("/").split("/")
-        matching_get_paths = [
-            template
-            for template, item in api_paths.items()
-            if isinstance(item, dict)
-            and "get" in item
-            and len(template.strip("/").split("/")) == len(resource_segments)
-            and all(
-                template_segment == resource_segment
-                or (template_segment.startswith("{") and template_segment.endswith("}"))
-                for template_segment, resource_segment in zip(
-                    template.strip("/").split("/"), resource_segments, strict=True
-                )
-            )
-        ]
-        if len(matching_get_paths) != 1:
+        if not resource_uri_matches_template(
+            event_type["resourceUriTemplate"], data["resource"]["uri"]
+        ):
             raise ContractToolError(
-                f"CloudEvent resource URI has no unique authoritative GET projection: {path.name}"
+                f"CloudEvent resource URI does not match registered template: {path.name}"
             )
         results.append(
             {
                 "path": repository_path(path),
                 "type": event["type"],
                 "sequence": data["aggregate"]["sequence"],
+                "resynchronizeOperationId": event_type["resynchronizeOperationId"],
+                "redaction": event_type["redaction"],
             }
         )
     if observed_event_types != set(event_types):

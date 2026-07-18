@@ -1,0 +1,25 @@
+{
+  "contract": "bytedesk.renderer-attempt-authority/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-attempt-authority/1.0.0",
+    "digest": "sha256:816b295d1e71efb62b9a299c5162efcab87a1e6dd4403762eb4d47751a7f8c68"
+  },
+  "attemptId": "render-attempt-1",
+  "attemptFencingToken": 7,
+  "rendererSelectionDigest": "sha256:7b1ba66ff1e6b7c4584556b01037687a343c948e439cd63e752f9bbfb8c46798",
+  "portableDefinitionDigest": "sha256:27efe2ec9eb9fc3c0553b9b9297a092cfb621d64b720041cbbdfe96ea93e6037",
+  "inputTreeDigest": "sha256:4daf1c241b8f4de37c572e9bc4f32fdf0218271adf4435ff37860d741dfb308b",
+  "contractBundleDigest": "sha256:245d144e29abd3cc8023a43a6cd8366484ffd8550311cce18d42282d8b46d7c2",
+  "sandboxProfileDigest": "sha256:dc60666c14291e7ae180c07e8022220044a36920b79268ef4210971965194539",
+  "issuerIdentityDigest": "sha256:b078f55271950b878e639f9eea7f9c34d5b9a15477704d775e602ef51a5a2654",
+  "issuedAt": "2026-07-17T12:00:04Z",
+  "expiresAt": "2026-07-17T12:05:00Z",
+  "authorityDigest": "sha256:544f36d29713de5152dfecfe224a74e004b6f2f531121108fe3ed929badefc78",
+  "framedRequestDigest": "sha256:95315f23ef192a9840294d4d6d997eb4039e88be36e20a00cc4776cdf1fa0c89",
+  "productReleaseStatusCheckpointDigest": "sha256:b7addde70a21f2497cddb4676a5904f66bcf0ad8091ef845893adcf99612b1ca",
+  "productReleaseStatusCheckpointAuthenticationEvidenceDigest": "sha256:bebd02e43a93b05f5ef42ca4c099e09188e81da48a9391db1adb45295dc4854f",
+  "productReleaseStatusRequestNonce": "status_head_nonce_product-release-status-head-epoch-2_0123456789abcdef",
+  "rendererReleaseStatusCheckpointDigest": "sha256:a48b871fa3a2fb0e5e26f57816f1f0a94b5120da3ee71d975ca3e228e304dca0",
+  "rendererReleaseStatusCheckpointAuthenticationEvidenceDigest": "sha256:87b115f57cae7e8a6baab8dd523b31d6b261b0c6e606d56de47362b7ca758b4a",
+  "rendererReleaseStatusRequestNonce": "status_head_nonce_renderer-native-1_0_0-status-head-refresh_0123456789abcdef"
+}

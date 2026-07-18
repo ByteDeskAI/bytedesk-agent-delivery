@@ -23,8 +23,10 @@ def main() -> int:
     args = parser.parse_args()
 
     request = load_json(args.request)
-    if request.get("purpose") != "product-release-v1":
-        raise ContractToolError("test signer accepts only product-release-v1 test requests")
+    if request.get("purpose") != "contract-bundle-release-v1":
+        raise ContractToolError(
+            "test signer accepts only contract-bundle-release-v1 test requests"
+        )
     request_bytes = canonical_json(request)
     private_key = ec.generate_private_key(ec.SECP256R1())
     signature = private_key.sign(request_bytes, ec.ECDSA(hashes.SHA256()))

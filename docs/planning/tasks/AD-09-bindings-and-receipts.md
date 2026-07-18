@@ -22,7 +22,12 @@ Agent Delivery owns delivery lineage and evidence. A consuming platform remains 
 - OCI and trust contracts from AD-07 and AD-08.
 - Machine-contract, renderer-identity, consumer-authority/private-signing, and
   delivery-lifecycle schemas from CONTRACTS-FROZEN.
-- Historical ByteDesk `AgentOrgProfile`, `HermesEngine`, `AgentDeploymentRevision`, observation, audit, outbox, and identity behavior as reference-consumer compatibility constraints only.
+- An exact `bytedesk.external-input-lock/1` artifact for the ByteDesk
+  `AgentOrgProfile`, `HermesEngine`, `AgentDeploymentRevision`, observation,
+  audit, outbox, and identity behavior used as reference-consumer compatibility
+  evidence. The lock binds repository URL, immutable commit, source-tree digest,
+  sorted path/digest inventory, and `compatibilityEvidenceOnly: true`; no
+  consumer-specific model becomes core contract authority.
 
 ## Required work
 
@@ -35,7 +40,11 @@ Agent Delivery owns delivery lineage and evidence. A consuming platform remains 
    records with purpose, consumer/subject/installation/target/candidate/desired
    revision, nonce, issue/expiry, policy, and current opaque subdigest binding.
    Credential values and authority subdocuments never enter the store.
-4. Define adapter compatibility for consumers with existing deployment records. The ByteDesk Platform adapter must evolve/project through its existing `AgentDeploymentRevision`; it must not add a duplicate receipt table or retroactively label legacy payloads as verified OCI artifacts.
+4. Define adapter compatibility for consumers with preexisting deployment
+   records. The ByteDesk Platform adapter may evolve/project through only the
+   exact `AgentDeploymentRevision` behavior named by the accepted external-input
+   lock; it must not add a duplicate receipt table or retroactively label legacy
+   payloads as verified OCI artifacts.
 5. Enforce one active definition binding per installation, consumer subject, harness, and target scope without deleting history.
 6. Model installation, candidate preparation, target rollout, host-attempt,
    slot/generation, observation, and receipt facts as separate schemas and
@@ -50,6 +59,10 @@ Agent Delivery owns delivery lineage and evidence. A consuming platform remains 
 10. Add append-only receipts that bind schema/trust/renderer/authority/canary
     evidence and distinguish current predecessor from historical
     `recoverySource`. No receipt or observation can promote itself.
+11. Resolve complete consumer-authority and skill-approval objects plus their
+    exact descriptors and full signing results. Persist the closed sorted
+    private-input authentication bundle used by AD-13; a bare digest or
+    repository-name classification cannot authenticate a private input.
 
 ## Outputs
 
@@ -74,7 +87,12 @@ Agent Delivery owns delivery lineage and evidence. A consuming platform remains 
 - Renderer semantic version alone is never accepted; binding and receipt
   lineage preserve the exact release manifest and executed product identity.
 - Fresh authority evidence is separately required for compile, activate, and
-  recover operations; a compilation snapshot cannot authorize activation.
+  recover operations. Compile authority signs the complete AD-13 authorized
+  private-input digest; that field is forbidden on activate and recover, and a
+  compilation snapshot cannot authorize either operation.
+- Every private input's role, subject, media type, descriptor, trust policy, and
+  complete signing result are reconstructible from the persisted
+  authentication bundle; missing or mismatched objects fail before compile.
 - There is one desired-state aggregate and one logical writer per target. Store
   migration is quiesced and audited; live dual writing is forbidden.
 - History is append-only. Recovery creates a new forward revision with current
@@ -91,7 +109,12 @@ bundle, strict operation, source-kind, absent/match/ABA, exhaustive legal/
 illegal lifecycle, authority freshness/nonce/replay/cross-consumer, exact
 renderer identity, idempotency, managed/consumer-native store, no-dual-write
 migration, observation non-authority, retention, isolation, redaction, and
-historical-reference-adapter compatibility tests.
+  historical-reference-adapter compatibility tests. Consumer-authority tests
+  include compile-only signed authorized-input-digest presence, mismatch,
+  non-compile smuggling, and denied-verification-without-success-result cases.
+  They also include missing authority/approval objects, signing-result
+  substitution, role/media mismatch, and repository-prefix classification
+  denial.
 
 ## Not in scope
 
@@ -101,11 +124,54 @@ Catalog APIs, consumer organizational-profile creation, authorization/grant admi
 
 Blocked by AD-01 and AD-08.
 
+## Normative contracts and conformance
+
+- **Ports and operations.** `bytedesk.port.consumer-authority-approval/1`
+  (`resolve-authority-snapshot`, `resolve-skill-approval`,
+  `verify-private-authority`), `bytedesk.port.consumer-projection/1`
+  (`resolve-consumer-subject`, `project-consumer-receipt`), and
+  `bytedesk.port.desired-state-store/1` (`read-target-state`,
+  `watch-target-state`, `compare-and-swap-target-state`, `resolve-idempotency`,
+  `read-target-history`, `migrate-target-state`) are registered in
+  `contracts/ports/v1/port-registry.json`. Exact field-value and closed
+  request/result schemas are distributed in
+  `contracts/ports/v1/type-catalog.json`; canonical valid and structural-denial
+  payloads are in `contracts/ports/v1/contract-fixtures.json`.
+- **Schemas, artifacts, and profiles.** Exact schema IDs include
+  `https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/consumer-authority/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/skill-approval/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/desired-state-store-receipt/1.0.0`,
+  and
+  `https://schemas.bytedesk.ai/agent-delivery/v1/desired-state-store-migration/1.0.0`,
+  under `contracts/schemas/v1/`. Managed/consumer-native store, projection,
+  authority, approval, migration, and external-input-lock profiles are in
+  `contracts/ports/v1/protocol-profiles.json`.
+- **Conformance owner.** AD-09 owns aggregate persistence, absent/match CAS,
+  authority/approval evidence, no-duplicate-receipt projection, both
+  DesiredStateStore variants, and quiesced migration fixtures. Run
+  `make verify-downstream-ports`; the task-specific suite is
+  `downstream.consumer-state.v1` in
+  `contracts/ports/v1/conformance-cases.json`. Execute the suite's exact harness
+  steps and closed oracles from `contracts/ports/v1/conformance-plan.json`;
+  schema-valid structural fixtures alone are not semantic implementation goldens.
+- **Boundary.** Agent Delivery stores delivery lineage and opaque signed
+  references only. Consumer identity, roles, grants, credentials, workload
+  identity, business approval, and underlying authorization state remain
+  consumer-owned and cannot be copied into core contracts or a duplicate
+  consumer receipt aggregate.
+
 ## Architecture review amendments
 
-- Binding and receipt state is per consumer subject and target. Record per-target source, public catalog render, customization, exact skills, embedded effective render, and private deployment subdigests under a signed release manifest.
-- A consumer may bind its workload principal to `consumer subject + runtime slot + profile deployment subdigest + release`, but Agent Delivery only carries the signed reference and evidence; the consumer creates and authorizes the principal.
+- Binding and receipt state is per consumer subject and target. Record per-target source, public catalog render, customization, exact skills, embedded effective render, and canonical private deployment descriptors under a signed release manifest.
+- A consumer may bind its workload principal to `consumer subject + runtime slot + exact profile deployment descriptor + release`, but Agent Delivery only carries the signed reference and evidence; the consumer creates and authorizes the principal.
 - Updating one subject must not advance unrelated subjects. A system-package change may require a target-wide release and must be explicit.
 - Consumer definition/deployment fields must be migrated away from mutable organizational-profile records. For ByteDesk this includes `AgentInstructions`, `HermesAgentId`, `LastSoulHash`, `LastDeployedAt`, and `DeployStatus`; that migration belongs to AD-16 and its Platform integration, not the core product.
 - Persist stable target-slot observations and tombstones only as supplied by the runtime adapter. Never allocate by roster index or silently reuse a retired slot; the consuming runtime remains slot authority.
-- Preserve each consumer's existing deployment-revision/observation aggregate through a projection or external reference rather than adding a parallel receipt system inside that consumer.
+- Preserve a consumer's deployment-revision/observation aggregate through a
+  projection or external reference rather than adding a parallel receipt system
+  inside that consumer; reference-consumer behavior must come from an accepted
+  exact external-input lock.

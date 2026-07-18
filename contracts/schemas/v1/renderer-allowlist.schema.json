@@ -2,16 +2,18 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-allowlist/1.0.0",
   "title": "Compiled renderer release allowlist",
+  "x-bytedesk-digestAuthority": { "profile": "bytedesk.renderer-allowlist-authority-digest/1", "exclude": ["contract", "schema", "authorityDigest", "signingResult"] },
   "type": "object",
-  "required": ["contract", "schema", "productDistributionDigest", "entries", "generatedAt", "trustPolicy"],
+  "required": ["contract", "schema", "entries", "generatedAt", "trustPolicy", "authorityDigest", "signingResult"],
   "properties": {
     "contract": { "const": "bytedesk.renderer-allowlist/1" },
     "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
-    "productDistributionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
     "entries": {
       "type": "array",
       "minItems": 1,
       "maxItems": 100000,
+      "uniqueItems": true,
+      "description": "Entries must also be unique by the semantic harnessId/rendererId/version selection key; the renderer conformance validator enforces that property-level invariant.",
       "items": {
         "type": "object",
         "required": ["harnessId", "rendererId", "version", "release", "platforms"],
@@ -33,7 +35,19 @@
       }
     },
     "generatedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
-    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+    "trustPolicy": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+        { "properties": { "id": { "const": "product-release-v1" } }, "required": ["id"] }
+      ]
+    },
+    "authorityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "signingResult": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0" },
+        { "properties": { "purpose": { "const": "product-release-v1" }, "subjectMediaType": { "const": "application/vnd.bytedesk.agent.renderer-allowlist.v1+json" } }, "required": ["purpose", "subjectMediaType"] }
+      ]
+    }
   },
   "additionalProperties": false,
   "unevaluatedProperties": false

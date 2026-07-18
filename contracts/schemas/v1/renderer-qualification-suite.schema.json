@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-qualification-suite/1.0.0",
+  "title": "Closed renderer release qualification suite",
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "suiteId",
+    "version",
+    "requiredRoles",
+    "requiredCoverage",
+    "conformancePlan",
+    "inputCorpus",
+    "evaluatorDistribution",
+    "contractBundle",
+    "qualificationWorkerProfileDigest",
+    "qualificationProtocolProfileDigest",
+    "sandboxProfileDigest",
+    "resourceProfileDigest",
+    "timeoutProfileDigest",
+    "trustPolicy"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.renderer-qualification-suite/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "suiteId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$", "maxLength": 128 },
+    "requiredRoles": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/qualificationRole" }
+    },
+    "requiredCoverage": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/coverageRequirement" },
+      "description": "Closed role-to-subject-scope matrix. Semantic verification rejects duplicate role/scope pairs and requires the matrix to expand exactly over M, P, the contract bundle, every R, and every selected platform executable."
+    },
+    "conformancePlan": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "inputCorpus": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "evaluatorDistribution": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "contractBundle": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/contractBundleDescriptor" },
+    "qualificationWorkerProfileDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "qualificationProtocolProfileDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "sandboxProfileDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "resourceProfileDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "timeoutProfileDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "trustPolicy": { "$ref": "#/$defs/qualificationTrust" }
+  },
+  "$defs": {
+    "qualificationRole": {
+      "type": "string",
+      "enum": [
+        "provenance",
+        "sbom",
+        "vulnerability",
+        "malware",
+        "secret_scan",
+        "scan_completeness",
+        "license",
+        "conformance",
+        "compatibility",
+        "determinism",
+        "sandbox",
+        "executed_distribution"
+      ]
+    },
+    "coverageRequirement": {
+      "type": "object",
+      "required": ["requirementId", "role", "subjectScope", "subjectRole"],
+      "properties": {
+        "requirementId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "role": { "$ref": "#/$defs/qualificationRole" },
+        "subjectScope": {
+          "type": "string",
+          "enum": [
+            "product_release",
+            "product_distribution",
+            "contract_bundle",
+            "every_renderer_release",
+            "every_renderer_executable"
+          ]
+        },
+        "subjectRole": {
+          "type": "string",
+          "enum": [
+            "product_release",
+            "product_distribution",
+            "contract_bundle",
+            "renderer_release",
+            "renderer_executable"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "subjectScope": { "const": "product_release" } }, "required": ["subjectScope"] },
+          "then": { "properties": { "subjectRole": { "const": "product_release" } } }
+        },
+        {
+          "if": { "properties": { "subjectScope": { "const": "product_distribution" } }, "required": ["subjectScope"] },
+          "then": { "properties": { "subjectRole": { "const": "product_distribution" } } }
+        },
+        {
+          "if": { "properties": { "subjectScope": { "const": "contract_bundle" } }, "required": ["subjectScope"] },
+          "then": { "properties": { "subjectRole": { "const": "contract_bundle" } } }
+        },
+        {
+          "if": { "properties": { "subjectScope": { "const": "every_renderer_release" } }, "required": ["subjectScope"] },
+          "then": { "properties": { "subjectRole": { "const": "renderer_release" } } }
+        },
+        {
+          "if": { "properties": { "subjectScope": { "const": "every_renderer_executable" } }, "required": ["subjectScope"] },
+          "then": { "properties": { "subjectRole": { "const": "renderer_executable" } } }
+        }
+      ],
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "qualificationTrust": {
+      "type": "object",
+      "required": ["id", "digest"],
+      "properties": {
+        "id": { "const": "release-qualification-policy-v1" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "The suite freezes the exact corpus, plan, evaluator, contract bundle, worker/protocol, sandbox, resource, timeout, and role-to-subject matrix. A version label or role list alone is never authority-equivalent."
+}

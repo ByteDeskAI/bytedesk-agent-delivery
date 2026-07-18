@@ -77,7 +77,8 @@ For each new desired revision, the host:
 2. Acquires a local runtime reconciliation lock.
 3. Pulls manifests and layers by exact digest into a bounded cache.
 4. Verifies the complete explicit OCI graph, binding/customization, selected
-   skills, embedded effective render bundle/manifest, and independently
+   skills, embedded effective render manifest/payload and authenticated
+   renderer execution lineage, and independently
    distributed trust policy, including the renderer-release manifest, actual
    executed product distribution, embedded allowlist, and schema digests.
 5. Recomputes authoritative structured-object digests from RFC 8785 canonical

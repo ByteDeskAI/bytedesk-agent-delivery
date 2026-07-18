@@ -18,6 +18,7 @@ from contractlib import ContractToolError, canonical_json, load_json, sha256_byt
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, required=True)
+    parser.add_argument("--schema", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--expected-digest", required=True)
     args = parser.parse_args()
@@ -25,6 +26,15 @@ def main() -> int:
     policy = load_json(args.source.resolve())
     if not isinstance(policy, dict):
         raise ContractToolError("test trust-policy source root is not an object")
+    schema = load_json(args.schema.resolve())
+    if not isinstance(schema, dict) or not isinstance(schema.get("$id"), str):
+        raise ContractToolError("test trust-policy schema is not an identified object")
+    expected_schema = {
+        "id": schema["$id"],
+        "digest": sha256_bytes(canonical_json(schema)),
+    }
+    if policy.get("schema") != expected_schema:
+        raise ContractToolError("test trust-policy source uses a stale schema descriptor")
     payload = canonical_json(policy)
     digest = sha256_bytes(payload)
     if digest != args.expected_digest:

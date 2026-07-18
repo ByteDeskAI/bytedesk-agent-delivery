@@ -77,11 +77,13 @@ same-repository signatures/attestations/SBOMs, and records explicit descriptors
 for every cross-repository edge. Authoritative objects use RFC 8785 canonical
 JSON and arbitrary payloads preserve exact bytes.
 
-Product, public-source, public-render, consumer-private-skill,
-consumer-authority, and consumer-deployment signer purposes are distinct. All
-private purposes are isolated per consumer, preferably with non-exportable keys
-in the consumer's KMS boundary. Publisher provenance is not consumer skill
-approval.
+Product, contract-bundle, public-source, public-render, consumer-private-skill,
+consumer-authority, and consumer-deployment signer purposes are distinct. The
+KMS-only `product-release-v1` policy covers product distributions, allowlists,
+and renderer releases; the separately pinned keyless
+`contract-bundle-release-v1` policy covers only contract bundles. All private
+purposes are isolated per consumer, preferably with non-exportable keys in the
+consumer's KMS boundary. Publisher provenance is not consumer skill approval.
 
 ### Installation and Promotion Coordinator
 
@@ -116,8 +118,9 @@ to verified source, verifies exact consumer skill approvals, and reconstructs a
 complete Agent Spec. It validates a current consumer-signed authority snapshot,
 resolves the exact renderer release through the compiled allowlist, performs a
 full sandboxed render, and embeds the effective bundle and manifest in a
-per-consumer-signed deployment. It prepares a runtime release but cannot make it
-desired state.
+per-consumer-signed deployment. It emits separate signed private-compilation
+evidence and prepares a runtime release containing the exact deployment/evidence
+pair, but cannot make that release desired state.
 
 The private delta may configure functional models, providers, tools, MCP,
 files, harness settings, and opaque secret references. Consumer identity,
@@ -170,10 +173,10 @@ API/worker/CLI components, isolated Python 3.13 Agent Spec renderer workers,
 PostgreSQL 18 state/actions/outbox, and synchronous OCI API publication to
 active and recovery-region Harbor HA endpoints. Each Harbor endpoint has
 region-local S3 plus a dedicated PostgreSQL 15/Redis Sentinel metadata plane;
-none is product authority. The profile also fixes purpose-separated KMS/WIF,
-SPIFFE mTLS, Kubernetes 1.36/1.35, staged gVisor render sandboxes, and HA
-OpenTelemetry gateways. Distribution 3 is only the local/protocol Registry
-profile. PostgreSQL command transactions atomically append aggregate, action,
+none is product authority. The profile also fixes purpose-separated KMS/WIF and
+contract-release Sigstore keyless identity, SPIFFE mTLS, Kubernetes 1.36/1.35,
+staged gVisor render sandboxes, and HA OpenTelemetry gateways. Distribution 3
+is only the local/protocol Registry profile. PostgreSQL command transactions atomically append aggregate, action,
 evidence, and outbox state; no required Kafka, NATS, Redis, or cloud queue
 becomes a second authority.
 

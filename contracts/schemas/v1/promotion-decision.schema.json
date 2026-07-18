@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/promotion-decision/1.0.0",
+  "title": "Promotion Coordinator commit decision",
+  "type": "object",
+  "required": ["contract", "schema", "decisionId", "actionId", "consumerId", "targetId", "rolloutId", "candidate", "precondition", "before", "after", "evidence", "deploymentReceipts", "storeReceipt", "fencingToken", "outcome", "decidedAt"],
+  "properties": {
+    "contract": { "const": "bytedesk.promotion-decision/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "decisionId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "actionId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "rolloutId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerRuntimeReleaseDescriptor" },
+    "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" },
+    "before": { "$ref": "#/$defs/revisionIdentity" },
+    "after": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/revisionIdentity" }] },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/subjectEvidence" },
+      "description": "Canonical complete per-subject evidence set, sorted by UTF-8 bytes of subjectId. It contains exactly one entry for every candidate runtime-release deployment; every entry must bind the same target-wide slot, generation, and activation authorization. Missing, duplicate, reordered, or substituted subject evidence fails before commit."
+    },
+    "deploymentReceipts": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 100000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/deploymentReceiptReference" },
+      "description": "Canonical complete receipt-reference set, sorted by UTF-8 bytes of subjectId, binding each per-subject append-only deployment receipt by identity and exact raw JCS digest."
+    },
+    "storeReceipt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/desired-state-store-receipt/1.0.0" },
+    "fencingToken": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "outcome": { "type": "string", "enum": ["committed", "no_op", "denied", "conflict", "commit_unknown"] },
+    "problem": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0" },
+    "decidedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+  },
+  "$defs": {
+    "activationAuthorizationDescriptor": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.activation-authorization.v1+json" },
+            "trustPolicy": {
+              "properties": { "id": { "const": "consumer-activation-authorization-v1" } },
+              "required": ["id"]
+            }
+          },
+          "required": ["mediaType", "trustPolicy"]
+        }
+      ]
+    },
+    "subjectEvidence": {
+      "type": "object",
+      "required": ["subjectId", "deployment", "slotId", "generation", "authority", "activationAuthorization", "activationAuthorizationDigest", "hostCandidateReady", "hostActiveReadback", "capability"],
+      "properties": {
+        "subjectId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "deployment": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerDeploymentDescriptor" },
+        "slotId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "generation": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+        "authority": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "activationAuthorization": { "$ref": "#/$defs/activationAuthorizationDescriptor" },
+        "activationAuthorizationDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "hostCandidateReady": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "hostActiveReadback": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "capability": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "deploymentReceiptReference": {
+      "type": "object",
+      "required": ["subjectId", "deployment", "receiptId", "receiptDigest"],
+      "properties": {
+        "subjectId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "deployment": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerDeploymentDescriptor" },
+        "receiptId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "receiptDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "revisionIdentity": {
+      "type": "object",
+      "required": ["revision", "digest"],
+      "properties": {
+        "revision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome": { "enum": ["committed", "no_op"] } }, "required": ["outcome"] },
+      "then": { "properties": { "after": { "not": { "type": "null" } }, "deploymentReceipts": { "minItems": 1 } }, "not": { "required": ["problem"] } }
+    },
+    {
+      "if": { "properties": { "outcome": { "enum": ["denied", "conflict", "commit_unknown"] } }, "required": ["outcome"] },
+      "then": { "required": ["problem"], "properties": { "after": { "type": "null" }, "deploymentReceipts": { "maxItems": 0 } } }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "The authoritative commit point is the referenced DesiredStateStore CAS. A committed decision binds canonical complete per-subject evidence and per-subject receipt references exactly covering the candidate runtime-release deployments. Local projection finalization may lag and cannot reverse it; commit_unknown enters resolution rather than ordinary retry."
+}

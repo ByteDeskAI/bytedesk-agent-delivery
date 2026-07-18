@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/product-release-manifest/1.0.0",
+  "title": "Closed signed Agent Delivery product release manifest",
+  "x-bytedesk-digestAuthority": { "profile": "bytedesk.product-release-manifest-authority-digest/1", "exclude": ["contract", "schema", "authorityDigest", "signingResult"] },
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "version",
+    "productDistribution",
+    "compiledAllowlist",
+    "rendererReleases",
+    "contractBundle",
+    "contractBundleVerification",
+    "qualificationPolicy",
+    "qualificationSuite",
+    "minimumQualificationCoverageDigest",
+    "builder",
+    "toolchainDigest",
+    "dependencyLockDigest",
+    "publishedAt",
+    "trustPolicy",
+    "authorityDigest",
+    "signingResult"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.product-release-manifest/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "version": { "type": "string", "maxLength": 128, "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "productDistribution": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor",
+      "description": "Exact immutable Agent Delivery distribution. It may embed the exact compiled allowlist bytes or digest for runtime readback, but it never embeds this later product-release manifest or any backlink to it. The embedded allowlist identity must equal compiledAllowlist."
+    },
+    "compiledAllowlist": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor",
+      "description": "Exact closed renderer allowlist whose entries resolve the renderer releases below."
+    },
+    "rendererReleases": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "uniqueItems": true,
+      "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+      "description": "Complete canonical-order release set. Descriptors must be unique by repository and digest and must equal the allowlist release set exactly."
+    },
+    "contractBundle": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/contractBundleDescriptor"
+    },
+    "contractBundleVerification": {
+      "type": "object",
+      "required": [
+        "profile",
+        "decision",
+        "authorityIssued",
+        "vectorId",
+        "subject",
+        "purpose",
+        "credentialKind",
+        "signerIdentityDigest",
+        "trustedRootDigest",
+        "authenticatedSigner",
+        "builderDigest",
+        "preSignCertificationDigest",
+        "signingRequest",
+        "signingRequestDigest",
+        "signatureBundle",
+        "signatureBundleDigest",
+        "trustPolicy",
+        "verifiedAt",
+        "verificationEvidenceDigest"
+      ],
+      "properties": {
+        "profile": { "const": "bytedesk.contract-bundle-keyless-verification/1" },
+        "decision": { "const": "permitted" },
+        "authorityIssued": {
+          "const": false,
+          "description": "Signature verification authenticates bytes but never issues product, consumer, or runtime authority."
+        },
+        "vectorId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "subject": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/contractBundleDescriptor" },
+        "purpose": { "const": "contract-bundle-release-v1" },
+        "credentialKind": { "const": "sigstore_keyless" },
+        "signerIdentityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "trustedRootDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "authenticatedSigner": {
+          "allOf": [
+            { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signer-identity/1.0.0" },
+            {
+              "properties": {
+                "purpose": { "const": "contract-bundle-release-v1" },
+                "credentialKind": { "const": "sigstore_keyless" }
+              },
+              "required": ["purpose", "credentialKind"]
+            }
+          ]
+        },
+        "builderDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "preSignCertificationDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "signingRequest": {
+          "allOf": [
+            { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/evidenceBlobDescriptor" },
+            { "properties": { "mediaType": { "const": "application/vnd.bytedesk.agent.signing-request.v1+json" } }, "required": ["mediaType"] }
+          ],
+          "description": "Byte descriptor for the canonical signing request. It is evidence bound by this receipt, not an independently policy-scoped subject."
+        },
+        "signingRequestDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "signatureBundle": {
+          "allOf": [
+            { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/evidenceBlobDescriptor" },
+            { "properties": { "mediaType": { "const": "application/vnd.dev.sigstore.bundle.v0.3+json" } }, "required": ["mediaType"] }
+          ],
+          "description": "Byte descriptor for the verified Sigstore bundle. Signature evidence does not broaden the contract policy's subject scope."
+        },
+        "signatureBundleDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "trustPolicy": {
+          "allOf": [
+            { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+            { "properties": { "id": { "const": "contract-bundle-release-v1" } }, "required": ["id"] }
+          ]
+        },
+        "verifiedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+        "verificationEvidenceDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false,
+      "description": "Exact non-authority-issuing outcome from the trusted Sigstore-keyless verification Adapter. The later product-release signature binds this receipt."
+    },
+    "qualificationPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor", "description": "Exact immutable policy selected before qualification. G must use this descriptor and cannot self-select a weaker policy." },
+    "qualificationSuite": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor", "description": "Exact immutable qualification suite selected before M is signed." },
+    "minimumQualificationCoverageDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256", "description": "Digest of the minimum closed coverage matrix that the pinned policy and suite must equal; a strict subset is never accepted." },
+    "builder": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "toolchainDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "dependencyLockDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "publishedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "trustPolicy": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+        { "properties": { "id": { "const": "product-release-v1" } }, "required": ["id"] }
+      ]
+    },
+    "authorityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "signingResult": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0" },
+        { "properties": { "purpose": { "const": "product-release-v1" }, "subjectMediaType": { "const": "application/vnd.bytedesk.agent.product-release-manifest.v1+json" } }, "required": ["purpose", "subjectMediaType"] }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Signed with product-release-v1 after renderer releases, the compiled allowlist, and product distribution are immutable. Verification follows the acyclic authority graph renderer release -> compiled allowlist -> product distribution -> product release manifest -> renderer selection."
+}

@@ -1,0 +1,74 @@
+{
+  "contract": "bytedesk.trust-policy/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+    "digest": "sha256:ea53b4814c96282ba5812c2573b4adf45a026340b1022503e25b9f391dcd1509"
+  },
+  "policyId": "release-qualification-attempt-v1",
+  "version": "1.0.0",
+  "effective": {
+    "notBefore": "2026-07-17T00:00:00Z",
+    "notAfter": "2027-07-17T00:00:00Z"
+  },
+  "scope": {
+    "repositories": [
+      "registry.example/product/qualification"
+    ],
+    "mediaTypes": [
+      "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "application/vnd.bytedesk.agent.renderer-qualification-attempt-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.renderer-qualification-attempt.v1+json",
+      "application/vnd.bytedesk.agent.renderer-qualification-selection.v1+json",
+      "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.signing-result.v1+json"
+    ],
+    "purposes": [
+      "release-qualification-attempt-v1"
+    ]
+  },
+  "signers": [
+    {
+      "purpose": "release-qualification-attempt-v1",
+      "credentialKind": "kms_key",
+      "keyVersion": "kms://product/release-qualification-attempt-v1/versions/1",
+      "publicKeyDigest": "sha256:93860668d80d0db1109fdf41d1f7a296dfad21ba7fb4ec2e21e443c6a6acc068",
+      "algorithm": "ECDSA_P256_SHA256",
+      "workloadIdentity": "spiffe://bytedesk.ai/agent-delivery/release-qualification-attempt",
+      "claims": {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audience": "agent-delivery-release-qualification-attempt-v1",
+        "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:release-qualification-attempt-v1",
+        "repository": "ByteDeskAI/bytedesk-agent-delivery",
+        "workflow": ".github/workflows/release-qualification-attempt-v1.yml",
+        "ref": "refs/tags/v1.0.0",
+        "environment": "release-qualification-attempt-v1",
+        "builderDigest": "sha256:a8b2173e2a8a22ba784e3c4a3e5708932263b5e8367a886e33d18d0da7239b64"
+      }
+    }
+  ],
+  "requiredEvidence": [
+    "schema",
+    "authority"
+  ],
+  "rules": {
+    "freshnessSeconds": 900,
+    "requireNonce": true,
+    "requirePredecessor": true,
+    "denyDowngrade": true,
+    "withdrawal": "deny_new_use",
+    "outage": "fail_closed_new_work"
+  },
+  "revocations": {
+    "keyVersions": [],
+    "digests": [],
+    "workflows": [],
+    "builders": [],
+    "schemas": [],
+    "renderers": [],
+    "content": []
+  },
+  "failureMode": "fail_closed",
+  "predecessor": {
+    "kind": "none"
+  }
+}

@@ -1,13 +1,21 @@
 {
   "contract": "bytedesk.signing-request/1",
-  "schema": {"id": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0", "digest": "sha256:e3bbbc3f9b084c9b2d949ab8183aaf7196b77157f28ba19208fde7492e244399"},
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0",
+    "digest": "sha256:5ce348f8fe102aadced9964db8df66009bd3993c99d93c9840533c17174553e6"
+  },
   "requestId": "sign-invalid-media-type-01",
   "purpose": "consumer-deployment-v1",
+  "credentialKind": "kms_key",
+  "signerIdentityDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
   "keyVersion": "kms://consumer-01/deployment/key/version/1",
   "repository": "registry.example/consumer/deployments",
   "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
   "mediaType": "NOT A MEDIA TYPE",
-  "trustPolicy": {"id": "consumer-deployment-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+  "trustPolicy": {
+    "id": "consumer-deployment-v1",
+    "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
   "consumerId": "consumer-01",
   "nonce": "nonce_0123456789abcdef",
   "issuedAt": "2026-07-17T12:00:00Z",

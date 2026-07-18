@@ -1,0 +1,17 @@
+{
+  "purpose": "contract-bundle-release-v1",
+  "credentialKind": "sigstore_keyless",
+  "trustedRootDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "algorithm": "ECDSA_P256_SHA256",
+  "workloadIdentity": "https://github.com/ByteDeskAI/bytedesk-agent-delivery/.github/workflows/contract-release-signer.yml@1111111111111111111111111111111111111111",
+  "claims": {
+    "issuer": "https://token.actions.githubusercontent.com",
+    "audience": "sigstore",
+    "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:contract-release",
+    "repository": "ByteDeskAI/bytedesk-agent-delivery",
+    "workflow": ".github/workflows/contract-release-signer.yml@1111111111111111111111111111111111111111",
+    "ref": "refs/tags/v1.0.0",
+    "environment": "contract-release",
+    "builderDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  }
+}

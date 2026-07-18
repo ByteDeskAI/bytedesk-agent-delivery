@@ -1,0 +1,18 @@
+{
+  "algorithm": "ECDSA_P256_SHA256",
+  "claims": {
+    "audience": "agent-delivery-product-release-v1",
+    "builderDigest": "sha256:25653bf4af960608d9b32541b3d4a4c811fffe0a7f4c6c9cc750f5740bbffeff",
+    "environment": "product-release-v1",
+    "issuer": "https://token.actions.githubusercontent.com",
+    "ref": "refs/tags/v1.0.0",
+    "repository": "ByteDeskAI/bytedesk-agent-delivery",
+    "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:product-release-v1",
+    "workflow": ".github/workflows/product-release-v1.yml"
+  },
+  "credentialKind": "kms_key",
+  "keyVersion": "kms://product/product-release-v1/versions/1",
+  "publicKeyDigest": "sha256:0f34c7c967a701e9e1d4c031ef8e7ca1853d7eeb4211d3d6c3dfd6ab82ce3a4a",
+  "purpose": "product-release-v1",
+  "workloadIdentity": "spiffe://bytedesk.ai/agent-delivery/product-release"
+}

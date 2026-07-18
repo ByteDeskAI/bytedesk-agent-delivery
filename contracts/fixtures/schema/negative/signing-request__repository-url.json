@@ -2,16 +2,19 @@
   "contract": "bytedesk.signing-request/1",
   "schema": {
     "id": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0",
-    "digest": "sha256:e3bbbc3f9b084c9b2d949ab8183aaf7196b77157f28ba19208fde7492e244399"
+    "digest": "sha256:5ce348f8fe102aadced9964db8df66009bd3993c99d93c9840533c17174553e6"
   },
   "requestId": "sign-repository-url",
-  "purpose": "product-release-v1",
-  "keyVersion": "kms://product/release/key/version/1",
+  "purpose": "contract-bundle-release-v1",
+  "credentialKind": "sigstore_keyless",
+  "signerIdentityDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "builderDigest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "preSignCertificationDigest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "repository": "https://registry.example/product/releases",
   "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
   "mediaType": "application/vnd.bytedesk.agent.contract-bundle.v1+json",
   "trustPolicy": {
-    "id": "product-release-v1",
+    "id": "contract-bundle-release-v1",
     "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
   },
   "nonce": "nonce_0123456789abcdef",

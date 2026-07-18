@@ -19,7 +19,11 @@ Create `ByteDeskAI/bytedesk-agent-marketplace` as a public, MIT-licensed, third-
 - The exact `CONTRACTS-FROZEN` schema bundle, canonical-encoding profile,
   source-kind rules, strict operation profiles, and generic catalog contract.
 - Official Agent Spec 26.1.2 schema, SDK, and validation behavior.
-- ByteDesk organization repository standards that do not introduce ByteDesk Platform or Agent Delivery runtime coupling.
+- Any ByteDesk organization repository standards used as compatibility evidence
+  must first be bound by an exact `bytedesk.external-input-lock/1` artifact
+  containing the repository URL, immutable commit, source-tree digest, sorted
+  path/digest inventory, and `compatibilityEvidenceOnly: true`. An unpinned
+  checkout or mutable branch is not an input or authority.
 
 ## Required work
 
@@ -75,6 +79,36 @@ Migrating all employee agents, OCI publication, harness renderers, Agent Deliver
 ## Dependencies
 
 Blocked by AD-01 only.
+
+## Normative contracts and conformance
+
+- **Ports and operations.** `bytedesk.port.catalog/1`
+  (`list-catalog-releases`, `resolve-catalog-release`, `fetch-catalog-object`,
+  `publish-catalog-release`) and `bytedesk.port.agent-spec-validator/1`
+  (`validate-agent-spec`) are the only downstream ports used by the marketplace
+  workflow. Their exact operation entries live in
+  `contracts/ports/v1/port-registry.json`. Exact field-value and closed
+  request/result schemas are distributed in
+  `contracts/ports/v1/type-catalog.json`; canonical valid and structural-denial
+  payloads are in `contracts/ports/v1/contract-fixtures.json`.
+- **Schemas, artifacts, and profiles.** The exact product schema IDs are
+  `https://schemas.bytedesk.ai/agent-delivery/v1/agent-source/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/skill-package/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/catalog-index/1.0.0`, and
+  `https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle/1.0.0`, at their
+  corresponding paths under `contracts/schemas/v1/`. Canonical encoding and
+  external-input-lock profiles are pinned in
+  `contracts/ports/v1/protocol-profiles.json`.
+- **Conformance owner.** AD-02 owns the clean-clone marketplace and official
+  validation fixtures. Run `make verify-downstream-ports`; the task-specific
+  suite is `downstream.marketplace.v1` in
+  `contracts/ports/v1/conformance-cases.json`. Execute the suite's exact harness
+  steps and closed oracles from `contracts/ports/v1/conformance-plan.json`;
+  schema-valid structural fixtures alone are not semantic implementation goldens.
+- **Boundary.** Marketplace output is tenant-free functional source and
+  discovery metadata. It cannot contain consumer identity, grants, credentials,
+  approval, trust, or deployment authority, and no consumer-specific detail may
+  enter a core contract or generic fixture.
 
 ## Architecture review amendments
 

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/protocol-profiles/1.0.0",
+  "profile": "bytedesk.protocol-profiles/1",
+  "version": 1,
+  "profiles": [
+    {
+      "profileId": "bytedesk.worker-framing/1",
+      "ownerTask": "AD-04",
+      "repoPaths": [
+        "contracts/schemas/v1/renderer-release.schema.json",
+        "contracts/schemas/v1/renderer-capability.schema.json",
+        "docs/planning/tasks/AD-04-renderer-contract.md"
+      ],
+      "requirements": {
+        "framing": "uint32-be-length-prefixed",
+        "payloadEncoding": "rfc8785-jcs-json",
+        "oneRequestPerProcess": true,
+        "maxRequestBytes": 4194304,
+        "maxResponseBytes": 4194304,
+        "maxDiagnosticsBytes": 65536,
+        "deadlineSource": "launcher-monotonic-clock",
+        "workerStdin": "launcher-private-anonymous-pipe-single-framed-request",
+        "workerStdout": "launcher-private-anonymous-pipe-single-framed-response-and-eof",
+        "workerStderr": "launcher-private-anonymous-pipe-bounded-untrusted-diagnostics-to-output-file",
+        "launcherContainerStdout": "empty-or-fixed-non-content-lifecycle-codes",
+        "launcherContainerStderr": "empty-or-fixed-non-content-lifecycle-codes",
+        "contentStreamIsolation": "renderer-response-and-diagnostics-never-reach-cri-node-kubernetes-event-or-telemetry-logs",
+        "diagnosticHandling": "bounded-untrusted-private-output-file-hash-redact-evidence-destroy-with-attempt",
+        "inheritedFileDescriptors": "closed-except-launcher-private-worker-pipes-and-launcher-owned-directories",
+        "network": "denied",
+        "secrets": "none",
+        "filesystem": {
+          "root": "read-only",
+          "input": "read-only-exact-tree",
+          "output": "empty-launcher-owned-directory",
+          "temporary": "bounded-private-directory",
+          "executable": "exact-allowlisted-digest"
+        },
+        "failureMapping": {
+          "malformedFrame": "worker_protocol_failed",
+          "oversizedFrame": "worker_protocol_failed",
+          "timeout": "worker_protocol_failed",
+          "extraStdout": "worker_protocol_failed",
+          "containerStreamContent": "artifact_unsafe",
+          "outputValidation": "renderer_output_invalid"
+        }
+      }
+    }
+  ],
+  "unexpectedAuthority": "must-be-rejected"
+}

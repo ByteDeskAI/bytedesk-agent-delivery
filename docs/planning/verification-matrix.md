@@ -5,7 +5,7 @@ This is the minimum release evidence set. A task may add stricter checks.
 The concrete topology used for core production certification is
 [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md).
 Its PostgreSQL transaction/queue/outbox, Distribution/object storage, KMS,
-Kubernetes, gVisor, identity, telemetry, migration, and restore claims require
+Sigstore keyless contract release, Kubernetes, gVisor, identity, telemetry, migration, and restore claims require
 executable evidence in addition to the portable contract evidence below.
 
 ## Contracts and portable source
@@ -25,7 +25,7 @@ executable evidence in addition to the portable contract evidence below.
 
 | Area | Positive evidence | Negative/fault evidence |
 |---|---|---|
-| Determinism | Two isolated clean builds emit identical files and digests from identical JCS objects and byte-exact payloads | Timestamp, object-key order, YAML spelling, mode, locale, path, or compression drift changes semantic output or escapes detection |
+| Determinism | Two isolated clean builds emit identical files and digests from identical JCS objects and byte-exact payloads; paired `linux/amd64` and `linux/arm64` variants prove the same platform-independent functional-input digest, logical tree, archive digest, and archive size while selection, execution, platform-bound input/compatibility, reproducibility, and complete manifest identities differ | Timestamp, object-key order, YAML spelling, mode, locale, path, compression, or platform drift changes logical/archive output or escapes detection; collapsing distinct platform execution or manifest identity also fails |
 | Harness compatibility | Native, Hermes, and OpenClaw contract fixtures pass | Unsupported/lossy semantic is explicit and cannot silently pass |
 | Renderer release identity | Binding, render, and deployment record the signed renderer-release manifest, executing distribution/platform, schema, and embedded allowlist digests | Version-only selection, tag/PATH fallback, wrong executable/platform/allowlist/schema, runtime allowlist expansion, or withdrawn renderer fails |
 | Renderer sandbox | Trusted product renderer runs in a fresh no-network, no-secret, resource-bounded sandbox and emits only declared output | Input execution, hook/plugin/library injection, ambient identity, network, home/config access, timeout, memory, process, or disk escape fails |
@@ -40,9 +40,10 @@ executable evidence in addition to the portable contract evidence below.
 | Area | Positive evidence | Negative/fault evidence |
 |---|---|---|
 | Artifact graph | Exact source -> render -> deployment -> release edges verify | Wrong/missing subject, media type, size, repository, or source edge fails |
-| Signatures | Correct purpose key and workload claims verify | Unknown/revoked/wrong-purpose key or wrong workflow/repo/ref/environment fails |
+| Signatures | Correct purpose signer identity and workload claims verify | Unknown/revoked/wrong-purpose signer or wrong workflow/repo/ref/environment fails |
 | Attestations | Required provenance, SBOM, compatibility, evaluation, and policy predicates verify | Missing, stale, tampered, or wrong-subject predicate fails |
-| KMS/WIF | Short-lived workload identity signs with non-exportable key | Exported key path, broad identity, KMS outage, or claim mismatch fails closed |
+| KMS/WIF | KMS-backed purposes use short-lived workload identity and non-exportable exact key versions | Exported key path, broad identity, KMS outage, alias substitution, or claim mismatch fails closed |
+| Contract-bundle keyless trust | `contract-bundle-release-v1` verifies the exact keyless signer, trusted root, sealed builder, certification, repository, media type, and separate policy | KMS contract signing, product-purpose substitution, mixed policy, static leaf pin, wrong workflow/root/builder/certification, or cross-scoped repository/media type fails closed |
 | Registry | Target implementation passes manifest/referrer/immutable-tag/access tests | Cross-project pull, tag mutation, quota breach, or GC of a rooted digest is denied |
 | Privacy | Public evidence contains no consumer identifier or private policy data | Leak fixtures fail publication |
 | Consumer private keys | Consumer-owned KMS and tenant-dedicated hosted-key profiles sign with separate private-skill, authority/approval, and deployment roles | Cross-consumer shared key, exported key, supplier provenance substituted for private-skill publication or approval, compiler self-approval, wrong purpose, broad IAM, or consumer-unpinned hosted trust fails |

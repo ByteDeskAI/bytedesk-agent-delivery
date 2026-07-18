@@ -1,25 +1,49 @@
 {
   "contract": "bytedesk.authorization-decision-proof/1",
-  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/authorization-decision-proof/1.0.0", "digest": "sha256:ed787fced0175cb4cb4704bea7e1258371492c6390d1b55c63365f6cf29c6d97" },
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/authorization-decision-proof/1.0.0",
+    "digest": "sha256:9c05ae1a5633650a4acd04c1758cb19e1a192d6b9399ca437a614e05152d36af"
+  },
   "proofId": "authorization-proof-01",
   "actor": "consumer_authorization_system",
   "planDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
   "nonce": "nonce_0123456789abcdef",
-  "consumerId": "consumer-01", "subjectId": "subject-01", "targetId": "target-01",
+  "consumerId": "consumer-01",
+  "subjectId": "subject-01",
+  "targetId": "target-01",
+  "candidateDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
   "releaseDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
   "deploymentDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
-  "capability": { "id": "capability.forbidden", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+  "capability": {
+    "id": "capability.forbidden",
+    "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
   "policyDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
   "grantSetDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
   "workloadIdentityDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
-  "decision": { "class": "policy_denied", "code": "sentinel_denied" },
-  "signerIdentity": "spiffe://consumer.example/authorization",
-  "signerPolicy": { "id": "authorization-decision-v1", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" },
-  "transport": {
-    "outcome": "successful_authorization_response", "protocol": "https", "statusCode": 200,
-    "authenticated": true, "completed": true, "parsed": true,
-    "responseMediaType": "application/json", "responseDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  "decision": {
+    "class": "policy_denied",
+    "code": "sentinel_denied"
   },
-  "issuedAt": "2026-07-17T12:01:00Z", "expiresAt": "2026-07-17T12:04:00Z",
-  "trace": { "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "classification": "restricted" }
+  "signerIdentity": "spiffe://consumer.example/authorization",
+  "signerPolicy": {
+    "id": "authorization-decision-v1",
+    "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "transport": {
+    "outcome": "successful_authorization_response",
+    "protocol": "https",
+    "statusCode": 200,
+    "authenticated": true,
+    "completed": true,
+    "parsed": true,
+    "responseMediaType": "application/json",
+    "responseDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "issuedAt": "2026-07-17T12:01:00Z",
+  "expiresAt": "2026-07-17T12:04:00Z",
+  "trace": {
+    "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "classification": "restricted"
+  }
 }

@@ -1,0 +1,71 @@
+{
+  "contract": "bytedesk.trust-policy/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+    "digest": "sha256:ea53b4814c96282ba5812c2573b4adf45a026340b1022503e25b9f391dcd1509"
+  },
+  "policyId": "consumer-authority-v1",
+  "version": "1.0.0",
+  "effective": {
+    "notBefore": "2026-07-17T00:00:00Z",
+    "notAfter": "2027-07-17T00:00:00Z"
+  },
+  "scope": {
+    "repositories": [
+      "registry.example/consumer/approvals"
+    ],
+    "mediaTypes": [
+      "application/vnd.bytedesk.agent.skill-approval.v1+json",
+      "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.signing-result.v1+json"
+    ],
+    "purposes": [
+      "consumer-authority-v1"
+    ]
+  },
+  "signers": [
+    {
+      "purpose": "consumer-authority-v1",
+      "credentialKind": "kms_key",
+      "keyVersion": "kms://product/consumer-authority-v1/versions/1",
+      "publicKeyDigest": "sha256:694ec304627db44efc207410ccbae54b79d974fc31975a9b38bf9f768fa6fad4",
+      "algorithm": "ECDSA_P256_SHA256",
+      "workloadIdentity": "spiffe://bytedesk.ai/agent-delivery/consumer-authority",
+      "claims": {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audience": "agent-delivery-consumer-authority-v1",
+        "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:consumer-authority-v1",
+        "repository": "ByteDeskAI/bytedesk-agent-delivery",
+        "workflow": ".github/workflows/consumer-authority-v1.yml",
+        "ref": "refs/tags/v1.0.0",
+        "environment": "consumer-authority-v1",
+        "builderDigest": "sha256:b6321ef33892951ec63993fc47cd7c00ed83b24828484dbdb72737016ec39d73"
+      }
+    }
+  ],
+  "requiredEvidence": [
+    "schema",
+    "authority"
+  ],
+  "rules": {
+    "freshnessSeconds": 900,
+    "requireNonce": true,
+    "requirePredecessor": true,
+    "denyDowngrade": true,
+    "withdrawal": "deny_new_use",
+    "outage": "fail_closed_new_work"
+  },
+  "revocations": {
+    "keyVersions": [],
+    "digests": [],
+    "workflows": [],
+    "builders": [],
+    "schemas": [],
+    "renderers": [],
+    "content": []
+  },
+  "failureMode": "fail_closed",
+  "predecessor": {
+    "kind": "none"
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/action-catalog/1.0.0",
+  "profile": "bytedesk.action-catalog/1",
+  "version": 1,
+  "actions": [
+    {
+      "kind": "validate",
+      "portId": "bytedesk.port.agent-spec-validator/1",
+      "operationId": "validate-agent-spec",
+      "requestContract": "bytedesk.port.agent-spec-validator.validate-agent-spec.request/1",
+      "resultContractClass": "resource",
+      "terminalResultContract": "bytedesk.action-result.validate/1",
+      "ownerTask": "AD-04",
+      "cancellableUntil": "before-worker-dispatch",
+      "idempotency": "canonical request digest",
+      "failureCodes": [
+        "invalid_request",
+        "schema_mismatch",
+        "unsupported_version",
+        "artifact_unsafe"
+      ]
+    },
+    {
+      "kind": "render",
+      "portId": "bytedesk.port.renderer-strategy/1",
+      "operationId": "render",
+      "requestContract": "bytedesk.port.renderer-strategy.render.request/1",
+      "resultContractClass": "artifact",
+      "terminalResultContract": "bytedesk.action-result.render/1",
+      "ownerTask": "AD-04",
+      "cancellableUntil": "before-worker-dispatch",
+      "idempotency": "all exact render input digests",
+      "failureCodes": [
+        "renderer_not_allowlisted",
+        "worker_protocol_failed",
+        "renderer_output_invalid",
+        "compatibility_denied"
+      ]
+    },
+    {
+      "kind": "package",
+      "portId": "bytedesk.port.oci-registry/1",
+      "operationId": "push-artifact",
+      "requestContract": "bytedesk.port.oci-registry.push-artifact.request/1",
+      "resultContractClass": "artifact",
+      "terminalResultContract": "bytedesk.action-result.package/1",
+      "ownerTask": "AD-07",
+      "cancellableUntil": "before-first-registry-write",
+      "idempotency": "idempotency key and exact graph digest",
+      "failureCodes": [
+        "artifact_unsafe",
+        "idempotency_collision",
+        "registry_commit_unknown"
+      ]
+    },
+    {
+      "kind": "publish",
+      "portId": "bytedesk.port.catalog/1",
+      "operationId": "publish-catalog-release",
+      "requestContract": "bytedesk.port.catalog.publish-catalog-release.request/1",
+      "resultContractClass": "resource",
+      "terminalResultContract": "bytedesk.action-result.publish/1",
+      "ownerTask": "AD-02",
+      "cancellableUntil": "before-catalog-commit",
+      "idempotency": "idempotency key and canonical catalog digest",
+      "failureCodes": [
+        "precondition_failed",
+        "idempotency_collision",
+        "registry_commit_unknown"
+      ]
+    },
+    {
+      "kind": "import",
+      "portId": "bytedesk.port.control-plane-api-events/1",
+      "operationId": "submit-command",
+      "requestContract": "bytedesk.port.control-plane-api-events.submit-command.request/1",
+      "resultContractClass": "resource",
+      "terminalResultContract": "bytedesk.action-result.import/1",
+      "ownerTask": "AD-10",
+      "cancellableUntil": "before-managed-resource-commit",
+      "idempotency": "idempotency key and canonical command digest",
+      "failureCodes": [
+        "invalid_request",
+        "authorization_denied",
+        "precondition_failed",
+        "idempotency_collision"
+      ]
+    },
+    {
+      "kind": "compile",
+      "portId": "bytedesk.port.private-compiler/1",
+      "operationId": "compile-private-deployment",
+      "requestContract": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
+      "resultContractClass": "artifact",
+      "terminalResultContract": "bytedesk.action-result.compile/1",
+      "ownerTask": "AD-13",
+      "cancellableUntil": "before-private-artifact-publication",
+      "idempotency": "idempotency key and all public/private input digests",
+      "failureCodes": [
+        "authority_invalid",
+        "skill_approval_invalid",
+        "compile_denied",
+        "compile_commit_unknown"
+      ]
+    },
+    {
+      "kind": "sign",
+      "portId": "bytedesk.port.kms-signing/1",
+      "operationId": "sign-digest",
+      "requestContract": "bytedesk.port.kms-signing.sign-digest.request/1",
+      "resultContractClass": "artifact",
+      "terminalResultContract": "bytedesk.action-result.sign/1",
+      "ownerTask": "AD-08",
+      "cancellableUntil": "before-signature-issued",
+      "idempotency": "signing request ID and canonical request digest",
+      "failureCodes": [
+        "signer_purpose_mismatch",
+        "signing_failed",
+        "trust_verification_failed"
+      ]
+    },
+    {
+      "kind": "promote",
+      "portId": "bytedesk.port.promotion-coordinator/1",
+      "operationId": "commit-promotion",
+      "requestContract": "bytedesk.port.promotion-coordinator.commit-promotion.request/1",
+      "resultContractClass": "resource",
+      "terminalResultContract": "bytedesk.action-result.promote/1",
+      "ownerTask": "AD-12",
+      "cancellableUntil": "before-target-state-cas",
+      "idempotency": "idempotency key evidence digests and target precondition",
+      "failureCodes": [
+        "promotion_evidence_missing",
+        "desired_state_cas_mismatch",
+        "desired_state_commit_unknown",
+        "region_epoch_stale"
+      ]
+    },
+    {
+      "kind": "recover",
+      "portId": "bytedesk.port.promotion-coordinator/1",
+      "operationId": "plan-forward-recovery",
+      "requestContract": "bytedesk.port.promotion-coordinator.plan-forward-recovery.request/1",
+      "resultContractClass": "resource",
+      "terminalResultContract": "bytedesk.action-result.recover/1",
+      "ownerTask": "AD-12",
+      "cancellableUntil": "before-recovery-rollout-start",
+      "idempotency": "target history plus current tooling and policy digests",
+      "failureCodes": [
+        "resource_not_found",
+        "compatibility_denied",
+        "trust_verification_failed"
+      ]
+    },
+    {
+      "kind": "withdraw",
+      "portId": "bytedesk.port.control-plane-api-events/1",
+      "operationId": "submit-command",
+      "requestContract": "bytedesk.port.control-plane-api-events.submit-command.request/1",
+      "resultContractClass": "resource",
+      "terminalResultContract": "bytedesk.action-result.withdraw/1",
+      "ownerTask": "AD-10",
+      "cancellableUntil": "before-withdrawal-commit",
+      "idempotency": "idempotency key and canonical command digest",
+      "failureCodes": [
+        "authorization_denied",
+        "precondition_failed",
+        "idempotency_collision"
+      ]
+    },
+    {
+      "kind": "retire",
+      "portId": "bytedesk.port.control-plane-api-events/1",
+      "operationId": "submit-command",
+      "requestContract": "bytedesk.port.control-plane-api-events.submit-command.request/1",
+      "resultContractClass": "resource",
+      "terminalResultContract": "bytedesk.action-result.retire/1",
+      "ownerTask": "AD-10",
+      "cancellableUntil": "before-retirement-commit",
+      "idempotency": "idempotency key and canonical command digest",
+      "failureCodes": [
+        "authorization_denied",
+        "precondition_failed",
+        "idempotency_collision"
+      ]
+    },
+    {
+      "kind": "reconcile",
+      "portId": "bytedesk.port.host-reconciler/1",
+      "operationId": "recover-attempt-journal",
+      "requestContract": "bytedesk.port.host-reconciler.recover-attempt-journal.request/1",
+      "resultContractClass": "resource",
+      "terminalResultContract": "bytedesk.action-result.reconcile/1",
+      "ownerTask": "AD-14",
+      "cancellableUntil": "before-active-slot-switch",
+      "idempotency": "attempt ID target revision and target digest",
+      "failureCodes": [
+        "host_fenced",
+        "host_switch_indeterminate",
+        "host_readback_mismatch"
+      ]
+    },
+    {
+      "kind": "archive",
+      "portId": "bytedesk.port.evidence-archive/1",
+      "operationId": "advance-archive-root",
+      "requestContract": "bytedesk.port.evidence-archive.advance-archive-root.request/1",
+      "resultContractClass": "resource",
+      "terminalResultContract": "bytedesk.action-result.archive/1",
+      "ownerTask": "AD-08",
+      "cancellableUntil": "before-archive-root-cas",
+      "idempotency": "idempotency key and exact previous archive-root precondition",
+      "failureCodes": [
+        "precondition_failed",
+        "idempotency_collision",
+        "archive_restore_failed"
+      ]
+    },
+    {
+      "kind": "restore",
+      "portId": "bytedesk.port.evidence-archive/1",
+      "operationId": "restore-evidence",
+      "requestContract": "bytedesk.port.evidence-archive.restore-evidence.request/1",
+      "resultContractClass": "artifact",
+      "terminalResultContract": "bytedesk.action-result.restore/1",
+      "ownerTask": "AD-18",
+      "cancellableUntil": "before-restored-evidence-publication",
+      "idempotency": "idempotency key and exact archive/evidence digests",
+      "failureCodes": [
+        "resource_not_found",
+        "trust_verification_failed",
+        "archive_restore_failed"
+      ]
+    },
+    {
+      "kind": "region_failover",
+      "portId": "bytedesk.port.region-fence/1",
+      "operationId": "activate-recovery-region",
+      "requestContract": "bytedesk.port.region-fence.activate-recovery-region.request/1",
+      "resultContractClass": "resource",
+      "terminalResultContract": "bytedesk.action-result.region-failover/1",
+      "ownerTask": "AD-18",
+      "cancellableUntil": "before-region-epoch-commit",
+      "idempotency": "idempotency key and exact fence verification evidence",
+      "failureCodes": [
+        "region_epoch_stale",
+        "region_fence_unproven",
+        "desired_state_commit_unknown"
+      ]
+    }
+  ]
+}

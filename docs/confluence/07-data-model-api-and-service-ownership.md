@@ -75,7 +75,8 @@ deployment revision rather than a separate private-render artifact.
 
 Records the private compiled artifact, tenant-free public-render lineage,
 binding/customization digest, selected public/private skill descriptors,
-embedded effective render bundle and manifest, public-byte reuse decision, and
+embedded effective render manifest, exact payload descriptor, authenticated
+renderer execution lineage, public-byte reuse decision, and
 all current consumer-provided subdigests: organizational profile, policy,
 grants, provider access, credential-version references, execution/sandbox
 approval, runtime target, and stable slot. Raw secret values are never stored in
@@ -83,9 +84,11 @@ the record or artifact. V1 has no separate private-render artifact.
 
 ### Runtime release
 
-Aggregates the exact desired deployment revisions for one runtime. It has a
-monotonic revision, predecessor, rollout policy, system package descriptor, and
-signed release manifest digest.
+Aggregates the exact canonical deployment descriptor and separate exact
+private-compilation-evidence descriptor for every subject intended for one
+runtime. It has a monotonic revision, predecessor, rollout policy, system
+package descriptor, `consumer-runtime-release-v1` signing result, and signed
+release manifest digest.
 
 ### Target delivery state
 

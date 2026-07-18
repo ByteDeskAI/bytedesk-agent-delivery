@@ -1,0 +1,28 @@
+{
+  "contract": "bytedesk.verification-result/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+    "digest": "sha256:0acdbdbfeb5c84af9ab26a32b9d5a5e49dba4a1dd45189ac1e82a635bb5ab9b6"
+  },
+  "verificationId": "public-finalization-renderer-native-1.0.0-amd64-status-verification",
+  "subject": {
+    "repository": "registry.example/product/status",
+    "digest": "sha256:d10ca5df8c08e8864ef1729cd41af0a68ee2ad1f1706993a5ee37b5ef5d5a0e4",
+    "mediaType": "application/vnd.bytedesk.agent.release-status.v1+json",
+    "size": 2645,
+    "trustPolicy": {
+      "id": "release-status-v1",
+      "digest": "sha256:050cc2bb0b00d65f5531f508c9927d55e599f40b207313707ef19346842eea87"
+    }
+  },
+  "policy": {
+    "id": "release-status-v1",
+    "digest": "sha256:050cc2bb0b00d65f5531f508c9927d55e599f40b207313707ef19346842eea87"
+  },
+  "evaluatedAt": "2026-07-17T12:00:06.500000Z",
+  "outcome": "permitted",
+  "reasonCodes": [],
+  "evidenceDigests": [
+    "sha256:9e46d071b15b1ea6f9f79067565b9473783581a73d9382742af6865917b80fad"
+  ]
+}

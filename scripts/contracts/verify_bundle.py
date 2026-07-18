@@ -70,6 +70,16 @@ from validate_schemas import (
     validate_positive_fixture_coverage,
     validate_schema_inventory,
 )
+from release_evidence import (
+    ReleaseEvidenceEvaluation,
+    release_evidence_subject,
+    validate_release_evidence,
+    validate_release_evidence_schema,
+)
+from signing_authority import (
+    SIGNER_IDENTITY_FIELDS_BY_CREDENTIAL,
+    signer_identity_digest,
+)
 
 
 CONTRACT_BUNDLE_SCHEMA_ID = (
@@ -85,6 +95,7 @@ TRUST_POLICY_SCHEMA_ID = (
     "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0"
 )
 CONTRACT_BUNDLE_MEDIA_TYPE = "application/vnd.bytedesk.agent.contract-bundle.v1+json"
+CONTRACT_BUNDLE_RELEASE_PURPOSE = "contract-bundle-release-v1"
 MAX_SIGNING_REQUEST_VALIDITY = timedelta(minutes=5)
 MAX_SIGNATURE_EVIDENCE_BYTES = 64 * 1024 * 1024
 MAX_EXTERNAL_VERIFIER_BYTES = 256 * 1024 * 1024
@@ -92,6 +103,7 @@ MAX_REPLAY_LEDGER_BYTES = 64 * 1024 * 1024
 PINNED_REUSABLE_WORKFLOW_PATTERN = re.compile(
     r"^\.github/workflows/[A-Za-z0-9._-]+\.ya?ml@[0-9a-f]{40}$"
 )
+SHA256_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
 MANIFEST_ARCHIVE_PATH = "bundle/manifest.json"
 REPOSITORY_ONLY_RELEASE_PATTERNS = (
     "contracts/schemas/repository/*.schema.json",
@@ -671,6 +683,8 @@ def parse_timestamp(value: str, description: str) -> datetime:
 @dataclass(frozen=True)
 class TrustEvaluation:
     policy_digest: str
+    credential_kind: str
+    signer_identity_digest: str
     certificate_identity: str
     certificate_oidc_issuer: str
     certificate_audience: str
@@ -679,7 +693,9 @@ class TrustEvaluation:
     source_repository: str
     source_ref: str
     environment: str
-    builder_digest: str | None
+    trusted_root_digest: str
+    builder_digest: str
+    pre_sign_certification_digest: str
 
 
 def load_canonical_trust_policy(path: Path) -> tuple[dict[str, Any], bytes]:
@@ -694,12 +710,15 @@ def preflight_trust_policy(
     policy_bytes: bytes,
     *,
     expected_policy: dict[str, str],
+    expected_repository: str,
     request: dict[str, Any],
     manifest: dict[str, Any],
     verification_time: str,
     available_evidence: set[str],
+    authenticated_builder_digest: str,
+    authenticated_pre_sign_certification_digest: str,
 ) -> TrustEvaluation:
-    """Evaluate the closed product-release policy without artifact code/data.
+    """Evaluate the closed contract-bundle-release policy without artifact code/data.
 
     The policy snapshot is independently supplied and pinned by its raw
     canonical digest. This procedural profile runs before signature adapter
@@ -749,41 +768,45 @@ def preflight_trust_policy(
     if not_before >= not_after or evaluated_at < not_before or evaluated_at >= not_after:
         raise ContractToolError("trust policy is not effective at verification time")
 
+    if not isinstance(expected_repository, str) or not expected_repository:
+        raise ContractToolError("independently expected contract repository is invalid")
+    if request.get("repository") != expected_repository:
+        raise ContractToolError(
+            "signing request repository differs from the independent verifier input"
+        )
+    if request.get("mediaType") != CONTRACT_BUNDLE_MEDIA_TYPE:
+        raise ContractToolError("signing request is not for the contract-bundle media type")
+    if request.get("purpose") != CONTRACT_BUNDLE_RELEASE_PURPOSE:
+        raise ContractToolError("signing request is not for contract-bundle-release-v1")
+
     scope = policy.get("scope")
-    allowed_scope_fields = {"repositories", "mediaTypes", "purposes", "consumers", "targets"}
-    if (
-        not isinstance(scope, dict)
-        or not {"repositories", "mediaTypes", "purposes"}.issubset(scope)
-        or not set(scope).issubset(allowed_scope_fields)
-        or not all(isinstance(scope[field], list) for field in scope)
-    ):
-        raise ContractToolError("trust policy scope is not a closed array profile")
-    if request["repository"] not in scope["repositories"]:
-        raise ContractToolError("signing request repository is outside trust-policy scope")
-    if request["mediaType"] not in scope["mediaTypes"]:
-        raise ContractToolError("signing request media type is outside trust-policy scope")
-    if request["purpose"] not in scope["purposes"]:
-        raise ContractToolError("signing request purpose is outside trust-policy scope")
+    required_scope_fields = {"repositories", "mediaTypes", "purposes"}
+    if not isinstance(scope, dict) or set(scope) != required_scope_fields:
+        raise ContractToolError(
+            "contract-bundle trust-policy scope must contain exactly repositories, "
+            "mediaTypes, and purposes"
+        )
+    if scope["repositories"] != [expected_repository]:
+        raise ContractToolError(
+            "contract-bundle trust-policy scope must contain exactly the independently "
+            "expected repository"
+        )
+    if scope["mediaTypes"] != [CONTRACT_BUNDLE_MEDIA_TYPE]:
+        raise ContractToolError(
+            "contract-bundle trust-policy scope must contain exactly the contract-bundle "
+            "JSON media type"
+        )
+    if scope["purposes"] != [CONTRACT_BUNDLE_RELEASE_PURPOSE]:
+        raise ContractToolError(
+            "contract-bundle trust-policy scope must contain exactly "
+            "contract-bundle-release-v1"
+        )
 
     signers = policy.get("signers")
-    if not isinstance(signers, list):
-        raise ContractToolError("trust policy signers must be an array")
-    signer_matches: list[dict[str, Any]] = []
-    signer_fields = {"purpose", "keyVersion", "algorithm", "workloadIdentity", "claims"}
-    for signer in signers:
-        if not isinstance(signer, dict) or set(signer) != signer_fields:
-            raise ContractToolError("trust policy signer is not closed")
-        if (
-            signer.get("purpose") == request["purpose"]
-            and signer.get("keyVersion") == request["keyVersion"]
-        ):
-            signer_matches.append(signer)
-    if len(signer_matches) != 1:
-        raise ContractToolError("trust policy does not select exactly one signer")
-    signer = signer_matches[0]
-    if signer["algorithm"] != "ECDSA_P256_SHA256":
-        raise ContractToolError("trust policy signer algorithm is unsupported")
-    claims = signer["claims"]
+    if not isinstance(signers, list) or len(signers) != 1:
+        raise ContractToolError(
+            "contract-bundle trust policy must contain exactly one keyless signer"
+        )
     required_claims = {
         "issuer",
         "audience",
@@ -792,28 +815,81 @@ def preflight_trust_policy(
         "workflow",
         "ref",
         "environment",
+        "builderDigest",
     }
-    allowed_claims = required_claims | {"builderDigest"}
-    if not isinstance(claims, dict) or not required_claims.issubset(claims) or not set(
-        claims
-    ).issubset(allowed_claims):
-        raise ContractToolError("product-release signer claims are incomplete or open")
+    for signer in signers:
+        if not isinstance(signer, dict):
+            raise ContractToolError("trust policy signer is not closed")
+        signer_fields = SIGNER_IDENTITY_FIELDS_BY_CREDENTIAL.get(
+            signer.get("credentialKind")
+        )
+        if signer_fields is None or set(signer) != signer_fields:
+            raise ContractToolError("trust policy signer is not closed")
+        signer_claims = signer.get("claims")
+        if (
+            not isinstance(signer.get("purpose"), str)
+            or not signer["purpose"]
+            or signer.get("algorithm") != "ECDSA_P256_SHA256"
+            or not isinstance(signer.get("workloadIdentity"), str)
+            or not signer["workloadIdentity"]
+            or not isinstance(signer_claims, dict)
+            or set(signer_claims) != required_claims
+            or not all(
+                isinstance(signer_claims[field], str) and signer_claims[field]
+                for field in required_claims
+            )
+        ):
+            raise ContractToolError("trust policy signer identity is invalid")
+        if signer["credentialKind"] != "sigstore_keyless":
+            raise ContractToolError(
+                "contract-bundle trust policy forbids KMS and requires a keyless signer"
+            )
+        if (
+            not isinstance(signer.get("trustedRootDigest"), str)
+            or SHA256_PATTERN.fullmatch(signer["trustedRootDigest"]) is None
+        ):
+            raise ContractToolError("trust policy keyless signer identity is invalid")
+    signer = signers[0]
+    if signer.get("purpose") != CONTRACT_BUNDLE_RELEASE_PURPOSE:
+        raise ContractToolError(
+            "contract-bundle trust-policy signer has the wrong purpose"
+        )
+    if request.get("credentialKind") != "sigstore_keyless":
+        raise ContractToolError("contract-bundle releases require Sigstore keyless signing")
+    if signer_identity_digest(signer) != request.get("signerIdentityDigest"):
+        raise ContractToolError(
+            "contract-bundle trust policy does not select the exact requested signer"
+        )
+    if signer["algorithm"] != "ECDSA_P256_SHA256":
+        raise ContractToolError("trust policy signer algorithm is unsupported")
+    if (
+        not isinstance(signer["trustedRootDigest"], str)
+        or SHA256_PATTERN.fullmatch(signer["trustedRootDigest"]) is None
+    ):
+        raise ContractToolError("trust policy signer trusted-root digest is invalid")
+    claims = signer["claims"]
+    if not isinstance(claims, dict) or set(claims) != required_claims:
+        raise ContractToolError("contract-bundle-release signer claims are incomplete or open")
     if not all(isinstance(claims[field], str) and claims[field] for field in required_claims):
-        raise ContractToolError("product-release signer claim values are invalid")
+        raise ContractToolError("contract-bundle-release signer claim values are invalid")
     if not isinstance(signer["workloadIdentity"], str) or not signer["workloadIdentity"]:
-        raise ContractToolError("product-release signer workload identity is invalid")
+        raise ContractToolError("contract-bundle-release signer workload identity is invalid")
     if PINNED_REUSABLE_WORKFLOW_PATTERN.fullmatch(claims["workflow"]) is None:
         raise ContractToolError(
-            "product-release signer workflow must be an exact SHA-pinned reusable workflow"
+            "contract-bundle-release signer workflow must be an exact SHA-pinned reusable workflow"
         )
     if not claims["ref"].startswith("refs/tags/v"):
-        raise ContractToolError("product-release signer ref is not an immutable release-tag profile")
+        raise ContractToolError(
+            "contract-bundle-release signer ref is not an immutable release-tag profile"
+        )
     if f":environment:{claims['environment']}" not in claims["subject"]:
-        raise ContractToolError("product-release signer subject does not bind its environment")
+        raise ContractToolError(
+            "contract-bundle-release signer subject does not bind its environment"
+        )
     certificate_identity = f"https://github.com/{claims['repository']}/{claims['workflow']}"
     if signer["workloadIdentity"] != certificate_identity:
         raise ContractToolError(
-            "product-release workload identity must equal the authenticated Fulcio SAN URI"
+            "contract-bundle-release workload identity must equal the authenticated Fulcio SAN URI"
         )
 
     rules = policy.get("rules")
@@ -828,7 +904,9 @@ def preflight_trust_policy(
     if not isinstance(rules, dict) or set(rules) != rule_fields:
         raise ContractToolError("trust policy rules are not closed")
     if rules["requireNonce"] is not True or not isinstance(rules["freshnessSeconds"], int):
-        raise ContractToolError("product-release trust policy must require bounded nonce freshness")
+        raise ContractToolError(
+            "contract-bundle-release trust policy must require bounded nonce freshness"
+        )
     issued_at = parse_timestamp(request["issuedAt"], "signing request issuedAt")
     if evaluated_at < issued_at or (
         evaluated_at - issued_at
@@ -862,15 +940,63 @@ def preflight_trust_policy(
         or not all(isinstance(revocations[field], list) for field in revocation_fields)
     ):
         raise ContractToolError("trust policy revocations are not closed arrays")
-    if request["keyVersion"] in revocations["keyVersions"]:
-        raise ContractToolError("trust policy revokes the signing key version")
+    string_revocations = {
+        "keyVersions": 2048,
+        "workflows": 1024,
+    }
+    digest_revocations = {
+        "digests",
+        "builders",
+        "schemas",
+        "renderers",
+        "content",
+    }
+    for field, maximum_length in string_revocations.items():
+        values = revocations[field]
+        if (
+            len(values) > 100_000
+            or not all(
+                isinstance(value, str) and 0 < len(value) <= maximum_length
+                for value in values
+            )
+            or len(values) != len(set(values))
+        ):
+            raise ContractToolError(f"trust policy {field} revocations are invalid")
+    for field in digest_revocations:
+        values = revocations[field]
+        if (
+            len(values) > 100_000
+            or not all(
+                isinstance(value, str) and SHA256_PATTERN.fullmatch(value) is not None
+                for value in values
+            )
+            or len(values) != len(set(values))
+        ):
+            raise ContractToolError(f"trust policy {field} revocations are invalid")
     if claims["workflow"] in revocations["workflows"]:
         raise ContractToolError("trust policy revokes the signing workflow")
-    builder_digest = claims.get("builderDigest")
-    if builder_digest is not None and (
-        not isinstance(builder_digest, str) or builder_digest in revocations["builders"]
+    if signer["trustedRootDigest"] in revocations["digests"]:
+        raise ContractToolError("trust policy revokes the Sigstore trusted root")
+    builder_digest = claims["builderDigest"]
+    if (
+        not isinstance(builder_digest, str)
+        or SHA256_PATTERN.fullmatch(builder_digest) is None
+        or builder_digest in revocations["builders"]
     ):
         raise ContractToolError("trust policy revokes or invalidates the signing builder")
+    if request["builderDigest"] != builder_digest:
+        raise ContractToolError("signed request builder digest differs from trust policy")
+    if authenticated_builder_digest != builder_digest:
+        raise ContractToolError(
+            "executed-distribution builder digest differs from trust policy"
+        )
+    if (
+        request["preSignCertificationDigest"]
+        != authenticated_pre_sign_certification_digest
+    ):
+        raise ContractToolError(
+            "signed request does not bind the resolved pre-sign certification"
+        )
     manifest_digest = sha256_bytes(canonical_json(manifest))
     if manifest_digest in revocations["digests"] or manifest_digest in revocations["content"]:
         raise ContractToolError("trust policy revokes the contract bundle manifest")
@@ -886,6 +1012,8 @@ def preflight_trust_policy(
 
     return TrustEvaluation(
         policy_digest=policy_digest,
+        credential_kind=signer["credentialKind"],
+        signer_identity_digest=request["signerIdentityDigest"],
         certificate_identity=certificate_identity,
         certificate_oidc_issuer=claims["issuer"],
         certificate_audience=claims["audience"],
@@ -894,7 +1022,9 @@ def preflight_trust_policy(
         source_repository=claims["repository"],
         source_ref=claims["ref"],
         environment=claims["environment"],
+        trusted_root_digest=signer["trustedRootDigest"],
         builder_digest=builder_digest,
+        pre_sign_certification_digest=request["preSignCertificationDigest"],
     )
 
 
@@ -903,10 +1033,13 @@ def evaluate_trust_policy(
     policy_bytes: bytes,
     *,
     expected_policy: dict[str, str],
+    expected_repository: str,
     request: dict[str, Any],
     manifest: dict[str, Any],
     verification_time: str,
     available_evidence: set[str],
+    authenticated_builder_digest: str,
+    authenticated_pre_sign_certification_digest: str,
     registry: Any,
     schemas: dict[str, tuple[str, Any]],
 ) -> TrustEvaluation:
@@ -930,10 +1063,15 @@ def evaluate_trust_policy(
         policy,
         policy_bytes,
         expected_policy=expected_policy,
+        expected_repository=expected_repository,
         request=request,
         manifest=manifest,
         verification_time=verification_time,
         available_evidence=available_evidence,
+        authenticated_builder_digest=authenticated_builder_digest,
+        authenticated_pre_sign_certification_digest=(
+            authenticated_pre_sign_certification_digest
+        ),
     )
 
 
@@ -957,7 +1095,10 @@ def validate_signing_request_bindings(
         "schema",
         "requestId",
         "purpose",
-        "keyVersion",
+        "credentialKind",
+        "signerIdentityDigest",
+        "builderDigest",
+        "preSignCertificationDigest",
         "repository",
         "digest",
         "mediaType",
@@ -978,7 +1119,10 @@ def validate_signing_request_bindings(
     exact_fields = {
         "requestId": expected["requestId"],
         "purpose": expected["purpose"],
-        "keyVersion": expected["keyVersion"],
+        "credentialKind": expected["credentialKind"],
+        "signerIdentityDigest": expected["signerIdentityDigest"],
+        "builderDigest": expected["builderDigest"],
+        "preSignCertificationDigest": expected["preSignCertificationDigest"],
         "repository": expected["repository"],
         "digest": sha256_bytes(manifest_bytes),
         "mediaType": CONTRACT_BUNDLE_MEDIA_TYPE,
@@ -990,8 +1134,12 @@ def validate_signing_request_bindings(
     for field, value in exact_fields.items():
         if request.get(field) != value:
             raise ContractToolError(f"signing request {field} does not match independent input")
-    if request.get("purpose") != "product-release-v1":
-        raise ContractToolError("contract bundles require product-release-v1 signing purpose")
+    if request.get("purpose") != CONTRACT_BUNDLE_RELEASE_PURPOSE:
+        raise ContractToolError(
+            "contract bundles require contract-bundle-release-v1 signing purpose"
+        )
+    if request.get("credentialKind") != "sigstore_keyless":
+        raise ContractToolError("contract bundles require Sigstore keyless signing")
 
     issued_at = parse_timestamp(request["issuedAt"], "signing request issuedAt")
     expires_at = parse_timestamp(request["expiresAt"], "signing request expiresAt")
@@ -1391,13 +1539,17 @@ def main() -> int:
     parser.add_argument("--expected-request-id")
     parser.add_argument("--expected-repository")
     parser.add_argument("--expected-purpose")
-    parser.add_argument("--expected-key-version")
+    parser.add_argument("--expected-credential-kind")
+    parser.add_argument("--expected-signer-identity-digest")
+    parser.add_argument("--expected-builder-digest")
     parser.add_argument("--expected-nonce")
     parser.add_argument("--expected-issued-at")
     parser.add_argument("--expected-expires-at")
     parser.add_argument("--verification-time")
     parser.add_argument("--replay-ledger", type=Path)
     parser.add_argument("--allow-test-local-replay-ledger", action="store_true")
+    parser.add_argument("--release-evidence-attestation", type=Path)
+    parser.add_argument("--release-evidence-dir", type=Path)
     parser.add_argument("--allow-unsigned-structure", action="store_true")
     parser.add_argument("--evidence", type=Path)
     args = parser.parse_args()
@@ -1450,6 +1602,13 @@ def main() -> int:
         raise ContractToolError(
             "select exactly one verification mode: explicit test signature, external Adapter conformance, or unsigned structure"
         )
+    if args.allow_unsigned_structure and (
+        args.release_evidence_attestation is not None
+        or args.release_evidence_dir is not None
+    ):
+        raise ContractToolError(
+            "unsigned structure verification cannot claim release evidence"
+        )
 
     request_digest: str | None = None
     signature_verification: dict[str, str] | None = None
@@ -1458,12 +1617,26 @@ def main() -> int:
     request_bytes: bytes | None = None
     external_verification_input: bytes | None = None
     external_verification_output: bytes | None = None
+    release_evidence_evaluation: ReleaseEvidenceEvaluation | None = None
     if test_mode_requested or external_mode_requested:
         binding_values = {
             "requestId": args.expected_request_id,
             "repository": args.expected_repository,
             "purpose": args.expected_purpose,
-            "keyVersion": args.expected_key_version,
+            "credentialKind": args.expected_credential_kind,
+            "signerIdentityDigest": args.expected_signer_identity_digest,
+            "builderDigest": args.expected_builder_digest,
+            "preSignCertificationDigest": (
+                sha256_bytes(
+                    stable_read_bytes(
+                        args.release_evidence_attestation.absolute(),
+                        description="independently supplied pre-sign certification",
+                        maximum_bytes=MAX_SIGNATURE_EVIDENCE_BYTES,
+                    )
+                )
+                if args.release_evidence_attestation is not None
+                else None
+            ),
             "nonce": args.expected_nonce,
             "issuedAt": args.expected_issued_at,
             "expiresAt": args.expected_expires_at,
@@ -1475,10 +1648,12 @@ def main() -> int:
             or args.verification_time is None
             or args.replay_ledger is None
             or args.trust_policy is None
+            or args.release_evidence_attestation is None
+            or args.release_evidence_dir is None
         ):
             raise ContractToolError(
                 "signed verification lacks independent request bindings: "
-                f"{missing + ([] if args.verification_time else ['verificationTime']) + ([] if args.replay_ledger else ['replayLedger']) + ([] if args.trust_policy else ['trustPolicySnapshot'])}"
+                f"{missing + ([] if args.verification_time else ['verificationTime']) + ([] if args.replay_ledger else ['replayLedger']) + ([] if args.trust_policy else ['trustPolicySnapshot']) + ([] if args.release_evidence_attestation else ['releaseEvidenceAttestation']) + ([] if args.release_evidence_dir else ['releaseEvidenceDirectory'])}"
             )
         if not args.allow_test_local_replay_ledger:
             raise ContractToolError(
@@ -1494,7 +1669,7 @@ def main() -> int:
     else:
         request_path = None
 
-    available_evidence = {"schema", "compatibility"}
+    available_evidence: set[str] = set()
     if request_path is not None:
         request, request_bytes = load_canonical_request(request_path.absolute())
         request_digest = validate_signing_request_bindings(
@@ -1504,14 +1679,39 @@ def main() -> int:
             args.verification_time,
         )
         policy, policy_bytes = load_canonical_trust_policy(args.trust_policy.absolute())
+        evidence_subject = release_evidence_subject(
+            repository=request["repository"],
+            digest=archive_snapshot.digest,
+            size=archive_snapshot.size,
+            trust_policy=expected_policy,
+        )
+        release_evidence_evaluation = validate_release_evidence(
+            args.release_evidence_attestation.absolute(),
+            args.release_evidence_dir.absolute(),
+            repo_root=Path(__file__).resolve().parents[2],
+            subject=evidence_subject,
+            policy=policy,
+            policy_bytes=policy_bytes,
+            expected_policy=expected_policy,
+            manifest=manifest,
+            manifest_bytes=manifest_bytes,
+            members=members,
+            verification_time=args.verification_time,
+        )
+        available_evidence = set(release_evidence_evaluation.available_evidence)
         trust_evaluation = preflight_trust_policy(
             policy,
             policy_bytes,
             expected_policy=expected_policy,
+            expected_repository=args.expected_repository,
             request=request,
             manifest=manifest,
             verification_time=args.verification_time,
             available_evidence=available_evidence,
+            authenticated_builder_digest=release_evidence_evaluation.builder_digest,
+            authenticated_pre_sign_certification_digest=(
+                release_evidence_evaluation.attestation_digest
+            ),
         )
     else:
         policy = None
@@ -1582,6 +1782,10 @@ def main() -> int:
                 args.expected_workload_identity,
                 trust_evaluation.workload_identity,
             ),
+            "Sigstore trusted-root digest": (
+                args.expected_sigstore_trusted_root_digest,
+                trust_evaluation.trusted_root_digest,
+            ),
         }
         for description, (supplied, derived) in independently_expected.items():
             if supplied is not None and supplied != derived:
@@ -1606,7 +1810,7 @@ def main() -> int:
             manifest_bytes,
             binding_values,
             args.verification_time,
-            args.expected_sigstore_trusted_root_digest,
+            trust_evaluation.trusted_root_digest,
             args.expected_cosign_digest,
             trust_evaluation.certificate_identity,
             trust_evaluation.certificate_oidc_issuer,
@@ -1646,6 +1850,12 @@ def main() -> int:
     verify_inventory(manifest, members)
     verify_build_input_digest(manifest, members)
     validate_authenticated_bundle_semantics(manifest, members, registry, schemas)
+    if release_evidence_evaluation is not None:
+        validate_release_evidence_schema(
+            release_evidence_evaluation,
+            registry=registry,
+            schemas=schemas,
+        )
 
     if request is not None:
         full_request_digest = validate_signing_request(
@@ -1664,10 +1874,15 @@ def main() -> int:
             policy,
             policy_bytes,
             expected_policy=expected_policy,
+            expected_repository=args.expected_repository,
             request=request,
             manifest=manifest,
             verification_time=args.verification_time,
             available_evidence=available_evidence,
+            authenticated_builder_digest=release_evidence_evaluation.builder_digest,
+            authenticated_pre_sign_certification_digest=(
+                release_evidence_evaluation.attestation_digest
+            ),
             registry=registry,
             schemas=schemas,
         )
@@ -1726,13 +1941,33 @@ def main() -> int:
     if trust_evaluation is not None:
         trust_evaluation_evidence = {
             "policyDigest": trust_evaluation.policy_digest,
+            "credentialKind": trust_evaluation.credential_kind,
+            "signerIdentityDigest": trust_evaluation.signer_identity_digest,
             "certificateIdentity": trust_evaluation.certificate_identity,
             "certificateOidcIssuer": trust_evaluation.certificate_oidc_issuer,
             "workloadIdentity": trust_evaluation.workload_identity,
             "workflow": trust_evaluation.workflow,
             "sourceRepository": trust_evaluation.source_repository,
             "sourceRef": trust_evaluation.source_ref,
-            "builderDigest": trust_evaluation.builder_digest,
+            "keylessVerificationAnchor": {
+                "trustedRootDigest": trust_evaluation.trusted_root_digest,
+                "independentlySuppliedBytesAuthenticated": external_mode_requested,
+            },
+            "builderBinding": {
+                "digest": trust_evaluation.builder_digest,
+                "policyMatch": True,
+                "signedRequestMatch": True,
+                "executedDistributionMatch": True,
+                "builderExecutionAuthenticated": False,
+                "binding": "conformance_only",
+            },
+            "preSignCertificationBinding": {
+                "digest": trust_evaluation.pre_sign_certification_digest,
+                "signedRequestMatch": True,
+                "resolvedEvidenceMatch": True,
+                "certificationAuthenticated": False,
+                "binding": "conformance_only",
+            },
             "policyOnlyClaimsNotPostHocCertificateAssertions": {
                 "fulcioIssuanceAudience": trust_evaluation.certificate_audience,
                 "tokenEnvironment": trust_evaluation.environment,
@@ -1764,6 +1999,22 @@ def main() -> int:
         "verificationResultDigest": None,
         "signatureVerification": signature_verification,
         "trustPolicyEvaluation": trust_evaluation_evidence,
+        "releaseEvidence": (
+            {
+                "attestationDigest": release_evidence_evaluation.attestation_digest,
+                "availableEvidence": sorted(
+                    release_evidence_evaluation.available_evidence
+                ),
+                "evidenceDigests": dict(release_evidence_evaluation.evidence_digests),
+                "evaluatedAt": release_evidence_evaluation.evaluated_at,
+                "evaluator": dict(release_evidence_evaluation.evaluator),
+                "authorityIssued": release_evidence_evaluation.authority_issued,
+                "attestationAuthenticated": False,
+                "resolution": "test-local-conformance-files",
+            }
+            if release_evidence_evaluation is not None
+            else None
+        ),
         "repositoryOnlyPathExclusion": {
             "patterns": list(REPOSITORY_ONLY_RELEASE_PATTERNS),
             "outcome": "pass",

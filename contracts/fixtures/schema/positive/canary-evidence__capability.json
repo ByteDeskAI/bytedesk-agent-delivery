@@ -1,6 +1,6 @@
 {
   "contract": "bytedesk.canary-evidence/1",
-  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-evidence/1.0.0", "digest": "sha256:0b0cab5e7cc9141d23570de7385c1a529d30818c27803a59ae94a738214c6e95" },
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-evidence/1.0.0", "digest": "sha256:5eb14e112b0176232119f753eac423d615796103f780e4e08afc0f7b3af76af9" },
   "evidenceId": "canary-evidence-capability-01",
   "actor": "consumer_capability_verifier",
   "rolloutId": "rollout-01",
@@ -22,6 +22,12 @@
   "actorIdentity": "spiffe://consumer.example/capability-verifier",
   "actorVersion": "1.0.0",
   "signerPolicy": { "id": "consumer-capability-evidence-v1", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" },
+  "capabilityDispatch": {
+    "requestDigest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+    "receiptDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checkProfileDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "authorizationDecisionDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
   "results": {
     "mode": "required",
     "workload_login": { "actual": "passed", "trace": { "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "classification": "restricted" } },

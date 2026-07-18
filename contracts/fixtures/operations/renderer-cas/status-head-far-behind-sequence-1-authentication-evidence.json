@@ -1,0 +1,53 @@
+{
+  "contract": "bytedesk.release-status-head-authentication-evidence/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status-head-authentication-evidence/1.0.0",
+    "digest": "sha256:80de945991486aca16e229083880d1983b08ec00618239d9b46ff682355a92ed"
+  },
+  "purpose": "release-status-head-v1",
+  "checkpointDigest": "sha256:a8b536b5802f21273ec64c6874c676abda033430cb8216f8d56d0307f66cc192",
+  "requestNonce": "status_head_nonce_status-head-far-behind-sequence-1_0123456789abcdef",
+  "authorityBindingDigest": "sha256:30a870af3677151355c1d260f6d308055df7b50996845fc958f0c8c89905f284",
+  "signingResult": {
+    "contract": "bytedesk.signing-result/1",
+    "schema": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0",
+      "digest": "sha256:a64e23f1ae5a04e0c26c67085a41e8d0d70a9df9d45b1ec789c72c7634543ede"
+    },
+    "requestId": "sign-status-head-far-behind-sequence-1",
+    "requestDigest": "sha256:0a79b6e0dcb79ee9a8cd0af75c800daaa3bc590944cbc73187326c457ec93738",
+    "purpose": "release-status-head-v1",
+    "keyVersion": "kms://product/release-status-head-v1/versions/1",
+    "algorithm": "ECDSA_P256_SHA256",
+    "publicKeyDigest": "sha256:0a4c8de2f435b9898240bcd3231bac4df64dcfff75125fb71604f0aba9232cbc",
+    "repository": "registry.example/product/status-heads",
+    "subjectDigest": "sha256:a8b536b5802f21273ec64c6874c676abda033430cb8216f8d56d0307f66cc192",
+    "subjectMediaType": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json",
+    "signatureBundle": {
+      "repository": "registry.example/product/status-heads",
+      "digest": "sha256:5a4ef6fd3e42fd27385bd9fb30f8c490fe12c1eb1fd5d134867081dfcaa4eeb3",
+      "mediaType": "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "size": 2199,
+      "trustPolicy": {
+        "id": "release-status-head-v1",
+        "digest": "sha256:6d815798af5b075b271a71366f3f085fae5e48eed0f61c7c5c03b71c046ab036"
+      }
+    },
+    "trustPolicy": {
+      "id": "release-status-head-v1",
+      "digest": "sha256:6d815798af5b075b271a71366f3f085fae5e48eed0f61c7c5c03b71c046ab036"
+    },
+    "providerAuditEvidence": {
+      "repository": "registry.example/product/status-heads",
+      "digest": "sha256:99f4afa3522f62a83af2491046dd88323667772d7339508998a2e0ab27c5c378",
+      "mediaType": "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "size": 1742,
+      "trustPolicy": {
+        "id": "release-status-head-v1",
+        "digest": "sha256:6d815798af5b075b271a71366f3f085fae5e48eed0f61c7c5c03b71c046ab036"
+      }
+    },
+    "signedAt": "2026-07-17T12:00:01Z"
+  },
+  "evidenceDigest": "sha256:e7b46759d6df86d40081d01caad11d9a51e3fcc055d42c1c7bf57e380c468f6a"
+}

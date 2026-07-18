@@ -7,9 +7,9 @@
 product-schema inventory. That JCS control has exactly the root fields
 `profile` and `schemas`; every entry has exactly `id`, repository-relative
 `path`, and RFC 8785 SHA-256 `digest`, in ascending ID order. The current
-inventory closes the set at 49 schemas. The builder accepts
+inventory closes the set at 112 schemas. The builder accepts
 the exact product version, deterministic creation time, and independently
-configured immutable `product-release-v1` trust-policy ID and digest. It
+configured immutable `contract-bundle-release-v1` trust-policy ID and digest. It
 resolves only repository files, classifies every JSON member by its closed v1
 semantic role, expands schema fixtures only from the primary fixture index, and
 emits:
@@ -33,6 +33,22 @@ and bundled-schema registry rather than trusting those manifest claims. An
 extra, missing, linked, non-regular, path-escaping, noncanonical structured
 control, semantically inconsistent index, or metadata-varying tar member fails
 verification.
+
+The 312-entry fixture index—159 valid instances and 153 invalid instances—
+includes the exact live action, problem, event, port-registry, protocol-profile,
+protocol-fixture, conformance-case, port-type, conformance-plan, and port-contract
+fixture controls as valid instances of their ten product schemas, plus a
+minimal positive and a closed-boundary denial for each schema. The generated
+`type-catalog.json` and `contract-fixtures.json` bind the exact registry and
+source-schema digests used to derive every embedded downstream contract. The
+builder and verifier accept those catalogs only as authenticated bundle
+members: they never execute generated content, resolve an embedded schema from
+the network, or treat a passing fixture as runtime or consumer authority.
+
+The deterministic metadata refresh manages 230 schema fixtures across 242
+files, preserves the 2 intentional semantic-denial outcomes, and recomputes
+the 25-document inventory. Those managed fixtures are a refresh surface within
+the complete 312-entry index, not a competing fixture authority.
 
 The documentation map closes its schema references over one strictly sorted,
 unique document inventory. Every inventory entry binds a portable repository
@@ -106,11 +122,15 @@ members, trailing bytes, or any second encoding of the same content.
 `create_signing_request.py` accepts the exact canonical bundle manifest and
 explicit release identity fields and emits canonical
 `bytedesk.signing-request/1`. The signed object is this complete request, not a
-bare manifest. It binds request ID, `product-release-v1` purpose, immutable key
-version, repository, canonical-manifest digest, media type, trust-policy
-ID/digest, nonce, and issue/expiry timestamps. Its validity window is at most
-five minutes. The creator has no private-key option, reads no credential,
-invokes no signer, and cannot sign.
+bare manifest. It binds request ID, the `contract-bundle-release-v1` purpose,
+`credentialKind: sigstore_keyless`, exact `signerIdentityDigest`, repository,
+canonical-manifest digest, media type, trust-policy ID/digest, sealed
+`builderDigest`, pre-sign-certification digest, nonce, and issue/expiry
+timestamps. The independently selected contract-bundle policy pins
+`trustedRootDigest` and forbids KMS `keyVersion` or a static Fulcio-leaf
+`publicKeyDigest`. The request validity window is at most five minutes. The
+creator has no private-key option, reads no credential, invokes no signer, and
+cannot sign.
 
 Production deliberately separates code execution from signing authority:
 
@@ -146,9 +166,10 @@ Production deliberately separates code execution from signing authority:
    candidate content.
 
 The protected environment supplies the exact destination repository, policy
-bytes and digest, key version, sealed-verifier image digest, Cosign executable
-digest, and Sigstore trusted-root bytes and digest. The sealed verifier digest
-is recorded as `builderDigest`; it is distinct from the Cosign binary digest.
+bytes and digest, keyless signer-identity digest, sealed-verifier image digest,
+Cosign executable digest, and Sigstore trusted-root bytes and digest. The sealed
+verifier digest is recorded as `builderDigest`; it is distinct from the Cosign
+binary digest.
 Release automation rejects PEM, PKCS#12, raw private-key, generic-command,
 environment-secret-key, mutable image, or caller-selected signer inputs.
 
@@ -159,6 +180,21 @@ source commit, `workflow_dispatch` trigger, exact OIDC issuer, and independently
 pinned trusted root. Policy-only token constraints such as audience and
 protected environment remain issuance controls; they are not misrepresented as
 post-hoc certificate assertions.
+
+The contract-bundle request declares `credentialKind: sigstore_keyless`, binds
+the complete policy signer by `signerIdentityDigest`, and forbids `keyVersion`
+and a static leaf `publicKeyDigest`. It also signs the sealed `builderDigest`
+and the exact pre-sign-certification digest. Finalization must resolve that
+certification and match its executed distribution before claiming builder
+execution; repository conformance evidence keeps that claim false.
+
+The independently configured contract-bundle policy is purpose-, repository-,
+and media-type-scoped to `contract-bundle-release-v1` and the contract-bundle
+artifact only. It contains exactly the accepted keyless signer and no KMS
+signer. The separate `product-release-v1` policy remains KMS-only for product
+distributions, compiled allowlists, and renderer releases. A policy that mixes
+these purposes or signer credential kinds, or scopes either policy to the
+other's artifact media or repository, fails closed.
 
 The repository `verify_bundle.py` is a conformance and development verifier,
 not production authority. Its Sigstore mode is explicitly
@@ -178,12 +214,14 @@ authority, and is never a release gate. The contract bundle never supplies its
 own trusted key or policy; expected policy bytes, ID, and digest arrive through
 an independent channel and any mismatch fails closed.
 
-The checked-in workflow is intentionally inert until its bootstrap pin and
-protected release configuration are complete. Before activation, replace the
-all-zero reusable-workflow reference with the exact reviewed commit containing
-the signer workflow, publish and independently certify the sealed verifier
-image, configure every protected value above, and pass environment approval.
-Leaving any prerequisite absent or mutable makes release signing fail closed.
+The release workflow uses a two-revision bootstrap. Its reviewed content
+revision deliberately retains the all-zero reusable-workflow reference and
+therefore cannot sign. After that exact revision passes verification, the
+activation revision replaces the sentinel with the immutable content-revision
+commit containing the reviewed signer workflow. Activation also requires an
+independently certified sealed-verifier image, every protected value above,
+and environment approval. Leaving any prerequisite absent or mutable makes
+release signing fail closed.
 
 `sign_test_ephemeral.py` is a deliberately separate test-only tool. It creates
 an ECDSA P-256 key inside one process, never serializes the private key, and

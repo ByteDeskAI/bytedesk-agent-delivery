@@ -1,0 +1,19 @@
+{
+  "contract": "bytedesk.trust-policy-pin-set-resolution/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-resolution/1.0.0",
+    "digest": "sha256:338852a272d7191ea043932fc24baadc84ee9db116faa915840c4dc3a4a3d5f6"
+  },
+  "requestNonce": "trust_pin_activation_nonce_0123456789abcdef",
+  "requestDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "disposition": "activation_pending",
+  "pinSet": null,
+  "pinSetDescriptor": null,
+  "providerEvidence": null,
+  "resolvedTrustPolicy": {
+    "id": "public-render-v1",
+    "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "resolvedAt": "2026-07-17T12:00:02Z",
+  "resolutionDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+}

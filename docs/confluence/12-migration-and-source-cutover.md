@@ -60,8 +60,12 @@ Before publishing artifacts:
 5. Define exact renderer-release manifests, executed distribution/worker and
    allowlist identities, capability matrices, deterministic fixtures, and
    sandbox/withdrawal behavior.
-6. Record the current source inventory and expected reference roster.
-7. Define source-of-truth cutover and forward-recovery gates, the sole
+6. Freeze the product-pinned qualification policy/suite, typed evidence tree,
+   exact predicates and final decision; append-only signed release status;
+   nonce/time-bound authenticated status heads; constructible public-render
+   publication; and recursive OCI config/layer/blob verification.
+7. Record the current source inventory and expected reference roster.
+8. Define source-of-truth cutover and forward-recovery gates, the sole
    Promotion Coordinator writer, one DesiredStateStore per target, separate
    lifecycle state machines, and Host versus Consumer Capability Verifier
    evidence for each consumer.

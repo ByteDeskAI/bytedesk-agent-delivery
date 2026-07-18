@@ -122,6 +122,12 @@ def validate_release_workflows(
         "--cap-drop ALL",
         "--security-opt no-new-privileges",
         "--expected-builder-digest \"$VERIFIER_DIGEST\"",
+        "--expected-credential-kind sigstore_keyless",
+        "--expected-signer-identity-digest \"$CONTRACT_RELEASE_SIGNER_IDENTITY_DIGEST\"",
+        "--expected-trusted-root-digest \"$CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_DIGEST\"",
+        '.purpose == "contract-bundle-release-v1"',
+        ".preSignCertificationDigest == $certificationDigest",
+        "(has(\"keyVersion\") | not)",
         "--expected-cosign-digest \"$CONTRACT_RELEASE_COSIGN_DIGEST\"",
         "--certificate-github-workflow-repository \"$GITHUB_REPOSITORY\"",
         "--certificate-github-workflow-ref \"$CALLER_SOURCE_REF\"",
@@ -145,6 +151,9 @@ def validate_release_workflows(
         "--require-trusted-source-rebuild-match",
         "--mount type=bind,src=\"$PWD/signed\",dst=/signed,readonly",
         "require_regular_bounded final/release-signing-evidence.json 4194304",
+        '.profile == "bytedesk.contract-bundle-release-signing-evidence/1"',
+        '.verificationMode == "sigstore_contract_bundle_release"',
+        ".contractBundleSignatureIssued == true",
         ".sourceLineage == {commit:$commit,tree:$tree,snapshotDigest:$snapshotDigest,commitMetadataDigest:$metadataDigest,safeExtractionProfile:\"bytedesk.portable-path/1\",treeObjectMatch:true,rebuildBundleDigest:$bundleDigest,rebuildManifestDigest:$manifestDigest,byteForByteCandidateMatch:true}",
         ".sourceLineageVerified == true",
         ".byteForByteSourceRebuildMatch == true",
@@ -160,6 +169,8 @@ def validate_release_workflows(
         "scripts/contracts/",
         "make verify",
         "uv run",
+        "sigstore_product_release",
+        "productReleaseSignatureIssued",
         "go run",
         "python ",
         "jq -cnS",
@@ -192,6 +203,16 @@ def validate_release_workflows(
         raise ContractToolError("source commit metadata is not checked before both rebuilds")
     if signer.count("--require-source-tree-object-match") != 2:
         raise ContractToolError("source tree identity is not recomputed in both sealed phases")
+    if signer.count("--expected-credential-kind sigstore_keyless") != 2:
+        raise ContractToolError("both sealed phases must require the keyless credential kind")
+    if signer.count(
+        '--expected-signer-identity-digest "$CONTRACT_RELEASE_SIGNER_IDENTITY_DIGEST"'
+    ) != 2:
+        raise ContractToolError("both sealed phases must pin the signer identity digest")
+    if signer.count(
+        '--expected-trusted-root-digest "$CONTRACT_RELEASE_SIGSTORE_TRUSTED_ROOT_DIGEST"'
+    ) != 2:
+        raise ContractToolError("both sealed phases must pin the trusted-root digest")
     if re.search(
         r"CONTRACT_RELEASE_VERIFIER_IMAGE.*(?:^|:)latest(?:$|\s)", signer, re.MULTILINE
     ):
@@ -323,6 +344,53 @@ def main() -> int:
                     s.replace(
                         '--expected-builder-digest "$VERIFIER_DIGEST"',
                         '--expected-builder-digest "$CONTRACT_RELEASE_COSIGN_DIGEST"',
+                    ),
+                ),
+            ),
+            expect_denial(
+                "contract-bundle-signing-purpose-not-bound",
+                caller,
+                signer,
+                lambda c, s: (
+                    c,
+                    s.replace(
+                        '.purpose == "contract-bundle-release-v1"',
+                        "true",
+                        1,
+                    ),
+                ),
+            ),
+            expect_denial(
+                "keyless-request-allows-kms-key-version",
+                caller,
+                signer,
+                lambda c, s: (
+                    c,
+                    s.replace('(has("keyVersion") | not)', "true", 1),
+                ),
+            ),
+            expect_denial(
+                "pre-sign-certification-not-bound-into-request",
+                caller,
+                signer,
+                lambda c, s: (
+                    c,
+                    s.replace(
+                        ".preSignCertificationDigest == $certificationDigest",
+                        "true",
+                        1,
+                    ),
+                ),
+            ),
+            expect_denial(
+                "keyless-signer-identity-unpinned",
+                caller,
+                signer,
+                lambda c, s: (
+                    c,
+                    s.replace(
+                        '--expected-signer-identity-digest "$CONTRACT_RELEASE_SIGNER_IDENTITY_DIGEST"',
+                        "--expected-signer-identity-digest unchecked",
                     ),
                 ),
             ),

@@ -20,7 +20,8 @@ report required for standalone GA.
 - Landed AD-01 and AD-04 through AD-15.
 - Generic Agent and portable SpecializedAgent catalogs, strict operation,
   skill, native, Hermes, OpenClaw, consumer, and runtime fixtures.
-- Production-equivalent registry, KMS/WIF, Git provider, Agent Delivery control
+- Production-equivalent registry, KMS/WIF, Sigstore keyless contract-release,
+  Git provider, Agent Delivery control
   plane, consumer Adapter, capability verifier, DesiredStateStore, and runtime
   topology dedicated to certification.
 - AD-01 threat model, test matrix, runbooks, and trust controls.
@@ -33,7 +34,9 @@ report required for standalone GA.
    conformance.
 2. Run a clean third-party workflow using a generic definition-only catalog:
    validate, render with exact native/Hermes/OpenClaw renderer releases,
-   package, publish, pull, inspect, and verify product/artifact trust without
+   qualify every renderer/platform, obtain fresh authenticated current status
+   heads, finalize signed tenant-free public renders, package, publish, pull,
+   inspect, and recursively verify product/artifact trust without
    ByteDesk Platform or ByteDesk's marketplace.
 3. Run the generic consumer workflow: install with exact CAS, verify fresh
    consumer authority and skill approvals, compile/sign through both allowed
@@ -43,6 +46,7 @@ report required for standalone GA.
    current-tooling forward recovery.
 4. Run complete supply-chain, API/event, Git-intent, control-plane,
    DesiredStateStore, compiler, host, capability-verifier, registry, KMS,
+   Sigstore keyless contract-release,
    cancellation, concurrency, crash/restart, outage, revocation, retention, and
    exact receipt-reproduction fault matrices.
 5. Measure and archive every Operational readiness v1 SLO, reference-workload
@@ -89,6 +93,14 @@ report required for standalone GA.
 - Restricted YAML is provenance-only authoring input; the complete running lineage reproduces from canonical JCS contract objects plus byte-exact payloads.
 - Exact renderer-release manifests, executed distributions/platforms, compiled
   allowlists, and schema digests are present in every relevant lineage.
+- Native Agent Spec, Hermes, and OpenClaw each pass the complete qualification
+  role/subject matrix on `linux/amd64` and `linux/arm64`; every qualification
+  object and signed public-render lineage is constructible through a declared
+  production port.
+- Selection and execution prove fresh caller-nonce/time-bound authenticated
+  current product and renderer status heads. First contact, unchanged refresh,
+  append-only advancement, rollback, fork, expiry, wrong nonce, withdrawal,
+  revocation, and end-of-support are certified.
 - Consumer authority is fresh at compile, activation, and recovery; authority/
   approval and deployment keys are separate and private keys are isolated per
   consumer.
@@ -119,6 +131,59 @@ AD-16/AD-17 produce REFERENCE-CONSUMER-CERT separately.
 
 Blocked by AD-01 and AD-04 through AD-15 only.
 
+## Normative contracts and conformance
+
+- **Ports and operations.** CORE-CERT covers every registered operation under
+  `bytedesk.port.catalog/1`, `bytedesk.port.scm/1`,
+  `bytedesk.port.agent-spec-validator/1`,
+  `bytedesk.port.renderer-strategy/1`, `bytedesk.port.renderer-adapter/1`,
+  `bytedesk.port.renderer-sandbox/1`,
+  `bytedesk.port.wayflow-compatibility/1`,
+  `bytedesk.port.oci-registry/1`, `bytedesk.port.kms-signing/1`,
+  `bytedesk.port.supply-chain-evidence/1`,
+  `bytedesk.port.evidence-archive/1`,
+  `bytedesk.port.consumer-authority-approval/1`,
+  `bytedesk.port.consumer-projection/1`,
+  `bytedesk.port.desired-state-store/1`,
+  `bytedesk.port.control-plane-api-events/1`,
+  `bytedesk.port.promotion-coordinator/1`,
+  `bytedesk.port.private-compiler/1`,
+  `bytedesk.port.host-reconciler/1`,
+  `bytedesk.port.capability-verifier/1`,
+  `bytedesk.port.cli-automation/1`, and `bytedesk.port.region-fence/1`. The
+  certification inventory also covers `bytedesk.port.release-status-head/1`,
+  `bytedesk.port.trust-policy-provider/1`,
+  `bytedesk.port.release-qualification-finalizer/1`,
+  `bytedesk.port.public-render-finalizer/1`, and
+  `bytedesk.port.public-render-publisher/1`. The
+  closed operation IDs for each port are authoritative in
+  `contracts/ports/v1/port-registry.json`; omission or an additional unreviewed
+  operation fails certification. Exact field-value and closed request/result
+  schemas are distributed in `contracts/ports/v1/type-catalog.json`; canonical
+  valid and structural-denial payloads are in
+  `contracts/ports/v1/contract-fixtures.json`.
+- **Schemas, artifacts, and profiles.** Certification binds the exact closed
+  inventory at `contracts/bundle/v1/schema-inventory.json`, every source schema
+  under `contracts/schemas/v1/`, OpenAPI and AsyncAPI projections, the port,
+  action, problem, event, OCI, renderer, signer/evidence, DesiredStateStore,
+  host/capability, CLI, region-fence, and external-input-lock profiles under
+  `contracts/ports/v1/protocol-profiles.json`, and the signed offline bundle
+  manifest and exact digest.
+- **Conformance owner.** AD-18 owns whole-product negative-path, version-skew,
+  provider-profile, restore/failover, scale, chaos, security, and signed evidence
+  aggregation. Run `make verify-downstream-ports`; the task-specific suite is
+  `downstream.certification.v1` in
+  `contracts/ports/v1/conformance-cases.json`. Execute its exact compiled steps
+  from `contracts/ports/v1/conformance-plan.json`; schema-valid structural
+  samples are not semantic implementation goldens. Every task-owned suite from
+  AD-02 through AD-17 must pass without waiver.
+- **Boundary.** Native Agent Spec is the only selectable native output and
+  WayFlow 26.1.2 remains evidence-only. AD-17 owns the ByteDesk OpenClaw
+  migration map; the Promotion Coordinator alone triggers Capability Verifier
+  work and writes target desired state. No reference-consumer identity, grant,
+  credential, policy, runtime detail, or business approval may enter core
+  contracts or generic certification fixtures.
+
 ## Architecture review amendments — mandatory certification matrix
 
 Core evidence must cover:
@@ -128,11 +193,17 @@ Core evidence must cover:
   SpecializedAgent resolution, and official Agent Spec validation;
 - generic selectable/system fixtures without a ByteDesk catalog dependency;
 - deterministic source, render, deployment, and release OCI digests across clean rebuilds;
+- complete signed product/renderer inline authority, qualification policy/suite,
+  typed evidence tree/predicates/final decision, and all required
+  renderer/platform matrix cells;
+- fresh signed status revisions, nonce/time-bound head checkpoints,
+  authentication evidence, and exact append-only consistency proofs, including
+  rollback/fork/staleness denials;
 - RFC 8785 JCS golden bytes across independent implementations, YAML/JSON semantic equivalence, forbidden YAML/duplicate-JSON-member denial, and byte-exact arbitrary payload preservation;
 - tampered layer, wrong or missing subject, unknown/revoked key, missing attestation, cross-installation/consumer, downgrade, and source-substitution denial;
 - exact renderer-release manifest, executed distribution/platform, compiled
   allowlist, schema, sandbox, withdrawal, and substitution evidence for native,
-  Hermes, and OpenClaw;
+  Hermes, and OpenClaw on both server architectures;
 - duplicate, reordered, missed, and conflicting Git events plus scheduled reconciliation;
 - installation create/bind idempotency, consumer-subject adapter failures, and lifecycle races;
 - absent/match revision-plus-digest CAS and ABA denial; one Coordinator writer
@@ -146,6 +217,12 @@ Core evidence must cover:
 - arbitrary declared regular skill files preserved without execution in validation, rendering, compilation, publication, staging, or activation, plus rejection of unsafe entries, secrets, and resource bombs;
 - private customization of every functional Agent Spec property, file, skill, model/provider choice, tool/MCP functional configuration, harness setting, and opaque secret reference, with negative tests for every forbidden security-authority or mandatory-control mutation;
 - explicit cross-repository parent descriptors and no reliance on cross-repository OCI subject/referrer discovery;
+- recursive OCI manifest/config/layer/blob closure with exact media/role
+  mapping, bounded traversal, missing-content/cycle/duplicate-role/tag denial;
+- full authenticated private-input bundle, compilation-input/deployment/
+  compilation-evidence/runtime-release signer separation, and an acyclic
+  lock → deployment → evidence → release proof in which each runtime-release
+  entry binds both exact deployment and compilation-evidence descriptors;
 - newest-first forward-recovery eligibility, current-tooling rebuild, revoked
   renderer and withdrawn-content denial, separate recoverySource, no Git
   dependency, and no historical authority/deployment reactivation;

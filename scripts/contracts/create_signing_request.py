@@ -2,8 +2,8 @@
 """Create the canonical request consumed by an external release signer.
 
 This command never accepts private-key material and never invokes a signer. A
-production workflow sends its output to the purpose-scoped KMS/workload-
-identity Signer Adapter and verifies the returned Cosign bundle independently.
+production contract-release workflow signs its output through the pinned
+Sigstore keyless identity and verifies the returned bundle independently.
 """
 
 from __future__ import annotations
@@ -33,6 +33,7 @@ SIGNING_REQUEST_SCHEMA_ID = (
     "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0"
 )
 CONTRACT_BUNDLE_MEDIA_TYPE = "application/vnd.bytedesk.agent.contract-bundle.v1+json"
+CONTRACT_BUNDLE_RELEASE_PURPOSE = "contract-bundle-release-v1"
 MAX_SIGNING_REQUEST_VALIDITY = timedelta(minutes=5)
 
 
@@ -51,7 +52,9 @@ def main() -> int:
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--request-id", required=True)
-    parser.add_argument("--key-version", required=True)
+    parser.add_argument("--signer-identity-digest", required=True)
+    parser.add_argument("--builder-digest", required=True)
+    parser.add_argument("--pre-sign-certification", type=Path, required=True)
     parser.add_argument("--repository", required=True)
     parser.add_argument("--trust-policy-id", required=True)
     parser.add_argument("--trust-policy-digest", required=True)
@@ -78,14 +81,25 @@ def main() -> int:
         raise ContractToolError("input is not a contract bundle manifest")
     if manifest.get("trustPolicy") != expected_policy:
         raise ContractToolError("manifest trust policy differs from independent signer input")
+    certification, certification_bytes = load_json_bytes(
+        args.pre_sign_certification.resolve()
+    )
+    if (
+        not isinstance(certification, dict)
+        or certification_bytes != canonical_json(certification)
+    ):
+        raise ContractToolError("pre-sign certification is not an exact canonical object")
 
     schema = load_json(SCHEMAS_ROOT / "signing-request.schema.json")
     request = {
         "contract": "bytedesk.signing-request/1",
         "schema": {"id": SIGNING_REQUEST_SCHEMA_ID, "digest": canonical_digest(schema)},
         "requestId": args.request_id,
-        "purpose": "product-release-v1",
-        "keyVersion": args.key_version,
+        "purpose": CONTRACT_BUNDLE_RELEASE_PURPOSE,
+        "credentialKind": "sigstore_keyless",
+        "signerIdentityDigest": args.signer_identity_digest,
+        "builderDigest": args.builder_digest,
+        "preSignCertificationDigest": sha256_bytes(certification_bytes),
         "repository": args.repository,
         "digest": sha256_bytes(manifest_bytes),
         "mediaType": CONTRACT_BUNDLE_MEDIA_TYPE,

@@ -56,7 +56,9 @@ A consumer Adapter supplies:
   for every effective skill digest;
 - a signed, short-lived consumer-authority snapshot with current policy, grant-
   set, credential-set, workload-identity, lifecycle, mandatory-control,
-  approval-policy, and target-binding subdigests;
+  approval-policy, and target-binding subdigests; compile snapshots also sign
+  the complete AD-13 authorized-private-input digest, which is forbidden on
+  activate and recover snapshots;
 - a consumer activation/business-approval reference when required;
 - one configured DesiredStateStore Adapter for the target;
 - a consumer Capability Verifier endpoint or authenticated event contract; and
@@ -142,8 +144,12 @@ scope evidence returns the skill to quarantine.
 
 The compiler:
 
-1. verifies contract bundle, source, public render, exact renderer release,
-   binding, skills, approvals, consumer authority, and trust;
+1. verifies contract bundle, purpose-signed source/public render, exact product
+   and renderer releases, pinned qualification decision, fresh authenticated
+   current status heads, binding, skills, approvals, consumer authority, and
+   trust, and requires the
+   permitted compile authority's signed complete-input digest to match its own
+   independently recomputed value;
 2. verifies the exact source digest and RFC 8785 bytes before exactly one
    official Agent Spec `26.1.2` validation; requires the declared kind to match
    root `component_type`, explicit top-level `agentspec_version: 26.1.2`, and no
@@ -157,10 +163,17 @@ The compiler:
    and current consumer policy;
 5. fully rerenders with the exact allowlisted renderer release in its trusted
    sandbox;
-6. embeds the effective render bundle, file inventory, and complete lineage in
-   a consumer-private deployment;
-7. signs through the consumer-isolated deployment-signing role; and
-8. emits a prepared candidate and append-only evidence.
+6. freezes the exact sorted private-input authentication bundle, signs the
+   complete input lock under `consumer-compilation-input-v1`, and embeds that
+   full signing result in the deployment;
+7. embeds the effective render manifest, exact payload descriptor, and complete
+   issued-attempt/authenticated-execution lineage in a consumer-private deployment;
+8. commits the canonical deployment descriptor as the sole deployment identity;
+9. signs a separate compilation statement under the consumer-isolated
+   compilation-evidence role, with no backlink from the deployment; and
+10. emits the exact lock, deployment, and compilation-evidence descriptors plus
+    append-only evidence, then prepares a separately signed runtime-release
+    subject entry containing the exact deployment/evidence pair.
 
 The compiler never patches public render output, writes runtime desired state,
 executes package/skill content, resolves secret values, or approves itself.

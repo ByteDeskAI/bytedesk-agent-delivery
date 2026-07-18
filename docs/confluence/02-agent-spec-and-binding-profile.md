@@ -301,7 +301,8 @@ Resolution is deterministic:
 13. Verify the exact renderer-release manifest against the product's embedded
     allowlist, execute the declared product distribution/worker digest in its
     sandbox, and perform the complete deterministic render.
-14. Embed the effective render bundle and manifest in the private deployment and
+14. Embed the effective render manifest, exact runtime-file payload descriptor,
+    and authenticated renderer execution lineage in the private deployment and
     record the tenant-free public-render lineage used to resolve the renderer.
 
 The complete copied base exists only in deterministic private build output. It

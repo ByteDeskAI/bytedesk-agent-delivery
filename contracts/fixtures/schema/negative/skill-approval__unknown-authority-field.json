@@ -2,7 +2,7 @@
   "contract": "bytedesk.skill-approval/1",
   "schema": {
     "id": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-approval/1.0.0",
-    "digest": "sha256:2365c3f5cb0441af43b43dc11ac08a14bd584491c1d7195e635ac4fcd28838a9"
+    "digest": "sha256:f963d1810f8010bc0d1ae3110620a01d451e37a86eaea653b567f3eddb0a0e5f"
   },
   "packageId": "analysis-helper",
   "skill": {
@@ -19,7 +19,22 @@
   "subjectId": "subject-01",
   "installationId": "installation-01",
   "targetClass": "hosted-hermes",
-  "useScope": "subject-01 production runtime",
+  "useScope": {
+    "target": {
+      "kind": "target_class",
+      "targetClass": "hosted-hermes",
+      "targetClassDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "harnesses": [
+      "hermes"
+    ],
+    "operations": [
+      "compile",
+      "activate",
+      "recover",
+      "runtime_execute"
+    ]
+  },
   "evidenceDigests": {
     "scan": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
     "sbom": "sha256:2222222222222222222222222222222222222222222222222222222222222222",

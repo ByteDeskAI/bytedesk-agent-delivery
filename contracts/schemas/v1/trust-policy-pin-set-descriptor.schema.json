@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-descriptor/1.0.0",
+  "title": "Provider-authenticated trust-policy pin-set descriptor",
+  "type": "object",
+  "required": [
+    "repository",
+    "digest",
+    "mediaType",
+    "size",
+    "providerId",
+    "providerAuthorityDigest"
+  ],
+  "properties": {
+    "repository": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/ociRepository"
+    },
+    "digest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "mediaType": {
+      "const": "application/vnd.bytedesk.agent.trust-policy-pin-set.v1+json"
+    },
+    "size": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "providerId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "providerAuthorityDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Digest of the independently provisioned provider trust anchor. It is external to every pin set and prevents self-authentication."
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "A closed content descriptor authenticated by the configured trust-policy provider. It deliberately has no trustPolicy field because a pin set cannot authorize its own distribution."
+}

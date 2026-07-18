@@ -21,8 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      CONTRACT_TRUST_POLICY_ID: contract-test-product-release-v1
-      CONTRACT_TRUST_POLICY_DIGEST: sha256:8205b2d4241555df4d539274a6c8d82356b248ba33e249ad85017a9f4491b992
+      CONTRACT_TRUST_POLICY_ID: contract-bundle-release-v1
+      CONTRACT_TRUST_POLICY_DIGEST: sha256:473040213be733a68e94083ca8289cf9e25ad555c139a9d3e947eca0f3edc091
     steps:
       - name: Check out exact source
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1

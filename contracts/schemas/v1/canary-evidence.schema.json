@@ -28,9 +28,11 @@
     "actorIdentity": { "type": "string", "minLength": 1, "maxLength": 2048 },
     "actorVersion": { "type": "string", "minLength": 1, "maxLength": 128 },
     "signerPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+    "capabilityDispatch": { "$ref": "#/$defs/capabilityDispatchBinding" },
     "results": {
       "oneOf": [
-        { "$ref": "#/$defs/hostResults" },
+        { "$ref": "#/$defs/hostCandidateReadyResults" },
+        { "$ref": "#/$defs/hostActiveReadbackResults" },
         { "$ref": "#/$defs/capabilityRequiredResults" },
         { "$ref": "#/$defs/capabilityNotApplicableResults" }
       ]
@@ -42,11 +44,22 @@
   "allOf": [
     {
       "if": { "properties": { "actor": { "const": "host_reconciler" } }, "required": ["actor"] },
-      "then": { "properties": { "results": { "$ref": "#/$defs/hostResults" } } }
+      "then": {
+        "properties": {
+          "results": {
+            "oneOf": [
+              { "$ref": "#/$defs/hostCandidateReadyResults" },
+              { "$ref": "#/$defs/hostActiveReadbackResults" }
+            ]
+          }
+        },
+        "not": { "required": ["capabilityDispatch"] }
+      }
     },
     {
       "if": { "properties": { "actor": { "const": "consumer_capability_verifier" } }, "required": ["actor"] },
       "then": {
+        "required": ["capabilityDispatch"],
         "properties": {
           "results": {
             "oneOf": [
@@ -61,6 +74,18 @@
   "additionalProperties": false,
   "unevaluatedProperties": false,
   "$defs": {
+    "capabilityDispatchBinding": {
+      "type": "object",
+      "required": ["requestDigest", "receiptDigest", "checkProfileDigest", "authorizationDecisionDigest"],
+      "properties": {
+        "requestDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "receiptDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "checkProfileDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "authorizationDecisionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
     "technicalResult": {
       "type": "object",
       "required": ["actual", "trace"],
@@ -71,17 +96,30 @@
       "additionalProperties": false,
       "unevaluatedProperties": false
     },
-    "hostResults": {
+    "hostCandidateReadyResults": {
       "type": "object",
-      "required": ["artifact_readback", "file_inventory", "slot_generation", "service_process", "resource_thresholds", "harness_readiness", "switch_marker"],
+      "required": ["phase", "artifact_readback", "file_inventory", "slot_generation", "service_process", "resource_thresholds", "harness_readiness"],
       "properties": {
+        "phase": { "const": "candidate_ready" },
         "artifact_readback": { "$ref": "#/$defs/technicalResult" },
         "file_inventory": { "$ref": "#/$defs/technicalResult" },
         "slot_generation": { "$ref": "#/$defs/technicalResult" },
         "service_process": { "$ref": "#/$defs/technicalResult" },
         "resource_thresholds": { "$ref": "#/$defs/technicalResult" },
-        "harness_readiness": { "$ref": "#/$defs/technicalResult" },
-        "switch_marker": { "$ref": "#/$defs/technicalResult" }
+        "harness_readiness": { "$ref": "#/$defs/technicalResult" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "hostActiveReadbackResults": {
+      "type": "object",
+      "required": ["phase", "switch_marker", "active_pointer", "file_inventory", "service_process"],
+      "properties": {
+        "phase": { "const": "active_readback" },
+        "switch_marker": { "$ref": "#/$defs/technicalResult" },
+        "active_pointer": { "$ref": "#/$defs/technicalResult" },
+        "file_inventory": { "$ref": "#/$defs/technicalResult" },
+        "service_process": { "$ref": "#/$defs/technicalResult" }
       },
       "additionalProperties": false,
       "unevaluatedProperties": false
@@ -115,7 +153,7 @@
           "required": ["outcome", "failureClass"],
           "properties": {
             "outcome": { "const": "failed" },
-            "failureClass": { "type": "string", "enum": ["transport_error", "timeout", "not_found", "parser_error", "unavailable"] }
+            "failureClass": { "type": "string", "enum": ["transport_error", "timeout", "not_found", "parser_error", "unavailable", "workload_identity_failed"] }
           },
           "additionalProperties": false,
           "unevaluatedProperties": false
@@ -156,5 +194,5 @@
       "unevaluatedProperties": false
     }
   },
-  "description": "Actor-discriminated evidence fixes exactly seven host results or exactly the required three capability results or one certified non-applicability result. Failed transports remain failures and cannot be represented as policy denial."
+  "description": "Actor-discriminated evidence is one candidate-ready or active-readback Host phase, exactly the required three capability results, or one certified non-applicability result. Failed transports remain failures and cannot be represented as policy denial."
 }

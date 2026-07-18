@@ -19,7 +19,7 @@ that boundary.
 > **Non-normative implementation note:**
 > [ADR-0002](../architecture/adr/0002-implementation-stack-and-reference-topology.md)
 > fixes AWS KMS as the first product signing Adapter profile and purpose-
-> separated reference workloads. Role 5 remains consumer-owned and is only
+> separated reference workloads. The `consumer-authority-v1` purpose remains consumer-owned and is only
 > verified by Agent Delivery; it is never granted to the Agent Delivery API,
 > worker, compiler, Coordinator, renderer, host, or publisher.
 
@@ -39,19 +39,33 @@ object and RFC 8785 identity containing:
 - signer-policy ID and digest, signer identity, issued-at, not-before,
   expires-at, and unique nonce; and
 - binding, deployment candidate, and desired-revision digests to which the
-  snapshot applies.
+  snapshot applies; and
+- for `operation: compile` only, the consumer-signed
+  `authorizedPrivateInputDigest` over the complete private-compilation inputs
+  defined by AD-13. The field is required for compile and forbidden for
+  activate or recover so compile authority cannot be repurposed as lifecycle
+  authority.
 
 Subdocuments remain consumer-owned and opaque to Agent Delivery. Their digests
 prove freshness and binding; they do not invite Agent Delivery to interpret or
 grant their contents. The snapshot contains no credential values, tokens,
 private keys, connection secrets, or reusable workload credentials.
 
-Compilation requires a currently valid snapshot. Activation and recovery
-require a newly verified snapshot bound to the exact candidate and desired
-revision; a compilation-time snapshot cannot be assumed current. The v1 default
-maximum lifetime is fifteen minutes and the activation check must be no more
-than five minutes old. A consumer profile may shorten, but not lengthen, these
-limits without a separately reviewed risk profile.
+Compilation requires a currently valid permitted snapshot whose signed
+`authorizedPrivateInputDigest` equals the verifier's independently recomputed
+`bytedesk.authorized-private-compilation-input/1` digest. The exact preimage is
+`{profile, contract: lock.contract, schema: lock.schema, inputs}` where `inputs`
+is the complete locked-input object with only `authoritySnapshot` and
+`authorizedPrivateInputDigest` removed. Binding the exact lock schema prevents
+an authorized value from being replayed under a different contract revision.
+A missing or mismatched
+digest is denial, and a denied snapshot never produces a successful verification
+result or an authorized digest. Activation and recovery require a newly verified
+snapshot bound to the exact candidate and desired revision; a compilation-time
+snapshot cannot be assumed current. The v1 default maximum lifetime is fifteen
+minutes and the activation check must be no more than five minutes old. A
+consumer profile may shorten, but not lengthen, these limits without a separately
+reviewed risk profile.
 
 Concrete model/provider choice, endpoints, tool and MCP configuration, and
 opaque secret references are functional customization and are already covered
@@ -82,21 +96,55 @@ the skill to quarantine.
 
 ## Required private signing topology
 
-Production profiles use purpose-separated signing roles:
+Production profiles use the closed purposes defined by
+[Trust policy v1](trust-policy-v1.md). The private graph depends on these
+distinct purposes:
 
-1. `product-release-v1` for Agent Delivery distributions, contract bundles,
-   allowlists, and renderer releases;
-2. `public-source-v1` for catalogs, public sources, and public skills;
-3. `public-render-v1` for public render outputs;
-4. `consumer-private-skill-v1` for consumer-private skill publication;
-5. `consumer-authority-v1` for authority snapshots and skill/business approval;
-   and
-6. `consumer-deployment-v1` for private deployments and runtime releases.
+1. `consumer-private-skill-v1` authenticates consumer-private skill
+   publication but never approves use.
+2. `consumer-authority-v1` authenticates authority snapshots and exact
+   skill/business approval.
+3. `consumer-compilation-input-v1` authenticates the complete frozen private
+   input lock after consumer authority is verified.
+4. `renderer-attempt-v1` and `renderer-execution-v1` authenticate the issued
+   renderer attempt and actual execution evidence.
+5. `consumer-deployment-v1` authenticates the private deployment.
+6. `consumer-compilation-evidence-v1` authenticates the separate compiler
+   evidence statement.
+7. `consumer-runtime-release-v1` authenticates the runtime-release root.
 
-Roles 4 through 6 are isolated per consumer. Authority/approval and deployment
-signing use different keys and workload identities so a compromised compiler
-cannot approve itself. One shared provider key cannot sign private artifacts
-for multiple consumers.
+All consumer-private purposes are isolated per consumer. Authority/approval,
+private-skill, compilation-input, deployment, compilation-evidence, and
+runtime-release signing use policy-constrained keys and workload identities.
+The authority/approval signer is never shared with a compiler or deployment
+publisher, and prohibited purpose pairs cannot share a key/workload identity.
+One shared provider key cannot sign private artifacts for multiple consumers.
+
+## Authenticated private input and release graph
+
+The compiler does not accept a set of plausible digests. Before compilation it
+resolves the complete public/private inputs, the full consumer-authority object,
+each skill-approval object, and every complete signing result through the
+Consumer Authority Adapter. It builds a closed
+`bytedesk.private-input-authentication-bundle/1` whose sorted entries bind each
+role, exact subject descriptor, and exact signing-result descriptor. The
+private input lock carries that exact bundle descriptor and its
+`compilationInputDigest` covers the bundle. Bare digest-only authentication,
+repository-prefix type inference, or an unregistered media/role pair fails.
+
+The consumer signs the authorized private-input digest. After independent
+verification, the compilation-input signer signs the exact complete lock. The
+private deployment binds that lock and carries its complete signing result, so
+deployment verification reaches the exact authenticated input without relying
+on a database join or ambient request state.
+
+The compilation-evidence object is created after the deployment and binds the
+request, lock, deployment, renderer lineage, payload, compiler distribution,
+and outcome. The deployment does not embed or reference the evidence, avoiding
+a digest cycle. The separately signed runtime release then references both the
+exact canonical deployment descriptor and the exact compilation-evidence
+descriptor. A runtime release never substitutes a parallel deployment digest
+or makes the evidence self-referential.
 
 ## Consumer sovereignty and hosted operation
 
@@ -127,10 +175,10 @@ signature only when the consumer independently configures an exact provenance
 policy for that repository, signer, media type, evidence set, and scope. That
 signature is additional provenance and never satisfies
 `consumer-private-skill-v1`. Before inclusion, the exact unchanged skill digest
-must also receive a role-4 signature from the consumer's isolated private-skill
-publication key, normally through a consumer-local mirror or publication
-descriptor. Separate current consumer skill-approval evidence under role 5
-remains mandatory.
+must also receive a `consumer-private-skill-v1` signature from the consumer's
+isolated private-skill publication key, normally through a consumer-local mirror
+or publication descriptor. Separate current consumer skill-approval evidence
+under `consumer-authority-v1` remains mandatory.
 
 ## Immutable trust-policy identity
 
@@ -158,8 +206,10 @@ Before private compilation, activation, or recovery, the verifier:
 4. verifies consumer, subject, installation, candidate, target, desired
    revision, nonce, operation, predecessor, and time binding;
 5. verifies every effective skill approval;
-6. compares the current opaque subdigests with the deployment inputs; and
-7. records the exact evidence graph in the append-only receipt.
+6. for compile, compares the consumer-signed `authorizedPrivateInputDigest` with
+   the independently recomputed contract-, exact-schema-, and complete-input digest;
+7. compares the current opaque subdigests with the deployment inputs; and
+8. records the exact evidence graph in the append-only receipt.
 
 Call-time authorization remains mandatory after activation. A fresh snapshot
 does not turn a configured tool into a standing grant.
@@ -167,9 +217,11 @@ does not turn a configured tool into a standing grant.
 ## Failure and outage behavior
 
 Missing, expired, future-dated, replayed, revoked, wrong-purpose, cross-
-consumer, wrong-target, stale-revision, wrong-policy, or mismatched-subdigest
-evidence blocks new compilation or activation. The system never reuses a stale
-snapshot, asks a deployment signer to issue approval, or accepts an unsigned
+consumer, wrong-target, stale-revision, wrong-policy, mismatched-subdigest, or
+missing/mismatched compile-input-digest evidence blocks new compilation or
+activation. Supplying a compile-input digest on activate or recover is invalid.
+The system never reuses a stale snapshot, asks a deployment signer to issue
+approval, synthesizes authority from a verifier request, or accepts an unsigned
 consumer assertion.
 
 During consumer authority or KMS outage, an already active verified release may
@@ -186,6 +238,9 @@ Conformance evidence includes:
   migration ceremonies;
 - authority snapshot freshness, audience, nonce, binding, predecessor,
   candidate, subdigest, and replay tests;
+- compile-only signed authorized-input-digest presence, exact match, mismatch,
+  and non-compile smuggling tests, including proof that denied verification
+  returns no successful authorized digest;
 - separate authority, approval, private-skill, and deployment signer tests;
 - exact skill approval, changed digest, expiry, revocation, and scope tests;
 - current activation recheck and stale compilation-snapshot denial;

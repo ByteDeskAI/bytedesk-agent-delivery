@@ -1,0 +1,24 @@
+{
+  "contract": "bytedesk.signing-request/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0",
+    "digest": "sha256:5ce348f8fe102aadced9964db8df66009bd3993c99d93c9840533c17174553e6"
+  },
+  "requestId": "sign-contract-bundle-kms-01",
+  "purpose": "contract-bundle-release-v1",
+  "credentialKind": "kms_key",
+  "keyVersion": "kms://product/product-release-v1/versions/1",
+  "signerIdentityDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "builderDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "preSignCertificationDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "repository": "registry.example/product/contracts",
+  "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "mediaType": "application/vnd.bytedesk.agent.contract-bundle.v1+json",
+  "trustPolicy": {
+    "id": "contract-bundle-release-v1",
+    "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "nonce": "nonce_0123456789abcdef",
+  "issuedAt": "2026-07-17T12:00:00Z",
+  "expiresAt": "2026-07-17T12:05:00Z"
+}

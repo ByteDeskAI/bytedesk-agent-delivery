@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/external-input-lock/1.0.0",
+  "title": "Immutable compatibility or migration input lock",
+  "type": "object",
+  "required": ["contract", "schema", "lockId", "role", "repository", "commit", "treeDigest", "paths", "validators", "compatibilityEvidenceOnly", "retrievedAt"],
+  "properties": {
+    "contract": { "const": "bytedesk.external-input-lock/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "lockId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "role": { "type": "string", "enum": ["compatibility_evidence", "migration_input", "reference_consumer_certification"] },
+    "repository": { "type": "string", "format": "uri", "pattern": "^https://", "maxLength": 2048 },
+    "commit": { "type": "string", "pattern": "^[0-9a-f]{40,64}$", "maxLength": 64 },
+    "treeDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "paths": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "required": ["path", "digest", "size"],
+        "properties": {
+          "path": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/portablePath" },
+          "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+          "size": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonNegativeSafeInteger" }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    },
+    "validators": { "type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" } },
+    "compatibilityEvidenceOnly": { "const": true },
+    "retrievedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Pins external implementation bytes used only as compatibility, migration, or certification evidence. It never makes external files portable source or core contract authority."
+}

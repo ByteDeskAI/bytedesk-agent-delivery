@@ -58,7 +58,8 @@ candidate.
 4. Verify closed schemas, RFC 8785 bytes, explicit graph edges, signatures,
    attestations, exact renderer release/execution lineage, approved skills,
    effective-render inventory, consumer/target/slot binding, current trust,
-   withdrawal/revocation, and desired predecessor.
+   the complete signed activation authorization, its activation-stage product
+   and renderer status eligibility, and desired predecessor.
 5. Extract untrusted content without execution into a new generation staging
    area with path/type/count/size/decompression controls. Preserve arbitrary
    `.yaml` and binary payload bytes exactly.
@@ -66,16 +67,31 @@ candidate.
    service definition, slot isolation, tombstones, and unrelated profiles.
 7. Run renderer/harness-declared static and parser preflight without invoking
    package hooks or skill code.
-8. Append `staged` and `preflight_passed` technical observations.
+8. Stage and preflight each canonical deployment and append its `staged` and
+   `preflight_passed` technical observations. Every entry remains per subject
+   while binding the same runtime-release descriptor, `releaseDigest`, and
+   `deployableGraphDigest`.
 9. Follow the Adapter's certified isolated-candidate or guarded-in-place path
-   only after the Coordinator publishes the matching activation challenge or
-   authorization.
-10. Switch atomically at a harness-safe boundary, persist an fsync/durable
-    switch marker, and read back the exact active generation.
-11. Return technical canary evidence; wait for the consumer Capability
-    Verifier and Promotion Coordinator rather than invoking capabilities.
-12. Append final observed facts and retain predecessor content according to
-    recovery/retention policy.
+   only after the Coordinator publishes the complete matching signed
+   `bytedesk.activation-authorization/1`. A digest alone is not authority; the
+   Host verifies its exact runtime-release/deployment closure, canonical
+   per-subject candidate-ready/authority/decision sets, signature, validity,
+   attempt, generations, and region fence. It validates the Coordinator's
+   historical permitted eligibility-verification result, then at
+   `operationTime` produces a distinct fresh Host use-time verification against
+   current authenticated status heads and trust pins.
+10. Persist one fsync/durable target-wide switch intent binding
+    `releaseDigest`, `deployableGraphDigest`,
+    `activationAuthorizationDigest`, and
+    `hostEligibilityVerificationEvidenceDigest`; then switch the complete graph
+    atomically at a harness-safe boundary and persist one matching marker.
+11. Read back each deployment in canonical subject order. The complete set must
+    cover the deployable graph exactly before the Coordinator can CAS target
+    state. Return per-subject technical canary evidence and wait for the
+    consumer Capability Verifier rather than invoking capabilities.
+12. Append final observed facts. After the sole-writer target-state CAS, the
+    Promotion Coordinator appends the canonical per-subject receipt set. Retain
+    predecessor content according to recovery/retention policy.
 
 No renderer, agent, skill, script, binary, package manager, build, install,
 migration, or artifact hook executes during pull, verify, extraction, staging,
@@ -106,6 +122,12 @@ An Adapter must certify one mode and its safe boundary, traffic behavior,
 workspace/slot isolation, credential issuance path, timeout, and crash markers.
 It cannot choose a mode from agent content.
 
+Both modes use one target-wide activation and one journal for the complete
+runtime-release graph. They do not switch or journal subjects independently.
+Staging, preflight, technical/capability evidence, promotion-decision entries,
+active readback, and deployment receipts remain per subject and must form
+complete canonical graph-covering sets.
+
 ## Technical canary evidence
 
 The host responds to a nonce-bound `bytedesk.canary-plan/1` with signed or
@@ -125,7 +147,9 @@ The host persists separate records for:
 
 - current active slot and generation;
 - staged candidate generations;
-- physical switch marker and predecessor;
+- one target-wide physical switch journal and marker bound to the runtime
+  release, complete deployable graph, activation authorization, fresh Host
+  use-time eligibility verification, and predecessor;
 - each reconciliation attempt and retry budget;
 - technical observations/evidence; and
 - cleanup/tombstone status.

@@ -1,0 +1,12 @@
+{
+  "repository": "registry.example/product/trust-pins",
+  "digest": "sha256:1cb05ee6b17c84fcdb9644c37bd93c2d4eb1327af0cf55866cdc1747ce003c95",
+  "mediaType": "application/vnd.bytedesk.agent.trust-policy-pin-set.v1+json",
+  "size": 783,
+  "providerId": "product-trust-provider",
+  "providerAuthorityDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "trustPolicy": {
+    "id": "public-render-v1",
+    "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  }
+}

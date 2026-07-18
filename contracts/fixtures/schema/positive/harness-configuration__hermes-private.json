@@ -1,0 +1,61 @@
+{
+  "contract": "bytedesk.harness-configuration/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-configuration/1.0.0",
+    "digest": "sha256:d12717fef52ade60c56a3d8389991d2a927948e21d753c66726defb49bbf3b31"
+  },
+  "scope": "private",
+  "harnessId": "hermes",
+  "configurationVersion": "1.0.0",
+  "modelBindings": [
+    {
+      "logicalModelId": "primary",
+      "providerId": "consumer-model-provider",
+      "providerModelId": "provider-model-v3",
+      "endpoint": "https://models.consumer.example/v1",
+      "secretReferenceIds": [
+        "model-provider-token"
+      ]
+    }
+  ],
+  "toolBindings": [
+    {
+      "bindingId": "search",
+      "adapterId": "consumer-search-adapter",
+      "configurationDigest": "sha256:a19592a516e3904ef01f8096deadd4ea21c15566cf3a346cf966a83e07006a16",
+      "secretReferenceIds": [
+        "search-token"
+      ]
+    }
+  ],
+  "mcpServers": [
+    {
+      "serverId": "local-files",
+      "transport": "stdio",
+      "runtimeResourceId": "consumer-mcp-local-files",
+      "configurationDigest": "sha256:089a087b0b441500ff727ad3f3f9ce244b85acc5be83ef41ffae4d5eea8dd2df",
+      "secretReferenceIds": []
+    }
+  ],
+  "resourceBindings": [],
+  "harnessOptions": [
+    {
+      "optionId": "max-turns",
+      "value": 24
+    },
+    {
+      "optionId": "streaming",
+      "value": true
+    }
+  ],
+  "opaqueSecretReferences": [
+    {
+      "referenceId": "model-provider-token",
+      "purpose": "model_provider"
+    },
+    {
+      "referenceId": "search-token",
+      "purpose": "tool"
+    }
+  ]
+}

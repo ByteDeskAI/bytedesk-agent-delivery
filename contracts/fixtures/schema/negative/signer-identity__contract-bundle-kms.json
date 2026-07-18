@@ -1,0 +1,18 @@
+{
+  "purpose": "contract-bundle-release-v1",
+  "credentialKind": "kms_key",
+  "keyVersion": "kms://product/contract-bundle-release-v1/versions/1",
+  "publicKeyDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "algorithm": "ECDSA_P256_SHA256",
+  "workloadIdentity": "spiffe://agent-delivery.bytedesk.ai/product/contract-bundle-release-v1",
+  "claims": {
+    "issuer": "https://token.actions.githubusercontent.com",
+    "audience": "agent-delivery-contract-bundle-release-v1",
+    "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:contract-release",
+    "repository": "ByteDeskAI/bytedesk-agent-delivery",
+    "workflow": ".github/workflows/contract-release-signer.yml@1111111111111111111111111111111111111111",
+    "ref": "refs/tags/v1.0.0",
+    "environment": "contract-release",
+    "builderDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  }
+}

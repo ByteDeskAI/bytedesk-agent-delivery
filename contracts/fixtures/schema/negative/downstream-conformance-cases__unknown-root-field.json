@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/downstream-conformance-cases/1.0.0",
+  "cases": [
+    {
+      "caseId": "PORT-001-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "list-catalog-releases",
+          "portId": "bytedesk.port.catalog/1"
+        },
+        {
+          "operationId": "resolve-catalog-release",
+          "portId": "bytedesk.port.catalog/1"
+        },
+        {
+          "operationId": "fetch-catalog-object",
+          "portId": "bytedesk.port.catalog/1"
+        },
+        {
+          "operationId": "publish-catalog-release",
+          "portId": "bytedesk.port.catalog/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-02",
+      "portSuites": [
+        "downstream.catalog.v1"
+      ],
+      "suite": "downstream.marketplace.v1"
+    }
+  ],
+  "profile": "bytedesk.downstream-conformance-cases/1",
+  "version": 1,
+  "unexpectedAuthority": "must-be-rejected"
+}

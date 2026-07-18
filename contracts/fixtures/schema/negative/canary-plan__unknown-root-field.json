@@ -1,6 +1,6 @@
 {
   "contract": "bytedesk.canary-plan/1",
-  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-plan/1.0.0", "digest": "sha256:9c3ede7a8526bf7ad6a5866cedd1b51a9b48fce2d7fe22d7d4f4776a6562c89b" },
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-plan/1.0.0", "digest": "sha256:bb3e9c6bef3cd1b26f602d94ba01ad8901714cf78b7913826f7b48f01c0431a0" },
   "planId": "canary-plan-01", "rolloutId": "rollout-01", "nonce": "nonce_0123456789abcdef",
   "candidateDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "desiredRevisionDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "releaseDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "deploymentDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
   "consumerId": "consumer-01", "subjectId": "subject-01", "targetId": "target-01", "slotId": "slot-01", "generation": 1, "activationMode": "isolated_candidate",

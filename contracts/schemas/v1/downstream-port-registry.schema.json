@@ -1,0 +1,360 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/downstream-port-registry/1.0.0",
+  "title": "Closed downstream port registry",
+  "type": "object",
+  "required": [
+    "$schema",
+    "profile",
+    "version",
+    "compatibility",
+    "typeCatalog",
+    "contractFixtures",
+    "ports"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://schemas.bytedesk.ai/agent-delivery/v1/downstream-port-registry/1.0.0"
+    },
+    "profile": {
+      "const": "bytedesk.downstream-port-registry/1"
+    },
+    "version": {
+      "const": 1
+    },
+    "compatibility": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "typeCatalog": {
+      "const": "contracts/ports/v1/type-catalog.json"
+    },
+    "contractFixtures": {
+      "const": "contracts/ports/v1/contract-fixtures.json"
+    },
+    "ports": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/port"
+      }
+    }
+  },
+  "$defs": {
+    "fieldType": {
+      "type": "string",
+      "enum": [
+        "array",
+        "boolean",
+        "bytes",
+        "digest",
+        "digest-or-null",
+        "identifier",
+        "integer",
+        "object",
+        "object-or-null",
+        "string",
+        "string-or-null",
+        "timestamp"
+      ]
+    },
+    "field": {
+      "type": "object",
+      "required": [
+        "name",
+        "type",
+        "required",
+        "schemaRef",
+        "valueType"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-z][A-Za-z0-9]*$"
+        },
+        "type": {
+          "$ref": "#/$defs/fieldType"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "schemaRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "valueType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^bytedesk\\.port-field\\.[a-z0-9.-]+/1$"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "errorMapping": {
+      "type": "object",
+      "required": [
+        "code",
+        "sideEffectState"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "sideEffectState": {
+          "type": "string",
+          "enum": [
+            "none",
+            "not-committed",
+            "committed-unchanged",
+            "commit-unknown"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "operation": {
+      "type": "object",
+      "required": [
+        "operationId",
+        "requestContract",
+        "resultContract",
+        "requestFields",
+        "resultFields",
+        "errors",
+        "idempotency",
+        "failureSemantics",
+        "commitUncertainty",
+        "authentication",
+        "authorization",
+        "compatibility",
+        "owner",
+        "suite"
+      ],
+      "properties": {
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "requestContract": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^bytedesk\\.port\\.[a-z0-9-]+\\.[a-z0-9-]+\\.request/1$"
+        },
+        "resultContract": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^bytedesk\\.port\\.[a-z0-9-]+\\.[a-z0-9-]+\\.result/1$"
+        },
+        "requestFields": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "resultFields": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/errorMapping"
+          }
+        },
+        "idempotency": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "failureSemantics": {
+          "type": "string",
+          "enum": [
+            "fail-closed-append-only-evidence",
+            "fail-closed-managed-commit",
+            "fail-closed-no-side-effect",
+            "fail-closed-read-only",
+            "fail-closed-remote-commit"
+          ]
+        },
+        "commitUncertainty": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "authentication": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "authorization": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "compatibility": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "suite": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^downstream\\.[a-z0-9.-]+$"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "port": {
+      "type": "object",
+      "required": [
+        "portId",
+        "kind",
+        "owner",
+        "tasks",
+        "suite",
+        "contractPaths",
+        "promisedSchemas",
+        "protocolProfiles",
+        "operations"
+      ],
+      "properties": {
+        "portId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^bytedesk\\.port\\.[a-z0-9-]+/1$"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "adapter",
+            "api",
+            "cli",
+            "protocol",
+            "strategy"
+          ]
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "tasks": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 17,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "maxLength": 5,
+            "pattern": "^AD-(?:0[2-9]|1[0-8])$"
+          }
+        },
+        "suite": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^downstream\\.[a-z0-9.-]+$"
+        },
+        "contractPaths": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "pattern": "^(?:contracts|docs)/[^\\\\\\x00-\\x1f\\x7f]+$"
+          }
+        },
+        "promisedSchemas": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "pattern": "^https://schemas\\.bytedesk\\.ai/agent-delivery/"
+          }
+        },
+        "protocolProfiles": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 13,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "bytedesk.api-events/1",
+              "bytedesk.capability-verification/1",
+              "bytedesk.cli-automation/1",
+              "bytedesk.desired-state-store/1",
+              "bytedesk.external-input-lock/1",
+              "bytedesk.host-switch-journal/1",
+              "bytedesk.oci-archive-layout/1",
+              "bytedesk.oci-artifact-profile/1",
+              "bytedesk.promotion-coordinator/1",
+              "bytedesk.renderer-contract/1",
+              "bytedesk.signing-evidence-profile/1",
+              "bytedesk.supply-chain-pins/1",
+              "bytedesk.worker-framing/1"
+            ]
+          }
+        },
+        "operations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/operation"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

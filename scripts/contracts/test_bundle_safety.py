@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import hashlib
 import json
 import sys
 from typing import Any, Callable
@@ -50,6 +51,7 @@ from verify_bundle import (
     repository_only_release_path as verifier_rejects,
     validate_bundled_documentation_map,
 )
+from bundle_profile import BundleProfileError, normalized_member_payload
 
 
 SOURCE_CONFIG = CONTRACTS_ROOT / "bundle" / "v1" / "bundle-source.json"
@@ -77,6 +79,37 @@ def expect_denial(
         denials.append({"case": case, "outcome": "denied"})
     else:
         raise ContractToolError(f"malformed metadata was accepted: {case}")
+
+
+def single_property_repairs(
+    instance: dict[str, Any],
+    validator: Draft202012Validator,
+) -> list[tuple[str | int, ...]]:
+    """Return property paths whose removal makes one denial fixture valid."""
+
+    property_paths: list[tuple[str | int, ...]] = []
+
+    def collect(value: Any, path: tuple[str | int, ...]) -> None:
+        if isinstance(value, dict):
+            for key, child in value.items():
+                child_path = (*path, key)
+                property_paths.append(child_path)
+                collect(child, child_path)
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                collect(child, (*path, index))
+
+    collect(instance, ())
+    repairs: list[tuple[str | int, ...]] = []
+    for property_path in property_paths:
+        candidate = deepcopy(instance)
+        parent: Any = candidate
+        for segment in property_path[:-1]:
+            parent = parent[segment]
+        del parent[property_path[-1]]
+        if validator.is_valid(candidate):
+            repairs.append(property_path)
+    return repairs
 
 
 def exercise_metadata_denials(denials: list[dict[str, str]]) -> None:
@@ -558,21 +591,20 @@ def exercise_metadata_denials(denials: list[dict[str, str]]) -> None:
         if not entry["path"].endswith("__unknown-authority-field.json"):
             continue
         instance = load_json(CONTRACTS_ROOT.parent / entry["path"])
-        if not isinstance(instance, dict) or instance.pop("unknownAuthority", None) is not True:
+        if not isinstance(instance, dict):
             raise ContractToolError(
                 f"unknown-authority denial is not a closed single-field mutation: {entry['path']}"
             )
-        errors = list(
-            Draft202012Validator(
-                validation_schemas[entry["schemaId"]][1],
-                registry=registry,
-                format_checker=Draft202012Validator.FORMAT_CHECKER,
-            ).iter_errors(instance)
+        validator = Draft202012Validator(
+            validation_schemas[entry["schemaId"]][1],
+            registry=registry,
+            format_checker=Draft202012Validator.FORMAT_CHECKER,
         )
-        if errors:
+        repairs = single_property_repairs(instance, validator)
+        if len(repairs) != 1:
             raise ContractToolError(
-                f"unknown-authority denial has an incidental failure: {entry['path']}: "
-                f"{errors[0].message}"
+                "unknown-authority denial is not a closed single-field mutation: "
+                f"{entry['path']}: repair candidates={repairs}"
             )
         single_fault_count += 1
     if single_fault_count == 0:
@@ -712,6 +744,36 @@ def main() -> int:
 
     source = load_json(SOURCE_CONFIG)
     denials: list[dict[str, str]] = []
+    private_cas_include = (
+        "contracts/fixtures/operations/private-compilation-cas/blobs/sha256/*"
+    )
+    if source["include"].count(private_cas_include) != 1:
+        raise ContractToolError(
+            "bundle source does not contain the one closed private CAS namespace"
+        )
+    cas_payload = b"private-cas-raw-byte-profile"
+    cas_digest = hashlib.sha256(cas_payload).hexdigest()
+    cas_path = private_cas_include.removesuffix("*") + cas_digest
+    if normalized_member_payload(cas_path, cas_payload) != cas_payload:
+        raise ContractToolError("private CAS bytes were normalized instead of preserved")
+    for case_id, path, payload in (
+        (
+            "private-cas-invalid-digest-path",
+            private_cas_include.removesuffix("*") + "not-a-digest",
+            cas_payload,
+        ),
+        (
+            "private-cas-path-byte-mismatch",
+            cas_path,
+            cas_payload + b"-substituted",
+        ),
+    ):
+        try:
+            normalized_member_payload(path, payload)
+        except BundleProfileError:
+            denials.append({"case": case_id, "outcome": "denied"})
+        else:
+            raise ContractToolError(f"malformed private CAS was accepted: {case_id}")
     for path in FORBIDDEN_INPUTS:
         if not builder_rejects(path) or not verifier_rejects(path):
             raise ContractToolError(f"compiled builder/verifier exclusion drift for {path}")

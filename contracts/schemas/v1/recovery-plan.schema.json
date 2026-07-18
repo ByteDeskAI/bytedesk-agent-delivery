@@ -57,8 +57,8 @@
       "required": ["publicRender", "deployment", "runtimeRelease"],
       "properties": {
         "publicRender": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
-        "deployment": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
-        "runtimeRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" }
+        "deployment": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerDeploymentDescriptor" },
+        "runtimeRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerRuntimeReleaseDescriptor" }
       },
       "additionalProperties": false,
       "unevaluatedProperties": false

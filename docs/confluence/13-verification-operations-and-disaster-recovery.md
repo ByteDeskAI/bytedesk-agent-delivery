@@ -28,6 +28,10 @@ Contract suites freeze:
 - [Renderer identity v1](../standards/renderer-identity-v1.md): exact renderer-
   release manifest, executed distribution/worker, platform, product/allowlist/
   schema digests, sandbox, withdrawal, and current-tooling recovery;
+- [Release qualification and status v1](../standards/release-qualification-v1.md):
+  product-pinned policy/suite/coverage, typed evidence tree and predicates,
+  signed decision, append-only status, and nonce/time-bound authenticated fresh
+  status heads;
 - [Consumer authority v1](../standards/consumer-authority-v1.md): fresh signed
   authority snapshots, signed exact-skill approvals, immutable policy digests,
   and consumer-owned or tenant-dedicated purpose-separated private keys;
@@ -46,7 +50,7 @@ Contract suites freeze:
   arbitrary functional Agent Spec overrides, safe regular-file operations,
   public/private skill selection, opaque secret references, and denial fixtures;
 - [OCI media types v1](../standards/oci-media-types-v1.md), descriptor shape,
-  and canonical encoding;
+  canonical encoding, and recursive manifest/config/layer/blob closure;
 - [Trust policy v1](../standards/trust-policy-v1.md) purpose and claim rules;
 - tenant-free public renderer input/output, private full-rerender compilation,
   exact public-render reuse, compatibility, and warning codes;
@@ -85,13 +89,18 @@ failure injection that cannot be produced safely otherwise.
 They include product and renderer executable readback, consumer-owned and
 tenant-dedicated KMS profiles, authority/approval versus deployment signer
 separation, DesiredStateStore managed/consumer-native conformance, and store
-migration with no dual write.
+migration with no dual write. Native Agent Spec, Hermes, and OpenClaw each run
+on `linux/amd64` and `linux/arm64` through qualification, rendering, signed
+public-render finalization, publication, recursive pull verification, and exact
+receipt readback.
 
 ### End-to-end tests
 
 End-to-end certification starts from an immutable source commit and ends with a
 host observation and verified receipt. It covers public discovery, source
-verification, binding/customization, signed public/private skill approval, private full
+verification, full product/renderer qualification, fresh authenticated current
+status, signed tenant-free public-render publication, binding/customization,
+signed public/private skill approval, private full
 rerender and compile, release, safe activation, workload login, allowed/denied
 capability and skill-execution checks, and forward recovery.
 
@@ -165,7 +174,7 @@ Certification denies and records stable codes for:
   authorization;
 - cross-consumer, cross-tenant, wrong-profile, wrong-runtime, and wrong-slot
   deployment reuse;
-- stale policy/grant/profile/credential and wrong deployment subdigest;
+- stale policy/grant/profile/credential and wrong canonical deployment descriptor;
 - archive traversal, absolute paths, links, devices, FIFOs, sockets, size bombs,
   and excessive graph depth; and
 - renderer, compiler, or package-directed code execution attempts.
@@ -241,7 +250,7 @@ An integrated runtime additionally proves current consumer authority:
   and denial of the same content without approval or outside that sandbox;
 - denial of an ungranted capability;
 - denial for wrong consumer/tenant/profile/runtime;
-- denial for stale release or deployment subdigest; and
+- denial for stale release or deployment descriptor; and
 - denial after a grant or credential is revoked.
 
 These are integration proofs against consumer-owned systems. Agent Delivery

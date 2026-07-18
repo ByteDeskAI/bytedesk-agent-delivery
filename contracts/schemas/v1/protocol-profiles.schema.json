@@ -1,0 +1,4249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/protocol-profiles/1.0.0",
+  "title": "Closed downstream protocol profile catalog",
+  "type": "object",
+  "required": [
+    "$schema",
+    "profile",
+    "version",
+    "profiles"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://schemas.bytedesk.ai/agent-delivery/v1/protocol-profiles/1.0.0"
+    },
+    "profile": {
+      "const": "bytedesk.protocol-profiles/1"
+    },
+    "version": {
+      "const": 1
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.worker-framing/1"
+              },
+              "ownerTask": {
+                "const": "AD-04"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "framing",
+                  "payloadEncoding",
+                  "oneRequestPerProcess",
+                  "maxRequestBytes",
+                  "maxResponseBytes",
+                  "maxDiagnosticsBytes",
+                  "deadlineSource",
+                  "workerStdin",
+                  "workerStdout",
+                  "workerStderr",
+                  "launcherContainerStdout",
+                  "launcherContainerStderr",
+                  "contentStreamIsolation",
+                  "diagnosticHandling",
+                  "inheritedFileDescriptors",
+                  "network",
+                  "secrets",
+                  "filesystem",
+                  "failureMapping"
+                ],
+                "properties": {
+                  "framing": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "payloadEncoding": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "oneRequestPerProcess": {
+                    "type": "boolean"
+                  },
+                  "maxRequestBytes": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "maxResponseBytes": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "maxDiagnosticsBytes": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "deadlineSource": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "workerStdin": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "workerStdout": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "workerStderr": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "launcherContainerStdout": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "launcherContainerStderr": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "contentStreamIsolation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "diagnosticHandling": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "inheritedFileDescriptors": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "network": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "secrets": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "filesystem": {
+                    "type": "object",
+                    "required": [
+                      "root",
+                      "input",
+                      "output",
+                      "temporary",
+                      "executable"
+                    ],
+                    "properties": {
+                      "root": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "input": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "output": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "temporary": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "executable": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "failureMapping": {
+                    "type": "object",
+                    "required": [
+                      "malformedFrame",
+                      "oversizedFrame",
+                      "timeout",
+                      "extraStdout",
+                      "containerStreamContent",
+                      "outputValidation"
+                    ],
+                    "properties": {
+                      "malformedFrame": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "oversizedFrame": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "timeout": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "extraStdout": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "containerStreamContent": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "outputValidation": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.oci-archive-layout/1"
+              },
+              "ownerTask": {
+                "const": "AD-07"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "referenceAuthority",
+                  "tagAndChannelUse",
+                  "manifestEncoding",
+                  "layerOrder",
+                  "publicArtifactRule",
+                  "privateArtifactRule",
+                  "archiveFormat",
+                  "archiveMetadata",
+                  "pathProfile",
+                  "rejectLinksAndSpecialFiles",
+                  "rejectDuplicatePortablePaths",
+                  "maximumExpandedBytes",
+                  "maximumMemberBytes",
+                  "maximumMembers",
+                  "archiveRootMutation",
+                  "restoreRule"
+                ],
+                "properties": {
+                  "referenceAuthority": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "tagAndChannelUse": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "manifestEncoding": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "layerOrder": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "publicArtifactRule": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "privateArtifactRule": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "archiveFormat": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "archiveMetadata": {
+                    "type": "object",
+                    "required": [
+                      "uid",
+                      "gid",
+                      "uname",
+                      "gname",
+                      "mtime",
+                      "modeProfile"
+                    ],
+                    "properties": {
+                      "uid": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "gid": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "uname": {
+                        "type": "string",
+                        "maxLength": 4096
+                      },
+                      "gname": {
+                        "type": "string",
+                        "maxLength": 4096
+                      },
+                      "mtime": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "modeProfile": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "pathProfile": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "rejectLinksAndSpecialFiles": {
+                    "type": "boolean"
+                  },
+                  "rejectDuplicatePortablePaths": {
+                    "type": "boolean"
+                  },
+                  "maximumExpandedBytes": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "maximumMemberBytes": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "maximumMembers": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "archiveRootMutation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "restoreRule": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.supply-chain-pins/1"
+              },
+              "ownerTask": {
+                "const": "AD-08"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "actionReferences",
+                  "containerReferences",
+                  "languageDependencies",
+                  "schemaReferences",
+                  "trustReferences",
+                  "rendererReferences",
+                  "scannerReferences",
+                  "sourceReferences",
+                  "forbiddenSelectors",
+                  "unavailableBehavior",
+                  "evidence"
+                ],
+                "properties": {
+                  "actionReferences": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "containerReferences": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "languageDependencies": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "schemaReferences": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "trustReferences": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "rendererReferences": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "scannerReferences": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "sourceReferences": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "forbiddenSelectors": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "unavailableBehavior": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.renderer-contract/1"
+              },
+              "ownerTask": {
+                "const": "AD-04"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "promisedSchemaIds",
+                  "selection",
+                  "forbiddenSelection",
+                  "invocation",
+                  "inputIdentity",
+                  "outputIdentity",
+                  "executeArtifactContent",
+                  "normalization",
+                  "publicRender",
+                  "privateRender",
+                  "wayflowAuthority"
+                ],
+                "properties": {
+                  "promisedSchemaIds": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "selection": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "forbiddenSelection": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "invocation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "inputIdentity": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "outputIdentity": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "executeArtifactContent": {
+                    "type": "boolean"
+                  },
+                  "normalization": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "publicRender": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "privateRender": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "wayflowAuthority": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.desired-state-store/1"
+              },
+              "ownerTask": {
+                "const": "AD-09"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "selectedStoreCardinality",
+                  "supportedStoreClasses",
+                  "soleLogicalWriter",
+                  "nonWriters",
+                  "read",
+                  "watch",
+                  "createPrecondition",
+                  "updatePrecondition",
+                  "idempotency",
+                  "migration",
+                  "regionFencing"
+                ],
+                "properties": {
+                  "selectedStoreCardinality": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "supportedStoreClasses": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "soleLogicalWriter": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "nonWriters": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "read": {
+                    "type": "object",
+                    "required": [
+                      "consistency",
+                      "returns"
+                    ],
+                    "properties": {
+                      "consistency": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "returns": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "watch": {
+                    "type": "object",
+                    "required": [
+                      "authority",
+                      "resumeToken",
+                      "onGap",
+                      "maximumPollIntervalSeconds"
+                    ],
+                    "properties": {
+                      "authority": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "resumeToken": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "onGap": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "maximumPollIntervalSeconds": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "createPrecondition": {
+                    "type": "object",
+                    "required": [
+                      "kind",
+                      "omission",
+                      "null"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "omission": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "null": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "updatePrecondition": {
+                    "type": "object",
+                    "required": [
+                      "kind",
+                      "required",
+                      "wildcard",
+                      "force",
+                      "digestOnly"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "required": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "wildcard": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "force": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "digestOnly": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "idempotency": {
+                    "type": "object",
+                    "required": [
+                      "keyBinding",
+                      "collision",
+                      "uncertainCommit"
+                    ],
+                    "properties": {
+                      "keyBinding": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "collision": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "uncertainCommit": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "migration": {
+                    "type": "object",
+                    "required": [
+                      "mode",
+                      "dualWrite",
+                      "checkpointed",
+                      "sourceReadOnlyAfterCutover",
+                      "rollback"
+                    ],
+                    "properties": {
+                      "mode": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "dualWrite": {
+                        "type": "boolean"
+                      },
+                      "checkpointed": {
+                        "type": "boolean"
+                      },
+                      "sourceReadOnlyAfterCutover": {
+                        "type": "boolean"
+                      },
+                      "rollback": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "regionFencing": {
+                    "type": "object",
+                    "required": [
+                      "required",
+                      "monotonicEpoch",
+                      "staleWriter"
+                    ],
+                    "properties": {
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "monotonicEpoch": {
+                        "type": "boolean"
+                      },
+                      "staleWriter": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.api-events/1"
+              },
+              "ownerTask": {
+                "const": "AD-10"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "httpContract",
+                  "eventContract",
+                  "cloudEventsVersion",
+                  "delivery",
+                  "ordering",
+                  "authority",
+                  "transports",
+                  "sse",
+                  "eventTypes",
+                  "unknownSchema",
+                  "sequenceGap",
+                  "deduplication",
+                  "mutationPreconditions",
+                  "problemContract"
+                ],
+                "properties": {
+                  "httpContract": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "eventContract": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "cloudEventsVersion": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "delivery": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "ordering": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "authority": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "transports": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "sse": {
+                    "type": "object",
+                    "required": [
+                      "resumeHeader",
+                      "allowedOnlyOn",
+                      "heartbeat",
+                      "disconnect"
+                    ],
+                    "properties": {
+                      "resumeHeader": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "allowedOnlyOn": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "heartbeat": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "disconnect": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "eventTypes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "unknownSchema": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "sequenceGap": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "deduplication": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "mutationPreconditions": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "problemContract": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.promotion-coordinator/1"
+              },
+              "ownerTask": {
+                "const": "AD-12"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "soleWriter",
+                  "isolatedCandidateOrdering",
+                  "guardedInPlaceOrdering",
+                  "managedCommitPoint",
+                  "externalCommitPoints",
+                  "cancellation",
+                  "fences",
+                  "crashRecovery",
+                  "recovery"
+                ],
+                "properties": {
+                  "soleWriter": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "isolatedCandidateOrdering": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "guardedInPlaceOrdering": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "managedCommitPoint": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "externalCommitPoints": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "cancellation": {
+                    "type": "object",
+                    "required": [
+                      "allowed",
+                      "afterClientTimeout",
+                      "afterTargetStateCas"
+                    ],
+                    "properties": {
+                      "allowed": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "afterClientTimeout": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "afterTargetStateCas": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "fences": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "crashRecovery": {
+                    "type": "object",
+                    "required": [
+                      "beforeRemoteCommit",
+                      "commitResponseLost",
+                      "afterHostSwitchBeforeDesiredCas",
+                      "afterDesiredCasBeforeReceipt",
+                      "staleCoordinator"
+                    ],
+                    "properties": {
+                      "beforeRemoteCommit": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "commitResponseLost": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "afterHostSwitchBeforeDesiredCas": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "afterDesiredCasBeforeReceipt": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "staleCoordinator": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "recovery": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.host-switch-journal/1"
+              },
+              "ownerTask": {
+                "const": "AD-14"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "journalIdentity",
+                  "phases",
+                  "appendRule",
+                  "durability",
+                  "switchPrimitive",
+                  "switchIntent",
+                  "switchMarker",
+                  "generationFence",
+                  "crashDisposition",
+                  "cleanup",
+                  "executionBoundary"
+                ],
+                "properties": {
+                  "journalIdentity": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "phases": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "appendRule": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "durability": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "switchPrimitive": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "switchIntent": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "switchMarker": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "generationFence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "crashDisposition": {
+                    "type": "object",
+                    "required": [
+                      "beforeIntent",
+                      "afterIntentBeforeSwitch",
+                      "duringSwitch",
+                      "afterSwitchBeforeMarker",
+                      "afterMarkerBeforeObservation",
+                      "staleAttempt"
+                    ],
+                    "properties": {
+                      "beforeIntent": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "afterIntentBeforeSwitch": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "duringSwitch": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "afterSwitchBeforeMarker": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "afterMarkerBeforeObservation": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "staleAttempt": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "cleanup": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "executionBoundary": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.capability-verification/1"
+              },
+              "ownerTask": {
+                "const": "AD-14"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "dispatchActor",
+                  "verificationActor",
+                  "forbiddenDispatchActors",
+                  "bindingFields",
+                  "chainBindings",
+                  "outcomeDerivation",
+                  "outcomes",
+                  "denialProof",
+                  "notDenial",
+                  "freshness",
+                  "isolatedCandidateSequence",
+                  "guardedInPlaceSequence",
+                  "evidenceSeparation",
+                  "failureMapping"
+                ],
+                "properties": {
+                  "dispatchActor": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "verificationActor": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "forbiddenDispatchActors": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "bindingFields": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "chainBindings": {
+                    "type": "object",
+                    "required": [
+                      "dispatchReceiptFields",
+                      "verificationRequestFields",
+                      "evidenceDispatchFields",
+                      "acceptedResultFields",
+                      "comparison",
+                      "mismatch"
+                    ],
+                    "properties": {
+                      "dispatchReceiptFields": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 64,
+                        "uniqueItems": true,
+                        "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+                      },
+                      "verificationRequestFields": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 64,
+                        "uniqueItems": true,
+                        "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+                      },
+                      "evidenceDispatchFields": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 64,
+                        "uniqueItems": true,
+                        "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+                      },
+                      "acceptedResultFields": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 64,
+                        "uniqueItems": true,
+                        "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+                      },
+                      "comparison": { "type": "string", "minLength": 1, "maxLength": 4096 },
+                      "mismatch": { "const": "evidence_invalid" }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "outcomeDerivation": {
+                    "type": "array",
+                    "minItems": 10,
+                    "maxItems": 10,
+                    "uniqueItems": true,
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "required": [
+                            "mode",
+                            "workloadLogin",
+                            "requiredCapability",
+                            "deniedSentinel",
+                            "outcome"
+                          ],
+                          "properties": {
+                            "mode": { "const": "required" },
+                            "workloadLogin": { "enum": ["passed", "failed"] },
+                            "requiredCapability": { "enum": ["permitted", "policy_denied"] },
+                            "deniedSentinel": { "enum": ["permitted", "policy_denied"] },
+                            "outcome": { "enum": ["permitted", "denied"] }
+                          },
+                          "additionalProperties": false,
+                          "unevaluatedProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "required": [
+                            "mode",
+                            "certifiedResult",
+                            "outcome"
+                          ],
+                          "properties": {
+                            "mode": { "const": "certified_not_applicable" },
+                            "certifiedResult": { "enum": ["not_applicable", "failed"] },
+                            "outcome": { "enum": ["permitted", "denied"] }
+                          },
+                          "additionalProperties": false,
+                          "unevaluatedProperties": false
+                        }
+                      ]
+                    }
+                  },
+                  "outcomes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "denialProof": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "notDenial": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "freshness": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "isolatedCandidateSequence": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "guardedInPlaceSequence": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "evidenceSeparation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "failureMapping": {
+                    "type": "object",
+                    "required": [
+                      "invalid_inputs",
+                      "invalid_contract",
+                      "binding_mismatch",
+                      "stale_evidence",
+                      "permit_authorization_proof_missing",
+                      "permit_authorization_decision_mismatch",
+                      "host_canary_check_failed",
+                      "workload_login_failed",
+                      "not_applicable_check_failed",
+                      "uncertified_not_applicable",
+                      "signer_mismatch",
+                      "unauthenticated_evidence",
+                      "unauthenticated_authorization_proof",
+                      "capability_denial_not_proven",
+                      "authorization_transport_failure"
+                    ],
+                    "properties": {
+                      "invalid_inputs": { "const": "evidence_invalid" },
+                      "invalid_contract": { "const": "evidence_invalid" },
+                      "binding_mismatch": { "const": "evidence_invalid" },
+                      "stale_evidence": { "const": "evidence_invalid" },
+                      "permit_authorization_proof_missing": { "const": "evidence_invalid" },
+                      "permit_authorization_decision_mismatch": { "const": "evidence_invalid" },
+                      "host_canary_check_failed": { "const": "evidence_invalid" },
+                      "workload_login_failed": { "const": "evidence_invalid" },
+                      "not_applicable_check_failed": { "const": "evidence_invalid" },
+                      "uncertified_not_applicable": { "const": "evidence_invalid" },
+                      "signer_mismatch": { "const": "trust_verification_failed" },
+                      "unauthenticated_evidence": { "const": "trust_verification_failed" },
+                      "unauthenticated_authorization_proof": { "const": "trust_verification_failed" },
+                      "capability_denial_not_proven": { "const": "capability_denial_not_proven" },
+                      "authorization_transport_failure": { "const": "capability_transport_failed" }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.cli-automation/1"
+              },
+              "ownerTask": {
+                "const": "AD-15"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "executable",
+                  "commandTree",
+                  "outputModes",
+                  "jsonEncoding",
+                  "stdout",
+                  "stderr",
+                  "secretHandling",
+                  "mutationConfirmation",
+                  "asyncProgress",
+                  "exitCodes",
+                  "compatibility"
+                ],
+                "properties": {
+                  "executable": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "commandTree": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "outputModes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "jsonEncoding": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "stdout": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "stderr": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "secretHandling": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "mutationConfirmation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "asyncProgress": {
+                    "type": "object",
+                    "required": [
+                      "fields",
+                      "pollBackoff",
+                      "maximumPollSeconds",
+                      "waitTimeout"
+                    ],
+                    "properties": {
+                      "fields": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "pollBackoff": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "maximumPollSeconds": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "waitTimeout": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "exitCodes": {
+                    "type": "object",
+                    "required": [
+                      "success",
+                      "usage_or_configuration",
+                      "validation",
+                      "compatibility",
+                      "trust",
+                      "authentication",
+                      "authorization_or_policy",
+                      "conflict_or_precondition",
+                      "unavailable_or_retryable",
+                      "terminal_operation_failure",
+                      "cancelled",
+                      "client_wait_timeout",
+                      "protocol_or_contract"
+                    ],
+                    "properties": {
+                      "success": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "usage_or_configuration": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "validation": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "compatibility": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "trust": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "authentication": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "authorization_or_policy": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "conflict_or_precondition": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "unavailable_or_retryable": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "terminal_operation_failure": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "cancelled": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "client_wait_timeout": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "protocol_or_contract": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "compatibility": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.external-input-lock/1"
+              },
+              "ownerTask": {
+                "const": "AD-18"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "artifactProfile",
+                  "schemaContract",
+                  "requiredFields",
+                  "roles",
+                  "repository",
+                  "commit",
+                  "treeDigest",
+                  "paths",
+                  "validators",
+                  "compatibilityEvidenceOnly",
+                  "fetch",
+                  "verification",
+                  "forbiddenSelectors",
+                  "unavailableBehavior",
+                  "authorityBoundary"
+                ],
+                "properties": {
+                  "artifactProfile": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "schemaContract": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "requiredFields": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "roles": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "repository": {
+                    "type": "object",
+                    "required": [
+                      "required",
+                      "scheme",
+                      "normalization"
+                    ],
+                    "properties": {
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "scheme": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "normalization": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "commit": {
+                    "type": "object",
+                    "required": [
+                      "required",
+                      "pattern",
+                      "branchOrTag"
+                    ],
+                    "properties": {
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "pattern": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "branchOrTag": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "treeDigest": {
+                    "type": "object",
+                    "required": [
+                      "required",
+                      "algorithm",
+                      "recomputeFromFetchedTree"
+                    ],
+                    "properties": {
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "algorithm": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "recomputeFromFetchedTree": {
+                        "type": "boolean"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "paths": {
+                    "type": "object",
+                    "required": [
+                      "required",
+                      "minimumItems",
+                      "maximumItems",
+                      "ordering",
+                      "entryFields",
+                      "duplicatePaths",
+                      "missingOrExtraPaths",
+                      "pathProfile",
+                      "fileBytes"
+                    ],
+                    "properties": {
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "minimumItems": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "maximumItems": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "ordering": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "entryFields": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "duplicatePaths": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "missingOrExtraPaths": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "pathProfile": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "fileBytes": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "validators": {
+                    "type": "object",
+                    "required": [
+                      "required",
+                      "minimumItems",
+                      "maximumItems",
+                      "identity"
+                    ],
+                    "properties": {
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "minimumItems": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "maximumItems": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "identity": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "compatibilityEvidenceOnly": {
+                    "type": "boolean"
+                  },
+                  "fetch": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "verification": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "forbiddenSelectors": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10000,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "uniqueItems": true
+                  },
+                  "unavailableBehavior": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "authorityBoundary": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.oci-artifact-profile/1"
+              },
+              "ownerTask": {
+                "const": "AD-07"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "manifest",
+                  "index",
+                  "config",
+                  "artifactTypes",
+                  "layers",
+                  "subject",
+                  "referrers",
+                  "crossRepositoryEdges",
+                  "graphBounds",
+                  "publication",
+                  "verification",
+                  "archive"
+                ],
+                "properties": {
+                  "manifest": {
+                    "type": "object",
+                    "required": [
+                      "mediaType",
+                      "schemaVersion",
+                      "encoding",
+                      "requiredMembers",
+                      "optionalMembers",
+                      "unknownMembers",
+                      "digestAlgorithm"
+                    ],
+                    "properties": {
+                      "mediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "schemaVersion": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "encoding": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredMembers": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "optionalMembers": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "unknownMembers": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "digestAlgorithm": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "index": {
+                    "type": "object",
+                    "required": [
+                      "mediaType",
+                      "authorityUse",
+                      "descriptorSelection",
+                      "tagSelection"
+                    ],
+                    "properties": {
+                      "mediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "authorityUse": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "descriptorSelection": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "tagSelection": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "config": {
+                    "type": "object",
+                    "required": [
+                      "mediaType",
+                      "bytesUtf8",
+                      "size",
+                      "digest",
+                      "semanticAuthority"
+                    ],
+                    "properties": {
+                      "mediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "bytesUtf8": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "size": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "digest": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "semanticAuthority": {
+                        "type": "boolean"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "artifactTypes": {
+                    "type": "object",
+                    "minProperties": 53,
+                    "maxProperties": 53,
+                    "required": [
+                      "contractBundle",
+                      "productDistribution",
+                      "productRelease",
+                      "rendererAllowlist",
+                      "rendererRelease",
+                      "qualificationPolicy",
+                      "qualificationSuite",
+                      "qualificationSelection",
+                      "qualificationAttempt",
+                      "qualificationAttemptAuthentication",
+                      "qualificationEvidenceTree",
+                      "qualificationReceipt",
+                      "qualificationReceiptAuthentication",
+                      "qualificationEvidence",
+                      "qualificationFinalizationMatrix",
+                      "qualificationPredicate",
+                      "qualificationDecision",
+                      "releaseStatus",
+                      "statusInclusionProof",
+                      "statusConsistencyProof",
+                      "statusHeadCheckpoint",
+                      "statusHeadAuthentication",
+                      "releaseStatusEligibility",
+                      "releaseStatusAppendResolution",
+                      "catalogIndex",
+                      "agentSource",
+                      "skillPackage",
+                      "rendererSelection",
+                      "rendererAttemptAuthority",
+                      "rendererAttemptAuthentication",
+                      "rendererExecutionReceipt",
+                      "rendererExecutionAuthentication",
+                      "renderManifest",
+                      "harnessRender",
+                      "publicationEvidence",
+                      "consumerAuthority",
+                      "skillApproval",
+                      "privateCompilationInput",
+                      "privateInputAuthentication",
+                      "consumerDeployment",
+                      "privateCompilationEvidence",
+                      "runtimeRelease",
+                      "activationAuthorization",
+                      "targetDeliveryState",
+                      "canaryPlan",
+                      "canaryEvidence",
+                      "authorizationDecisionProof",
+                      "recoveryPlan",
+                      "compatibilityAttestation",
+                      "evaluationAttestation",
+                      "policyAttestation",
+                      "deploymentReceipt",
+                      "readinessReport"
+                    ],
+                    "propertyNames": {
+                      "enum": [
+                        "contractBundle",
+                        "productDistribution",
+                        "productRelease",
+                        "rendererAllowlist",
+                        "rendererRelease",
+                        "qualificationPolicy",
+                        "qualificationSuite",
+                        "qualificationSelection",
+                        "qualificationAttempt",
+                        "qualificationAttemptAuthentication",
+                        "qualificationEvidenceTree",
+                        "qualificationReceipt",
+                        "qualificationReceiptAuthentication",
+                        "qualificationEvidence",
+                        "qualificationFinalizationMatrix",
+                        "qualificationPredicate",
+                        "qualificationDecision",
+                        "releaseStatus",
+                        "statusInclusionProof",
+                        "statusConsistencyProof",
+                        "statusHeadCheckpoint",
+                        "statusHeadAuthentication",
+                        "releaseStatusEligibility",
+                        "releaseStatusAppendResolution",
+                        "catalogIndex",
+                        "agentSource",
+                        "skillPackage",
+                        "rendererSelection",
+                        "rendererAttemptAuthority",
+                        "rendererAttemptAuthentication",
+                        "rendererExecutionReceipt",
+                        "rendererExecutionAuthentication",
+                        "renderManifest",
+                        "harnessRender",
+                        "publicationEvidence",
+                        "consumerAuthority",
+                        "skillApproval",
+                        "privateCompilationInput",
+                        "privateInputAuthentication",
+                        "consumerDeployment",
+                        "privateCompilationEvidence",
+                        "runtimeRelease",
+                        "activationAuthorization",
+                        "targetDeliveryState",
+                        "canaryPlan",
+                        "canaryEvidence",
+                        "authorizationDecisionProof",
+                        "recoveryPlan",
+                        "compatibilityAttestation",
+                        "evaluationAttestation",
+                        "policyAttestation",
+                        "deploymentReceipt",
+                        "readinessReport"
+                      ]
+                    },
+                    "additionalProperties": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "unevaluatedProperties": false
+                  },
+                  "layers": {
+                    "type": "object",
+                    "required": [
+                      "mediaType",
+                      "roleOrder",
+                      "omittedRole",
+                      "undeclaredOrDuplicateRole",
+                      "descriptorRequired",
+                      "roleAnnotation",
+                      "archiveProfile",
+                      "tar",
+                      "gzip",
+                      "arbitraryPayloadBytes"
+                    ],
+                    "properties": {
+                      "mediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "roleOrder": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "omittedRole": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "undeclaredOrDuplicateRole": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "descriptorRequired": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "roleAnnotation": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "archiveProfile": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "tar": {
+                        "type": "object",
+                        "required": [
+                          "pathOrder",
+                          "pathProfile",
+                          "uid",
+                          "gid",
+                          "uname",
+                          "gname",
+                          "mtime",
+                          "regularModes",
+                          "directoryMode",
+                          "acceptedTypes",
+                          "linksAndSpecialFiles"
+                        ],
+                        "properties": {
+                          "pathOrder": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 4096
+                          },
+                          "pathProfile": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 4096
+                          },
+                          "uid": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "gid": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "uname": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "gname": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "mtime": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "regularModes": {
+                            "type": "array",
+                            "minItems": 1,
+                            "maxItems": 10000,
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4096
+                            },
+                            "uniqueItems": true
+                          },
+                          "directoryMode": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 4096
+                          },
+                          "acceptedTypes": {
+                            "type": "array",
+                            "minItems": 1,
+                            "maxItems": 10000,
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4096
+                            },
+                            "uniqueItems": true
+                          },
+                          "linksAndSpecialFiles": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 4096
+                          }
+                        },
+                        "additionalProperties": false,
+                        "unevaluatedProperties": false
+                      },
+                      "gzip": {
+                        "type": "object",
+                        "required": [
+                          "algorithm",
+                          "level",
+                          "mtime",
+                          "operatingSystemByte",
+                          "filename",
+                          "comment",
+                          "extraFields",
+                          "concatenatedMembers"
+                        ],
+                        "properties": {
+                          "algorithm": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 4096
+                          },
+                          "level": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "mtime": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "operatingSystemByte": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "filename": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "comment": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "extraFields": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 4096
+                          },
+                          "concatenatedMembers": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 4096
+                          }
+                        },
+                        "additionalProperties": false,
+                        "unevaluatedProperties": false
+                      },
+                      "arbitraryPayloadBytes": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "subject": {
+                    "type": "object",
+                    "required": [
+                      "requiredMembers",
+                      "repositoryRule",
+                      "digestAlgorithm",
+                      "tagOrAnnotationAuthority",
+                      "missingWrongOrCrossRepository"
+                    ],
+                    "properties": {
+                      "requiredMembers": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "repositoryRule": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "digestAlgorithm": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "tagOrAnnotationAuthority": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "missingWrongOrCrossRepository": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "referrers": {
+                    "type": "object",
+                    "required": [
+                      "repositoryScope",
+                      "discoveryAuthority",
+                      "requiredDescriptorVerification",
+                      "allowedArtifactTypes",
+                      "missingRequiredReferrer"
+                    ],
+                    "properties": {
+                      "repositoryScope": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "discoveryAuthority": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredDescriptorVerification": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "allowedArtifactTypes": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "missingRequiredReferrer": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "crossRepositoryEdges": {
+                    "type": "object",
+                    "required": [
+                      "ociSubjectUse",
+                      "requiredDescriptorMembers",
+                      "trustPolicyMembers",
+                      "verification",
+                      "artifactProvidedTrustRoot"
+                    ],
+                    "properties": {
+                      "ociSubjectUse": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredDescriptorMembers": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "trustPolicyMembers": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "verification": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "artifactProvidedTrustRoot": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "graphBounds": {
+                    "type": "object",
+                    "required": [
+                      "maximumDepth",
+                      "maximumDescriptors",
+                      "maximumManifestBytes",
+                      "maximumBlobBytes",
+                      "maximumExpandedBytes",
+                      "maximumTraversalSeconds",
+                      "cycleBehavior"
+                    ],
+                    "properties": {
+                      "maximumDepth": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "maximumDescriptors": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "maximumManifestBytes": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "maximumBlobBytes": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "maximumExpandedBytes": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "maximumTraversalSeconds": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "cycleBehavior": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "publication": {
+                    "type": "object",
+                    "required": [
+                      "buildCount",
+                      "equality",
+                      "commitResolution",
+                      "tagWrite"
+                    ],
+                    "properties": {
+                      "buildCount": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "equality": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "commitResolution": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "tagWrite": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "verification": {
+                    "type": "object",
+                    "required": [
+                      "order",
+                      "unknownSchemaMediaTypeLayerRoleOrEdge",
+                      "extraction",
+                      "execution"
+                    ],
+                    "properties": {
+                      "order": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "unknownSchemaMediaTypeLayerRoleOrEdge": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "extraction": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "execution": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "archive": {
+                    "type": "object",
+                    "required": [
+                      "format",
+                      "maximumMembers",
+                      "maximumMemberBytes",
+                      "maximumExpandedBytes",
+                      "rootCreatePrecondition",
+                      "rootUpdatePrecondition",
+                      "restore"
+                    ],
+                    "properties": {
+                      "format": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "maximumMembers": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "maximumMemberBytes": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "maximumExpandedBytes": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "rootCreatePrecondition": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "rootUpdatePrecondition": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "restore": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "profileId",
+              "ownerTask",
+              "repoPaths",
+              "requirements"
+            ],
+            "properties": {
+              "profileId": {
+                "const": "bytedesk.signing-evidence-profile/1"
+              },
+              "ownerTask": {
+                "const": "AD-08"
+              },
+              "repoPaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/+@-]*$"
+                }
+              },
+              "requirements": {
+                "type": "object",
+                "required": [
+                  "cryptographicProfile",
+                  "kmsProfile",
+                  "purposeProfiles",
+                  "isolation",
+                  "signingRequest",
+                  "signingResult",
+                  "cosign",
+                  "sbom",
+                  "provenance",
+                  "vulnerabilityScan",
+                  "malwareScan",
+                  "secretScan",
+                  "scanCompleteness",
+                  "licenseEvaluation",
+                  "evidenceAttachment",
+                  "rotationAndRevocation",
+                  "failureBehavior"
+                ],
+                "properties": {
+                  "cryptographicProfile": {
+                    "type": "object",
+                    "required": [
+                      "contractName",
+                      "keyType",
+                      "curve",
+                      "digest",
+                      "providerSigningAlgorithm",
+                      "signatureEncoding",
+                      "publicKeyEncoding",
+                      "privateKeyExport"
+                    ],
+                    "properties": {
+                      "contractName": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "keyType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "curve": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "digest": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "providerSigningAlgorithm": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "signatureEncoding": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "publicKeyEncoding": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "privateKeyExport": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "kmsProfile": {
+                    "type": "object",
+                    "required": [
+                      "firstProvider",
+                      "keySpec",
+                      "keyUsage",
+                      "immutableVersionIdentity",
+                      "workloadPermission",
+                      "forbiddenPermissions",
+                      "authentication",
+                      "providerAuditEvidence",
+                      "alternativeProviders"
+                    ],
+                    "properties": {
+                      "firstProvider": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "keySpec": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "keyUsage": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "immutableVersionIdentity": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "workloadPermission": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "forbiddenPermissions": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "authentication": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "providerAuditEvidence": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "alternativeProviders": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "purposeProfiles": {
+                    "type": "object",
+                    "required": [
+                      "productRelease",
+                      "publicSource",
+                      "publicRender",
+                      "consumerPrivateSkill",
+                      "consumerAuthority",
+                      "consumerDeployment",
+                      "consumerRuntimeRelease",
+                      "releaseQualificationPolicy",
+                      "releaseQualificationAttempt",
+                      "releaseQualificationReceipt",
+                      "releaseQualificationEvidence",
+                      "releaseQualificationDecision",
+                      "releaseStatus",
+                      "releaseStatusHead",
+                      "releaseStatusEligibility",
+                      "rendererAttempt",
+                      "rendererExecution",
+                      "consumerReleaseStatusEligibility",
+                      "consumerCompilationInput",
+                      "consumerCompilationEvidence",
+                      "consumerActivationAuthorization"
+                    ],
+                    "properties": {
+                      "productRelease": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "publicSource": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "publicRender": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "consumerPrivateSkill": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "consumerAuthority": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "consumerDeployment": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "consumerRuntimeRelease": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "releaseQualificationPolicy": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "releaseQualificationAttempt": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "releaseQualificationReceipt": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "releaseQualificationEvidence": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "releaseQualificationDecision": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "releaseStatus": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "releaseStatusHead": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "releaseStatusEligibility": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "rendererAttempt": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "rendererExecution": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "consumerReleaseStatusEligibility": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "consumerCompilationInput": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "consumerCompilationEvidence": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "consumerActivationAuthorization": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "isolation": {
+                    "type": "object",
+                    "required": [
+                      "productPurposes",
+                      "privatePurposes",
+                      "consumerAuthoritySignerAccessFromAgentDelivery",
+                      "crossConsumerPrivateKey",
+                      "hostedProfile",
+                      "preferredProfile",
+                      "dispatcherSignPermission"
+                    ],
+                    "properties": {
+                      "productPurposes": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "privatePurposes": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "consumerAuthoritySignerAccessFromAgentDelivery": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "crossConsumerPrivateKey": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "hostedProfile": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "preferredProfile": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "dispatcherSignPermission": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "signingRequest": {
+                    "type": "object",
+                    "required": [
+                      "schemaId",
+                      "canonicalEncoding",
+                      "requiredBindings",
+                      "idempotency",
+                      "replayWithDifferentDigest"
+                    ],
+                    "properties": {
+                      "schemaId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "canonicalEncoding": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredBindings": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "idempotency": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "replayWithDifferentDigest": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "signingResult": {
+                    "type": "object",
+                    "required": [
+                      "schemaId",
+                      "requiredBindings",
+                      "wrongPurposeSubjectConsumerKeyOrPolicy"
+                    ],
+                    "properties": {
+                      "schemaId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredBindings": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "wrongPurposeSubjectConsumerKeyOrPolicy": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "cosign": {
+                    "type": "object",
+                    "required": [
+                      "version",
+                      "executableAuthority",
+                      "bundleMediaType",
+                      "subjectSelection",
+                      "tagSigning",
+                      "transparencyForPrivateConsumerArtifacts"
+                    ],
+                    "properties": {
+                      "version": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "executableAuthority": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "bundleMediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "subjectSelection": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "tagSigning": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "transparencyForPrivateConsumerArtifacts": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "sbom": {
+                    "type": "object",
+                    "required": [
+                      "specification",
+                      "interoperabilityProfile",
+                      "versionPolicy",
+                      "mediaType",
+                      "encoding",
+                      "requiredInputs",
+                      "requiredFor",
+                      "requiredSections",
+                      "fileChecksum",
+                      "packageVerificationCode",
+                      "generatorInput",
+                      "missingIncompleteOrUnknownComponent"
+                    ],
+                    "properties": {
+                      "specification": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "interoperabilityProfile": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "versionPolicy": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "mediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "encoding": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredInputs": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 64,
+                        "uniqueItems": true,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128
+                        }
+                      },
+                      "requiredFor": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "requiredSections": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "fileChecksum": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "packageVerificationCode": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "generatorInput": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "missingIncompleteOrUnknownComponent": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "provenance": {
+                    "type": "object",
+                    "required": [
+                      "specification",
+                      "statementType",
+                      "predicateType",
+                      "mediaType",
+                      "targetBuildLevel",
+                      "requiredInputs",
+                      "requiredSubject",
+                      "requiredPredicateFields",
+                      "requiredMaterials",
+                      "builderAndWorkflowAuthority",
+                      "mismatchedMissingOrUnpinnedMaterial"
+                    ],
+                    "properties": {
+                      "specification": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "statementType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "predicateType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "mediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "targetBuildLevel": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "requiredInputs": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 64,
+                        "uniqueItems": true,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128
+                        }
+                      },
+                      "requiredSubject": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredPredicateFields": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "requiredMaterials": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "builderAndWorkflowAuthority": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "mismatchedMissingOrUnpinnedMaterial": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "vulnerabilityScan": {
+                    "type": "object",
+                    "required": [
+                      "mediaType",
+                      "requiredInputs",
+                      "resultClasses",
+                      "denialThresholds",
+                      "indeterminateConditions",
+                      "indeterminatePromotionEligible",
+                      "artifactExecution"
+                    ],
+                    "properties": {
+                      "mediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredInputs": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "resultClasses": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "denialThresholds": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "indeterminateConditions": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "indeterminatePromotionEligible": {
+                        "type": "boolean"
+                      },
+                      "artifactExecution": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "malwareScan": {
+                    "type": "object",
+                    "required": [
+                      "mediaType",
+                      "requiredInputs",
+                      "requiredCoverage",
+                      "detectedOrCoverageIncomplete",
+                      "artifactExecution"
+                    ],
+                    "properties": {
+                      "mediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredInputs": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "requiredCoverage": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "detectedOrCoverageIncomplete": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "artifactExecution": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "secretScan": {
+                    "type": "object",
+                    "required": [
+                      "mediaType",
+                      "requiredInputs",
+                      "requiredCoverage",
+                      "rawSecretInArtifact",
+                      "opaqueSecretReference",
+                      "findingsRedaction"
+                    ],
+                    "properties": {
+                      "mediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredInputs": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "requiredCoverage": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "rawSecretInArtifact": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "opaqueSecretReference": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "findingsRedaction": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "scanCompleteness": {
+                    "type": "object",
+                    "required": [
+                      "mediaType",
+                      "requiredInputs",
+                      "requiredReports",
+                      "completePassRequirement",
+                      "missingMismatchedOrIncomplete",
+                      "evidenceCannotGrantRuntimeAuthority"
+                    ],
+                    "properties": {
+                      "mediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredInputs": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 64,
+                        "uniqueItems": true,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128
+                        }
+                      },
+                      "requiredReports": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 16,
+                        "uniqueItems": true,
+                        "items": {
+                          "type": "string",
+                          "enum": ["vulnerability", "malware", "secret"]
+                        }
+                      },
+                      "completePassRequirement": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "missingMismatchedOrIncomplete": {
+                        "const": "deny"
+                      },
+                      "evidenceCannotGrantRuntimeAuthority": {
+                        "const": true
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "licenseEvaluation": {
+                    "type": "object",
+                    "required": [
+                      "mediaType",
+                      "expressionSyntax",
+                      "expressionParserProfile",
+                      "licenseListVersion",
+                      "licenseListSource",
+                      "licenseListDigest",
+                      "exceptionListDigest",
+                      "parserDistributionAuthority",
+                      "licenseRefRule",
+                      "requiredInputs",
+                      "resultClasses",
+                      "unknownOrUnlicensedExpression",
+                      "policyUnavailable",
+                      "invalidExpression",
+                      "deniedExpression",
+                      "evidenceCannotGrantRuntimeAuthority"
+                    ],
+                    "properties": {
+                      "mediaType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "expressionSyntax": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "expressionParserProfile": {
+                        "const": "spdx-license-expression-2.3-strict/1"
+                      },
+                      "licenseListVersion": {
+                        "const": "3.28.0"
+                      },
+                      "licenseListSource": {
+                        "const": "https://github.com/spdx/license-list-data/tree/v3.28.0/json"
+                      },
+                      "licenseListDigest": {
+                        "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+                      },
+                      "exceptionListDigest": {
+                        "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+                      },
+                      "parserDistributionAuthority": {
+                        "const": "evaluatorImageDigest"
+                      },
+                      "licenseRefRule": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredInputs": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "resultClasses": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "unknownOrUnlicensedExpression": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "policyUnavailable": {
+                        "const": "dependency_unavailable-operation-problem-no-report"
+                      },
+                      "invalidExpression": {
+                        "const": "evidence_invalid-operation-problem-no-report"
+                      },
+                      "deniedExpression": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "evidenceCannotGrantRuntimeAuthority": {
+                        "type": "boolean"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "evidenceAttachment": {
+                    "type": "object",
+                    "required": [
+                      "relationship",
+                      "descriptorBindings",
+                      "crossRepositoryEvidence",
+                      "requiredEvidenceSet"
+                    ],
+                    "properties": {
+                      "relationship": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "descriptorBindings": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      },
+                      "crossRepositoryEvidence": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "requiredEvidenceSet": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "uniqueItems": true
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "rotationAndRevocation": {
+                    "type": "object",
+                    "required": [
+                      "verificationTrustSet",
+                      "priorSignatureMutation",
+                      "revokedKeyOrDigest",
+                      "historicalEvidence",
+                      "compromisedSignerResponse"
+                    ],
+                    "properties": {
+                      "verificationTrustSet": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "priorSignatureMutation": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "revokedKeyOrDigest": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "historicalEvidence": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "compromisedSignerResponse": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  },
+                  "failureBehavior": {
+                    "type": "object",
+                    "required": [
+                      "kmsUnavailable",
+                      "signingResponseLost",
+                      "scannerUnavailable",
+                      "policyUnavailable",
+                      "missingEvidence",
+                      "artifactOrSkillFilesExecuted"
+                    ],
+                    "properties": {
+                      "kmsUnavailable": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "signingResponseLost": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "scannerUnavailable": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "policyUnavailable": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "missingEvidence": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "artifactOrSkillFilesExecuted": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "additionalProperties": false,
+                    "unevaluatedProperties": false
+                  }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

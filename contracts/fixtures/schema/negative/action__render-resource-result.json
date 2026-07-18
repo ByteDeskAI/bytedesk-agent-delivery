@@ -1,0 +1,44 @@
+{
+  "contract": "bytedesk.action/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0",
+    "digest": "sha256:ddf0e484b8d35195f984204e130c9f3e88b5e347581722437aa763e28b2c346a"
+  },
+  "actionId": "action-render-invalid-result",
+  "scope": {
+    "kind": "public"
+  },
+  "correlationId": "correlation-render-invalid-result",
+  "causationId": "command-render-invalid-result",
+  "kind": "render",
+  "inputDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "state": "succeeded",
+  "progress": {
+    "phase": "complete",
+    "completed": 1,
+    "total": 1,
+    "unit": "items",
+    "updatedAt": "2026-07-17T12:01:00Z"
+  },
+  "attempt": 1,
+  "cancellable": false,
+  "precondition": {
+    "kind": "absent"
+  },
+  "predecessor": {
+    "kind": "none"
+  },
+  "resultContract": "bytedesk.action-result.render/1",
+  "result": {
+    "kind": "resource",
+    "uri": "/v1/renders/sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "schema": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/render-manifest/1.0.0",
+      "digest": "sha256:46ad38bfe2d711b45213b6eb520c5fbd9ea306976417c52264a64a76aa037151"
+    },
+    "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "etag": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "createdAt": "2026-07-17T12:00:00Z",
+  "updatedAt": "2026-07-17T12:01:00Z"
+}

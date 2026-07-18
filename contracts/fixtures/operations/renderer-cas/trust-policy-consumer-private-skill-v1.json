@@ -1,0 +1,73 @@
+{
+  "contract": "bytedesk.trust-policy/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+    "digest": "sha256:ea53b4814c96282ba5812c2573b4adf45a026340b1022503e25b9f391dcd1509"
+  },
+  "policyId": "consumer-private-skill-v1",
+  "version": "1.0.0",
+  "effective": {
+    "notBefore": "2026-07-17T00:00:00Z",
+    "notAfter": "2027-07-17T00:00:00Z"
+  },
+  "scope": {
+    "repositories": [
+      "registry.example/consumer/skills",
+      "registry.example/skills/escalation"
+    ],
+    "mediaTypes": [
+      "application/vnd.bytedesk.agent.skill.v1+json",
+      "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.signing-result.v1+json"
+    ],
+    "purposes": [
+      "consumer-private-skill-v1"
+    ]
+  },
+  "signers": [
+    {
+      "purpose": "consumer-private-skill-v1",
+      "credentialKind": "kms_key",
+      "keyVersion": "kms://product/consumer-private-skill-v1/versions/1",
+      "publicKeyDigest": "sha256:292461767f10c1ad88e9064d48746cd9887f879b74f3b87f09577d289b8e655d",
+      "algorithm": "ECDSA_P256_SHA256",
+      "workloadIdentity": "spiffe://bytedesk.ai/agent-delivery/consumer-private-skill",
+      "claims": {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audience": "agent-delivery-consumer-private-skill-v1",
+        "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:consumer-private-skill-v1",
+        "repository": "ByteDeskAI/bytedesk-agent-delivery",
+        "workflow": ".github/workflows/consumer-private-skill-v1.yml",
+        "ref": "refs/tags/v1.0.0",
+        "environment": "consumer-private-skill-v1",
+        "builderDigest": "sha256:d1ab7ee7e688a92bedd8058930a63db79d488c1aaf5ef482a1879a6e9f3e08ea"
+      }
+    }
+  ],
+  "requiredEvidence": [
+    "schema",
+    "authority",
+    "skill_approval"
+  ],
+  "rules": {
+    "freshnessSeconds": 900,
+    "requireNonce": true,
+    "requirePredecessor": true,
+    "denyDowngrade": true,
+    "withdrawal": "deny_new_use",
+    "outage": "fail_closed_new_work"
+  },
+  "revocations": {
+    "keyVersions": [],
+    "digests": [],
+    "workflows": [],
+    "builders": [],
+    "schemas": [],
+    "renderers": [],
+    "content": []
+  },
+  "failureMode": "fail_closed",
+  "predecessor": {
+    "kind": "none"
+  }
+}

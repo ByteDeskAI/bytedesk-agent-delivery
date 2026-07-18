@@ -49,7 +49,17 @@ Git and bots are optional intent producers, not desired-state writers.
    policy binding for both actors, and promote only after matching technical and
    capability evidence. Timeout, 404, network or parser failure is not denial
    evidence.
-8. Implement newest-first recovery eligibility over historical functional
+8. Resolve the immutable runtime-release descriptor and complete canonical
+   deployable graph before authorizing activation. Require canonical
+   per-subject `candidateReadyEvidence`, `authoritySnapshots`, and
+   `authorizationDecisionProofs` arrays that strictly order and exactly cover
+   the graph. Bind a fresh Coordinator `authorizationNonce`, one `slotId`,
+   activation mode, generations, fencing token, region epoch, and
+   `operationTime` into the idempotency request digest and signed authorization.
+   Independently resolve and authenticate fresh activation-stage product and
+   renderer eligibility; return the exact eligibility object, permitted
+   verification result, evidence digest, and all authorization/graph echoes.
+9. Implement newest-first recovery eligibility over historical functional
    content. Reject withdrawn content, revoked tooling, stale authority or
    approval, semantic mismatch, or missing dependencies; request a newly
    compiled rollout with current source trust, renderer/compiler, authority,
@@ -64,6 +74,9 @@ Git and bots are optional intent producers, not desired-state writers.
 - Evaluation report and attestation contract.
 - Approval-required classification, canary-plan/evidence verification, and
   forward-recovery eligibility/command contracts.
+- Signed target-wide activation authorization with complete canonical
+  per-subject evidence/authority/decision inputs and fresh release-eligibility
+  verification output.
 - Concurrency, replay, crash/restart, and policy tests.
 
 ## Acceptance criteria
@@ -83,6 +96,10 @@ Git and bots are optional intent producers, not desired-state writers.
 - Promotion requires fresh matching evidence from both the target-scoped host
   and distinct consumer capability verifier, or signed `not_applicable` only
   for a certified no-capability profile.
+- Activation authorization fails closed on any missing, duplicate, reordered,
+  or substituted graph subject; stale/reused authorization nonce; mismatched
+  target slot; incomplete renderer eligibility; or result echo that differs
+  from the signed request and authorization.
 - Recovery records current predecessor separately from historical
   `recoverySource` and fails closed when no eligible current-tooling rebuild
   exists.
@@ -94,7 +111,10 @@ idempotency, concurrency/lease/supersession, managed/consumer-native store and
 no-dual-write migration, compatibility/rebase, bot/API/Git intent, skill
 quarantine/approval, authority freshness, canary nonce/actor/false-denial/late-
 evidence, promotion CAS, newest-first recovery, revoked tooling/withdrawn
-content/current-tooling rebuild/no-candidate/Git-outage, and crash/restart tests.
+content/current-tooling rebuild/no-candidate/Git-outage, canonical
+deployable-graph coverage, per-subject array missing/duplicate/reorder/
+substitution, authorization-nonce/slot mismatch, eligibility-result echo, and
+crash/restart tests.
 
 ## Not in scope
 
@@ -105,6 +125,55 @@ consuming-platform grant/identity administration.
 
 Blocked by AD-08, AD-09, and AD-10. AD-11 is an optional Git intent producer,
 not a prerequisite. AD-13 and AD-14 consume this process contract.
+
+## Normative contracts and conformance
+
+- **Ports and operations.** `bytedesk.port.promotion-coordinator/1`
+  (`start-rollout`, `evaluate-evidence`, `authorize-activation`,
+  `commit-promotion`, `plan-forward-recovery`, `cancel-rollout`),
+  `bytedesk.port.desired-state-store/1` (`read-target-state`,
+  `compare-and-swap-target-state`, `resolve-idempotency`,
+  `read-target-history`), `bytedesk.port.capability-verifier/1`
+  (`dispatch-capability-check`, `verify-capability-result`), and
+  `bytedesk.port.consumer-authority-approval/1`
+  (`verify-private-authority`), plus `bytedesk.port.region-fence/1`
+  (`prepare-region-fence`, `activate-recovery-region`, `verify-region-fence`),
+  are registered in `contracts/ports/v1/port-registry.json`. Exact field-value
+  and closed request/result schemas are distributed in
+  `contracts/ports/v1/type-catalog.json`; canonical valid and structural-denial
+  payloads are in `contracts/ports/v1/contract-fixtures.json`.
+- **Schemas, artifacts, and profiles.** Exact schema IDs include
+  `https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/rollout/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/canary-plan/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/canary-evidence/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/evaluation-attestation/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/activation-authorization/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/release-status-eligibility-evidence/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/recovery-plan/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/promotion-decision/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/desired-state-store-receipt/1.0.0`,
+  and `https://schemas.bytedesk.ai/agent-delivery/v1/region-fence/1.0.0`, under
+  `contracts/schemas/v1/`. Coordinator fencing/crash order, evidence phase,
+  remote-CAS response resolution, regional fencing, and forward-recovery
+  profiles are in `contracts/ports/v1/protocol-profiles.json`.
+- **Conformance owner.** AD-12 owns exhaustive transition, sole-writer CAS,
+  crash/fencing, evidence ordering, capability dispatch, activation-time
+  product/renderer status freshness, signed exact deployable-graph
+  authorization, canonical per-subject candidate-ready/authority/decision set
+  coverage, authorization nonce/slot/request/result binding, and current-tooling
+  recovery-planning fixtures. Run
+  `make verify-downstream-ports`; the
+  task-specific suite is `downstream.promotion.v1` in
+  `contracts/ports/v1/conformance-cases.json`. Execute the suite's exact harness
+  steps and closed oracles from `contracts/ports/v1/conformance-plan.json`;
+  schema-valid structural fixtures alone are not semantic implementation goldens.
+- **Boundary.** The Promotion Coordinator is the only actor that triggers the
+  Capability Verifier and the only logical writer of target desired state.
+  Hosts, compilers, Git, bots, APIs, operators, observations, and capability
+  verifiers submit intent or evidence only. The Coordinator cannot issue or
+  broaden consumer authority.
 
 ## Architecture review amendments
 

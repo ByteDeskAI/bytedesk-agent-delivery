@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-resolution-query/1.0.0",
+  "title": "Trust-policy provider resolution query",
+  "x-bytedesk-digestAuthority": {
+    "profile": "bytedesk.trust-policy-pin-set-resolution-request/1",
+    "exclude": ["contract", "schema", "requestDigest"]
+  },
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "requestNonce",
+    "requestDigest",
+    "kind",
+    "pinSetId",
+    "scope",
+    "consumerId",
+    "clientPriorState",
+    "idempotencyKey",
+    "activationRequestDigest",
+    "purpose",
+    "trustPolicy",
+    "signingTime",
+    "operationTime"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.trust-policy-pin-set-resolution-query/1" },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "requestNonce": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonce"
+    },
+    "requestDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "RFC 8785 JCS SHA-256 digest of the complete closed query including operationTime and excluding only requestDigest, contract, and schema."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "activation_attempt",
+        "current_for_new_use",
+        "historical_verification"
+      ]
+    },
+    "pinSetId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "scope": { "type": "string", "enum": ["product", "consumer"] },
+    "consumerId": {
+      "oneOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        { "type": "null" }
+      ]
+    },
+    "clientPriorState": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/clientPriorState" }
+      ],
+      "description": "Explicit null on first contact, otherwise the exact provider state previously accepted by this client."
+    },
+    "idempotencyKey": {
+      "oneOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        { "type": "null" }
+      ]
+    },
+    "activationRequestDigest": {
+      "oneOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        { "type": "null" }
+      ]
+    },
+    "purpose": {
+      "oneOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        { "type": "null" }
+      ]
+    },
+    "trustPolicy": {
+      "oneOf": [
+        { "$ref": "#/$defs/trustPolicyReference" },
+        { "type": "null" }
+      ]
+    },
+    "signingTime": {
+      "oneOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+        { "type": "null" }
+      ]
+    },
+    "operationTime": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp"
+    }
+  },
+  "$defs": {
+    "trustPolicyReference": {
+      "type": "object",
+      "required": ["id", "digest"],
+      "properties": {
+        "id": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "clientPriorState": {
+      "type": "object",
+      "required": ["revision", "pinSetDigest", "pinSetDescriptor"],
+      "properties": {
+        "revision": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger"
+        },
+        "pinSetDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        },
+        "pinSetDescriptor": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-descriptor/1.0.0"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "scope": { "const": "product" } }, "required": ["scope"] },
+      "then": { "properties": { "consumerId": { "type": "null" } } },
+      "else": { "properties": { "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" } } }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "activation_attempt" } }, "required": ["kind"] },
+      "then": {
+        "properties": {
+          "idempotencyKey": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "activationRequestDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+          "purpose": { "type": "null" },
+          "trustPolicy": { "type": "null" },
+          "signingTime": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "current_for_new_use" } }, "required": ["kind"] },
+      "then": {
+        "properties": {
+          "idempotencyKey": { "type": "null" },
+          "activationRequestDigest": { "type": "null" },
+          "purpose": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "trustPolicy": { "type": "null" },
+          "signingTime": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "historical_verification" } }, "required": ["kind"] },
+      "then": {
+        "properties": {
+          "idempotencyKey": { "type": "null" },
+          "activationRequestDigest": { "type": "null" },
+          "purpose": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "trustPolicy": { "$ref": "#/$defs/trustPolicyReference" },
+          "signingTime": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "A nonce-bound provider query. Current-for-new-use resolves only the current exact policy at operationTime. Historical verification requires an exact policy digest and signingTime, and still applies current revocations at operationTime. Activation-attempt resolution is keyed by the original idempotency key and canonical activation request digest. Any revision or digest below, or inconsistent with, clientPriorState is rollback or equivocation and fails closed."
+}

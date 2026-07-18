@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-catalog/1.0.0",
+  "profile": "bytedesk.problem-catalog/1",
+  "version": 1,
+  "problems": [
+    {
+      "code": "action_cancelled",
+      "type": "https://problems.bytedesk.ai/agent-delivery/action-cancelled",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "committed-unchanged"
+      ],
+      "cliExit": 11
+    }
+  ]
+}

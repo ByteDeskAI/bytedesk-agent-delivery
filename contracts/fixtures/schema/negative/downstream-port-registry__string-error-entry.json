@@ -1,0 +1,63 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/downstream-port-registry/1.0.0",
+  "profile": "bytedesk.downstream-port-registry/1",
+  "version": 1,
+  "compatibility": "Exact port-major contracts are immutable.",
+  "typeCatalog": "contracts/ports/v1/type-catalog.json",
+  "contractFixtures": "contracts/ports/v1/contract-fixtures.json",
+  "ports": [
+    {
+      "portId": "bytedesk.port.catalog/1",
+      "kind": "adapter",
+      "owner": "catalog",
+      "tasks": [
+        "AD-02"
+      ],
+      "suite": "downstream.catalog.v1",
+      "contractPaths": [
+        "contracts/schemas/v1/catalog-index.schema.json"
+      ],
+      "promisedSchemas": [],
+      "protocolProfiles": [
+        "bytedesk.oci-archive-layout/1",
+        "bytedesk.oci-artifact-profile/1"
+      ],
+      "operations": [
+        {
+          "operationId": "list-catalog-releases",
+          "requestContract": "bytedesk.port.catalog.list-catalog-releases.request/1",
+          "resultContract": "bytedesk.port.catalog.list-catalog-releases.result/1",
+          "requestFields": [
+            {
+              "name": "limit",
+              "type": "integer",
+              "required": true,
+              "schemaRef": "primitive:nonnegative-integer",
+              "valueType": "bytedesk.port-field.catalog.list-catalog-releases.request.limit/1"
+            }
+          ],
+          "resultFields": [
+            {
+              "name": "releases",
+              "type": "array",
+              "required": true,
+              "schemaRef": "catalog-index#/$defs/catalogRelease",
+              "valueType": "bytedesk.port-field.catalog.list-catalog-releases.result.releases/1"
+            }
+          ],
+          "errors": [
+            "dependency_unavailable"
+          ],
+          "idempotency": "safe read",
+          "failureSemantics": "fail-closed-read-only",
+          "commitUncertainty": "not-applicable",
+          "authentication": "optional-client-identity",
+          "authorization": "public catalog read",
+          "compatibility": "cursor bound to catalog digest",
+          "owner": "catalog",
+          "suite": "downstream.catalog.v1"
+        }
+      ]
+    }
+  ]
+}

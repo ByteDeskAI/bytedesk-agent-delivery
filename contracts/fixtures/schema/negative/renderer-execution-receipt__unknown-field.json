@@ -1,0 +1,31 @@
+{
+  "contract": "bytedesk.renderer-execution-receipt/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-execution-receipt/1.0.0",
+    "digest": "sha256:659941ccbbaa1e64f2c3df6f5777e5dab5abad229d9e26d474106fa46d71b1be"
+  },
+  "attemptId": "render-attempt-1",
+  "attemptFencingToken": 7,
+  "selectionDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "rendererReleaseDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "platform": "linux/amd64",
+  "executedDistribution": {
+    "repository": "registry.example/product/renderers",
+    "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "size": 8388608,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  },
+  "inputTreeDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "framedRequestDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+  "framedResponseDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+  "outputTreeDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+  "sandboxProfileDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+  "workerProfileDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "launcherIdentityDigest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+  "completedAt": "2026-07-17T12:00:00Z",
+  "ambientExecutablePath": "/usr/local/bin/renderer"
+}

@@ -20,12 +20,15 @@ delivery-planning source of truth.
 - [Consumer integration contract](architecture/consumer-integration-contract.md)
 - [OCI artifact model](architecture/oci-artifact-model.md)
 - [Runtime reconciliation](architecture/runtime-reconciliation.md)
+- [Downstream contract coverage](architecture/downstream-contract-coverage.md)
 
 ## Standards
 
 - [Canonical encoding v1](standards/canonical-encoding-v1.md)
 - [Machine contracts v1](standards/machine-contracts-v1.md)
+- [Integration ports v1](standards/integration-ports-v1.md)
 - [Renderer identity v1](standards/renderer-identity-v1.md)
+- [Release qualification and status v1](standards/release-qualification-v1.md)
 - [Consumer authority and private signing v1](standards/consumer-authority-v1.md)
 - [Delivery lifecycle v1](standards/delivery-lifecycle-v1.md)
 - [Operational readiness v1](standards/operational-readiness-v1.md)

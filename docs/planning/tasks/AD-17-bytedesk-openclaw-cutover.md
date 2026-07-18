@@ -19,7 +19,11 @@ Make marketplace packages and the OpenClaw renderer the canonical source for Byt
 - Pinned CORE-CERT release with OpenClaw renderer, OCI/trust, control-plane,
   compiler, reconciler, API, CLI, and contract bundles.
 - REFERENCE-CATALOG-CERT when the cutover selects ByteDesk's 34+1 catalog.
-- Current `bytedesk-openclaw/agents` inventory and runtime packaging.
+- An exact `bytedesk.external-input-lock/1` artifact for the
+  `bytedesk-openclaw/agents` inventory and runtime packaging. The lock binds
+  repository URL, immutable commit, source-tree digest, sorted path/digest
+  inventory, and `compatibilityEvidenceOnly: true`; an unpinned checkout or
+  mutable branch is not an input or authority.
 - OCI source/render artifacts and trust verification from AD-07 and AD-08.
 - Migration map and parity report.
 - A separately approved OpenClaw integration task/branch in the correct repository.
@@ -30,7 +34,10 @@ Make marketplace packages and the OpenClaw renderer the canonical source for Byt
 2. Update the consumer repository's packaging, build, and install paths to consume or regenerate verified render artifacts rather than treating generated files as authoring inputs.
 3. Allow private consumer customization of all functional OpenClaw definition properties, configuration, arbitrary files/skills, and opaque secret references. Preserve tool/MCP/provider authority, identity, credentials, trust/signing, mandatory security controls, and approvals at the consuming-platform boundary.
 4. Add generated-file markers and gates that fail CI when hand edits drift from the pinned digest.
-5. Migrate existing slugs/references and document intentional semantic differences.
+5. Migrate the slugs/references identified by the accepted external-input lock
+   and document intentional semantic differences. This AD-17 ByteDesk OpenClaw
+   workstream owns the migration map and full-catalog comparison; AD-06 remains
+   generic-only.
 6. Remove or demote duplicate canonical content only after clean-build and runtime parity.
 7. Provide forward recovery by selecting eligible historical functional
    content and producing a newly compiled consumer rollout under current
@@ -60,7 +67,8 @@ Make marketplace packages and the OpenClaw renderer the canonical source for Byt
 - Clean builds reproduce the pinned rendered bundle byte-for-byte.
 - No MCP, tool, provider, resource, identity, role, or credential grant is inferred from marketplace source.
 - Arbitrary declared skill files are reproduced without Agent Delivery executing them; any later OpenClaw execution requires consumer approval and consumer-owned runtime controls.
-- Existing applicable agents retain reviewed role intent.
+- Applicable agents in the accepted external-input lock retain reviewed role
+  intent.
 - Current-tooling forward recovery from eligible historical functional content
   is documented and tested.
 - Failure or non-completion of this reference integration does not prevent a core Agent Delivery release satisfying AD-18's core certification.
@@ -83,6 +91,56 @@ Production release, unrelated OpenClaw refactoring, consumer authorization redes
 
 Blocked by CORE-CERT only. REFERENCE-CONSUMER-CERT additionally requires
 REFERENCE-CATALOG-CERT when this integration selects the ByteDesk catalog.
+
+## Normative contracts and conformance
+
+- **Ports and operations.** The reference integration uses
+  `bytedesk.port.consumer-authority-approval/1`
+  (`resolve-authority-snapshot`, `resolve-skill-approval`,
+  `verify-private-authority`), `bytedesk.port.consumer-projection/1`
+  (`resolve-consumer-subject`, `project-consumer-receipt`),
+  `bytedesk.port.private-compiler/1` (`compile-private-deployment`,
+  `resolve-compile-attempt`), `bytedesk.port.renderer-strategy/1`
+  (`select-renderer`, `render`), `bytedesk.port.desired-state-store/1`
+  (`read-target-state`, `watch-target-state`,
+  `compare-and-swap-target-state`, `resolve-idempotency`),
+  `bytedesk.port.host-reconciler/1` (`stage-candidate`,
+  `preflight-candidate`, `activate-candidate`, `readback-active-state`,
+  `append-host-observation`, `recover-attempt-journal`, `cleanup-candidate`), and
+  `bytedesk.port.capability-verifier/1` (`dispatch-capability-check`,
+  `verify-capability-result`) as registered in
+  `contracts/ports/v1/port-registry.json`. Exact field-value and closed
+  request/result schemas are distributed in
+  `contracts/ports/v1/type-catalog.json`; canonical valid and structural-denial
+  payloads are in `contracts/ports/v1/contract-fixtures.json`.
+- **Schemas, artifacts, and profiles.** Exact schema IDs include
+  `https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/consumer-authority/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/skill-approval/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/consumer-deployment/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/runtime-release/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/host-reconciliation-attempt/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/canary-evidence/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/authorization-decision-proof/1.0.0`,
+  and `https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0`,
+  under `contracts/schemas/v1/`. The OpenClaw renderer, consumer Adapter,
+  desired-store, capability, generated-file drift, cutover, and
+  `bytedesk.external-input-lock/1` profiles are in
+  `contracts/ports/v1/protocol-profiles.json`.
+- **Conformance owner.** This AD-17 ByteDesk OpenClaw workstream owns the exact
+  migration map, slug migration, full-catalog comparison, generated-file drift
+  gate, consumer runtime cutover, and current-tooling recovery evidence; AD-06
+  owns generic renderer behavior only. Run `make verify-downstream-ports`; the
+  task-specific suite is `downstream.bytedesk-openclaw.v1` in
+  `contracts/ports/v1/conformance-cases.json`. Execute the suite's exact harness
+  steps and closed oracles from `contracts/ports/v1/conformance-plan.json`;
+  schema-valid structural fixtures alone are not semantic implementation goldens.
+- **Boundary.** Consumer identity, grants, MCP/tool/provider authority,
+  credentials, trust, approvals, and mandatory security policy remain
+  consumer-owned. The Promotion Coordinator alone writes desired state and
+  triggers capability verification. OpenClaw- or ByteDesk-specific data remains
+  in this integration and never enters core schemas or generic fixtures.
 
 ## Architecture review amendments
 

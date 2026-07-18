@@ -25,6 +25,13 @@ The renderer boundary uses two established patterns:
 - An **Adapter** maps canonical Agent Spec semantics to the target harness's
   files and configuration model.
 
+Strategy selection is permitted only after the exact product and renderer
+releases pass their pinned qualification policy and the caller verifies fresh,
+nonce-bound authenticated current status heads. The complete renderer-selection
+object, including those exact proofs, is passed unchanged through Strategy,
+Adapter, sandbox, validation, and publication. No layer repeats selection from
+ambient host state.
+
 The registry is generated at product-build time, embedded in the signed product
 distribution, and identified by its own canonical digest. Version one
 does not load renderer plugins from marketplace packages or runtime paths. A
@@ -57,6 +64,9 @@ Public inputs are complete, immutable, and tenant-free:
 - actual supported platform distribution/worker descriptor;
 - product-release trust-policy, embedded allowlist, and renderer-owned schema
   digests;
+- exact signed product-release and release-qualification descriptors;
+- fresh nonce-bound product and renderer status-head checkpoints plus their
+  authentication evidence;
 - declared, non-secret public render parameters; and
 - exact public skill digests approved for the catalog render.
 
@@ -105,7 +115,7 @@ and hashed as their exact raw bytes rather than parsed based on extension.
 
 ## Renderer output contract
 
-Every render produces:
+Every Adapter execution produces:
 
 - the target bundle;
 - an ordered manifest of output paths and digests;
@@ -121,6 +131,50 @@ Every render produces:
 
 The output is invalid if the manifest omits a generated file or names a file
 outside the declared root.
+
+The public-render finalizer then consumes the complete tenant-free source and
+public-skill objects, unchanged renderer selection, authenticated attempt and
+execution receipts, validated render manifest, deterministic archive bytes,
+output layer, qualification decision, and current-status proofs. It emits one
+closed `bytedesk.harness-render/1` object with a schema-owned authority digest
+and complete `public-render-v1` signing result. The published object binds the
+exact source, skills, product/renderer releases, executed distribution,
+platform, allowlist, schemas, parameters, selection, attempt, execution,
+manifest, compatibility, output archive/layer, files, and trust policy. A
+manifest or archive that exists only inside a test fixture is not a publishable
+public render.
+
+Finalization and publication are separate product protocols. The finalizer
+requires fresh `public_render_finalization` status eligibility and emits the
+signed harness render plus deterministic graph and publication-payload digest;
+it has no registry authority. The purpose-separated public-render publisher
+must independently obtain fresh `public_render_publication` eligibility with a
+different caller nonce, verify complete product and used-renderer coverage, and
+bind its permitted verification evidence and operation time into an opaque
+authorization-context digest. It delegates only that digest and the exact graph
+to the status-agnostic Registry Adapter. Successful publication returns
+authenticated commit/readback evidence whose authorization-context digest,
+request digest, graph, descriptors, and raw bytes all match the publisher's
+request exactly.
+
+The renderer digest profile is closed and shared by every Adapter. It uses
+RFC 8785 JCS plus SHA-256 with distinct v1 domain objects for capability
+coverage, effective skill set, complete effective render input, compatibility
+coverage, logical output tree, and reproducibility. The manifest's archive
+digest remains the hash of exact deterministic archive bytes; it is not the
+logical tree digest. The compatibility result binds the JCS digest and coverage
+digest of the complete capability object and binds the manifest's effective
+input digest. The reproducibility digest then binds that effective input, the
+complete compatibility-result digest, and the complete output identity.
+
+Procedural conformance requires exact array ordering, capability semantic count
+and registry equality, skill ordering, file count, expanded byte sum, archive
+profile equality, renderer identity equality, and archive digest/size readback.
+Changing any one field while retaining an old aggregate digest is a terminal
+`renderer_output_invalid` failure. These rules are defined in
+[Renderer identity v1](../standards/renderer-identity-v1.md) and exercised by
+the renderer digest conformance catalog; a harness Adapter cannot replace them
+with a target-specific cache key.
 
 Renderer capability, parameter, harness-configuration, compatibility-result,
 and render-manifest objects use closed Draft 2020-12 schemas from the signed
@@ -219,7 +273,9 @@ Compatibility changes follow these rules:
 Renderer release provenance, SBOM, vulnerability, license, deterministic-
 output, executable-readback, and sandbox evidence follows
 [Renderer identity v1](../standards/renderer-identity-v1.md), including the v1
-SLSA Build Level 3 target.
+SLSA Build Level 3 target. Exact evidence-tree, qualification-decision, and
+fresh status-head rules follow
+[Release qualification and status v1](../standards/release-qualification-v1.md).
 
 ## Conformance suite
 
@@ -232,6 +288,11 @@ Every Adapter runs the same contract suite:
 - signed renderer manifest/allowlist validation, actual executable or worker
   digest readback, platform substitution denial, and one-version-to-one-
   manifest immutability;
+- the complete Native Agent Spec, Hermes, and OpenClaw renderer release matrix
+  on both `linux/amd64` and `linux/arm64`, with every required qualification
+  evidence role and constructible qualification/publication output;
+- first-contact, unchanged-refresh, append-only-advance, wrong-nonce, expired,
+  future, rollback, fork, withdrawn, and revoked status-head cases;
 - Unicode, newline, path, mode, and archive edge cases;
 - accepted equivalent YAML/JSON contract fixtures, RFC 8785 canonical bytes,
   disallowed YAML constructs, and byte-exact `.yaml`, `.json`, and binary
@@ -286,5 +347,6 @@ defines a secure plugin lifecycle.
 - [Hosted runtime deployment](10-hosted-runtime-deployment.md)
 - [Machine contracts v1](../standards/machine-contracts-v1.md)
 - [Renderer identity v1](../standards/renderer-identity-v1.md)
+- [Release qualification and status v1](../standards/release-qualification-v1.md)
 - [Consumer authority and private signing v1](../standards/consumer-authority-v1.md)
 - [Delivery lifecycle v1](../standards/delivery-lifecycle-v1.md)

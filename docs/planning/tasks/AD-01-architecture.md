@@ -16,7 +16,7 @@ inventing authority or state semantics later.
 
 - The decisions extracted from historical epic BDP-3301.
 - Agent Spec 26.1.2 language, schema, and official validator.
-- OCI Image and Distribution 1.1 subject/referrer behavior, ORAS artifact conventions, registry capabilities, Cosign KMS signing, and in-toto attestations.
+- OCI Image and Distribution 1.1 subject/referrer behavior, ORAS artifact conventions, registry capabilities, purpose-specific Cosign KMS and Sigstore keyless signing, and in-toto attestations.
 - The [architecture package](../../README.md) in this repository, including
   [ADR-0001](../../architecture/adr/0001-independent-agent-delivery-control-plane.md),
   the [decision register](../../architecture/decision-register.md), consumer
@@ -130,7 +130,9 @@ ADR-0001 and its architecture package must close all nine findings carried forwa
 3. Prevent consumer organizational-profile definition or deployment fields from becoming a second source of truth; migration of such fields belongs in each consumer adapter.
 4. Permit automatic update only when skill digests are unchanged; retain quarantine and approval for changed or high-risk skills. Skills may contain arbitrary regular files, including executable code, but delivery stages never execute them and runtime execution requires explicit approval of the exact skill digest under current consumer sandbox, identity, network, and call-time authorization controls.
 5. Keep OCI subjects/referrers repository-local and represent cross-repository edges as explicit signed digest descriptors. A private deployment embeds its effective render and does not claim a cross-repository public render as its OCI subject.
-6. Use purpose-separated, non-exportable KMS/WIF trust with rotation, revocation, least privilege, and privacy controls.
+6. Use purpose-separated KMS/WIF trust plus a separately pinned Sigstore-keyless
+   `contract-bundle-release-v1` policy, with rotation, revocation, least
+   privilege, exact repository/media scope, and privacy controls.
 7. Define durable runtime slots and tombstones plus a target-bound host identity; slot ownership remains with the consuming runtime.
 8. Define control-plane-to-host ownership, outbox/inbox delivery, async operation status, rollout lease/CAS, and complete failure/recovery states without importing consumer authorization.
 9. Treat YAML as human authoring only. Reject duplicate keys, aliases, custom tags, non-string keys, and non-finite numbers; hash and sign RFC 8785 JCS bytes from the validated JSON data model. Preserve arbitrary payload files byte-for-byte, even when a payload filename ends in `.yaml`.

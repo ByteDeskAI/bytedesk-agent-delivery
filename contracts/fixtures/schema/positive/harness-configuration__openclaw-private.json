@@ -1,0 +1,50 @@
+{
+  "contract": "bytedesk.harness-configuration/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-configuration/1.0.0",
+    "digest": "sha256:d12717fef52ade60c56a3d8389991d2a927948e21d753c66726defb49bbf3b31"
+  },
+  "scope": "private",
+  "harnessId": "openclaw",
+  "configurationVersion": "1.0.0",
+  "modelBindings": [],
+  "toolBindings": [
+    {
+      "bindingId": "browser",
+      "adapterId": "consumer-browser-adapter",
+      "configurationDigest": "sha256:6ee88d0431000813405cbf6f13d5b8c7e4aab4721451fa7e5c245165d469e7f5",
+      "secretReferenceIds": []
+    }
+  ],
+  "mcpServers": [
+    {
+      "serverId": "research",
+      "transport": "streamable_http",
+      "endpoint": "https://mcp.consumer.example/research",
+      "configurationDigest": "sha256:f680aa706adff523ed472147e1106cfc095dae186a5b583944ff0d791b4a9844",
+      "secretReferenceIds": [
+        "research-mcp-token"
+      ]
+    }
+  ],
+  "resourceBindings": [
+    {
+      "bindingId": "workspace",
+      "adapterId": "consumer-workspace-adapter",
+      "configurationDigest": "sha256:78e77f236795c5f1a6daddf390167aec314951df1b31eb72f5f7cbc04af75c63",
+      "secretReferenceIds": []
+    }
+  ],
+  "harnessOptions": [
+    {
+      "optionId": "workspace-mode",
+      "value": "ephemeral"
+    }
+  ],
+  "opaqueSecretReferences": [
+    {
+      "referenceId": "research-mcp-token",
+      "purpose": "mcp"
+    }
+  ]
+}

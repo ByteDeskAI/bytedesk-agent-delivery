@@ -4,14 +4,17 @@ from __future__ import annotations
 
 import unicodedata
 import io
+import hashlib
 import tarfile
 from collections.abc import Iterable
 from typing import BinaryIO, Mapping
 
 
-# Contract bundles contain schemas and conformance material, not product payload
-# blobs. These deliberately lower limits keep the Python reference verifier's
-# raw snapshot plus extracted-member working set below a predictable ceiling.
+# Contract bundles contain schemas and conformance material. The only payload
+# blobs are closed, digest-named raw CAS fixtures required to verify the exact
+# renderer and private-compilation graphs; they are not deployable releases.
+# These deliberately lower limits keep the Python reference verifier's raw
+# snapshot plus extracted-member working set below a predictable ceiling.
 MAX_BUNDLE_BYTES = 64 * 1024 * 1024
 MAX_BUNDLE_MEMBERS = 20_000
 MAX_BUNDLE_MEMBER_BYTES = 16 * 1024 * 1024
@@ -25,6 +28,10 @@ RAW_JSON_PREFIXES = (
     "contracts/fixtures/encoding/",
     "contracts/vendor/",
 )
+RAW_CAS_PREFIXES = (
+    "contracts/fixtures/operations/private-compilation-cas/blobs/sha256/",
+    "contracts/fixtures/operations/renderer-cas/blobs/sha256/",
+)
 STRUCTURED_CONTROL_PREFIXES = (
     "contracts/asyncapi/v1/",
     "contracts/bundle/v1/",
@@ -35,6 +42,7 @@ STRUCTURED_CONTROL_PREFIXES = (
     "contracts/fixtures/schema/",
     "contracts/lifecycle/",
     "contracts/openapi/v1/",
+    "contracts/ports/v1/",
     "contracts/schemas/v1/",
 )
 
@@ -72,6 +80,16 @@ def structured_control_member(path: str) -> bool:
 def normalized_member_payload(path: str, payload: bytes) -> bytes:
     """Return the exact v1 authority bytes for a classified member."""
 
+    if any(path.startswith(prefix) for prefix in RAW_CAS_PREFIXES):
+        digest_hex = path.rsplit("/", 1)[-1]
+        if (
+            len(digest_hex) != 64
+            or any(character not in "0123456789abcdef" for character in digest_hex)
+        ):
+            raise BundleProfileError(f"raw CAS member has an invalid digest path: {path}")
+        if hashlib.sha256(payload).hexdigest() != digest_hex:
+            raise BundleProfileError(f"raw CAS member bytes do not match its digest path: {path}")
+        return payload
     if not structured_control_member(path):
         return payload
     # Local import keeps the archive/path profile reusable by contractlib while

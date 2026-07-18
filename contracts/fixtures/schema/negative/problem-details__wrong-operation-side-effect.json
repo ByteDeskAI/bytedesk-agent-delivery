@@ -1,0 +1,13 @@
+{
+  "type": "https://problems.bytedesk.ai/agent-delivery/resource-not-found",
+  "title": "The requested resource was not found",
+  "status": 404,
+  "code": "resource_not_found",
+  "portId": "bytedesk.port.control-plane-api-events/1",
+  "operationId": "read-resource",
+  "correlationId": "corr-read-invalid-01",
+  "retryable": false,
+  "sideEffectState": "not-committed",
+  "violations": [],
+  "documentation": "https://docs.bytedesk.ai/agent-delivery/problems/resource-not-found"
+}

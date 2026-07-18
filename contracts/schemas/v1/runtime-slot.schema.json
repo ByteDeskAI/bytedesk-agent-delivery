@@ -19,6 +19,7 @@
     "workspace": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/portablePath" },
     "generation": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
     "state": { "type": "string", "enum": ["absent", "staging", "staged", "active", "predecessor", "retiring", "tombstoned"] },
+    "release": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerRuntimeReleaseDescriptor" },
     "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" },
     "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0" },
     "tombstoneEvidenceDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
@@ -31,6 +32,14 @@
     {
       "if": { "properties": { "state": { "not": { "const": "tombstoned" } } }, "required": ["state"] },
       "then": { "not": { "required": ["tombstoneEvidenceDigest"] } }
+    },
+    {
+      "if": { "properties": { "state": { "enum": ["staging", "staged", "active", "predecessor", "retiring"] } }, "required": ["state"] },
+      "then": { "required": ["release"] }
+    },
+    {
+      "if": { "properties": { "state": { "enum": ["absent", "tombstoned"] } }, "required": ["state"] },
+      "then": { "not": { "required": ["release"] } }
     }
   ],
   "additionalProperties": false,

@@ -57,15 +57,34 @@
   "$defs": {
     "hostExpectedChecks": {
       "type": "object",
-      "required": ["artifact_readback", "file_inventory", "slot_generation", "service_process", "resource_thresholds", "harness_readiness", "switch_marker"],
+      "required": ["candidate_ready", "active_readback"],
       "properties": {
-        "artifact_readback": { "const": "passed" },
-        "file_inventory": { "const": "passed" },
-        "slot_generation": { "const": "passed" },
-        "service_process": { "const": "passed" },
-        "resource_thresholds": { "const": "passed" },
-        "harness_readiness": { "const": "passed" },
-        "switch_marker": { "const": "passed" }
+        "candidate_ready": {
+          "type": "object",
+          "required": ["artifact_readback", "file_inventory", "slot_generation", "service_process", "resource_thresholds", "harness_readiness"],
+          "properties": {
+            "artifact_readback": { "const": "passed" },
+            "file_inventory": { "const": "passed" },
+            "slot_generation": { "const": "passed" },
+            "service_process": { "const": "passed" },
+            "resource_thresholds": { "const": "passed" },
+            "harness_readiness": { "const": "passed" }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        "active_readback": {
+          "type": "object",
+          "required": ["switch_marker", "active_pointer", "file_inventory", "service_process"],
+          "properties": {
+            "switch_marker": { "const": "passed" },
+            "active_pointer": { "const": "passed" },
+            "file_inventory": { "const": "passed" },
+            "service_process": { "const": "passed" }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
       },
       "additionalProperties": false,
       "unevaluatedProperties": false
@@ -137,5 +156,5 @@
   },
   "additionalProperties": false,
   "unevaluatedProperties": false,
-  "description": "The plan is consumer-targeted evidence input, never package authority. It fixes an exact technical check set and either exact capability probes or independently certified non-applicability."
+  "description": "The plan is consumer-targeted evidence input, never package authority. It fixes separate candidate-ready and active-readback Host check sets plus either exact capability probes or independently certified non-applicability. The Coordinator applies activation-mode ordering from the downstream protocol profile."
 }

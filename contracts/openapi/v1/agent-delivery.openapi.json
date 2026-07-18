@@ -19,12 +19,30 @@
     }
   ],
   "tags": [
-    {"name": "public", "description": "Tenant-free exact-digest reads."},
-    {"name": "actions", "description": "Durable asynchronous work."},
-    {"name": "installations", "description": "Consumer installation and binding state."},
-    {"name": "promotion", "description": "Promotion Coordinator command and status surface."},
-    {"name": "reconciliation", "description": "Target-scoped host observations."},
-    {"name": "evidence", "description": "Receipts and verification results."}
+    {
+      "name": "public",
+      "description": "Tenant-free exact-digest reads."
+    },
+    {
+      "name": "actions",
+      "description": "Durable asynchronous work."
+    },
+    {
+      "name": "installations",
+      "description": "Consumer installation and binding state."
+    },
+    {
+      "name": "promotion",
+      "description": "Promotion Coordinator command and status surface."
+    },
+    {
+      "name": "reconciliation",
+      "description": "Target-scoped host observations."
+    },
+    {
+      "name": "evidence",
+      "description": "Receipts and verification results."
+    }
   ],
   "paths": {
     "/v1/catalogs/{catalogId}/releases/{revision}": {
@@ -32,17 +50,31 @@
         "operationId": "getCatalogRelease",
         "summary": "Read one signed catalog release",
         "description": "Discovery only. Every returned artifact descriptor must be independently verified before use.",
-        "tags": ["public"],
+        "tags": [
+          "public"
+        ],
         "security": [],
         "parameters": [
-          {"$ref": "#/components/parameters/CatalogId"},
-          {"$ref": "#/components/parameters/Revision"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/CatalogId"
+          },
+          {
+            "$ref": "#/components/parameters/Revision"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/CatalogIndex"},
-          "304": {"description": "The caller already has the exact current representation."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/CatalogIndex"
+          },
+          "304": {
+            "description": "The caller already has the exact current representation."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -50,16 +82,28 @@
       "get": {
         "operationId": "getAgentSource",
         "summary": "Inspect one exact portable source manifest",
-        "tags": ["public"],
+        "tags": [
+          "public"
+        ],
         "security": [],
         "parameters": [
-          {"$ref": "#/components/parameters/SourceDigest"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/SourceDigest"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/AgentSource"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/AgentSource"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -67,17 +111,31 @@
       "get": {
         "operationId": "getRendererRelease",
         "summary": "Inspect one allowlisted renderer release",
-        "tags": ["public"],
+        "tags": [
+          "public"
+        ],
         "security": [],
         "parameters": [
-          {"$ref": "#/components/parameters/RendererId"},
-          {"$ref": "#/components/parameters/RendererDigest"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/RendererId"
+          },
+          {
+            "$ref": "#/components/parameters/RendererDigest"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/RendererRelease"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/RendererRelease"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -86,16 +144,28 @@
         "operationId": "getHarnessRender",
         "summary": "Inspect one tenant-free public render",
         "description": "This public path rejects consumer customization, private skills, opaque secret references, and tenant metadata.",
-        "tags": ["public"],
+        "tags": [
+          "public"
+        ],
         "security": [],
         "parameters": [
-          {"$ref": "#/components/parameters/RenderDigest"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/RenderDigest"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/HarnessRender"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/HarnessRender"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -103,16 +173,32 @@
       "get": {
         "operationId": "getAction",
         "summary": "Read durable asynchronous action state",
-        "tags": ["actions"],
-        "security": [{"consumerBearer": []}],
+        "tags": [
+          "actions"
+        ],
+        "security": [
+          {
+            "consumerBearer": []
+          }
+        ],
         "parameters": [
-          {"$ref": "#/components/parameters/ActionId"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/ActionId"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/Action"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/Action"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -120,16 +206,32 @@
       "get": {
         "operationId": "getInstallation",
         "summary": "Read one installation revision",
-        "tags": ["installations"],
-        "security": [{"consumerBearer": []}],
+        "tags": [
+          "installations"
+        ],
+        "security": [
+          {
+            "consumerBearer": []
+          }
+        ],
         "parameters": [
-          {"$ref": "#/components/parameters/InstallationId"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/InstallationId"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/Installation"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/Installation"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -137,16 +239,32 @@
       "get": {
         "operationId": "getCandidate",
         "summary": "Read immutable candidate preparation state",
-        "tags": ["promotion"],
-        "security": [{"consumerBearer": []}],
+        "tags": [
+          "promotion"
+        ],
+        "security": [
+          {
+            "consumerBearer": []
+          }
+        ],
         "parameters": [
-          {"$ref": "#/components/parameters/CandidateId"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/CandidateId"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/Candidate"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/Candidate"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -155,17 +273,194 @@
         "operationId": "getTargetDeliveryState",
         "summary": "Read the one authoritative desired-state aggregate",
         "description": "The API exposes no direct desired-state mutation. Commands go through the Promotion Coordinator, its sole logical writer.",
-        "tags": ["promotion"],
-        "security": [{"targetReconcilerBearer": []}],
+        "tags": [
+          "promotion"
+        ],
+        "security": [
+          {
+            "targetReconcilerBearer": []
+          }
+        ],
         "parameters": [
-          {"$ref": "#/components/parameters/TargetId"},
-          {"$ref": "#/components/parameters/IfNoneMatch"},
-          {"$ref": "#/components/parameters/LastEventId"}
+          {
+            "$ref": "#/components/parameters/TargetId"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/TargetDeliveryState"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/TargetDeliveryState"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/v1/targets/{targetId}/events": {
+      "get": {
+        "operationId": "watchTargetEvents",
+        "summary": "Watch target-scoped delivery notifications",
+        "description": "Authenticated HTTP/2 SSE notification stream. Last-Event-ID resumes at-least-once delivery by exact event ID. Notifications never replace an authoritative target-state read. A rejected or detected cursor gap stops projection and requires resynchronizeTargetEvents before reconnecting. Heartbeats and disconnects have no control-plane effect: durable actions continue until terminal or an explicit authenticated cancellation command succeeds.",
+        "tags": [
+          "reconciliation",
+          "actions"
+        ],
+        "security": [
+          {
+            "targetReconcilerBearer": []
+          }
+        ],
+        "x-bytedesk-port-operations": [
+          "bytedesk.port.desired-state-store/1#watch-target-state",
+          "bytedesk.port.control-plane-api-events/1#subscribe-events"
+        ],
+        "x-bytedesk-sse": {
+          "profile": "bytedesk.target-events-sse/1",
+          "itemMediaType": "application/cloudevents+json",
+          "delivery": "at-least-once",
+          "ordering": "per-aggregate-sequence",
+          "resumeHeader": "Last-Event-ID",
+          "eventId": "CloudEvent.id",
+          "heartbeat": "comment-frame",
+          "initialGap": "409-event_sequence_gap",
+          "streamGap": "close-and-resynchronize",
+          "resynchronizeOperationId": "resynchronizeTargetEvents",
+          "authority": "notification-only",
+          "durableActionDisconnect": "continues-until-terminal-or-explicit-cancel-command"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TargetId"
+          },
+          {
+            "$ref": "#/components/parameters/LastEventId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TargetEventStream"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/v1/targets/{targetId}/events/resync": {
+      "get": {
+        "operationId": "resynchronizeTargetEvents",
+        "summary": "Resynchronize one target event cursor",
+        "description": "Returns one authoritative target-state snapshot, its aggregate sequence, and an opaque resume token from the same resynchronization boundary. The caller discards its projected state, installs this snapshot, and reconnects watchTargetEvents with the returned token as Last-Event-ID.",
+        "tags": [
+          "reconciliation"
+        ],
+        "security": [
+          {
+            "targetReconcilerBearer": []
+          }
+        ],
+        "x-bytedesk-port-operations": [
+          "bytedesk.port.desired-state-store/1#read-target-state",
+          "bytedesk.port.control-plane-api-events/1#resynchronize-events"
+        ],
+        "x-bytedesk-resynchronization": {
+          "profile": "bytedesk.target-event-resynchronization/1",
+          "triggers": [
+            "event_sequence_gap",
+            "unknown_schema",
+            "resume_token_rejected"
+          ],
+          "result": "authoritative-target-state-plus-sequence-and-resume-token",
+          "resume": "reconnect-watchTargetEvents-with-returned-token",
+          "authority": "read-only"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TargetId"
+          },
+          {
+            "$ref": "#/components/parameters/KnownAggregateSequence"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TargetEventResynchronization"
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/v1/targets/{targetId}/capability-evidence": {
+      "post": {
+        "operationId": "appendCapabilityEvidence",
+        "summary": "Append nonce-bound consumer capability evidence",
+        "description": "Accepts only current consumer capability-verifier evidence over the exact dispatch nonce. This append-only intake cannot write desired state, authorize promotion, grant a capability, or turn absence, timeout, transport failure, or malformed evidence into policy denial.",
+        "tags": [
+          "evidence",
+          "promotion"
+        ],
+        "security": [
+          {
+            "capabilityVerifierMtls": []
+          }
+        ],
+        "x-bytedesk-port-operation": "bytedesk.port.control-plane-api-events/1#append-capability-evidence",
+        "x-bytedesk-authority": {
+          "profile": "bytedesk.capability-evidence-intake/1",
+          "effect": "append-only-evidence",
+          "desiredStateWrite": false,
+          "promotionAuthority": false,
+          "capabilityGrantAuthority": false,
+          "absenceOrTransportFailureIsDenial": false
+        },
+        "x-bytedesk-conditional-request": {
+          "requiredHeader": "If-None-Match",
+          "requiredValue": "*",
+          "forbiddenHeader": "If-Match",
+          "missingOrMismatch": "deny"
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TargetId"
+          },
+          {
+            "$ref": "#/components/parameters/RequiredIfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/CanonicalRequestDigest"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CapabilityEvidenceIntake"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/CapabilityEvidenceReceipt"
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -173,17 +468,35 @@
       "get": {
         "operationId": "getRollout",
         "summary": "Read one rollout",
-        "tags": ["promotion"],
-        "security": [{"consumerBearer": []}],
+        "tags": [
+          "promotion"
+        ],
+        "security": [
+          {
+            "consumerBearer": []
+          }
+        ],
         "parameters": [
-          {"$ref": "#/components/parameters/TargetId"},
-          {"$ref": "#/components/parameters/RolloutId"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/TargetId"
+          },
+          {
+            "$ref": "#/components/parameters/RolloutId"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/Rollout"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/Rollout"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -192,17 +505,30 @@
         "operationId": "submitCommand",
         "summary": "Submit one closed typed command",
         "description": "The command discriminator selects one schema-defined source validation, render, import, installation, update-proposal, promotion, forward-recovery, cancellation, or publication request. Every command submission requires a short-lived authenticated caller; source_validate and render may use only a public-purpose scope and tenant-free inputs, while every private command requires exact consumer and operation scope selected from the validated command discriminator. If-Match or If-None-Match and the schema precondition must agree whenever the command mutates an aggregate. The API routes promotion commands to the sole logical writer; accepting a command never makes the caller or event stream a desired-state writer.",
-        "tags": ["actions", "promotion"],
-        "security": [{"consumerBearer": []}],
+        "tags": [
+          "actions",
+          "promotion"
+        ],
+        "security": [
+          {
+            "consumerBearer": []
+          }
+        ],
         "x-bytedesk-command-authorization": {
           "discriminator": "command",
-          "publicPurposeCommands": ["source_validate", "render"],
+          "publicPurposeCommands": [
+            "source_validate",
+            "render"
+          ],
           "privateDefault": "require-exact-consumer-and-operation-scope",
           "unknownCommand": "deny"
         },
         "x-bytedesk-conditional-request": {
           "discriminator": "precondition.kind",
-          "notApplicableCommands": ["source_validate", "render"],
+          "notApplicableCommands": [
+            "source_validate",
+            "render"
+          ],
           "absent": {
             "requiredHeader": "If-None-Match",
             "requiredValue": "*",
@@ -216,20 +542,36 @@
           "missingOrConflicting": "deny"
         },
         "parameters": [
-          {"$ref": "#/components/parameters/IfMatch"},
-          {"$ref": "#/components/parameters/IfNoneMatch"},
-          {"$ref": "#/components/parameters/IdempotencyKey"},
-          {"$ref": "#/components/parameters/CanonicalRequestDigest"}
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/CanonicalRequestDigest"
+          }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {"schema": {"$ref": "#/components/schemas/CommandRequest"}}
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandRequest"
+              }
+            }
           }
         },
         "responses": {
-          "202": {"$ref": "#/components/responses/AcceptedAction"},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "202": {
+            "$ref": "#/components/responses/AcceptedAction"
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -238,8 +580,14 @@
         "operationId": "appendObservation",
         "summary": "Append target-scoped technical evidence",
         "description": "An observation is never desired state, promotion, capability approval, identity, or authorization authority.",
-        "tags": ["reconciliation"],
-        "security": [{"targetReconcilerBearer": []}],
+        "tags": [
+          "reconciliation"
+        ],
+        "security": [
+          {
+            "targetReconcilerBearer": []
+          }
+        ],
         "x-bytedesk-conditional-request": {
           "requiredHeader": "If-Match",
           "requiredValueFrom": "requestBody.desiredRevisionDigest",
@@ -247,20 +595,36 @@
           "missingOrMismatch": "deny"
         },
         "parameters": [
-          {"$ref": "#/components/parameters/TargetId"},
-          {"$ref": "#/components/parameters/RequiredIfMatch"},
-          {"$ref": "#/components/parameters/IdempotencyKey"},
-          {"$ref": "#/components/parameters/CanonicalRequestDigest"}
+          {
+            "$ref": "#/components/parameters/TargetId"
+          },
+          {
+            "$ref": "#/components/parameters/RequiredIfMatch"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/CanonicalRequestDigest"
+          }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {"schema": {"$ref": "#/components/schemas/Observation"}}
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Observation"
+              }
+            }
           }
         },
         "responses": {
-          "201": {"$ref": "#/components/responses/Observation"},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "201": {
+            "$ref": "#/components/responses/Observation"
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -269,17 +633,39 @@
         "operationId": "getObservation",
         "summary": "Read one exact append-only target observation",
         "description": "Returns technical evidence for event resynchronization. The observation remains non-authoritative for desired state, consumer capability, identity, approval, or promotion.",
-        "tags": ["reconciliation", "evidence"],
-        "security": [{"consumerBearer": []}, {"targetReconcilerBearer": []}],
+        "tags": [
+          "reconciliation",
+          "evidence"
+        ],
+        "security": [
+          {
+            "consumerBearer": []
+          },
+          {
+            "targetReconcilerBearer": []
+          }
+        ],
         "parameters": [
-          {"$ref": "#/components/parameters/TargetId"},
-          {"$ref": "#/components/parameters/ObservationId"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/TargetId"
+          },
+          {
+            "$ref": "#/components/parameters/ObservationId"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/Observation"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/Observation"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -287,16 +673,32 @@
       "get": {
         "operationId": "getConsumerDeployment",
         "summary": "Read one authenticated private deployment manifest",
-        "tags": ["evidence"],
-        "security": [{"consumerBearer": []}],
+        "tags": [
+          "evidence"
+        ],
+        "security": [
+          {
+            "consumerBearer": []
+          }
+        ],
         "parameters": [
-          {"$ref": "#/components/parameters/DeploymentDigest"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/DeploymentDigest"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/ConsumerDeployment"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/ConsumerDeployment"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -304,16 +706,32 @@
       "get": {
         "operationId": "getDeploymentReceipt",
         "summary": "Read an exact append-only deployment receipt",
-        "tags": ["evidence"],
-        "security": [{"consumerBearer": []}],
+        "tags": [
+          "evidence"
+        ],
+        "security": [
+          {
+            "consumerBearer": []
+          }
+        ],
         "parameters": [
-          {"$ref": "#/components/parameters/ReceiptId"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/ReceiptId"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/DeploymentReceipt"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/DeploymentReceipt"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     },
@@ -321,16 +739,32 @@
       "get": {
         "operationId": "getVerificationResult",
         "summary": "Read one exact graph-verification result",
-        "tags": ["evidence"],
-        "security": [{"consumerBearer": []}],
+        "tags": [
+          "evidence"
+        ],
+        "security": [
+          {
+            "consumerBearer": []
+          }
+        ],
         "parameters": [
-          {"$ref": "#/components/parameters/VerificationId"},
-          {"$ref": "#/components/parameters/IfNoneMatch"}
+          {
+            "$ref": "#/components/parameters/VerificationId"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          }
         ],
         "responses": {
-          "200": {"$ref": "#/components/responses/VerificationResult"},
-          "304": {"description": "Not modified."},
-          "default": {"$ref": "#/components/responses/Problem"}
+          "200": {
+            "$ref": "#/components/responses/VerificationResult"
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "default": {
+            "$ref": "#/components/responses/Problem"
+          }
         }
       }
     }
@@ -346,83 +780,768 @@
       "targetReconcilerBearer": {
         "type": "mutualTLS",
         "description": "Certificate-bound identity scoped to exactly one consumer and runtime target. It can read desired state and append observations only."
+      },
+      "capabilityVerifierMtls": {
+        "type": "mutualTLS",
+        "description": "Purpose-separated consumer capability-verifier certificate identity. It may append nonce-bound capability evidence for its exact consumer and target only; it cannot submit commands, append host observations, write desired state, or authorize promotion."
       }
     },
     "parameters": {
-      "ActionId": {"name": "actionId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
-      "CandidateId": {"name": "candidateId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
-      "CatalogId": {"name": "catalogId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
-      "InstallationId": {"name": "installationId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
-      "ObservationId": {"name": "observationId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
-      "ReceiptId": {"name": "receiptId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
-      "RendererId": {"name": "rendererId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
-      "RolloutId": {"name": "rolloutId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
-      "TargetId": {"name": "targetId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
-      "VerificationId": {"name": "verificationId", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}},
-      "Revision": {"name": "revision", "in": "path", "required": true, "schema": {"type": "integer", "minimum": 1, "maximum": 9007199254740991}},
-      "SourceDigest": {"name": "sourceDigest", "in": "path", "required": true, "schema": {"$ref": "#/components/schemas/Sha256Digest"}},
-      "RendererDigest": {"name": "rendererDigest", "in": "path", "required": true, "schema": {"$ref": "#/components/schemas/Sha256Digest"}},
-      "RenderDigest": {"name": "renderDigest", "in": "path", "required": true, "schema": {"$ref": "#/components/schemas/Sha256Digest"}},
-      "DeploymentDigest": {"name": "deploymentDigest", "in": "path", "required": true, "schema": {"$ref": "#/components/schemas/Sha256Digest"}},
-      "IfMatch": {"name": "If-Match", "in": "header", "required": false, "description": "Strong ETag containing the exact current canonical resource digest. The command precondition profile decides when this header is required.", "schema": {"type": "string", "pattern": "^\"sha256:[a-f0-9]{64}\"$"}},
-      "RequiredIfMatch": {"name": "If-Match", "in": "header", "required": true, "description": "Strong ETag containing the exact current target canonical resource digest. It must agree with the observation desiredRevisionDigest or the append fails with 412 and no side effects.", "schema": {"type": "string", "pattern": "^\"sha256:[a-f0-9]{64}\"$"}},
-      "IfNoneMatch": {"name": "If-None-Match", "in": "header", "required": false, "description": "Use star for first creation or a strong ETag for conditional reads.", "schema": {"type": "string", "pattern": "^(?:\\*|\"sha256:[a-f0-9]{64}\")$"}},
-      "IdempotencyKey": {"name": "Idempotency-Key", "in": "header", "required": true, "description": "Must exactly equal command.idempotencyKey. Reuse with the same canonical request returns the original result; reuse with another digest returns 409.", "schema": {"type": "string", "minLength": 16, "maxLength": 128}},
-      "CanonicalRequestDigest": {"name": "X-Canonical-Request-Digest", "in": "header", "required": true, "description": "SHA-256 of RFC 8785 canonical request data; key reuse with a different digest returns 409.", "schema": {"$ref": "#/components/schemas/Sha256Digest"}},
-      "LastEventId": {"name": "Last-Event-ID", "in": "header", "required": false, "description": "Resume hint only; the host must always conditionally fetch and verify the authoritative target state.", "schema": {"type": "string", "maxLength": 256}}
+      "ActionId": {
+        "name": "actionId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      },
+      "CandidateId": {
+        "name": "candidateId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      },
+      "CatalogId": {
+        "name": "catalogId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      },
+      "InstallationId": {
+        "name": "installationId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      },
+      "ObservationId": {
+        "name": "observationId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      },
+      "ReceiptId": {
+        "name": "receiptId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      },
+      "RendererId": {
+        "name": "rendererId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      },
+      "RolloutId": {
+        "name": "rolloutId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      },
+      "TargetId": {
+        "name": "targetId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      },
+      "VerificationId": {
+        "name": "verificationId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      },
+      "Revision": {
+        "name": "revision",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "SourceDigest": {
+        "name": "sourceDigest",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/Sha256Digest"
+        }
+      },
+      "RendererDigest": {
+        "name": "rendererDigest",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/Sha256Digest"
+        }
+      },
+      "RenderDigest": {
+        "name": "renderDigest",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/Sha256Digest"
+        }
+      },
+      "DeploymentDigest": {
+        "name": "deploymentDigest",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/Sha256Digest"
+        }
+      },
+      "IfMatch": {
+        "name": "If-Match",
+        "in": "header",
+        "required": false,
+        "description": "Strong ETag containing the exact current canonical resource digest. The command precondition profile decides when this header is required.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\"sha256:[a-f0-9]{64}\"$"
+        }
+      },
+      "RequiredIfMatch": {
+        "name": "If-Match",
+        "in": "header",
+        "required": true,
+        "description": "Strong ETag containing the exact current target canonical resource digest. It must agree with the observation desiredRevisionDigest or the append fails with 412 and no side effects.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\"sha256:[a-f0-9]{64}\"$"
+        }
+      },
+      "IfNoneMatch": {
+        "name": "If-None-Match",
+        "in": "header",
+        "required": false,
+        "description": "Use star for first creation or a strong ETag for conditional reads.",
+        "schema": {
+          "type": "string",
+          "pattern": "^(?:\\*|\"sha256:[a-f0-9]{64}\")$"
+        }
+      },
+      "IdempotencyKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": true,
+        "description": "Must exactly equal command.idempotencyKey. Reuse with the same canonical request returns the original result; reuse with another digest returns 409.",
+        "schema": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128
+        }
+      },
+      "CanonicalRequestDigest": {
+        "name": "X-Canonical-Request-Digest",
+        "in": "header",
+        "required": true,
+        "description": "SHA-256 of RFC 8785 canonical request data; key reuse with a different digest returns 409.",
+        "schema": {
+          "$ref": "#/components/schemas/Sha256Digest"
+        }
+      },
+      "RequiredIfNoneMatch": {
+        "name": "If-None-Match",
+        "in": "header",
+        "required": true,
+        "description": "Create-only evidence precondition. The only accepted value is star; omission, a digest, null, or any other token fails before append.",
+        "schema": {
+          "const": "*"
+        }
+      },
+      "KnownAggregateSequence": {
+        "name": "knownAggregateSequence",
+        "in": "query",
+        "required": true,
+        "description": "Last contiguous target aggregate sequence applied by the caller before a detected gap.",
+        "schema": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "LastEventId": {
+        "name": "Last-Event-ID",
+        "in": "header",
+        "required": false,
+        "description": "Opaque exact event resume token accepted only by watchTargetEvents. A missing token starts at the current subscription boundary; a rejected or gapped token requires resynchronizeTargetEvents.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
     },
     "headers": {
-      "ETag": {"required": true, "description": "Strong ETag equal to the canonical resource SHA-256 digest.", "schema": {"type": "string", "pattern": "^\"sha256:[a-f0-9]{64}\"$"}},
-      "Location": {"required": true, "description": "Relative URI of the durable action resource created for the accepted command.", "schema": {"type": "string", "format": "uri-reference", "pattern": "^/v1/actions/[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", "maxLength": 256}},
-      "RateLimitLimit": {"required": true, "schema": {"type": "integer", "minimum": 0, "maximum": 9007199254740991}},
-      "RateLimitRemaining": {"required": true, "schema": {"type": "integer", "minimum": 0, "maximum": 9007199254740991}},
-      "RateLimitReset": {"required": true, "schema": {"type": "integer", "minimum": 0, "maximum": 9007199254740991}}
+      "ETag": {
+        "required": true,
+        "description": "Strong ETag equal to the canonical resource SHA-256 digest.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\"sha256:[a-f0-9]{64}\"$"
+        }
+      },
+      "Location": {
+        "required": true,
+        "description": "Relative URI of the durable action resource created for the accepted command.",
+        "schema": {
+          "type": "string",
+          "format": "uri-reference",
+          "pattern": "^/v1/actions/[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+          "maxLength": 256
+        }
+      },
+      "RateLimitLimit": {
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "RateLimitRemaining": {
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "RateLimitReset": {
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
     },
     "schemas": {
-      "Action": {"$ref": "../../schemas/v1/action.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0", "x-bytedesk-schema-digest": "sha256:7b751d842207e9d9fe9f3e88edf50abfcc6a5cfdeea1db3b73ae9344ce827b9f"},
-      "AgentSource": {"$ref": "../../schemas/v1/agent-source.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-source/1.0.0", "x-bytedesk-schema-digest": "sha256:44fa5624b641e046f04365c5230c83028d29396c596f6ab894526e28fc8328c8"},
-      "Candidate": {"$ref": "../../schemas/v1/candidate.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0", "x-bytedesk-schema-digest": "sha256:009cf8bfacdc403752cb578a5c3896c2a88645ee93014ceed29da261efcfbea3"},
-      "CatalogIndex": {"$ref": "../../schemas/v1/catalog-index.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/catalog-index/1.0.0", "x-bytedesk-schema-digest": "sha256:f7bdca8523a7c8c3de3dcc9909857217959ace7744550d35c4e5b3b429bded62"},
-      "CommandRequest": {"$ref": "../../schemas/v1/command-request.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0", "x-bytedesk-schema-digest": "sha256:ef166e871e6bbe4ecef05907b1201e7962c5e93d29e61d996926f803fad40b6f"},
-      "ConsumerDeployment": {"$ref": "../../schemas/v1/consumer-deployment.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-deployment/1.0.0", "x-bytedesk-schema-digest": "sha256:60fb29bb8b8c3dd01056fc3b4bd35ca494c37ea40bb9451e9a99fb53e7a50e74"},
-      "DeploymentReceipt": {"$ref": "../../schemas/v1/deployment-receipt.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0", "x-bytedesk-schema-digest": "sha256:8fac6eb977a10c0eb275f930e00c247b8cfaecab1e0e9b4751ca79c3272b879a"},
-      "HarnessRender": {"$ref": "../../schemas/v1/harness-render.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0", "x-bytedesk-schema-digest": "sha256:55f6123e2913b52db2c9b6f8e944a4cb08a6f2202a2a6741b9a3a09d49cb5018"},
-      "Installation": {"$ref": "../../schemas/v1/installation.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0", "x-bytedesk-schema-digest": "sha256:af01882c9dc8dbf80fc753f148a35fd916d4bdbe5d93b6a8938c0b10f58ff8dc"},
-      "Observation": {"$ref": "../../schemas/v1/observation.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/observation/1.0.0", "x-bytedesk-schema-digest": "sha256:61cec89f0502071956315db65fabc3c0e7bb7c97b563711cfdb935987a3d5c92"},
-      "ProblemDetails": {"$ref": "../../schemas/v1/problem-details.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0", "x-bytedesk-schema-digest": "sha256:8da584af6e0f3d0d09a8ad356fbd81d2945f083a591cfd900d8bed8f95791bde"},
-      "RecoveryPlan": {"$ref": "../../schemas/v1/recovery-plan.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/recovery-plan/1.0.0", "x-bytedesk-schema-digest": "sha256:94649f9d4fcb5e7dca3aaefd4a01f81f7fb6ec7ab8963b3c71184bc26688c1b1"},
-      "RendererRelease": {"$ref": "../../schemas/v1/renderer-release.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-release/1.0.0", "x-bytedesk-schema-digest": "sha256:4742178bd53c03cc5ddf8d8049a97ad0018e5c465e0c3c99a127459c0d520c82"},
-      "Rollout": {"$ref": "../../schemas/v1/rollout.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/rollout/1.0.0", "x-bytedesk-schema-digest": "sha256:1dfb93051147cf66884d788a19da4158bc579327c168297b2d1ebd07cffb7e36"},
-      "Sha256Digest": {"$ref": "../../schemas/v1/common.schema.json#/$defs/sha256", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0", "x-bytedesk-schema-digest": "sha256:7e821fb269cccb656b897741c1c0dd27ea66249d92fed49f62526153bf543796"},
-      "TargetDeliveryState": {"$ref": "../../schemas/v1/target-delivery-state.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0", "x-bytedesk-schema-digest": "sha256:126bc30d3dd0174be7b5e10261b0874955cad41a7a0d8d80edc68c7c51849cfc"},
-      "VerificationResult": {"$ref": "../../schemas/v1/verification-result.schema.json", "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0", "x-bytedesk-schema-digest": "sha256:e7a125abfede2f5b71b10f72b03f9ac57ed61a5f5008ce8d3835c34b0314499f"}
+      "Action": {
+        "$ref": "../../schemas/v1/action.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:ddf0e484b8d35195f984204e130c9f3e88b5e347581722437aa763e28b2c346a"
+      },
+      "AgentSource": {
+        "$ref": "../../schemas/v1/agent-source.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-source/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:44fa5624b641e046f04365c5230c83028d29396c596f6ab894526e28fc8328c8"
+      },
+      "Candidate": {
+        "$ref": "../../schemas/v1/candidate.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:07964d57f89136a95950250c8790179a8765fd54788d81a7d1148d0cc8b8c2e5"
+      },
+      "CatalogIndex": {
+        "$ref": "../../schemas/v1/catalog-index.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/catalog-index/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:f7bdca8523a7c8c3de3dcc9909857217959ace7744550d35c4e5b3b429bded62"
+      },
+      "CommandRequest": {
+        "$ref": "../../schemas/v1/command-request.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:fdb077eb05d7943580f299461e91360c3630075e95bd68918e4bb600b5dd02fd"
+      },
+      "EventDataEnvelope": {
+        "$ref": "../../schemas/v1/event-data-envelope.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243"
+      },
+      "ConsumerDeployment": {
+        "$ref": "../../schemas/v1/consumer-deployment.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-deployment/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:24c4e7aecf25d16cf7d3aa768fe09ca9508e6db667e0a282b95c9dd68370fea0"
+      },
+      "DeploymentReceipt": {
+        "$ref": "../../schemas/v1/deployment-receipt.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:a32cd43cf6e566da849f23f0d0a8ef6cec269f60387b8d019bcdfece4c36bd1a"
+      },
+      "HarnessRender": {
+        "$ref": "../../schemas/v1/harness-render.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:68fe1a718f9e5210c0ba4d10095f049983499243b69ae565a826155b949525cf"
+      },
+      "Installation": {
+        "$ref": "../../schemas/v1/installation.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:af01882c9dc8dbf80fc753f148a35fd916d4bdbe5d93b6a8938c0b10f58ff8dc"
+      },
+      "Observation": {
+        "$ref": "../../schemas/v1/observation.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/observation/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:61cec89f0502071956315db65fabc3c0e7bb7c97b563711cfdb935987a3d5c92"
+      },
+      "ProblemDetails": {
+        "$ref": "../../schemas/v1/problem-details.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:73c47dbc705fa5c7b19f51d012711ef5f9d82f67ef87defe7c751172767131b1"
+      },
+      "RecoveryPlan": {
+        "$ref": "../../schemas/v1/recovery-plan.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/recovery-plan/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:15c95ed8c5f31982fe76e92bfef675830dcba98e4078261b961679e515c76829"
+      },
+      "RendererRelease": {
+        "$ref": "../../schemas/v1/renderer-release.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-release/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:fec8fe534d7d51129cca211fa12583410c58bc47c9c1b90ec00b77299a64e80b"
+      },
+      "Rollout": {
+        "$ref": "../../schemas/v1/rollout.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/rollout/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:a3fef06c3c2b3967279f4e572dfb0730dea1dac953d2e672d1bd8c2f146eb200"
+      },
+      "Sha256Digest": {
+        "$ref": "../../schemas/v1/common.schema.json#/$defs/sha256",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:088eb2aa7604a5ae581595d931dd539ee84c0ce4d4b7413c5c4400619f3ebb4d"
+      },
+      "TargetDeliveryState": {
+        "$ref": "../../schemas/v1/target-delivery-state.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:5ea7f494cd955eb19f1a89c6e640ed963426b40eaf3eab42b6f58f446d7b64b6"
+      },
+      "VerificationResult": {
+        "$ref": "../../schemas/v1/verification-result.schema.json",
+        "x-bytedesk-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+        "x-bytedesk-schema-digest": "sha256:0acdbdbfeb5c84af9ab26a32b9d5a5e49dba4a1dd45189ac1e82a635bb5ab9b6"
+      },
+      "AgentDeliveryCloudEvent": {
+        "type": "object",
+        "required": [
+          "specversion",
+          "id",
+          "source",
+          "type",
+          "subject",
+          "time",
+          "datacontenttype",
+          "dataschema",
+          "data"
+        ],
+        "properties": {
+          "specversion": {
+            "const": "1.0"
+          },
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "source": {
+            "type": "string",
+            "format": "uri-reference",
+            "maxLength": 2048
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "ai.bytedesk.agent-delivery.installation.changed.v1",
+              "ai.bytedesk.agent-delivery.action.changed.v1",
+              "ai.bytedesk.agent-delivery.candidate.changed.v1",
+              "ai.bytedesk.agent-delivery.rollout.changed.v1",
+              "ai.bytedesk.agent-delivery.target-delivery-state.changed.v1",
+              "ai.bytedesk.agent-delivery.observation.appended.v1",
+              "ai.bytedesk.agent-delivery.receipt.appended.v1"
+            ]
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "datacontenttype": {
+            "const": "application/json"
+          },
+          "dataschema": {
+            "const": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0"
+          },
+          "data": {
+            "$ref": "../../schemas/v1/event-data-envelope.schema.json"
+          }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false,
+        "x-bytedesk-cloudevents-version": "1.0.2",
+        "x-bytedesk-data-schema-id": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+        "x-bytedesk-data-schema-digest": "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243"
+      },
+      "CapabilityEvidenceIntake": {
+        "type": "object",
+        "required": [
+          "verificationResult",
+          "dispatchNonce",
+          "authorizationDecisionDigest"
+        ],
+        "properties": {
+          "verificationResult": {
+            "$ref": "../../schemas/v1/verification-result.schema.json"
+          },
+          "dispatchNonce": {
+            "$ref": "../../schemas/v1/common.schema.json#/$defs/nonce"
+          },
+          "authorizationDecisionDigest": {
+            "$ref": "../../schemas/v1/common.schema.json#/$defs/sha256"
+          }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false,
+        "x-bytedesk-port-contract": "bytedesk.port.control-plane-api-events.append-capability-evidence.request/1"
+      },
+      "CapabilityEvidenceReceipt": {
+        "type": "object",
+        "required": [
+          "evidenceDigest",
+          "acceptedAt"
+        ],
+        "properties": {
+          "evidenceDigest": {
+            "$ref": "../../schemas/v1/common.schema.json#/$defs/sha256"
+          },
+          "acceptedAt": {
+            "$ref": "../../schemas/v1/common.schema.json#/$defs/timestamp"
+          }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false,
+        "description": "Append receipt only. It is not a promotion decision, desired-state mutation, capability grant, or authorization decision.",
+        "x-bytedesk-port-contract": "bytedesk.port.control-plane-api-events.append-capability-evidence.result/1"
+      },
+      "TargetEventResynchronization": {
+        "type": "object",
+        "required": [
+          "targetState",
+          "aggregateSequence",
+          "resumeToken"
+        ],
+        "properties": {
+          "targetState": {
+            "$ref": "../../schemas/v1/target-delivery-state.schema.json"
+          },
+          "aggregateSequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "resumeToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false,
+        "description": "Atomic event-resynchronization read. The returned target state is authoritative; the sequence and token are notification cursors only.",
+        "x-bytedesk-port-contract": "bytedesk.port.control-plane-api-events.resynchronize-events.result/1"
+      }
     },
     "responses": {
-      "Action": {"description": "Durable asynchronous action.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Action"}}}},
+      "Action": {
+        "description": "Durable asynchronous action.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Action"
+            }
+          }
+        }
+      },
       "AcceptedAction": {
         "description": "Command accepted into the durable action queue.",
         "headers": {
-          "ETag": {"$ref": "#/components/headers/ETag"},
-          "Location": {"$ref": "#/components/headers/Location"},
-          "RateLimit-Limit": {"$ref": "#/components/headers/RateLimitLimit"},
-          "RateLimit-Remaining": {"$ref": "#/components/headers/RateLimitRemaining"},
-          "RateLimit-Reset": {"$ref": "#/components/headers/RateLimitReset"}
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          },
+          "Location": {
+            "$ref": "#/components/headers/Location"
+          },
+          "RateLimit-Limit": {
+            "$ref": "#/components/headers/RateLimitLimit"
+          },
+          "RateLimit-Remaining": {
+            "$ref": "#/components/headers/RateLimitRemaining"
+          },
+          "RateLimit-Reset": {
+            "$ref": "#/components/headers/RateLimitReset"
+          }
         },
-        "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Action"}}}
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Action"
+            }
+          }
+        }
       },
-      "AgentSource": {"description": "Exact public source manifest.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/AgentSource"}}}},
-      "Candidate": {"description": "Candidate state.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Candidate"}}}},
-      "CatalogIndex": {"description": "Signed catalog release.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CatalogIndex"}}}},
-      "ConsumerDeployment": {"description": "Private deployment manifest.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ConsumerDeployment"}}}},
-      "DeploymentReceipt": {"description": "Append-only deployment receipt.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/DeploymentReceipt"}}}},
-      "HarnessRender": {"description": "Tenant-free public render manifest.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HarnessRender"}}}},
-      "Installation": {"description": "Installation revision.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Installation"}}}},
-      "Observation": {"description": "Accepted append-only observation.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Observation"}}}},
-      "RendererRelease": {"description": "Allowlisted renderer release.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/RendererRelease"}}}},
-      "Rollout": {"description": "Rollout state.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Rollout"}}}},
-      "TargetDeliveryState": {"description": "Authoritative target desired state.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/TargetDeliveryState"}}}},
-      "VerificationResult": {"description": "Verification result.", "headers": {"ETag": {"$ref": "#/components/headers/ETag"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/VerificationResult"}}}},
-      "Problem": {"description": "RFC 9457 problem details. Details are redacted and the machine code is stable.", "content": {"application/problem+json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}}}
+      "AgentSource": {
+        "description": "Exact public source manifest.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AgentSource"
+            }
+          }
+        }
+      },
+      "Candidate": {
+        "description": "Candidate state.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Candidate"
+            }
+          }
+        }
+      },
+      "CatalogIndex": {
+        "description": "Signed catalog release.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CatalogIndex"
+            }
+          }
+        }
+      },
+      "ConsumerDeployment": {
+        "description": "Private deployment manifest.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ConsumerDeployment"
+            }
+          }
+        }
+      },
+      "DeploymentReceipt": {
+        "description": "Append-only deployment receipt.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DeploymentReceipt"
+            }
+          }
+        }
+      },
+      "HarnessRender": {
+        "description": "Tenant-free public render manifest.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/HarnessRender"
+            }
+          }
+        }
+      },
+      "Installation": {
+        "description": "Installation revision.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Installation"
+            }
+          }
+        }
+      },
+      "Observation": {
+        "description": "Accepted append-only observation.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Observation"
+            }
+          }
+        }
+      },
+      "CapabilityEvidenceReceipt": {
+        "description": "Accepted append-only consumer capability evidence receipt. Acceptance does not authorize promotion.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CapabilityEvidenceReceipt"
+            }
+          }
+        }
+      },
+      "RendererRelease": {
+        "description": "Allowlisted renderer release.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RendererRelease"
+            }
+          }
+        }
+      },
+      "Rollout": {
+        "description": "Rollout state.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Rollout"
+            }
+          }
+        }
+      },
+      "TargetDeliveryState": {
+        "description": "Authoritative target desired state.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TargetDeliveryState"
+            }
+          }
+        }
+      },
+      "TargetEventStream": {
+        "description": "Authenticated at-least-once SSE target notification stream. Each data item is one structured CloudEvent envelope; comment frames are heartbeats.",
+        "content": {
+          "text/event-stream": {
+            "itemSchema": {
+              "$ref": "#/components/schemas/AgentDeliveryCloudEvent"
+            }
+          }
+        }
+      },
+      "TargetEventResynchronization": {
+        "description": "Authoritative target snapshot plus a new notification resume boundary.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TargetEventResynchronization"
+            }
+          }
+        }
+      },
+      "VerificationResult": {
+        "description": "Verification result.",
+        "headers": {
+          "ETag": {
+            "$ref": "#/components/headers/ETag"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/VerificationResult"
+            }
+          }
+        }
+      },
+      "Problem": {
+        "description": "RFC 9457 problem details. Details are redacted; portId and operationId bind the stable code to that operation's exact side-effect state.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -114,8 +114,9 @@ The canonical decision sources for this task are the
   mappings; clean rebuilds are byte-identical and its manifest is identified by
   RFC 8785 SHA-256.
 - [x] Bundle signing and verification are runnable without repository secrets:
-  tests use ephemeral non-exported keys, and the release workflow accepts only
-  an external/KMS or workload-identity signer.
+  tests use ephemeral non-exported keys, and the contract release workflow
+  accepts only its exact `contract-bundle-release-v1` Sigstore keyless workload
+  identity under an independently pinned contract-bundle policy.
 - [x] Two independent Draft 2020-12 validators agree on every schema fixture;
   generated projections/examples/docs pass drift checks; unknown schemas,
   fields, references, operations, and illegal transitions fail closed.
@@ -208,7 +209,55 @@ The canonical decision sources for this task are the
 
 ### Evidence
 
-Pending.
+> **Evidence invalidated during final audit hardening (2026-07-17).** The
+> numerical snapshot below describes commit `2d03ae0` only. It is not current
+> Task 4 acceptance evidence and must not be used to claim completion. The
+> active source change adds trust-policy provider, Merkle status, stage-specific
+> eligibility, finalizer/publication, private-compilation, activation, KMS, and
+> OCI-closure contracts. This section and every checkbox above will be refreshed
+> from the final generated fixed point and clean detached verification before
+> Task 4 is accepted.
+
+- The closed downstream registry contains 21 versioned ports and 76 operations.
+  Its generated type authority contains 85 reusable base types, 511 unique
+  field-value schemas, 93 semantic field refinements, 152 closed request/result
+  contracts, and 152 valid contract fixture groups. The denial corpus contains
+  456 structural mutations and 11 operation-semantic mutations.
+- Every AD-02 through AD-18 task cites its exact normative schemas, port
+  operations, protocol profiles, and executable task suite. The mechanically
+  checked coverage matrix cites every registry contract path, request/result
+  contract ID, promised schema ID, and applicable profile; deleting any one
+  required authority token is rejected by the generic coverage mutation.
+- The compiled adapter conformance plan binds nine exact machine-authority
+  inputs by digest, 76 operation goldens, and all 108 cases into 187
+  deterministic steps. It executes all 152 valid contract fixtures and 467
+  adversarial mutations. Its RFC 8785 digest is
+  `sha256:178a7eb0982e867561f35183795c3472858cedf3a4335f7f3bb6e6a510b2552b`.
+- The protocol corpus covers 49 frozen protocol documents and 11 independent
+  materials with 71 denial mutations. Exact renderer preimage validation passes
+  three public/private renderer chains, one selection-to-execution receipt
+  binding, and one two-platform functional-output equivalence case while
+  rejecting 19 digest, exposure, allowlist, compatibility, and fallback
+  substitutions.
+- The source inventory contains 75 product schemas and 216 indexed fixtures.
+  Deterministic metadata refresh manages 153 files with zero drift while
+  preserving two intentional semantic denials. The Go and Python Draft 2020-12
+  validators agree on every fixture; both enforce bounded schema resources.
+- Final repository-wide and detached-checkout verification, including the exact
+  content-commit bundle and manifest identities, will be recorded after the
+  content commit exists so the evidence names an immutable source revision.
+- Release-evidence conformance passes one exact baseline and 20 independent
+  denial cases without authenticating the test attestation or issuing
+  authority. Repository verification covers 71 Markdown files, 576 local
+  links, three YAML files, 328 JSON files, and the complete acyclic
+  18-task/7-milestone planning graph.
+- Full-gate integration found and closed an authorization-proof binding defect:
+  a schema-required `candidateDigest` was not compared with the canary plan.
+  A red substitution test proved the gap, the verifier now binds the field, and
+  the complete canary and repository suites pass.
+- Focused independent audit, content commit, remote push, detached-checkout
+  verification, pull-request reporting, and GitHub Actions evidence remain
+  required before the final acceptance item is checked.
 
 ## Completion condition
 

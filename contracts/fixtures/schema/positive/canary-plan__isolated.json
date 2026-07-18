@@ -1,6 +1,6 @@
 {
   "contract": "bytedesk.canary-plan/1",
-  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-plan/1.0.0", "digest": "sha256:9c3ede7a8526bf7ad6a5866cedd1b51a9b48fce2d7fe22d7d4f4776a6562c89b" },
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-plan/1.0.0", "digest": "sha256:bb3e9c6bef3cd1b26f602d94ba01ad8901714cf78b7913826f7b48f01c0431a0" },
   "planId": "canary-plan-01",
   "rolloutId": "rollout-01",
   "nonce": "nonce_0123456789abcdef",
@@ -20,13 +20,20 @@
   "workloadIdentityDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
   "expectedChecks": {
     "host_reconciler": {
-      "artifact_readback": "passed",
-      "file_inventory": "passed",
-      "slot_generation": "passed",
-      "service_process": "passed",
-      "resource_thresholds": "passed",
-      "harness_readiness": "passed",
-      "switch_marker": "passed"
+      "candidate_ready": {
+        "artifact_readback": "passed",
+        "file_inventory": "passed",
+        "slot_generation": "passed",
+        "service_process": "passed",
+        "resource_thresholds": "passed",
+        "harness_readiness": "passed"
+      },
+      "active_readback": {
+        "switch_marker": "passed",
+        "active_pointer": "passed",
+        "file_inventory": "passed",
+        "service_process": "passed"
+      }
     },
     "consumer_capability_verifier": {
       "mode": "required",

@@ -1,0 +1,5 @@
+{
+  "contract": "bytedesk.cli-result/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/cli-result/1.0.0", "digest": "sha256:6baad0e2a8776d6933eea4d86f684f5519854bb1435ed8538208231687dbb793" },
+  "command": "promotion evaluate", "invocationId": "cli-invocation-02", "correlationId": "correlation-02", "outcome": "denied", "warnings": [], "emittedAt": "2026-07-17T12:00:00Z"
+}

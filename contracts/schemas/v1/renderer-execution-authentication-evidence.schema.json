@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-execution-authentication-evidence/1.0.0",
+  "title": "Purpose-bound renderer execution authentication evidence",
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "purpose",
+    "receiptDigest",
+    "attemptAuthorityDigest",
+    "rendererSelectionDigest",
+    "launcherIdentityDigest",
+    "signingResult",
+    "evidenceDigest"
+  ],
+  "properties": {
+    "contract": {
+      "const": "bytedesk.renderer-execution-authentication-evidence/1"
+    },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "purpose": {
+      "const": "renderer-execution-v1"
+    },
+    "receiptDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Canonical SHA-256 digest of the complete renderer-execution-receipt object."
+    },
+    "attemptAuthorityDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "rendererSelectionDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "launcherIdentityDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "signingResult": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0"
+        },
+        {
+          "properties": {
+            "purpose": {
+              "const": "renderer-execution-v1"
+            },
+            "subjectMediaType": {
+              "const": "application/vnd.bytedesk.agent.renderer-execution-receipt.v1+json"
+            }
+          },
+          "required": [
+            "purpose",
+            "subjectMediaType"
+          ]
+        }
+      ]
+    },
+    "evidenceDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "SHA-256 of RFC 8785 JCS bytes for the exact bytedesk.renderer-execution-authentication-evidence-digest/1 preimage defined by Renderer identity v1."
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "A purpose-separated collector signs the canonical receipt digest only after post-exit readback. The signing result subject digest, purpose, media type, key, policy, provider audit evidence, and signature bundle are verified offline; no sandbox signing key or ambient identity is permitted."
+}

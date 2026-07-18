@@ -1,0 +1,78 @@
+{
+  "contract": "bytedesk.trust-policy/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+    "digest": "sha256:ea53b4814c96282ba5812c2573b4adf45a026340b1022503e25b9f391dcd1509"
+  },
+  "policyId": "release-status-head-v1",
+  "version": "1.0.0",
+  "effective": {
+    "notBefore": "2026-07-17T00:00:00Z",
+    "notAfter": "2027-07-17T00:00:00Z"
+  },
+  "scope": {
+    "repositories": [
+      "registry.example/product/status-heads"
+    ],
+    "mediaTypes": [
+      "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "application/vnd.bytedesk.agent.release-status-head-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json",
+      "application/vnd.bytedesk.agent.release-status-log-consistency-proof.v1+json",
+      "application/vnd.bytedesk.agent.release-status-log-inclusion-proof.v1+json",
+      "application/vnd.bytedesk.agent.release-status.v1+json",
+      "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.signing-result.v1+json"
+    ],
+    "purposes": [
+      "release-status-head-v1"
+    ]
+  },
+  "signers": [
+    {
+      "purpose": "release-status-head-v1",
+      "credentialKind": "kms_key",
+      "keyVersion": "kms://product/release-status-head-v1/versions/1",
+      "publicKeyDigest": "sha256:0a4c8de2f435b9898240bcd3231bac4df64dcfff75125fb71604f0aba9232cbc",
+      "algorithm": "ECDSA_P256_SHA256",
+      "workloadIdentity": "spiffe://bytedesk.ai/agent-delivery/release-status-head",
+      "claims": {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audience": "agent-delivery-release-status-head-v1",
+        "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:release-status-head-v1",
+        "repository": "ByteDeskAI/bytedesk-agent-delivery",
+        "workflow": ".github/workflows/release-status-head-v1.yml",
+        "ref": "refs/tags/v1.0.0",
+        "environment": "release-status-head-v1",
+        "builderDigest": "sha256:be39063f65c65ad56c8a8a999b0992c188924bf62307e84d231982bdec2fb273"
+      }
+    }
+  ],
+  "requiredEvidence": [
+    "schema",
+    "authority",
+    "freshness",
+    "consistency"
+  ],
+  "rules": {
+    "freshnessSeconds": 900,
+    "requireNonce": true,
+    "requirePredecessor": true,
+    "denyDowngrade": true,
+    "withdrawal": "deny_new_use",
+    "outage": "fail_closed_new_work"
+  },
+  "revocations": {
+    "keyVersions": [],
+    "digests": [],
+    "workflows": [],
+    "builders": [],
+    "schemas": [],
+    "renderers": [],
+    "content": []
+  },
+  "failureMode": "fail_closed",
+  "predecessor": {
+    "kind": "none"
+  }
+}

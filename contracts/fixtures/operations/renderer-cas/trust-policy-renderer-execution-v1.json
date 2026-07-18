@@ -1,0 +1,74 @@
+{
+  "contract": "bytedesk.trust-policy/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+    "digest": "sha256:ea53b4814c96282ba5812c2573b4adf45a026340b1022503e25b9f391dcd1509"
+  },
+  "policyId": "renderer-execution-v1",
+  "version": "1.0.0",
+  "effective": {
+    "notBefore": "2026-07-17T00:00:00Z",
+    "notAfter": "2027-07-17T00:00:00Z"
+  },
+  "scope": {
+    "repositories": [
+      "registry.example/product/renderer-execution-evidence"
+    ],
+    "mediaTypes": [
+      "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "application/vnd.bytedesk.agent.renderer-execution-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.renderer-execution-receipt.v1+json",
+      "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.signing-result.v1+json"
+    ],
+    "purposes": [
+      "renderer-execution-v1"
+    ]
+  },
+  "signers": [
+    {
+      "purpose": "renderer-execution-v1",
+      "credentialKind": "kms_key",
+      "keyVersion": "kms://product/renderer-execution-v1/versions/1",
+      "publicKeyDigest": "sha256:1e25e409e03e0a9a46b19973c340537a1e5b852eae6dcc88644609389ae21f6f",
+      "algorithm": "ECDSA_P256_SHA256",
+      "workloadIdentity": "spiffe://bytedesk.ai/agent-delivery/renderer-execution",
+      "claims": {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audience": "agent-delivery-renderer-execution-v1",
+        "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:renderer-execution-v1",
+        "repository": "ByteDeskAI/bytedesk-agent-delivery",
+        "workflow": ".github/workflows/renderer-execution-v1.yml",
+        "ref": "refs/tags/v1.0.0",
+        "environment": "renderer-execution-v1",
+        "builderDigest": "sha256:ead61cce30c1e210798eee0c7f2d7daf196eccd79dee890af6b7d86ddb3e0c1d"
+      }
+    }
+  ],
+  "requiredEvidence": [
+    "schema",
+    "executed_distribution",
+    "authority"
+  ],
+  "rules": {
+    "freshnessSeconds": 900,
+    "requireNonce": true,
+    "requirePredecessor": true,
+    "denyDowngrade": true,
+    "withdrawal": "deny_new_use",
+    "outage": "fail_closed_new_work"
+  },
+  "revocations": {
+    "keyVersions": [],
+    "digests": [],
+    "workflows": [],
+    "builders": [],
+    "schemas": [],
+    "renderers": [],
+    "content": []
+  },
+  "failureMode": "fail_closed",
+  "predecessor": {
+    "kind": "none"
+  }
+}

@@ -2,7 +2,7 @@
   "contract": "bytedesk.verification-result/1",
   "schema": {
     "id": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
-    "digest": "sha256:e7a125abfede2f5b71b10f72b03f9ac57ed61a5f5008ce8d3835c34b0314499f"
+    "digest": "sha256:0acdbdbfeb5c84af9ab26a32b9d5a5e49dba4a1dd45189ac1e82a635bb5ab9b6"
   },
   "verificationId": "verify-01",
   "subject": {

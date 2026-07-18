@@ -1,0 +1,12 @@
+{
+  "contract": "bytedesk.release-status-append-resolution/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status-append-resolution/1.0.0",
+    "digest": "sha256:e0cf6a2fb4728d43ceb5a149ce5cb105ee7782c840ea99a8475883bffbb30f59"
+  },
+  "disposition": "committed",
+  "idempotencyKey": "append-release-status-01",
+  "requestDigest": "sha256:6000000000000000000000000000000000000000000000000000000000000006",
+  "appendResult": null,
+  "resolvedAt": "2026-07-17T12:00:04Z"
+}

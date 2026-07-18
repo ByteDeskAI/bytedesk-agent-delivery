@@ -7,7 +7,7 @@
   "eventType": "ai.bytedesk.agent-delivery.installation.updated.v1",
   "dataSchema": {
     "id": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0",
-    "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    "digest": "sha256:af01882c9dc8dbf80fc753f148a35fd916d4bdbe5d93b6a8938c0b10f58ff8dc"
   },
   "aggregate": {
     "type": "installation",
@@ -20,7 +20,7 @@
     "etag": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
     "projectionSchema": {
       "id": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0",
-      "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      "digest": "sha256:af01882c9dc8dbf80fc753f148a35fd916d4bdbe5d93b6a8938c0b10f58ff8dc"
     }
   },
   "consumerScope": "consumer-01",

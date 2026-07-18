@@ -1,0 +1,23 @@
+{
+  "contract": "bytedesk.harness-configuration/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-configuration/1.0.0",
+    "digest": "sha256:d12717fef52ade60c56a3d8389991d2a927948e21d753c66726defb49bbf3b31"
+  },
+  "scope": "public",
+  "harnessId": "hermes",
+  "configurationVersion": "1.0.0",
+  "modelBindings": [
+    {
+      "logicalModelId": "primary",
+      "providerId": "tenant-provider",
+      "providerModelId": "private-model",
+      "secretReferenceIds": []
+    }
+  ],
+  "toolBindings": [],
+  "mcpServers": [],
+  "resourceBindings": [],
+  "harnessOptions": [],
+  "opaqueSecretReferences": []
+}

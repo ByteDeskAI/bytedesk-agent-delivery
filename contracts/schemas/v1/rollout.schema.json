@@ -10,7 +10,7 @@
     "rolloutId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
     "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
     "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
-    "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerRuntimeReleaseDescriptor" },
     "desiredRevisionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
     "activationMode": { "type": "string", "enum": ["isolated_candidate", "guarded_in_place"] },
     "state": { "type": "string", "enum": ["pending", "staging", "staged", "preflight_passed", "canary_running", "canary_passed", "activation_authorized", "activating", "verifying_active", "provisional_active", "promoted", "cancelled", "superseded", "failed_pre_activation", "recovery_required"] },

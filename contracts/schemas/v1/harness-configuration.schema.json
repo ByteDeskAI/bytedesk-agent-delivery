@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-configuration/1.0.0",
+  "title": "Authority-safe functional harness configuration",
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "scope",
+    "harnessId",
+    "configurationVersion",
+    "modelBindings",
+    "toolBindings",
+    "mcpServers",
+    "resourceBindings",
+    "harnessOptions",
+    "opaqueSecretReferences"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.harness-configuration/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "scope": { "type": "string", "enum": ["public", "private"] },
+    "harnessId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "configurationVersion": { "type": "string", "maxLength": 128, "pattern": "^[1-9][0-9]*\\.[0-9]+\\.[0-9]+$" },
+    "modelBindings": {
+      "type": "array",
+      "maxItems": 1000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/modelBinding" }
+    },
+    "toolBindings": {
+      "type": "array",
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/functionalBinding" }
+    },
+    "mcpServers": {
+      "type": "array",
+      "maxItems": 1000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/mcpServer" }
+    },
+    "resourceBindings": {
+      "type": "array",
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/functionalBinding" }
+    },
+    "harnessOptions": {
+      "type": "array",
+      "maxItems": 1000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/harnessOption" }
+    },
+    "opaqueSecretReferences": {
+      "type": "array",
+      "maxItems": 1000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/opaqueSecretReference" }
+    }
+  },
+  "$defs": {
+    "secretReferenceIds": {
+      "type": "array",
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }
+    },
+    "modelBinding": {
+      "type": "object",
+      "required": ["logicalModelId", "providerId", "providerModelId", "secretReferenceIds"],
+      "properties": {
+        "logicalModelId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "providerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "providerModelId": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "endpoint": { "type": "string", "format": "uri", "maxLength": 2048, "pattern": "^https://" },
+        "secretReferenceIds": { "$ref": "#/$defs/secretReferenceIds" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "functionalBinding": {
+      "type": "object",
+      "required": ["bindingId", "adapterId", "configurationDigest", "secretReferenceIds"],
+      "properties": {
+        "bindingId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "adapterId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "configurationDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "secretReferenceIds": { "$ref": "#/$defs/secretReferenceIds" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "mcpServer": {
+      "type": "object",
+      "required": ["serverId", "transport", "configurationDigest", "secretReferenceIds"],
+      "properties": {
+        "serverId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "transport": { "type": "string", "enum": ["stdio", "streamable_http", "sse"] },
+        "endpoint": { "type": "string", "format": "uri", "maxLength": 2048, "pattern": "^https://" },
+        "runtimeResourceId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "configurationDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "secretReferenceIds": { "$ref": "#/$defs/secretReferenceIds" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "transport": { "const": "stdio" } }, "required": ["transport"] },
+          "then": {
+            "required": ["runtimeResourceId"],
+            "not": { "required": ["endpoint"] }
+          },
+          "else": {
+            "required": ["endpoint"],
+            "not": { "required": ["runtimeResourceId"] }
+          }
+        }
+      ],
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "harnessOption": {
+      "type": "object",
+      "required": ["optionId", "value"],
+      "properties": {
+        "optionId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "value": {
+          "oneOf": [
+            { "type": "string", "maxLength": 4096 },
+            { "type": "boolean" },
+            { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/safeInteger" }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "opaqueSecretReference": {
+      "type": "object",
+      "required": ["referenceId", "purpose"],
+      "properties": {
+        "referenceId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "purpose": { "type": "string", "enum": ["model_provider", "tool", "mcp", "resource", "harness"] }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false,
+      "description": "referenceId is an opaque consumer-managed lookup identifier, never a credential value or reusable bearer token."
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "scope": { "const": "public" } }, "required": ["scope"] },
+      "then": {
+        "properties": {
+          "modelBindings": { "maxItems": 0 },
+          "toolBindings": { "maxItems": 0 },
+          "mcpServers": { "maxItems": 0 },
+          "resourceBindings": { "maxItems": 0 },
+          "harnessOptions": { "maxItems": 0 },
+          "opaqueSecretReferences": { "maxItems": 0 }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Private entries are deterministic functional configuration only. They do not authorize a provider, tool, MCP server, resource, identity, role, credential, sandbox exception, network exception, or approval. Public configuration is intentionally empty; public renderer defaults are fixed by the renderer release."
+}

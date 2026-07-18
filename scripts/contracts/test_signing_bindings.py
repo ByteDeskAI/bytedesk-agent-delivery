@@ -11,7 +11,7 @@ import sys
 from tempfile import TemporaryDirectory
 from typing import Any, Callable
 
-from contractlib import ContractToolError, load_json, write_json
+from contractlib import ContractToolError, load_json, load_json_bytes, sha256_bytes, write_json
 from verify_bundle import (
     MANIFEST_ARCHIVE_PATH,
     build_bundle_registry,
@@ -40,7 +40,10 @@ def main() -> int:
     parser.add_argument("--expected-request-id", required=True)
     parser.add_argument("--expected-repository", required=True)
     parser.add_argument("--expected-purpose", required=True)
-    parser.add_argument("--expected-key-version", required=True)
+    parser.add_argument("--expected-credential-kind", required=True)
+    parser.add_argument("--expected-signer-identity-digest", required=True)
+    parser.add_argument("--expected-builder-digest", required=True)
+    parser.add_argument("--expected-pre-sign-certification", type=Path, required=True)
     parser.add_argument("--expected-nonce", required=True)
     parser.add_argument("--expected-issued-at", required=True)
     parser.add_argument("--expected-expires-at", required=True)
@@ -62,11 +65,17 @@ def main() -> int:
     signature = load_json(args.signature.resolve())
     if not isinstance(signature, dict):
         raise ContractToolError("test signature is not an object")
+    _, certification_bytes = load_json_bytes(
+        args.expected_pre_sign_certification.resolve()
+    )
     expected = {
         "requestId": args.expected_request_id,
         "repository": args.expected_repository,
         "purpose": args.expected_purpose,
-        "keyVersion": args.expected_key_version,
+        "credentialKind": args.expected_credential_kind,
+        "signerIdentityDigest": args.expected_signer_identity_digest,
+        "builderDigest": args.expected_builder_digest,
+        "preSignCertificationDigest": sha256_bytes(certification_bytes),
         "nonce": args.expected_nonce,
         "issuedAt": args.expected_issued_at,
         "expiresAt": args.expected_expires_at,
@@ -87,7 +96,10 @@ def main() -> int:
     signed_mutations: dict[str, Any] = {
         "requestId": "contract-test-request-000002",
         "purpose": "public-source-v1",
-        "keyVersion": "test-ephemeral-memory-v2",
+        "credentialKind": "kms_key",
+        "signerIdentityDigest": "sha256:" + "d" * 64,
+        "builderDigest": "sha256:" + "e" * 64,
+        "preSignCertificationDigest": "sha256:" + "f" * 64,
         "repository": "registry.example.invalid/bytedesk/substituted-contracts",
         "digest": "sha256:" + "b" * 64,
         "mediaType": "application/vnd.bytedesk.substituted+json",
@@ -105,7 +117,7 @@ def main() -> int:
             )
         )
     for policy_field, replacement in (
-        ("id", "substituted-product-release-v1"),
+        ("id", "substituted-contract-bundle-release-v1"),
         ("digest", "sha256:" + "b" * 64),
     ):
         candidate = deepcopy(request)
@@ -120,7 +132,10 @@ def main() -> int:
     independent_substitutions: dict[str, Any] = {
         "requestId": "contract-test-request-000002",
         "purpose": "public-source-v1",
-        "keyVersion": "test-ephemeral-memory-v2",
+        "credentialKind": "kms_key",
+        "signerIdentityDigest": "sha256:" + "d" * 64,
+        "builderDigest": "sha256:" + "e" * 64,
+        "preSignCertificationDigest": "sha256:" + "f" * 64,
         "repository": "registry.example.invalid/bytedesk/substituted-contracts",
         "nonce": "contracttestnonce000002",
         "issuedAt": "2026-07-17T00:00:01Z",
@@ -143,7 +158,7 @@ def main() -> int:
             )
         )
     for policy_field, replacement in (
-        ("id", "substituted-product-release-v1"),
+        ("id", "substituted-contract-bundle-release-v1"),
         ("digest", "sha256:" + "b" * 64),
     ):
         candidate_expected = deepcopy(expected)

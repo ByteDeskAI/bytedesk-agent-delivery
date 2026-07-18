@@ -17,7 +17,12 @@ runtime desired state or allowing it to bypass the Promotion Coordinator.
 
 - AD-09 installation/binding/candidate/TargetDeliveryState contracts and AD-10
   API/event/action resources.
-- Authenticated webhook-receipt and Git-provider adapter contracts. Historical BDP-3282 is reference-consumer ingress evidence, not a core dependency.
+- Authenticated webhook-receipt and Git-provider adapter contracts. Any
+  reference-consumer implementation evidence associated with BDP-3282 must be
+  supplied through an exact `bytedesk.external-input-lock/1` artifact binding
+  repository URL, immutable commit, source-tree digest, sorted path/digest
+  inventory, and `compatibilityEvidenceOnly: true`; it is not a core dependency
+  or authority.
 - Binding persistence, OCI verification, and private customization rules.
 - Consumer installation, repository, branch/path, and authorization-decision configuration.
 
@@ -80,10 +85,45 @@ Automatic successor proposals, private deployment compilation, production Git-pr
 
 Blocked by AD-09 and AD-10.
 
+## Normative contracts and conformance
+
+- **Ports and operations.** `bytedesk.port.scm/1` (`receive-webhook`,
+  `fetch-commit`, `scan-repository`, `publish-candidate-signal`) and
+  `bytedesk.port.control-plane-api-events/1` (`submit-command`, `read-resource`),
+  plus the read-only `bytedesk.port.desired-state-store/1`
+  (`read-target-state`), are the exact ingress and current-state boundaries in
+  `contracts/ports/v1/port-registry.json`. Exact field-value and closed
+  request/result schemas are distributed in
+  `contracts/ports/v1/type-catalog.json`; canonical valid and structural-denial
+  payloads are in `contracts/ports/v1/contract-fixtures.json`.
+- **Schemas, artifacts, and profiles.** Exact schema IDs include
+  `https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0`,
+  `https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0`, and
+  `https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0`, under
+  `contracts/schemas/v1/`. Webhook authentication, immutable commit/tree,
+  repository installation, branch/path, candidate-signal, and
+  `bytedesk.external-input-lock/1` profiles are in
+  `contracts/ports/v1/protocol-profiles.json`.
+- **Conformance owner.** AD-11 owns provider-neutral webhook, exact commit fetch,
+  Git intent, inbox/outbox, ordering, replay, dead-letter, scheduled scan, and
+  provider-outage fixtures. Run `make verify-downstream-ports`; the
+  task-specific suite is `downstream.scm-intake.v1` in
+  `contracts/ports/v1/conformance-cases.json`. Execute the suite's exact harness
+  steps and closed oracles from `contracts/ports/v1/conformance-plan.json`;
+  schema-valid structural fixtures alone are not semantic implementation goldens.
+- **Boundary.** Git is reviewed intent and provenance, not runtime desired state.
+  No webhook, bot, scan, provider Adapter, or candidate signal may bypass exact
+  preconditions or the Promotion Coordinator, and consumer credentials or
+  implementation details cannot enter core event contracts.
+
 ## Architecture review amendments
 
 - Agent Delivery owns its authenticated webhook receipt, immutable commit fetch, candidate/binding process, evaluation/promotion state, and delivery receipts. A consumer adapter owns mapping to that consumer's repository installation, subject, policy, identity, and deployment target.
-- Reuse one provider-neutral webhook ingress and event normalizer; do not create a path per consumer or event type. ByteDesk integration should adapt the existing BDP-3282 ingress rather than duplicate it.
+- Reuse one provider-neutral webhook ingress and event normalizer; do not create
+  a path per consumer or event type. ByteDesk integration may adapt only the
+  exact BDP-3282 implementation evidence named by the accepted external-input
+  lock rather than duplicating it.
 - Resolve installation scope + numeric repository ID + immutable commit SHA + provider installation authority + branch/path policy through the verified Git-provider broker.
 - Provider ingestion emits signed/versioned candidate signals through a transactional outbox. Reconciliation consumes them through a durable idempotent inbox with correlation, retry, dead-letter, and no cross-service/database reads.
 - Candidate preparation, target rollout, host attempt, and observations use the

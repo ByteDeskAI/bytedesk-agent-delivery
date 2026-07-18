@@ -10,11 +10,12 @@ signer, observation, host, or historical receipt can grant itself authority.
 
 The production reference controls that realize this objective are fixed by
 [ADR-0002](adr/0002-implementation-stack-and-reference-topology.md): distinct
-least-privilege workload identities, non-exportable purpose-separated KMS
-keys, PostgreSQL transaction/CAS authority, default-deny Kubernetes policy,
-fresh gVisor renderer sandboxes, closed configuration, redacted OpenTelemetry,
-and fenced backup/restore. Conforming alternative Adapters may change vendors,
-not the controls or denial evidence.
+least-privilege workload identities, purpose-separated KMS credentials and
+contract-release Sigstore keyless identity, PostgreSQL transaction/CAS
+authority, default-deny Kubernetes policy, fresh gVisor renderer sandboxes,
+closed configuration, redacted OpenTelemetry, and fenced backup/restore.
+Conforming alternative Adapters may change vendors, not the controls or denial
+evidence.
 
 ## Schema and trust roots
 
@@ -25,14 +26,18 @@ or closed-enum value fails. Generated models, OpenAPI, AsyncAPI, examples, and
 prose cannot override the schema.
 
 Trust policy is also independently configured. It pins exact policy and schema
-digests, immutable KMS key versions, algorithms, workload identities,
-repository/workflow/environment/builder claims, media types, evidence,
-freshness, withdrawal, and revocation. An artifact cannot supply or change its
-validator, policy, or trust roots.
+digests, algorithms, and credential-aware signer identity. KMS uses immutable
+`keyVersion` plus `publicKeyDigest`; Sigstore keyless uses exact
+`signerIdentityDigest` plus an independently pinned `trustedRootDigest` and
+forbids `keyVersion` or a static leaf `publicKeyDigest`. Policy also pins
+workload identities, repository/workflow/environment/builder claims, media
+types, evidence, freshness, withdrawal, and revocation. An artifact cannot
+supply or change its validator, policy, or trust roots.
 
-Keys are non-exportable KMS/HSM keys used through short-lived WIF/OIDC. Private
-material never enters repository/CI secrets, product secret stores, artifacts,
-runtime hosts, or workspaces.
+KMS private keys are non-exportable KMS/HSM keys used through short-lived
+WIF/OIDC. Sigstore keyless leaf keys are ephemeral under the independently
+pinned trust root. Private material never enters repository/CI secrets, product
+secret stores, artifacts, runtime hosts, or workspaces.
 
 ### Contract-bundle release trust
 
@@ -61,6 +66,27 @@ emits the canonical request and final evidence. The release identity is the
 exact called-workflow commit. Independent policy additionally pins caller
 repository, immutable tag, source commit, workflow trigger, OIDC issuer,
 trusted-root digest, sealed-verifier digest, and Cosign digest.
+The keyless request has no KMS key version: it signs the exact policy-signer,
+sealed-builder, and pre-sign-certification digests. Final evidence may claim
+builder execution only after resolving that certification and matching its
+executed distribution to the independently pinned sealed image.
+
+The bundle is accepted only under the exact `contract-bundle-release-v1`
+policy. That policy is keyless-only and scopes only the contract-bundle
+repository and media type. The KMS-only `product-release-v1` policy separately
+authorizes product distributions, compiled allowlists, and renderer releases.
+A mixed policy, cross-purpose signer, or cross-scoped repository/media type is
+denied even when its signature is otherwise cryptographically valid.
+
+The product-release manifest must bind the exact
+`contractBundleVerification` receipt produced by the trusted keyless Adapter.
+The receipt authenticates evidence but has `authorityIssued: false`; product
+authority comes only from the later KMS product signature over the complete
+manifest. Every downstream/private acceptance path still replays the keyless
+edge independently from the exact bundle, policy, request, Sigstore bundle,
+root, certificate identity/claims, workflow, builder, and certification
+bindings. Consequently, possession of the product KMS key cannot vouch for a
+missing or invalid contract-bundle signature.
 
 The repository verifier cannot issue production authority. Its external
 Sigstore path is adapter-conformance evidence, and its local replay ledger is a
@@ -74,17 +100,24 @@ certification fails closed.
 
 ## Purpose separation and consumer sovereignty
 
-V1 uses distinct signer purposes for product releases, public source, public
-render, consumer-private skills, consumer authority/approval, and consumer
-deployments. The last three are isolated per consumer. Authority/approval and
-deployment keys are different so a compiler cannot approve itself. A shared
-provider key for multiple consumers, exported CI key, provider-controlled
+V1 uses the 22 closed wire purposes in
+[Trust policy v1](../standards/trust-policy-v1.md). They separate product,
+contract-bundle release, source, public render, consumer-private skill,
+consumer authority, deployment, runtime release, qualification
+policy/attempt/receipt/evidence/decision,
+release status/status head, public and consumer-private stage-specific status
+eligibility, renderer attempt/execution, private-compilation input/evidence,
+and consumer activation authorization. Every consumer-private purpose is
+isolated per consumer.
+Authority/approval and deployment/compiler keys are different so a compiler
+cannot approve itself. A shared provider key for multiple consumers, exported
+CI key, provider-controlled
 mutable private trust root, or runtime-held private key is forbidden.
 
 The preferred private keys remain in the consumer's cloud/security boundary.
 Agent Delivery build/compiler/publication workloads may receive narrow sign
-permission only for the per-consumer private-skill or deployment purpose and
-cannot administer, export, rotate, or change policy. They never receive
+permission only for their exact per-consumer private-artifact or compilation
+purpose and cannot administer, export, rotate, or change policy. They never receive
 `consumer-authority-v1` sign permission; only the independently authenticated
 Consumer Authority Adapter can issue authority/approval evidence. A managed
 KMS/HSM key must be tenant-dedicated, explicitly accepted and pinned by the
@@ -110,6 +143,17 @@ release manifest. Independent policy may restrict but no runtime configuration,
 binding, catalog, skill, event, artifact, or customization may expand or
 redirect it. Rendering never falls back to a tag, PATH executable, local build,
 other installed version, or artifact-provided plugin.
+Conflicting duplicate harness/renderer/version entries fail the compiled
+allowlist, and conflicting duplicate OS/architecture entries fail a release
+manifest, so executable selection can never depend on array order.
+
+Signature trust does not establish release eligibility. The exact product and
+renderer releases must pass the pinned qualification policy, suite, and full
+role/subject/platform matrix. Immediately before selection or execution, the
+caller verifies fresh nonce-bound authenticated current status heads and any
+required append-only consistency proof. The attempt binds those accepted
+checkpoint/evidence digests. Qualification and status are specified by
+[Release qualification and status v1](../standards/release-qualification-v1.md).
 
 Each render runs in a fresh sandbox with no network, secrets, cloud metadata,
 signing keys, ambient identity, home directory, package manager, or developer
@@ -237,17 +281,24 @@ recovery, the verifier:
 
 1. resolves exact repository/digest/media-type/size and policy ID/digest;
 2. validates the independently trusted offline schema and RFC 8785 identity;
-3. verifies signature purpose, per-consumer isolation, key version, workload
-   claims, effective window, withdrawal, and revocation;
-4. verifies required provenance, SBOM, compatibility, evaluation, authority,
+3. verifies signature purpose, per-consumer isolation, and credential-aware
+   signer identity: immutable `keyVersion` plus `publicKeyDigest` for KMS, or
+   exact `signerIdentityDigest` plus independently pinned `trustedRootDigest`
+   and no static leaf or `keyVersion` for Sigstore keyless; it then verifies
+   workload claims, effective window, withdrawal, and revocation;
+4. verifies the pinned qualification policy/suite, complete typed evidence
+   matrix, signed final decision, and fresh nonce/time-bound current status
+   heads;
+5. verifies required provenance, SBOM, compatibility, evaluation, authority,
    skill approval, canary, and readiness evidence;
-5. traverses every explicit upstream descriptor independently;
-6. confirms source/binding/customization/skill/renderer/execution/file digests,
+6. recursively traverses every explicit upstream descriptor and OCI
+   manifest/config/layer/blob independently;
+7. confirms source/binding/customization/skill/renderer/execution/file digests,
    consumer, subject, installation, target, slot/generation, candidate, desired
    revision, precondition, nonce, and freshness;
-7. rejects any missing, stale, downgraded, cross-consumer, or substituted edge;
+8. rejects any missing, stale, downgraded, cross-consumer, or substituted edge;
    and
-8. records the exact graph in append-only evidence.
+9. records the exact graph in append-only evidence.
 
 Only the Promotion Coordinator may convert successful verification and fresh
 evidence into a new desired-state revision.
@@ -276,6 +327,9 @@ content.
 | Mutable source, policy, schema, renderer, or tag substitution | Exact independently trusted digests; no network or tag fallback |
 | Parser/schema differential or unknown field | Restricted YAML, Draft 2020-12 bundle, two-validator fixtures, closed authority objects |
 | Cross-repository referrer confusion | Complete signed downstream descriptors and independent traversal |
+| Partial/cyclic OCI graph or repository-prefix type confusion | Recursive exact config/layer/blob closure, closed media/role mapping, resource bounds, and cycle denial |
+| Signed but unqualified renderer or platform omission | Pinned qualification policy/suite, typed evidence matrix, signed decision, and all renderer/platform coverage |
+| Stale, rolled-back, or forked release status | Caller nonce/time-bound authenticated status head and exact append-only consistency proof |
 | Renderer/plugin/PATH/library injection | Compiled allowlist, exact worker readback, sandbox, no runtime plugins |
 | Input code executes during delivery | Non-executing parser/extractor/compiler/reconciler and execution-spy tests |
 | Tool configuration is mistaken for a grant | Functional roots separated from signed current consumer authority and call-time authorization |

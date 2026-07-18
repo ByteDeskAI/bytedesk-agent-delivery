@@ -1,0 +1,47 @@
+{
+  "contract": "bytedesk.consumer-authority/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-authority/1.0.0",
+    "digest": "sha256:d0d76ce005d8c6765c95083dfd6f40a76584a7fd93b2ace9f2537e2e4c3da84e"
+  },
+  "consumerId": "consumer-01",
+  "subjectId": "agent-finance-01",
+  "installationId": "installation-01",
+  "harnessId": "hermes",
+  "targetId": "runtime-prod-01",
+  "audience": "agent-delivery-private-compiler",
+  "operation": "compile",
+  "authorityRevision": 42,
+  "predecessor": {
+    "kind": "match",
+    "revision": 41,
+    "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+  },
+  "opaqueDigests": {
+    "policy": "sha256:7272727272727272727272727272727272727272727272727272727272727272",
+    "grantSet": "sha256:7373737373737373737373737373737373737373737373737373737373737373",
+    "credentialSet": "sha256:7474747474747474747474747474747474747474747474747474747474747474",
+    "workloadIdentity": "sha256:7575757575757575757575757575757575757575757575757575757575757575",
+    "lifecycle": "sha256:7676767676767676767676767676767676767676767676767676767676767676",
+    "mandatorySandbox": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+    "network": "sha256:7878787878787878787878787878787878787878787878787878787878787878",
+    "approvalPolicy": "sha256:7979797979797979797979797979797979797979797979797979797979797979",
+    "targetBinding": "sha256:8080808080808080808080808080808080808080808080808080808080808080"
+  },
+  "decision": {
+    "class": "permitted",
+    "code": "consumer_private_compilation_permitted"
+  },
+  "signerPolicy": {
+    "id": "consumer-authority-v1",
+    "digest": "sha256:3434343434343434343434343434343434343434343434343434343434343434"
+  },
+  "signerIdentity": "kms://consumer-01/authority/key/version/1",
+  "issuedAt": "2026-07-17T12:00:00Z",
+  "notBefore": "2026-07-17T12:00:00Z",
+  "expiresAt": "2026-07-17T12:15:00Z",
+  "nonce": "nonce_compile_0123456789abcdef",
+  "bindingDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "candidateDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "desiredRevisionDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+}

@@ -85,9 +85,11 @@ events are read models or intent/evidence sources, never competing writers.
 
 The Platform deployment projection adds:
 
-- a per-profile deployment subdigest;
+- a per-profile canonical deployment descriptor;
 - a durable Hermes runtime slot;
-- an engine release manifest containing exact active profile subdigests;
+- an engine release manifest containing, for every active profile, the exact
+  deployment descriptor and its separate exact private-compilation-evidence
+  descriptor;
 - explicit source, public render, private customization, exact skill, embedded
   effective render, private deployment, policy, grant, and profile descriptors;
   and
@@ -96,9 +98,9 @@ The Platform deployment projection adds:
 
 ADR-0182's runtime tuple must bind:
 
-`AgentOrgProfileId + TenantId + HermesEngineId + stable profile slot + profile deployment subdigest + current engine release`.
+`AgentOrgProfileId + TenantId + HermesEngineId + stable profile slot + exact profile deployment descriptor + current engine release`.
 
-Updating one employee definition changes that profile subdigest and the engine
+Updating one employee definition changes that profile deployment descriptor and the engine
 release without rotating unrelated principals or credentials. A change to the
 system package is explicitly engine-wide.
 

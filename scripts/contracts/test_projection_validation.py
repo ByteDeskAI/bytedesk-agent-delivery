@@ -15,12 +15,14 @@ from lint_projections import (
     ASYNCAPI_OFFICIAL_SCHEMA_ID,
     ASYNCAPI_OFFICIAL_SCHEMA_PATH,
     ASYNCAPI_PATH,
+    EVENT_TYPES_PATH,
     OPENAPI_DOCUMENT_URI,
     OPENAPI_OFFICIAL_SCHEMA_ID,
     OPENAPI_OFFICIAL_SCHEMA_PATH,
     OPENAPI_PATH,
     PINNED_VENDOR_FILES,
     check_asyncapi_topology,
+    check_event_registry_bindings,
     check_openapi_topology,
     load_pinned_projection_schema,
     projection_schema_resources,
@@ -309,6 +311,76 @@ def main() -> int:
         "openapi-header-component-schema-substitution",
         lambda: check_openapi_topology(mutated_openapi),
         "OpenAPI header component topology drift for ETag",
+    )
+
+    mutated_openapi = deepcopy(openapi)
+    mutated_openapi["paths"]["/v1/targets/{targetId}/state"]["get"][
+        "parameters"
+    ].append({"$ref": "#/components/parameters/LastEventId"})
+    expect_denial(
+        cases,
+        "openapi-last-event-id-on-ordinary-state-get",
+        lambda: check_openapi_topology(mutated_openapi),
+        "OpenAPI operation parameter topology drift for getTargetDeliveryState",
+    )
+    mutated_openapi = deepcopy(openapi)
+    stream_content = mutated_openapi["components"]["responses"][
+        "TargetEventStream"
+    ]["content"]
+    stream_content["application/json"] = stream_content.pop("text/event-stream")
+    expect_denial(
+        cases,
+        "openapi-target-watch-not-sse",
+        lambda: check_openapi_topology(mutated_openapi),
+        "OpenAPI response component topology drift for TargetEventStream",
+    )
+    mutated_openapi = deepcopy(openapi)
+    mutated_openapi["paths"]["/v1/targets/{targetId}/events"]["get"][
+        "x-bytedesk-sse"
+    ]["durableActionDisconnect"] = "cancel-action"
+    expect_denial(
+        cases,
+        "openapi-sse-disconnect-cancels-durable-action",
+        lambda: check_openapi_topology(mutated_openapi),
+        "OpenAPI target event SSE profile drift",
+    )
+    mutated_openapi = deepcopy(openapi)
+    mutated_openapi["paths"]["/v1/targets/{targetId}/capability-evidence"][
+        "post"
+    ]["security"] = [{"targetReconcilerBearer": []}]
+    expect_denial(
+        cases,
+        "openapi-capability-evidence-wrong-mtls-identity",
+        lambda: check_openapi_topology(mutated_openapi),
+        "OpenAPI operation security drift for appendCapabilityEvidence",
+    )
+    mutated_openapi = deepcopy(openapi)
+    mutated_openapi["paths"]["/v1/targets/{targetId}/capability-evidence"][
+        "post"
+    ]["x-bytedesk-authority"]["promotionAuthority"] = True
+    expect_denial(
+        cases,
+        "openapi-capability-evidence-promotion-authority",
+        lambda: check_openapi_topology(mutated_openapi),
+        "OpenAPI capability evidence authority boundary drift",
+    )
+    mutated_openapi = deepcopy(openapi)
+    mutated_openapi["components"]["schemas"]["CapabilityEvidenceIntake"][
+        "additionalProperties"
+    ] = True
+    expect_denial(
+        cases,
+        "openapi-capability-evidence-request-opened",
+        lambda: check_openapi_topology(mutated_openapi),
+        "OpenAPI protocol schema component topology drift for CapabilityEvidenceIntake",
+    )
+    mutated_event_types = deepcopy(load_json(EVENT_TYPES_PATH))
+    mutated_event_types["eventTypes"][0]["resourceSchemaDigest"] = "sha256:" + "0" * 64
+    expect_denial(
+        cases,
+        "event-registry-stale-resource-schema-digest",
+        lambda: check_event_registry_bindings(mutated_event_types, openapi),
+        "event type resource schema digest drift",
     )
 
     mutated_asyncapi = deepcopy(asyncapi)

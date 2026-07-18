@@ -8,10 +8,10 @@
   "subject": {
     "repository": "registry.example/consumer/candidates",
     "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "mediaType": "application/vnd.bytedesk.agent.release.v1+json",
+    "mediaType": "application/vnd.bytedesk.agent.runtime-release.v1+json",
     "size": 8192,
     "trustPolicy": {
-      "id": "consumer-deployment-v1",
+      "id": "consumer-runtime-release-v1",
       "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
     }
   },
