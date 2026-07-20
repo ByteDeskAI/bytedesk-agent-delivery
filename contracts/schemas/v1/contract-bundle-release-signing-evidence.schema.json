@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle-release-signing-evidence/1.0.0",
+  "title": "Sealed contract-bundle release signing evidence",
+  "description": "Emitted by the sealed contract-release verifier's finalize-contract-release-v1 subcommand after independently verifying the Cosign signature, trust policy, trusted root, and source lineage together. Never itself a consumer authority grant (consumerPermitIssued is always false).",
+  "type": "object",
+  "required": ["profile", "verificationMode", "signatureAuthenticated", "contractBundleSignatureIssued", "consumerPermitIssued", "fullBundleNativeSemantics", "sourceLineageVerified", "byteForByteSourceRebuildMatch", "outcome"],
+  "properties": {
+    "profile": { "const": "bytedesk.contract-bundle-release-signing-evidence/1" },
+    "verificationMode": { "const": "sigstore_contract_bundle_release" },
+    "signatureAuthenticated": { "const": true },
+    "contractBundleSignatureIssued": { "const": true },
+    "consumerPermitIssued": { "const": false },
+    "fullBundleNativeSemantics": { "const": true },
+    "sourceLineageVerified": { "const": true },
+    "byteForByteSourceRebuildMatch": { "const": true },
+    "outcome": { "const": "signed_and_verified" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

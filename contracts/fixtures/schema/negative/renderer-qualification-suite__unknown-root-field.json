@@ -288,7 +288,7 @@
   },
   "contractBundle": {
     "repository": "registry.example/product/contracts",
-    "digest": "sha256:245d144e29abd3cc8023a43a6cd8366484ffd8550311cce18d42282d8b46d7c2",
+    "digest": "sha256:00e015b2dea045c7bb14cdcd9c6c7c827812f5fae11a402a6010b4514a308b41",
     "mediaType": "application/vnd.bytedesk.agent.contract-bundle.v1+json",
     "size": 1940,
     "trustPolicy": {

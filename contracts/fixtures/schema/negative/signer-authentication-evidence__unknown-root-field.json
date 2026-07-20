@@ -25,7 +25,7 @@
   "providerRequestId": "fixture-kms-request:sign-product-release-current",
   "publicKeyDigest": "sha256:0f34c7c967a701e9e1d4c031ef8e7ca1853d7eeb4211d3d6c3dfd6ab82ce3a4a",
   "purpose": "product-release-v1",
-  "requestDigest": "sha256:d10d5b2deacbbccd81e92318ad2243a00122708970949ac4a790a4c33a9376d6",
+  "requestDigest": "sha256:5128dfb18d5593787374a681f0e47199d655a949cfd3e63f3c74bbf44f088877",
   "requestId": "sign-product-release-current",
   "schema": {
     "digest": "sha256:282ff99e63de09ed110499534d04878b3a797870177c83ee5c6581c286ee5a5a",

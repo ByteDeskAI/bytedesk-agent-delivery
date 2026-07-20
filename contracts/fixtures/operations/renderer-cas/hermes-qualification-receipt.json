@@ -6,9 +6,9 @@
   },
   "attemptId": "qualify-hermes-amd64-1",
   "attemptFencingToken": 1,
-  "attemptAuthorityDigest": "sha256:a1998f9e9d81a56260b38f9599875c0b3d38db7e8e1f259eaeb3d0dd96f4d39f",
-  "attemptAuthenticationEvidenceDigest": "sha256:2b97e33e527d3e5900f945af25197664636724a857a63ee1b991213d2a36191d",
-  "qualificationSelectionDigest": "sha256:3d862fddc5eca041fda17ea13023a20116f6dc53e8225a3980e5e06e93df9c33",
+  "attemptAuthorityDigest": "sha256:23fa1ba58c06485a46759a8c411e7abc5ae772e7650f9830e42d45ff0ab9e442",
+  "attemptAuthenticationEvidenceDigest": "sha256:58770cb38f8def5319d19dc25eb6642ffbd9ea5799a46a0386758b387e785b1b",
+  "qualificationSelectionDigest": "sha256:30f440e8aaf7949994ecdf894db22720503873749a1c2c2b0c91be688c482838",
   "rendererReleaseDigest": "sha256:893672b4d661487e19aae81705da617afce1f400409b5e610fdfa0641ff7934b",
   "platform": "linux/amd64",
   "executedDistribution": {
@@ -21,9 +21,9 @@
       "digest": "sha256:a80850c38ad05f095146c0075910ced54b678a2975bb92611a83b810292de757"
     }
   },
-  "inputTreeDigest": "sha256:aef759c7efddb446cc219ca9e90dd99ab3e7acb4c903351b0a16a444c38ba4a0",
-  "contractBundleDigest": "sha256:245d144e29abd3cc8023a43a6cd8366484ffd8550311cce18d42282d8b46d7c2",
-  "qualificationSuiteDigest": "sha256:a7ababe043e74e70abe866293249e8f00159ab00ef520edd41f8d3b984c65148",
+  "inputTreeDigest": "sha256:797a305c06d6ae2bad41ad5d278a90aac4b8568b60ef368b162efaa1e9ef6e1c",
+  "contractBundleDigest": "sha256:00e015b2dea045c7bb14cdcd9c6c7c827812f5fae11a402a6010b4514a308b41",
+  "qualificationSuiteDigest": "sha256:fd9f5caa497e5c204b5be3f0e7014c74c0162af949c2115611b6370fce037842",
   "conformancePlanDigest": "sha256:02553fcdb228176babeafc445489685c040278e74fe8bcb2c3e4556d1d25fbaf",
   "inputCorpusDigest": "sha256:36d2ace03f79ea1827d60db53341635989941c7163c197a215b56938e1a80bf2",
   "evaluatorDistribution": {
@@ -38,11 +38,11 @@
   },
   "qualificationWorkerProfileDigest": "sha256:c4d654a66a90705f63c460fc725354866827f0186bee49fd7ae235643302c384",
   "qualificationProtocolProfileDigest": "sha256:135ad2dd7dec9cc416f3272c495521580b5972cfde50ea9876020a239b992f42",
-  "framedRequestDigest": "sha256:157a2ca9dd50561eadbd51c1450069ab3deb6d6442b2aa1a595191475446d40b",
-  "framedResponseDigest": "sha256:edea9a66b84eeec804c4987df265f8b57c9a6194dd6f18a830f5f8563ee72f42",
+  "framedRequestDigest": "sha256:474edd14b8da2cdc84849e5c3fa66c14689bfcdf45b64d7675948ffd03e131bf",
+  "framedResponseDigest": "sha256:3faa2424711184a01d9418a9e8fca7667a5c31c13ff386e76f678a423ca531bb",
   "evidenceTree": {
     "repository": "registry.example/product/qualification",
-    "digest": "sha256:a12a32e8f391804f3556d44e5f0772cfc67d85f36485a5e6b85c74efc4ea7459",
+    "digest": "sha256:7798c062bbeb107a32e866f694544f37ff7503023af65905a8d1b578bb22cc3a",
     "mediaType": "application/vnd.bytedesk.agent.renderer-qualification-evidence-tree.v1+json",
     "size": 44931,
     "trustPolicy": {
@@ -50,7 +50,7 @@
       "digest": "sha256:1f76531220688a488b931c4c5233ccb7064e359488f86d84f2d48a6d20dd8bb3"
     }
   },
-  "evidenceTreeDigest": "sha256:a12a32e8f391804f3556d44e5f0772cfc67d85f36485a5e6b85c74efc4ea7459",
+  "evidenceTreeDigest": "sha256:7798c062bbeb107a32e866f694544f37ff7503023af65905a8d1b578bb22cc3a",
   "sandboxProfileDigest": "sha256:bae8babbab7c350f637eece710c26874dc98aa90ad8f75f6c87adb3be9cfd804",
   "resourceProfileDigest": "sha256:a8ea63935f5ef460ec6a9db7a16303084da85e62bd3e5128c341cb5a8a897a89",
   "timeoutProfileDigest": "sha256:776ec5b10927a8c66a9d1655e02076a7cbbf6669458c81657d5380822a911000",

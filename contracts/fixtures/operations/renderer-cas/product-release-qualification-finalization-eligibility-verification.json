@@ -7,7 +7,7 @@
   "verificationId": "product-release-qualification-finalization-eligibility-verification",
   "subject": {
     "repository": "registry.example/product/status-eligibility",
-    "digest": "sha256:ffd4b1c0180b7e24024e4bec3f6743be33d64770661ab33bd8140f229ecca9b4",
+    "digest": "sha256:35ef02b4a4ab63625bc330ea02f45f5d8cbae8a2b6b2c4819b4eb68b2ef4f32b",
     "mediaType": "application/vnd.bytedesk.agent.release-status-eligibility-evidence.v1+json",
     "size": 23675,
     "trustPolicy": {
@@ -23,6 +23,6 @@
   "outcome": "permitted",
   "reasonCodes": [],
   "evidenceDigests": [
-    "sha256:85efd7fb5cbc5981ce18c3dc14732afc457a53793be59ea408c432e37c6444f5"
+    "sha256:8378e19d98260bc82bee70861a6c1dbd63ede6038b182c54f79bd68558f63ef9"
   ]
 }

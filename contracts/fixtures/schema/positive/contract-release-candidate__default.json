@@ -1,0 +1,13 @@
+{
+  "profile": "bytedesk.contract-release-candidate/1",
+  "sourceRepository": "ByteDeskAI/bytedesk-agent-delivery",
+  "sourceRef": "refs/tags/v1.0.0-contracts",
+  "sourceCommit": "1111111111111111111111111111111111111111",
+  "bundleDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "manifestDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "trustPolicy": {
+    "id": "contract-bundle-release-v1",
+    "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "authorityIssued": false
+}

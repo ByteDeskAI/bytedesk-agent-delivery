@@ -2186,6 +2186,62 @@
       "valid": false,
       "category": "negative",
       "expectedKeyword": "const"
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/contract-release-candidate__default.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-candidate/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/contract-release-candidate__authority-issued.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-candidate/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "const"
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/contract-release-signer-binding__default.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-signer-binding/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/contract-release-signer-binding__wrong-issuer.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-signer-binding/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "const"
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/contract-release-certification__default.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-certification/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/contract-release-certification__rebuild-mismatch.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-certification/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "const"
+    },
+    {
+      "path": "contracts/fixtures/schema/positive/contract-bundle-release-signing-evidence__default.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle-release-signing-evidence/1.0.0",
+      "valid": true,
+      "category": "positive",
+      "expectedKeyword": []
+    },
+    {
+      "path": "contracts/fixtures/schema/negative/contract-bundle-release-signing-evidence__consumer-permit-issued.json",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle-release-signing-evidence/1.0.0",
+      "valid": false,
+      "category": "negative",
+      "expectedKeyword": "const"
     }
   ]
 }

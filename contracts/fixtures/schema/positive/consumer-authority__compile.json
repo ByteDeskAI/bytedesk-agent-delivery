@@ -44,5 +44,5 @@
   "bindingDigest": "sha256:289530f1f0d95ede50ce24241ae5c0299443da30c84ee4c269c14e918a10e1ac",
   "candidateDigest": "sha256:48059a5b7f805f96d5a57157611d1a7067afec0fef3f0d79857953916c4aeb29",
   "desiredRevisionDigest": "sha256:1b77839011c8fc6563db26fc7c6bbd794a5a6779979cbc2e77cfe669798ad58a",
-  "authorizedPrivateInputDigest": "sha256:cf392db2f9957493bcab265c98fea64af72a59effb13bd93cae2ea2b29d2edbb"
+  "authorizedPrivateInputDigest": "sha256:acdc08462b84e4a47915b83004ef8df47702fe8d674964c985ef3cc9a3be2c5b"
 }

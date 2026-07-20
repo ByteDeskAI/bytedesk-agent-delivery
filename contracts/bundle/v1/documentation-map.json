@@ -58,6 +58,10 @@
       "digest": "sha256:b3fc2ddac6e1db3c412135be729ad1c2731db74b0d65388e0d568c7d992ecc3e"
     },
     {
+      "path": "docs/planning/tasks/contract-release-signer-tool.md",
+      "digest": "sha256:2a2cd61e89b66016e4894595f06da7c710cd631d6eebd0703cee2cebf1f41495"
+    },
+    {
       "path": "docs/standards/agent-binding-v1.md",
       "digest": "sha256:137830a41cbac741255439cac994092c65b97482f25189659dd36ba3ee9b41de"
     },
@@ -247,10 +251,34 @@
       ]
     },
     {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle-release-signing-evidence/1.0.0",
+      "documents": [
+        "docs/planning/tasks/contract-release-signer-tool.md"
+      ]
+    },
+    {
       "id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle/1.0.0",
       "documents": [
         "docs/standards/machine-contracts-v1.md",
         "docs/standards/oci-media-types-v1.md"
+      ]
+    },
+    {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-candidate/1.0.0",
+      "documents": [
+        "docs/planning/tasks/contract-release-signer-tool.md"
+      ]
+    },
+    {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-certification/1.0.0",
+      "documents": [
+        "docs/planning/tasks/contract-release-signer-tool.md"
+      ]
+    },
+    {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-signer-binding/1.0.0",
+      "documents": [
+        "docs/planning/tasks/contract-release-signer-tool.md"
       ]
     },
     {

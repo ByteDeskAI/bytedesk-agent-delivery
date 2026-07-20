@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-certification/1.0.0",
+  "title": "Sealed contract-release pre-sign certification",
+  "description": "Emitted by the sealed contract-release verifier's certify-contract-release-v1 subcommand. Proves the candidate bundle was independently rebuilt from the exact source commit/tree and matches byte-for-byte before signing is permitted. Never itself an authority grant.",
+  "type": "object",
+  "required": ["profile", "fullBundleNativeSemantics", "sourceLineage", "authorityIssued", "outcome"],
+  "properties": {
+    "profile": { "const": "bytedesk.contract-release-certification/1" },
+    "fullBundleNativeSemantics": { "const": true },
+    "sourceLineage": {
+      "type": "object",
+      "required": ["commit", "tree", "snapshotDigest", "commitMetadataDigest", "safeExtractionProfile", "treeObjectMatch", "rebuildBundleDigest", "rebuildManifestDigest", "byteForByteCandidateMatch"],
+      "properties": {
+        "commit": { "type": "string", "minLength": 40, "maxLength": 40, "pattern": "^[a-f0-9]{40}$" },
+        "tree": { "type": "string", "minLength": 40, "maxLength": 40, "pattern": "^[a-f0-9]{40}$" },
+        "snapshotDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "commitMetadataDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "safeExtractionProfile": { "const": "bytedesk.portable-path/1" },
+        "treeObjectMatch": { "const": true },
+        "rebuildBundleDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "rebuildManifestDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "byteForByteCandidateMatch": { "const": true }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "authorityIssued": { "const": false },
+    "outcome": { "const": "permitted_to_sign" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

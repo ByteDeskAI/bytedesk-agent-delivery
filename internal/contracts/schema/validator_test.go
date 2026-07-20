@@ -65,7 +65,7 @@ func TestValidateRepositoryAcceptsCheckedInContractSet(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if report.SchemaCount != 112 || report.FixtureCount != 312 || report.Outcome != "pass" {
+	if report.SchemaCount != 116 || report.FixtureCount != 320 || report.Outcome != "pass" {
 		t.Fatalf("unexpected checked-in contract report: %+v", report)
 	}
 }

@@ -1,0 +1,11 @@
+{
+  "profile": "bytedesk.contract-bundle-release-signing-evidence/1",
+  "verificationMode": "sigstore_contract_bundle_release",
+  "signatureAuthenticated": true,
+  "contractBundleSignatureIssued": true,
+  "consumerPermitIssued": true,
+  "fullBundleNativeSemantics": true,
+  "sourceLineageVerified": true,
+  "byteForByteSourceRebuildMatch": true,
+  "outcome": "signed_and_verified"
+}
