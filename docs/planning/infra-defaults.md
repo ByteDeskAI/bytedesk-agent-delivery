@@ -38,6 +38,28 @@ production KMS/Sigstore infrastructure. Every signing-shaped output must
 say so explicitly (`authorityIssued: false`, `testOnly: true`, or
 equivalent) rather than imply a real production signature.
 
+## Upstream artifact descriptors a task's schema requires but no earlier task produced yet
+
+Discovered while scoping AD-04: `render-manifest.schema.json` requires
+`productRelease`, `rendererRelease`, and `executedDistribution` fields, each
+an `artifactDescriptor` (OCI repository + digest + mediaType + size +
+trustPolicy). None of those exist without a working renderer registry,
+signed renderer release, and real sandbox execution first - i.e. almost
+every AD-04 acceptance criterion is gated on infrastructure several other
+required-work items also haven't built yet. This is not unique to AD-04;
+expect the same shape (a schema's required fields assuming an artifact only
+a later or sibling task produces) elsewhere in AD-05 through AD-14.
+
+Default: build a real, local, non-production "conformance registry" -
+locally generated OCI-shaped artifact descriptors (real digests over real
+bytes, real trust-policy references) signed only with the ephemeral test-key
+pattern above, exactly the way `bytedesk-agent-delivery`'s own
+`make verify` already builds two real bundles and signs them with
+`sign_test_ephemeral.py` to prove the pipeline end-to-end without a
+production release existing. Do not stub these fields with placeholder
+strings; compute them for real from locally-produced content so the
+schema/digest math is genuinely exercised, just not production-authorized.
+
 ## Third-party pinned evidence packages (e.g. `wayflowcore`)
 
 If a pinned evidence-only package used only for CI/certification comparison
