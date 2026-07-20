@@ -7,7 +7,7 @@
   "verificationId": "release-qualification-policy-finalization-verification",
   "subject": {
     "repository": "registry.example/product/qualification",
-    "digest": "sha256:fd9c9b6d96ceb1daae4d3c05c89ba04781445c765f53f0c542b80dfc3d6b4ee1",
+    "digest": "sha256:ef8edbf7bb34fff0eaacd405c7714cb9d909fed86423da3c8e66394431a409b7",
     "mediaType": "application/vnd.bytedesk.agent.release-qualification-policy.v1+json",
     "size": 2935,
     "trustPolicy": {
@@ -23,6 +23,6 @@
   "outcome": "permitted",
   "reasonCodes": [],
   "evidenceDigests": [
-    "sha256:1b72cfc2ef150ff8637d42d0e121e783904da05fb005e8eb23a065f420bdb6a9"
+    "sha256:a7eafeafbe84a7feffdc47c63a6ec13de8611227c75de94bfa39baae25e52a52"
   ]
 }

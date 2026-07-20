@@ -1,1 +1,0 @@
-{"profile":"bytedesk.release-qualification-details/1","qualificationSelectionDigest":"sha256:fd36bf7e297863a66751be879f1c9e2796d6aa47e9600508c2da4544d3fca821","requirementId":"every-renderer-executable-vulnerability","result":"pass","role":"vulnerability","subjectDigest":"sha256:89ec17af7fce61bc5c166b82f544a46c7466354fbd685bd1f25dccfb571efc85","subjectRole":"renderer_executable"}

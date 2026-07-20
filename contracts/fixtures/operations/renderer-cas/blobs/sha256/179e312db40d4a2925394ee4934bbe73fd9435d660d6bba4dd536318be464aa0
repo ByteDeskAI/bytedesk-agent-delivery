@@ -1,0 +1,1 @@
+{"profile":"bytedesk.release-qualification-details/1","qualificationSelectionDigest":"sha256:297d51a2239972725864f1838017b74292d764cd999f3ef6923001800945ef16","requirementId":"every-renderer-executable-provenance","result":"pass","role":"provenance","subjectDigest":"sha256:a8c5229342c5b810f6f945e3fb9ec3f17cb7ff63670c7ba02e37d1586596fb78","subjectRole":"renderer_executable"}

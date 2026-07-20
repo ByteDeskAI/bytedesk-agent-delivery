@@ -1,1 +1,0 @@
-{"profile":"bytedesk.release-qualification-details/1","qualificationSelectionDigest":"sha256:89d3c38532a4f01d73f1b34415f2f3ca604ca99f30ff385773e880fa7a19f3f2","requirementId":"every-renderer-executable-compatibility","result":"pass","role":"compatibility","subjectDigest":"sha256:849479ca28d77084d4a9b627937fbe10e5976df6c6935adeb628bb7a6fc36242","subjectRole":"renderer_executable"}

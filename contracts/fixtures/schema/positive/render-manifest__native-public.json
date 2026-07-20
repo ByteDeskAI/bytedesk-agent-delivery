@@ -17,7 +17,7 @@
   },
   "sourceKind": "agent",
   "agentSpecVersion": "26.1.2",
-  "effectiveInputDigest": "sha256:c1850a3b3c8f702b823d031e5c418de07a238c8d777ccebc7f5e9308c19eebd5",
+  "effectiveInputDigest": "sha256:02efcd53b2c249064f33515f981adcacc8affe7ede76ed9d6bd1bfcef294beb0",
   "publicSkills": [
     {
       "repository": "registry.example/catalog/skills",
@@ -56,7 +56,7 @@
     }
   },
   "platform": "linux/amd64",
-  "productDistributionDigest": "sha256:1af51b278afdda7c0918bb8138a35cb099f842896b5dd6e1d618eb7d816ef146",
+  "productDistributionDigest": "sha256:91821030adb42cf6bdc0df24890fd868874a4befea560759b16339692e8f1679",
   "compiledAllowlistDigest": "sha256:721f6fd733c4869522baaa4badeb8a3cdf25236b2a82660e1682e10f54245864",
   "rendererSchemas": [
     {
@@ -140,8 +140,8 @@
     ],
     "normalizationProfile": "bytedesk-render-normalization-v1",
     "capabilityDigest": "sha256:910f94cbabf02835e04fbdfcb72395767558375e90be3d8f187a405389c08e83",
-    "inputDigest": "sha256:c1850a3b3c8f702b823d031e5c418de07a238c8d777ccebc7f5e9308c19eebd5",
-    "coverageDigest": "sha256:02aaf73d70445c0ea9a3bb8821a63623bb10ac18afa719955f8fc38a616a6246",
+    "inputDigest": "sha256:02efcd53b2c249064f33515f981adcacc8affe7ede76ed9d6bd1bfcef294beb0",
+    "coverageDigest": "sha256:7d66617101e46f789b6cd24cc68c93c0bf4b8aad94dd88f4ea2ef92effd0804d",
     "outcome": "exact",
     "semanticResults": [
       {
@@ -160,7 +160,7 @@
     "capabilityCoverageDigest": "sha256:2b98c968075a101dd8d845009cae1d72354d7bf7b550e4ba6ef0c36c1b175408",
     "productRelease": {
       "repository": "registry.example/product/agent-delivery",
-      "digest": "sha256:dfa4a106daf8ac9fbfd25c36358d7a731ca9b56390becf7b3d9fcb79fac80683",
+      "digest": "sha256:504733c0e6c8743e3105d4319d0eac619c18f7a91641b4aed81457a6670dfed3",
       "mediaType": "application/vnd.bytedesk.agent.product-release-manifest.v1+json",
       "size": 8598,
       "trustPolicy": {
@@ -168,7 +168,7 @@
         "digest": "sha256:a80850c38ad05f095146c0075910ced54b678a2975bb92611a83b810292de757"
       }
     },
-    "productDistributionDigest": "sha256:1af51b278afdda7c0918bb8138a35cb099f842896b5dd6e1d618eb7d816ef146",
+    "productDistributionDigest": "sha256:91821030adb42cf6bdc0df24890fd868874a4befea560759b16339692e8f1679",
     "rendererVersion": "1.0.0"
   },
   "files": [
@@ -198,10 +198,10 @@
     "archiveProfile": "bytedesk-render-archive-v1",
     "treeDigest": "sha256:76bb61b9097aadcc1a4a6d2a8e2a8a035b60482884a914fcd236be1cc8cbb83b"
   },
-  "reproducibilityDigest": "sha256:900d32b66149f140d2f7e23c684ee95ef8dfe5d9cc0649676c9175a1c809d254",
+  "reproducibilityDigest": "sha256:4136bed6301fce6ced0bf382a004987c240fc20018a63f169545fe60288e26b8",
   "productRelease": {
     "repository": "registry.example/product/agent-delivery",
-    "digest": "sha256:dfa4a106daf8ac9fbfd25c36358d7a731ca9b56390becf7b3d9fcb79fac80683",
+    "digest": "sha256:504733c0e6c8743e3105d4319d0eac619c18f7a91641b4aed81457a6670dfed3",
     "mediaType": "application/vnd.bytedesk.agent.product-release-manifest.v1+json",
     "size": 8598,
     "trustPolicy": {

@@ -1,0 +1,11 @@
+{
+  "profile": "bytedesk.contract-release-signer-binding/1",
+  "certificateOidcIssuer": "https://token.actions.githubusercontent.com",
+  "certificateIdentity": "https://github.com/ByteDeskAI/bytedesk-agent-delivery/.github/workflows/contract-release-signer.yml@refs/tags/v1.0.0-contracts",
+  "sourceRepository": "ByteDeskAI/bytedesk-agent-delivery",
+  "sourceRef": "refs/tags/v1.0.0-contracts",
+  "sourceCommit": "1111111111111111111111111111111111111111",
+  "workflowTrigger": "workflow_dispatch",
+  "builderDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "outcome": "permitted_to_sign"
+}

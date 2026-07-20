@@ -1,0 +1,17 @@
+{
+  "profile": "bytedesk.contract-release-certification/1",
+  "fullBundleNativeSemantics": true,
+  "sourceLineage": {
+    "commit": "1111111111111111111111111111111111111111",
+    "tree": "2222222222222222222222222222222222222222",
+    "snapshotDigest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "commitMetadataDigest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "safeExtractionProfile": "bytedesk.portable-path/1",
+    "treeObjectMatch": true,
+    "rebuildBundleDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "rebuildManifestDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "byteForByteCandidateMatch": true
+  },
+  "authorityIssued": false,
+  "outcome": "permitted_to_sign"
+}

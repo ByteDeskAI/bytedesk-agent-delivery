@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-signer-binding/1.0.0",
+  "title": "Sealed contract-release signer permission binding",
+  "description": "Emitted by the sealed contract-release verifier's certify-contract-release-v1 subcommand before any Sigstore signature is produced. Binds the caller's OIDC-derived certificate identity to the exact source revision and builder that are permitted to sign.",
+  "type": "object",
+  "required": ["profile", "certificateOidcIssuer", "certificateIdentity", "sourceRepository", "sourceRef", "sourceCommit", "workflowTrigger", "builderDigest", "outcome"],
+  "properties": {
+    "profile": { "const": "bytedesk.contract-release-signer-binding/1" },
+    "certificateOidcIssuer": { "const": "https://token.actions.githubusercontent.com" },
+    "certificateIdentity": {
+      "type": "string",
+      "maxLength": 2048,
+      "pattern": "^https://github\\.com/[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9._-]{1,100}/\\.github/workflows/[A-Za-z0-9._-]+\\.yml@.+$"
+    },
+    "sourceRepository": {
+      "type": "string",
+      "maxLength": 140,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9._-]{1,100}$"
+    },
+    "sourceRef": {
+      "type": "string",
+      "maxLength": 512,
+      "pattern": "^refs/(heads|tags)/.+$"
+    },
+    "sourceCommit": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 40,
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "workflowTrigger": { "const": "workflow_dispatch" },
+    "builderDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "outcome": { "const": "permitted_to_sign" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

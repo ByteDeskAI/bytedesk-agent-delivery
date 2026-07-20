@@ -102,9 +102,29 @@
       "digest": "sha256:24c4e7aecf25d16cf7d3aa768fe09ca9508e6db667e0a282b95c9dd68370fea0"
     },
     {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle-release-signing-evidence/1.0.0",
+      "path": "contracts/schemas/v1/contract-bundle-release-signing-evidence.schema.json",
+      "digest": "sha256:04bd2f77e2f307a7e8c7b74086dac6b381a431db74d5dde40eb01fb61423323c"
+    },
+    {
       "id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle/1.0.0",
       "path": "contracts/schemas/v1/contract-bundle.schema.json",
       "digest": "sha256:c837834d0ae9241ca27065221d91ade54090f7c62026db4580b03f5d078cdf8a"
+    },
+    {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-candidate/1.0.0",
+      "path": "contracts/schemas/v1/contract-release-candidate.schema.json",
+      "digest": "sha256:a71c542b79bdcc7cdfb82504e8a36de0489245ec01699d0f17ada9a5173afc56"
+    },
+    {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-certification/1.0.0",
+      "path": "contracts/schemas/v1/contract-release-certification.schema.json",
+      "digest": "sha256:1df587c07340f01f1c4526b04282cd496d31eeee8d9956a1e520930cd1a697fa"
+    },
+    {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-signer-binding/1.0.0",
+      "path": "contracts/schemas/v1/contract-release-signer-binding.schema.json",
+      "digest": "sha256:63081bb73a98f8ef4cc6a6cecd8ca9f5ea0048a9069dc9bf6861a7e0ca121e00"
     },
     {
       "id": "https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0",

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-release-candidate/1.0.0",
+  "title": "Unprivileged contract-release candidate metadata",
+  "description": "Produced by contract-release.yml's unprivileged build-candidate job before any signing authority exists. Deliberately has no schema self-descriptor field: it is emitted by a plain jq -cnS invocation, not the common {contract, schema} preamble, and its key set is closed by the calling workflow's own jq -e check.",
+  "type": "object",
+  "required": ["authorityIssued", "bundleDigest", "manifestDigest", "profile", "sourceCommit", "sourceRef", "sourceRepository", "trustPolicy"],
+  "properties": {
+    "profile": { "const": "bytedesk.contract-release-candidate/1" },
+    "sourceRepository": {
+      "type": "string",
+      "maxLength": 140,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9._-]{1,100}$",
+      "description": "GITHUB_REPOSITORY owner/repo, not an OCI repository: GitHub owner segments allow uppercase."
+    },
+    "sourceRef": {
+      "type": "string",
+      "maxLength": 512,
+      "pattern": "^refs/(heads|tags)/.+$"
+    },
+    "sourceCommit": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 40,
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "bundleDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "manifestDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+    "authorityIssued": { "const": false }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

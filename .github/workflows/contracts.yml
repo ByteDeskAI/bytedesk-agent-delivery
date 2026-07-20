@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 20
     env:
       CONTRACT_TRUST_POLICY_ID: contract-bundle-release-v1
-      CONTRACT_TRUST_POLICY_DIGEST: sha256:473040213be733a68e94083ca8289cf9e25ad555c139a9d3e947eca0f3edc091
+      CONTRACT_TRUST_POLICY_DIGEST: sha256:06d5e1753c474820c217806a7dbf1ad5947e106b8a0309fa09a77ec920ff3131
     steps:
       - name: Check out exact source
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1

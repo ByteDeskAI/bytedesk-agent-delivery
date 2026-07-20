@@ -38,14 +38,14 @@
   ],
   "fixtureIndex": {
     "path": "fixtures/schema/index.json",
-    "digest": "sha256:05efba18d1021fdf86b6f17e794069d12044fc065891f4412e7b6d7a058af691",
-    "size": 74103,
+    "digest": "sha256:888b7fbda7ac98b795e2d7797d266a1649b11ea186102655e470168dd5370e3e",
+    "size": 76137,
     "mode": "0644"
   },
   "schemaInventory": {
     "path": "schema-inventory.json",
-    "digest": "sha256:0fb09810cb4eadec5a15ec09545b131925e7938ebba7b502131c57194b86e48b",
-    "size": 26053,
+    "digest": "sha256:fc9b3073be4b5736f99d11dd08f8c6b76076883a83562cd330fa78f7f3a061f6",
+    "size": 27059,
     "mode": "0644"
   },
   "compatibility": {
@@ -56,11 +56,11 @@
   },
   "documentationMap": {
     "path": "documentation-map.json",
-    "digest": "sha256:5101d0f0a1c054f1b270962a42837b082a2fa607234272088ac59b9e831c7368",
-    "size": 25246,
+    "digest": "sha256:6f99447d5005ab8ddd782e12510fa810b87f491fccb3344bceb346f599165341",
+    "size": 26039,
     "mode": "0644"
   },
-  "buildInputDigest": "sha256:a57d9c4eae42bc6704e9f4ed6350e4623f1888b35ac3b3c24c5de1e1752a84c6",
+  "buildInputDigest": "sha256:afaacea5ef33ffcce48e422830364d70bbc430f6aaa017c764165cf446e1b1df",
   "trustPolicy": {
     "id": "contract-bundle-release-v1",
     "digest": "sha256:c02ce83cb387f9d51b97b3bee467157a217e4cf3ed79c8710183f9f3623bf4f5"
