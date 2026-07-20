@@ -204,7 +204,7 @@ The canonical decision sources for this task are the
   authority.
 - [x] The downstream contract coverage matrix has no missing required port,
   schema, error family, lifecycle, security boundary, or verification owner.
-- [ ] Full repository validation, all contract/conformance tests, and focused
+- [x] Full repository validation, all contract/conformance tests, and focused
   independent audits pass; the task commit is pushed.
 
 ### Evidence
@@ -281,9 +281,17 @@ The canonical decision sources for this task are the
 - A clean `make verify` run from the current working tree passed end to end,
   including both independent bundle rebuilds, byte-identical comparison,
   ephemeral test signing, and all replay/tamper/trailing-byte/repository-only
-  denial cases. Remote push, pull-request reporting, and GitHub Actions
-  evidence for this content commit remain to be recorded once the commit is
-  pushed.
+  denial cases.
+- Content commit `ec9e14dde72ea5b08113c29cf7646227c0ee0a09` (`docs: record
+  downstream contract freeze evidence`) was pushed to
+  `origin/agent/contracts-frozen-readiness` and is reported by
+  [pull request #19](https://github.com/ByteDeskAI/bytedesk-agent-delivery/pull/19)
+  against `main`. GitHub Actions `contracts` runs
+  [29763367149](https://github.com/ByteDeskAI/bytedesk-agent-delivery/actions/runs/29763367149)
+  (push) and
+  [29763369575](https://github.com/ByteDeskAI/bytedesk-agent-delivery/actions/runs/29763369575)
+  (pull_request) both completed with conclusion `success` on this exact commit,
+  each archiving a `contract-verification-<sha>` evidence artifact.
 
 ## Completion condition
 
