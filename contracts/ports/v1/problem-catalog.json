@@ -1,0 +1,643 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-catalog/1.0.0",
+  "profile": "bytedesk.problem-catalog/1",
+  "version": 1,
+  "problems": [
+    {
+      "code": "action_cancelled",
+      "type": "https://problems.bytedesk.ai/agent-delivery/action-cancelled",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "committed-unchanged"
+      ],
+      "cliExit": 11
+    },
+    {
+      "code": "action_terminal_failed",
+      "type": "https://problems.bytedesk.ai/agent-delivery/action-terminal-failed",
+      "status": 500,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "committed-unchanged"
+      ],
+      "cliExit": 10
+    },
+    {
+      "code": "archive_restore_failed",
+      "type": "https://problems.bytedesk.ai/agent-delivery/archive-restore-failed",
+      "status": 502,
+      "retryable": true,
+      "sideEffectStates": [
+        "commit-unknown"
+      ],
+      "cliExit": 9
+    },
+    {
+      "code": "artifact_unsafe",
+      "type": "https://problems.bytedesk.ai/agent-delivery/artifact-unsafe",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 3
+    },
+    {
+      "code": "authentication_failed",
+      "type": "https://problems.bytedesk.ai/agent-delivery/authentication-failed",
+      "status": 401,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 6
+    },
+    {
+      "code": "authority_denied",
+      "type": "https://problems.bytedesk.ai/agent-delivery/authority-denied",
+      "status": 403,
+      "retryable": false,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 7
+    },
+    {
+      "code": "authority_invalid",
+      "type": "https://problems.bytedesk.ai/agent-delivery/authority-invalid",
+      "status": 403,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 5
+    },
+    {
+      "code": "authorization_denied",
+      "type": "https://problems.bytedesk.ai/agent-delivery/authorization-denied",
+      "status": 403,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 7
+    },
+    {
+      "code": "capability_denial_not_proven",
+      "type": "https://problems.bytedesk.ai/agent-delivery/capability-denial-not-proven",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 10
+    },
+    {
+      "code": "capability_transport_failed",
+      "type": "https://problems.bytedesk.ai/agent-delivery/capability-transport-failed",
+      "status": 502,
+      "retryable": true,
+      "sideEffectStates": [
+        "none",
+        "commit-unknown"
+      ],
+      "cliExit": 9
+    },
+    {
+      "code": "client_wait_timeout",
+      "type": "https://problems.bytedesk.ai/agent-delivery/client-wait-timeout",
+      "status": 504,
+      "retryable": true,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 12
+    },
+    {
+      "code": "compatibility_denied",
+      "type": "https://problems.bytedesk.ai/agent-delivery/compatibility-denied",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 4
+    },
+    {
+      "code": "compile_commit_unknown",
+      "type": "https://problems.bytedesk.ai/agent-delivery/compile-commit-unknown",
+      "status": 503,
+      "retryable": true,
+      "sideEffectStates": [
+        "none",
+        "commit-unknown"
+      ],
+      "cliExit": 9
+    },
+    {
+      "code": "compile_denied",
+      "type": "https://problems.bytedesk.ai/agent-delivery/compile-denied",
+      "status": 403,
+      "retryable": false,
+      "sideEffectStates": [
+        "not-committed"
+      ],
+      "cliExit": 7
+    },
+    {
+      "code": "consistency_proof_invalid",
+      "type": "https://problems.bytedesk.ai/agent-delivery/consistency-proof-invalid",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 5
+    },
+    {
+      "code": "dependency_unavailable",
+      "type": "https://problems.bytedesk.ai/agent-delivery/dependency-unavailable",
+      "status": 503,
+      "retryable": true,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 9
+    },
+    {
+      "code": "desired_state_cas_mismatch",
+      "type": "https://problems.bytedesk.ai/agent-delivery/desired-state-cas-mismatch",
+      "status": 412,
+      "retryable": false,
+      "sideEffectStates": [
+        "not-committed"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "desired_state_commit_unknown",
+      "type": "https://problems.bytedesk.ai/agent-delivery/desired-state-commit-unknown",
+      "status": 503,
+      "retryable": true,
+      "sideEffectStates": [
+        "commit-unknown"
+      ],
+      "cliExit": 9
+    },
+    {
+      "code": "desired_state_history_gap",
+      "type": "https://problems.bytedesk.ai/agent-delivery/desired-state-history-gap",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "desired_state_wrong_writer",
+      "type": "https://problems.bytedesk.ai/agent-delivery/desired-state-wrong-writer",
+      "status": 403,
+      "retryable": false,
+      "sideEffectStates": [
+        "not-committed"
+      ],
+      "cliExit": 7
+    },
+    {
+      "code": "digest_mismatch",
+      "type": "https://problems.bytedesk.ai/agent-delivery/digest-mismatch",
+      "status": 412,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 3
+    },
+    {
+      "code": "event_sequence_gap",
+      "type": "https://problems.bytedesk.ai/agent-delivery/event-sequence-gap",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "evidence_invalid",
+      "type": "https://problems.bytedesk.ai/agent-delivery/evidence-invalid",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 5
+    },
+    {
+      "code": "external_input_unpinned",
+      "type": "https://problems.bytedesk.ai/agent-delivery/external-input-unpinned",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 2
+    },
+    {
+      "code": "host_fenced",
+      "type": "https://problems.bytedesk.ai/agent-delivery/host-fenced",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "host_readback_mismatch",
+      "type": "https://problems.bytedesk.ai/agent-delivery/host-readback-mismatch",
+      "status": 500,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "commit-unknown"
+      ],
+      "cliExit": 10
+    },
+    {
+      "code": "host_switch_indeterminate",
+      "type": "https://problems.bytedesk.ai/agent-delivery/host-switch-indeterminate",
+      "status": 503,
+      "retryable": true,
+      "sideEffectStates": [
+        "none",
+        "commit-unknown"
+      ],
+      "cliExit": 9
+    },
+    {
+      "code": "host_switch_unsafe",
+      "type": "https://problems.bytedesk.ai/agent-delivery/host-switch-unsafe",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "not-committed"
+      ],
+      "cliExit": 10
+    },
+    {
+      "code": "idempotency_collision",
+      "type": "https://problems.bytedesk.ai/agent-delivery/idempotency-collision",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "invalid_request",
+      "type": "https://problems.bytedesk.ai/agent-delivery/invalid-request",
+      "status": 400,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 2
+    },
+    {
+      "code": "migration_quiesce_required",
+      "type": "https://problems.bytedesk.ai/agent-delivery/migration-quiesce-required",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "not-committed"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "precondition_failed",
+      "type": "https://problems.bytedesk.ai/agent-delivery/precondition-failed",
+      "status": 412,
+      "retryable": false,
+      "sideEffectStates": [
+        "not-committed"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "private_data_exposure",
+      "type": "https://problems.bytedesk.ai/agent-delivery/private-data-exposure",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 7
+    },
+    {
+      "code": "promotion_evidence_missing",
+      "type": "https://problems.bytedesk.ai/agent-delivery/promotion-evidence-missing",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 10
+    },
+    {
+      "code": "protocol_violation",
+      "type": "https://problems.bytedesk.ai/agent-delivery/protocol-violation",
+      "status": 400,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 13
+    },
+    {
+      "code": "publication_commit_unknown",
+      "type": "https://problems.bytedesk.ai/agent-delivery/publication-commit-unknown",
+      "status": 503,
+      "retryable": true,
+      "sideEffectStates": [
+        "commit-unknown"
+      ],
+      "cliExit": 9
+    },
+    {
+      "code": "region_epoch_stale",
+      "type": "https://problems.bytedesk.ai/agent-delivery/region-epoch-stale",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "region_fence_unproven",
+      "type": "https://problems.bytedesk.ai/agent-delivery/region-fence-unproven",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 10
+    },
+    {
+      "code": "registry_commit_unknown",
+      "type": "https://problems.bytedesk.ai/agent-delivery/registry-commit-unknown",
+      "status": 503,
+      "retryable": true,
+      "sideEffectStates": [
+        "commit-unknown"
+      ],
+      "cliExit": 9
+    },
+    {
+      "code": "renderer_not_allowlisted",
+      "type": "https://problems.bytedesk.ai/agent-delivery/renderer-not-allowlisted",
+      "status": 403,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 4
+    },
+    {
+      "code": "renderer_output_invalid",
+      "type": "https://problems.bytedesk.ai/agent-delivery/renderer-output-invalid",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 3
+    },
+    {
+      "code": "resource_not_found",
+      "type": "https://problems.bytedesk.ai/agent-delivery/resource-not-found",
+      "status": 404,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 3
+    },
+    {
+      "code": "rollout_state_conflict",
+      "type": "https://problems.bytedesk.ai/agent-delivery/rollout-state-conflict",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "schema_mismatch",
+      "type": "https://problems.bytedesk.ai/agent-delivery/schema-mismatch",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 3
+    },
+    {
+      "code": "signer_purpose_mismatch",
+      "type": "https://problems.bytedesk.ai/agent-delivery/signer-purpose-mismatch",
+      "status": 403,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 5
+    },
+    {
+      "code": "signing_failed",
+      "type": "https://problems.bytedesk.ai/agent-delivery/signing-failed",
+      "status": 502,
+      "retryable": true,
+      "sideEffectStates": [
+        "none",
+        "not-committed",
+        "commit-unknown"
+      ],
+      "cliExit": 9
+    },
+    {
+      "code": "skill_approval_invalid",
+      "type": "https://problems.bytedesk.ai/agent-delivery/skill-approval-invalid",
+      "status": 403,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 5
+    },
+    {
+      "code": "source_not_immutable",
+      "type": "https://problems.bytedesk.ai/agent-delivery/source-not-immutable",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 3
+    },
+    {
+      "code": "status_head_fork",
+      "type": "https://problems.bytedesk.ai/agent-delivery/status-head-fork",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "status_head_rollback",
+      "type": "https://problems.bytedesk.ai/agent-delivery/status-head-rollback",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "status_head_unavailable",
+      "type": "https://problems.bytedesk.ai/agent-delivery/status-head-unavailable",
+      "status": 503,
+      "retryable": true,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 9
+    },
+    {
+      "code": "trust_pin_activation_commit_unknown",
+      "type": "https://problems.bytedesk.ai/agent-delivery/trust-pin-activation-commit-unknown",
+      "status": 503,
+      "retryable": true,
+      "sideEffectStates": [
+        "commit-unknown"
+      ],
+      "cliExit": 9
+    },
+    {
+      "code": "trust_pin_equivocation",
+      "type": "https://problems.bytedesk.ai/agent-delivery/trust-pin-equivocation",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "trust_pin_rollback",
+      "type": "https://problems.bytedesk.ai/agent-delivery/trust-pin-rollback",
+      "status": 409,
+      "retryable": false,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 8
+    },
+    {
+      "code": "trust_policy_expired",
+      "type": "https://problems.bytedesk.ai/agent-delivery/trust-policy-expired",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 5
+    },
+    {
+      "code": "trust_policy_not_eligible",
+      "type": "https://problems.bytedesk.ai/agent-delivery/trust-policy-not-eligible",
+      "status": 403,
+      "retryable": false,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 5
+    },
+    {
+      "code": "trust_policy_revoked",
+      "type": "https://problems.bytedesk.ai/agent-delivery/trust-policy-revoked",
+      "status": 403,
+      "retryable": false,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 5
+    },
+    {
+      "code": "trust_verification_failed",
+      "type": "https://problems.bytedesk.ai/agent-delivery/trust-verification-failed",
+      "status": 422,
+      "retryable": false,
+      "sideEffectStates": [
+        "none",
+        "not-committed"
+      ],
+      "cliExit": 5
+    },
+    {
+      "code": "unsupported_version",
+      "type": "https://problems.bytedesk.ai/agent-delivery/unsupported-version",
+      "status": 400,
+      "retryable": false,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 4
+    },
+    {
+      "code": "worker_protocol_failed",
+      "type": "https://problems.bytedesk.ai/agent-delivery/worker-protocol-failed",
+      "status": 502,
+      "retryable": true,
+      "sideEffectStates": [
+        "none"
+      ],
+      "cliExit": 13
+    }
+  ]
+}

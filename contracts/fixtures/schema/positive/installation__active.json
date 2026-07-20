@@ -1,0 +1,16 @@
+{
+  "contract": "bytedesk.installation/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0", "digest": "sha256:af01882c9dc8dbf80fc753f148a35fd916d4bdbe5d93b6a8938c0b10f58ff8dc" },
+  "installationId": "installation-01",
+  "consumerId": "consumer-01",
+  "subjectId": "subject-01",
+  "harnessId": "hermes",
+  "targetId": "target-01",
+  "state": "active",
+  "revision": 2,
+  "precondition": { "kind": "match", "revision": 1, "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+  "predecessor": { "kind": "match", "revision": 1, "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+  "binding": { "repository": "registry.example/consumer/bindings", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "mediaType": "application/vnd.bytedesk.agent.binding.v1+json", "size": 2048, "trustPolicy": { "id": "consumer-authority-v1", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" } },
+  "createdAt": "2026-07-17T12:00:00Z",
+  "updatedAt": "2026-07-17T12:01:00Z"
+}

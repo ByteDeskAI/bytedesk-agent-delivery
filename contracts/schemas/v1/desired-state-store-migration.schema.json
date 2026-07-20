@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/desired-state-store-migration/1.0.0",
+  "title": "Quiesced single-writer DesiredStateStore migration checkpoint",
+  "type": "object",
+  "required": ["contract", "schema", "migrationId", "sourceStoreId", "targetStoreId", "regionEpoch", "quiesceFence", "historyRootDigest", "targets", "sourceExportProof", "targetImportProof", "state", "cutover", "predecessor", "createdAt", "updatedAt"],
+  "properties": {
+    "contract": { "const": "bytedesk.desired-state-store-migration/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "migrationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "sourceStoreId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetStoreId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "regionEpoch": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "quiesceFence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "historyRootDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "required": ["consumerId", "targetId", "revision", "digest", "historyDigest"],
+        "properties": {
+          "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "revision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+          "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+          "historyDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    },
+    "sourceExportProof": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/redactedEvidenceRef" },
+    "targetImportProof": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/redactedEvidenceRef" },
+    "state": { "type": "string", "enum": ["prepared", "quiesced", "exported", "imported", "verified", "cutover", "failed"] },
+    "cutover": {
+      "oneOf": [
+        { "type": "object", "required": ["decision"], "properties": { "decision": { "const": "pending" } }, "additionalProperties": false, "unevaluatedProperties": false },
+        { "type": "object", "required": ["decision", "selectedStoreId", "decidedAt", "evidence"], "properties": { "decision": { "const": "committed" }, "selectedStoreId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }, "decidedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }, "evidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/redactedEvidenceRef" } }, "additionalProperties": false, "unevaluatedProperties": false }
+      ]
+    },
+    "problem": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0" },
+    "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0" },
+    "createdAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "updatedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+  },
+  "allOf": [
+    { "if": { "properties": { "state": { "const": "cutover" } }, "required": ["state"] }, "then": { "properties": { "cutover": { "properties": { "decision": { "const": "committed" } }, "required": ["decision"] } }, "not": { "required": ["problem"] } } },
+    { "if": { "properties": { "state": { "const": "failed" } }, "required": ["state"] }, "then": { "required": ["problem"], "properties": { "cutover": { "properties": { "decision": { "const": "pending" } }, "required": ["decision"] } } } }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Migration is quiesced and audited. Source and target history roots must match before one explicit cutover; live dual writing is forbidden."
+}

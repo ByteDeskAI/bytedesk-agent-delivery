@@ -1,0 +1,34 @@
+{
+  "contract": "bytedesk.identity-registration-manifest/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/identity-registration-manifest/1.0.0",
+    "digest": "sha256:14372f811c08d3bf65cb3920eab5877b77068ccae54888017df9706c86d0943f"
+  },
+  "trustDomain": "agent-delivery.example",
+  "entries": [
+    {
+      "spiffeId": "spiffe://agent-delivery.example/api",
+      "nodeAlias": "eks-production",
+      "namespace": "agent-delivery",
+      "serviceAccount": "api",
+      "containerName": "api",
+      "imageDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "operations": [
+        "accept_commands",
+        "read_catalog"
+      ]
+    }
+  ],
+  "precondition": {
+    "kind": "absent"
+  },
+  "predecessor": {
+    "kind": "none"
+  },
+  "approvedAt": "2026-07-17T12:00:00Z",
+  "trustPolicy": {
+    "id": "product-release-v1",
+    "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "unknownAuthority": true
+}

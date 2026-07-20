@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-qualification-finalization-matrix/1.0.0",
+  "title": "Complete release-qualification finalization matrix",
+  "x-bytedesk-digestAuthority": {
+    "profile": "bytedesk.release-qualification-finalization-matrix/1",
+    "exclude": ["contract", "schema", "matrixDigest"]
+  },
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "productRelease",
+    "qualificationPolicy",
+    "qualificationSuite",
+    "rendererEntries",
+    "evidence",
+    "matrixDigest"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.release-qualification-finalization-matrix/1" },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "productRelease": { "$ref": "#/$defs/productReleaseDescriptor" },
+    "qualificationPolicy": { "$ref": "#/$defs/qualificationPolicyDescriptor" },
+    "qualificationSuite": { "$ref": "#/$defs/qualificationSuiteDescriptor" },
+    "rendererEntries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/rendererEntry" },
+      "description": "Exactly one entry for every renderer release and target platform required by the product release. Entries are in ascending UTF-8 byte order by rendererRelease.digest then platform."
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/qualificationEvidenceDescriptor" },
+      "description": "The exact complete expanded policy/suite evidence set, ordered by subject role, subject digest, role, and evidence digest."
+    },
+    "matrixDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "typedDescriptor": {
+      "type": "object",
+      "required": ["repository", "digest", "mediaType", "size", "trustPolicy"],
+      "properties": {
+        "repository": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/ociRepository" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "mediaType": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/mediaType" },
+        "size": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonNegativeSafeInteger" },
+        "trustPolicy": {
+          "type": "object",
+          "required": ["id", "digest"],
+          "properties": {
+            "id": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+            "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "productReleaseDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/typedDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.product-release-manifest.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "product-release-v1" } }, "required": ["id"] }
+          }
+        }
+      ]
+    },
+    "rendererReleaseDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/typedDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.renderer-release.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "product-release-v1" } }, "required": ["id"] }
+          }
+        }
+      ]
+    },
+    "qualificationPolicyDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/typedDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.release-qualification-policy.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "release-qualification-policy-v1" } }, "required": ["id"] }
+          }
+        }
+      ]
+    },
+    "qualificationSuiteDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/typedDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.renderer-qualification-suite.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "release-qualification-policy-v1" } }, "required": ["id"] }
+          }
+        }
+      ]
+    },
+    "qualificationSelectionDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/typedDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.renderer-qualification-selection.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "release-qualification-attempt-v1" } }, "required": ["id"] }
+          }
+        }
+      ]
+    },
+    "qualificationAttemptDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/typedDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.renderer-qualification-attempt.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "release-qualification-attempt-v1" } }, "required": ["id"] }
+          }
+        }
+      ]
+    },
+    "qualificationAttemptAuthenticationDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/typedDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.renderer-qualification-attempt-authentication-evidence.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "release-qualification-attempt-v1" } }, "required": ["id"] }
+          }
+        }
+      ]
+    },
+    "qualificationReceiptDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/typedDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.renderer-qualification-receipt.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "release-qualification-receipt-v1" } }, "required": ["id"] }
+          }
+        }
+      ]
+    },
+    "qualificationReceiptAuthenticationDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/typedDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.renderer-qualification-receipt-authentication-evidence.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "release-qualification-receipt-v1" } }, "required": ["id"] }
+          }
+        }
+      ]
+    },
+    "qualificationEvidenceDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/typedDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.release-qualification-evidence.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "release-qualification-evidence-v1" } }, "required": ["id"] }
+          }
+        }
+      ]
+    },
+    "rendererEntry": {
+      "type": "object",
+      "required": [
+        "rendererRelease",
+        "platform",
+        "qualificationSelection",
+        "qualificationAttempt",
+        "qualificationAttemptAuthenticationEvidence",
+        "qualificationReceipt",
+        "qualificationReceiptAuthenticationEvidence"
+      ],
+      "properties": {
+        "rendererRelease": { "$ref": "#/$defs/rendererReleaseDescriptor" },
+        "platform": { "type": "string", "enum": ["linux/amd64", "linux/arm64"] },
+        "qualificationSelection": { "$ref": "#/$defs/qualificationSelectionDescriptor" },
+        "qualificationAttempt": { "$ref": "#/$defs/qualificationAttemptDescriptor" },
+        "qualificationAttemptAuthenticationEvidence": { "$ref": "#/$defs/qualificationAttemptAuthenticationDescriptor" },
+        "qualificationReceipt": { "$ref": "#/$defs/qualificationReceiptDescriptor" },
+        "qualificationReceiptAuthenticationEvidence": { "$ref": "#/$defs/qualificationReceiptAuthenticationDescriptor" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "The deterministic, descriptor-complete input matrix for release qualification. Semantic verification resolves every descriptor by exact digest, requires each body and authentication evidence to match its descriptor and role, requires a complete duplicate-free renderer/platform expansion and exact suite coverage, and rejects selection, attempt, receipt, evidence, or subject substitution."
+}

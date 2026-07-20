@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/action-catalog/1.0.0",
+  "profile": "bytedesk.action-catalog/1",
+  "version": 1,
+  "actions": [
+    {
+      "kind": "validate",
+      "portId": "bytedesk.port.agent-spec-validator/1",
+      "operationId": "validate-agent-spec",
+      "requestContract": "bytedesk.port.agent-spec-validator.validate-agent-spec.request/1",
+      "resultContractClass": "resource",
+      "terminalResultContract": "bytedesk.action-result.validate/1",
+      "ownerTask": "AD-04",
+      "cancellableUntil": "before-worker-dispatch",
+      "idempotency": "canonical request digest",
+      "failureCodes": [
+        "invalid_request",
+        "schema_mismatch",
+        "unsupported_version",
+        "artifact_unsafe"
+      ]
+    }
+  ]
+}

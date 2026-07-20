@@ -1,0 +1,12 @@
+{
+  "contract": "bytedesk.application-config/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/application-config/1.0.0", "digest": "sha256:c511cf947623a6e473d51f7b6c695246684863eee72862d247e43f39e34410e8" },
+  "mode": "api",
+  "listen": { "address": "0.0.0.0", "port": 8443 },
+  "database": { "endpoint": "postgresql.internal:5432", "database": "agent_delivery", "role": "api", "tlsMode": "verify-full" },
+  "registry": "https://registry.example",
+  "archive": "https://archive.example",
+  "identity": "spiffe://agent-delivery.example/api",
+  "telemetry": "https://otel.example",
+  "limits": { "objectBytes": 4194304, "operations": 10000, "files": 50000, "expandedBytes": 10737418240, "rendererSeconds": 600 }
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/product-distribution-manifest/1.0.0",
+  "title": "Immutable Agent Delivery product distribution identity",
+  "x-bytedesk-digestAuthority": { "profile": "bytedesk.product-distribution-manifest-authority-digest/1", "exclude": ["contract", "schema", "authorityDigest", "signingResult"] },
+  "type": "object",
+  "required": ["contract", "schema", "version", "executableDistribution", "embeddedCompiledAllowlist", "contractBundle", "builder", "toolchainDigest", "dependencyLockDigest", "builtAt", "trustPolicy", "authorityDigest", "signingResult"],
+  "properties": {
+    "contract": { "const": "bytedesk.product-distribution-manifest/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "version": { "type": "string", "maxLength": 128, "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "executableDistribution": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "embeddedCompiledAllowlist": { "$ref": "#/$defs/allowlistDescriptor" },
+    "contractBundle": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/contractBundleDescriptor" },
+    "builder": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "toolchainDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "dependencyLockDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "builtAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "trustPolicy": { "$ref": "#/$defs/productTrust" },
+    "authorityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "signingResult": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0" },
+        { "properties": { "purpose": { "const": "product-release-v1" }, "subjectMediaType": { "const": "application/vnd.bytedesk.agent.product-distribution.v1+json" } }, "required": ["purpose", "subjectMediaType"] }
+      ]
+    }
+  },
+  "$defs": {
+    "productTrust": {
+      "type": "object",
+      "required": ["id", "digest"],
+      "properties": {
+        "id": { "const": "product-release-v1" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "allowlistDescriptor": {
+      "type": "object",
+      "required": ["repository", "digest", "mediaType", "size", "trustPolicy"],
+      "properties": {
+        "repository": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/ociRepository" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "mediaType": { "const": "application/vnd.bytedesk.agent.renderer-allowlist.v1+json" },
+        "size": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonNegativeSafeInteger" },
+        "trustPolicy": { "$ref": "#/$defs/productTrust" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "This closed config is the product distribution P. The executable embeds or exposes these exact canonical bytes, including A; P never names M, qualification, production selection, attempts, receipts, or output."
+}

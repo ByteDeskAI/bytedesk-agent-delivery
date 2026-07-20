@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/archive-root/1.0.0",
+  "title": "Signed immutable evidence archive and retention root",
+  "type": "object",
+  "required": ["contract", "schema", "rootId", "revision", "precondition", "predecessor", "primaryRepository", "recoveryRepository", "entries", "retention", "createdAt", "trustPolicy"],
+  "properties": {
+    "contract": { "const": "bytedesk.archive-root/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "rootId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "revision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" },
+    "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0" },
+    "primaryRepository": { "type": "string", "format": "uri", "pattern": "^s3://", "maxLength": 2048 },
+    "recoveryRepository": { "type": "string", "format": "uri", "pattern": "^s3://", "maxLength": 2048 },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "required": ["digest", "mediaType", "size", "classification", "retentionReason", "primaryReadbackDigest", "recoveryReadbackDigest"],
+        "properties": {
+          "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+          "mediaType": { "type": "string", "minLength": 1, "maxLength": 255 },
+          "size": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonNegativeSafeInteger" },
+          "classification": { "type": "string", "enum": ["public", "consumer-private", "restricted"] },
+          "retentionReason": { "type": "string", "enum": ["active", "pending", "known_good", "recovery", "contract_history", "trust_history", "incident", "audit", "legal_hold"] },
+          "primaryReadbackDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+          "recoveryReadbackDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    },
+    "retention": {
+      "type": "object",
+      "required": ["retainUntil", "legalHold"],
+      "properties": {
+        "retainUntil": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+        "legalHold": { "type": "boolean" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "createdAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

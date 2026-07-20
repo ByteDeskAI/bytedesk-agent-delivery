@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0",
+  "title": "Immutable candidate preparation record",
+  "type": "object",
+  "required": ["contract", "schema", "candidateId", "consumerId", "installationId", "targetId", "input", "state", "attempt", "revision", "precondition", "predecessor", "createdAt", "updatedAt"],
+  "properties": {
+    "contract": { "const": "bytedesk.candidate/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "candidateId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "installationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "input": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "state": { "type": "string", "enum": ["received", "fetching", "fetched", "validating", "validated", "quarantined", "evaluating", "awaiting_approval", "approved", "compiling", "compiled", "signing", "prepared", "rejected", "cancelled", "superseded", "failed"] },
+    "attempt": { "type": "integer", "minimum": 0, "maximum": 1000 },
+    "revision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" },
+    "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0" },
+    "preparedRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerRuntimeReleaseDescriptor" },
+    "failure": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-details/1.0.0" },
+    "createdAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "updatedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "state": { "const": "prepared" } }, "required": ["state"] },
+      "then": { "required": ["preparedRelease"] }
+    },
+    {
+      "if": { "properties": { "state": { "const": "failed" } }, "required": ["state"] },
+      "then": { "required": ["failure"] }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

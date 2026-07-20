@@ -1,0 +1,441 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status-eligibility-evidence/1.0.0",
+  "title": "Stage-bound release-status eligibility evidence",
+  "x-bytedesk-digestAuthority": {
+    "profile": "bytedesk.release-status-eligibility-evidence-digest/1",
+    "exclude": [
+      "contract",
+      "schema",
+      "eligibilityDigest",
+      "signingResult"
+    ]
+  },
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "evidenceId",
+    "stage",
+    "operationTime",
+    "consumerId",
+    "pinSet",
+    "pinSetDigest",
+    "pinSetProviderEvidence",
+    "product",
+    "renderers",
+    "decision",
+    "eligibilityDigest",
+    "trustPolicy",
+    "signingResult"
+  ],
+  "properties": {
+    "contract": {
+      "const": "bytedesk.release-status-eligibility-evidence/1"
+    },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "evidenceId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "qualification_finalization",
+        "public_render_finalization",
+        "public_render_publication",
+        "private_compilation",
+        "activation"
+      ]
+    },
+    "operationTime": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp",
+      "description": "The mandatory use time at which every policy, signature, status, checkpoint, proof, and pin-set revision was evaluated. It is not inferred from a signing timestamp."
+    },
+    "consumerId": {
+      "oneOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "pinSet": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-descriptor/1.0.0",
+      "description": "Exact externally supplied product or consumer pin-set revision. Verification requires this descriptor digest to equal the raw RFC 8785 JCS digest of the resolved document, while pinSetDigest independently equals the resolved document's domain-separated pinSetDigest."
+    },
+    "pinSetDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "pinSetProviderEvidence": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-provider-evidence/1.0.0",
+      "description": "Exact authenticated provider activation/readback evidence for pinSet. It must resolve through the trusted pin-set provider Adapter and bind pinSetDigest, revision, scope, consumer, provider identity, activation, and byte-exact readback."
+    },
+    "product": {
+      "$ref": "#/$defs/productEntry"
+    },
+    "renderers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/rendererEntry"
+      },
+      "description": "Exactly one entry for every distinct renderer release used by the operation. Entries are sorted by UTF-8 bytes of harnessId, rendererId, rendererVersion, targetPlatform, then subject digest."
+    },
+    "decision": {
+      "const": "eligible"
+    },
+    "eligibilityDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "trustPolicy": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef"
+    },
+    "signingResult": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0"
+        },
+        {
+          "properties": {
+            "subjectMediaType": {
+              "const": "application/vnd.bytedesk.agent.release-status-eligibility-evidence-digest.v1+json"
+            }
+          },
+          "required": [
+            "subjectMediaType"
+          ]
+        }
+      ],
+      "description": "Purpose-separated signature over eligibilityDigest. The exact KMS verification result evidence digest is bound by the consuming operation alongside this artifact descriptor to avoid a self-reference."
+    }
+  },
+  "$defs": {
+    "statusEntry": {
+      "type": "object",
+      "required": [
+        "subjectKind",
+        "subject",
+        "status",
+        "checkpoint",
+        "checkpointAuthenticationEvidence",
+        "requestNonce",
+        "clientPriorState",
+        "headInclusionProof",
+        "consistencyProof",
+        "verificationEvidenceDigests"
+      ],
+      "properties": {
+        "subjectKind": {
+          "type": "string",
+          "enum": [
+            "product_release",
+            "renderer_release"
+          ]
+        },
+        "subject": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+            },
+            {
+              "properties": {
+                "mediaType": {
+                  "const": "application/vnd.bytedesk.agent.release-status.v1+json"
+                }
+              },
+              "required": [
+                "mediaType"
+              ]
+            }
+          ]
+        },
+        "checkpoint": {
+          "allOf": [
+            {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+            },
+            {
+              "properties": {
+                "mediaType": {
+                  "const": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json"
+                }
+              },
+              "required": [
+                "mediaType"
+              ]
+            }
+          ]
+        },
+        "checkpointAuthenticationEvidence": {
+          "allOf": [
+            {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+            },
+            {
+              "properties": {
+                "mediaType": {
+                  "const": "application/vnd.bytedesk.agent.release-status-head-authentication-evidence.v1+json"
+                }
+              },
+              "required": [
+                "mediaType"
+              ]
+            }
+          ]
+        },
+        "requestNonce": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonce"
+        },
+        "clientPriorState": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status-head-checkpoint/1.0.0#/$defs/clientPriorState"
+        },
+        "headInclusionProof": {
+          "allOf": [
+            {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+            },
+            {
+              "properties": {
+                "mediaType": {
+                  "const": "application/vnd.bytedesk.agent.release-status-log-inclusion-proof.v1+json"
+                }
+              },
+              "required": [
+                "mediaType"
+              ]
+            }
+          ]
+        },
+        "consistencyProof": {
+          "oneOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+                },
+                {
+                  "properties": {
+                    "mediaType": {
+                      "const": "application/vnd.bytedesk.agent.release-status-log-consistency-proof.v1+json"
+                    }
+                  },
+                  "required": [
+                    "mediaType"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verificationEvidenceDigests": {
+          "type": "object",
+          "required": [
+            "status",
+            "checkpointAuthentication",
+            "headInclusionProof",
+            "consistencyProof"
+          ],
+          "properties": {
+            "status": {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+            },
+            "checkpointAuthentication": {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+            },
+            "headInclusionProof": {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+            },
+            "consistencyProof": {
+              "oneOf": [
+                {
+                  "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false,
+          "description": "Exact permitted verification-result evidence digests for the signed status and checkpoint authentication plus mathematical Merkle inclusion and, when present, consistency verification. Inclusion proofs are descriptor-bound by the signed checkpoint and are not themselves signed."
+        },
+        "harnessId": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+        },
+        "rendererId": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+        },
+        "rendererVersion": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/semver"
+        },
+        "targetPlatform": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/platform"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "productEntry": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/statusEntry"
+        },
+        {
+          "properties": {
+            "subjectKind": {
+              "const": "product_release"
+            },
+            "subject": {
+              "properties": {
+                "mediaType": {
+                  "const": "application/vnd.bytedesk.agent.product-release-manifest.v1+json"
+                }
+              },
+              "required": [
+                "mediaType"
+              ]
+            }
+          },
+          "required": [
+            "subjectKind",
+            "subject"
+          ],
+          "not": {
+            "anyOf": [
+              { "required": ["harnessId"] },
+              { "required": ["rendererId"] },
+              { "required": ["rendererVersion"] },
+              { "required": ["targetPlatform"] }
+            ]
+          }
+        }
+      ]
+    },
+    "rendererEntry": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/statusEntry"
+        },
+        {
+          "required": [
+            "subjectKind",
+            "subject",
+            "harnessId",
+            "rendererId",
+            "rendererVersion",
+            "targetPlatform"
+          ],
+          "properties": {
+            "subjectKind": {
+              "const": "renderer_release"
+            },
+            "subject": {
+              "properties": {
+                "mediaType": {
+                  "const": "application/vnd.bytedesk.agent.renderer-release.v1+json"
+                }
+              },
+              "required": [
+                "mediaType"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "enum": [
+              "qualification_finalization",
+              "public_render_finalization",
+              "public_render_publication"
+            ]
+          }
+        },
+        "required": [
+          "stage"
+        ]
+      },
+      "then": {
+        "properties": {
+          "consumerId": {
+            "type": "null"
+          },
+          "trustPolicy": {
+            "properties": {
+              "id": {
+                "const": "release-status-eligibility-v1"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          },
+          "signingResult": {
+            "properties": {
+              "purpose": {
+                "const": "release-status-eligibility-v1"
+              }
+            },
+            "required": [
+              "purpose"
+            ],
+            "not": {
+              "required": [
+                "consumerId"
+              ]
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "consumerId": {
+            "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+          },
+          "trustPolicy": {
+            "properties": {
+              "id": {
+                "const": "consumer-release-status-eligibility-v1"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          },
+          "signingResult": {
+            "properties": {
+              "purpose": {
+                "const": "consumer-release-status-eligibility-v1"
+              }
+            },
+            "required": [
+              "purpose",
+              "consumerId"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "A consumer or product status verifier emits this evidence only after independently resolving the active pin set, obtaining new caller nonces, validating exact persisted high-water state, authenticating current status heads, verifying RFC 6962-style inclusion and consistency proofs, verifying every signature through the trusted KMS Adapter at operationTime, and proving the product plus every used renderer is current. Absence, outage, stale evidence, wrong nonce, rollback, fork, withdrawal, revocation, end of support, unlisted renderer, pin/provider mismatch, or a non-permitted verification result fails closed and produces no eligibility evidence."
+}

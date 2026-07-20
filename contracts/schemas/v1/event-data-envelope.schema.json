@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+  "title": "Non-authoritative Agent Delivery CloudEvent data envelope",
+  "type": "object",
+  "required": ["contract", "schema", "eventType", "dataSchema", "aggregate", "resource", "consumerScope", "correlationId", "causationId", "redaction"],
+  "properties": {
+    "contract": { "const": "bytedesk.event-data/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "eventType": { "type": "string", "pattern": "^ai\\.bytedesk\\.agent-delivery\\.[a-z0-9.-]+\\.v1$", "maxLength": 256 },
+    "dataSchema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "aggregate": {
+      "type": "object",
+      "required": ["type", "id", "revisionDigest", "sequence"],
+      "properties": {
+        "type": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "id": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "revisionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "sequence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "resource": {
+      "type": "object",
+      "required": ["uri", "etag", "projectionSchema"],
+      "properties": {
+        "uri": { "type": "string", "format": "uri-reference", "maxLength": 2048 },
+        "etag": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "projectionSchema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "consumerScope": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "correlationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "causationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "redaction": { "type": "string", "enum": ["public", "consumer-private", "restricted"] }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Notification data only. Receivers must fetch the exact authoritative resource before acting."
+}

@@ -1,0 +1,18 @@
+{
+  "contract": "bytedesk.desired-state-store-receipt/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/desired-state-store-receipt/1.0.0", "digest": "sha256:e4585ead68ce2349fff1340beeeeb9158a377d79f434159a2fe60cca294a6a3f" },
+  "storeId": "consumer-native-primary",
+  "operation": "compare_and_swap",
+  "requestId": "store-request-02",
+  "idempotencyKey": "promotion-02",
+  "inputDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "consumerId": "consumer-01",
+  "targetId": "target-01",
+  "regionEpoch": 3,
+  "writerFencingToken": 10,
+  "outcome": "commit_unknown",
+  "precondition": { "kind": "match", "revision": 8, "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222" },
+  "committed": { "revision": 9, "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "etag": "sha256:3333333333333333333333333333333333333333333333333333333333333333" },
+  "storeEvidence": { "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "classification": "consumer-private" },
+  "recordedAt": "2026-07-17T12:03:00Z"
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status/1.0.0",
+  "title": "Append-only current release status referrer",
+  "x-bytedesk-digestAuthority": { "profile": "bytedesk.release-status-authority-digest/1", "exclude": ["contract", "schema", "authorityDigest", "signingResult"] },
+  "type": "object",
+  "required": ["contract", "schema", "statusId", "subjectKind", "subject", "sequence", "predecessorDigest", "status", "reasonCode", "effectiveAt", "trustPolicy", "authorityDigest", "signingResult"],
+  "properties": {
+    "contract": { "const": "bytedesk.release-status/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "statusId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "subjectKind": { "type": "string", "enum": ["product_release", "renderer_release"] },
+    "subject": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "sequence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "predecessorDigest": { "oneOf": [{ "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }, { "type": "null" }] },
+    "status": { "type": "string", "enum": ["current", "withdrawn", "revoked", "end_of_support"] },
+    "reasonCode": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "replacement": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "effectiveAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "trustPolicy": {
+      "type": "object",
+      "required": ["id", "digest"],
+      "properties": { "id": { "const": "release-status-v1" }, "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" } },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "authorityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "signingResult": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0" },
+        { "properties": { "purpose": { "const": "release-status-v1" }, "subjectMediaType": { "const": "application/vnd.bytedesk.agent.release-status.v1+json" } }, "required": ["purpose", "subjectMediaType"] }
+      ]
+    }
+  },
+  "allOf": [
+    { "if": { "properties": { "sequence": { "const": 1 } }, "required": ["sequence"] }, "then": { "properties": { "predecessorDigest": { "type": "null" } } }, "else": { "properties": { "predecessorDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" } } } },
+    { "if": { "properties": { "status": { "const": "current" } }, "required": ["status"] }, "then": { "not": { "required": ["replacement"] } } }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "R and M are immutable cores. Withdrawal, revocation, end-of-support, and replacement are signed append-only referrers, never fields rewritten inside those cores."
+}

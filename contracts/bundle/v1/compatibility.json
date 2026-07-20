@@ -1,0 +1,37 @@
+{
+  "profile": "bytedesk.contract-compatibility/1",
+  "bundleMajor": 1,
+  "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "openapi": "3.2.0",
+  "asyncapi": "3.1.0",
+  "cloudEvents": "1.0.2",
+  "canonicalization": "RFC8785",
+  "rules": {
+    "authorityObjects": "closed-and-major-immutable",
+    "commandEnums": "closed",
+    "readModels": "optional-fields-may-be-additive-in-a-declared-minor",
+    "eventData": "optional-fields-may-be-additive-in-a-declared-minor",
+    "unknownSchema": "deny",
+    "unknownCommandField": "deny",
+    "unknownAuthorityField": "deny",
+    "eventGap": "stop-and-api-resynchronize",
+    "historicalVerification": "retain-exact-bundle-and-trust-policy"
+  },
+  "supportedInteroperability": [
+    {
+      "clientMajor": 1,
+      "serverMajor": 1,
+      "direction": "both",
+      "condition": "exact-schema-digest-or-declared-compatible-read-projection"
+    }
+  ],
+  "breakingChanges": [
+    "remove-or-rename-field",
+    "change-field-type-or-meaning",
+    "add-required-field",
+    "narrow-accepted-value",
+    "change-canonicalization-or-operation-semantics",
+    "change-security-interpretation",
+    "change-terminal-state-meaning"
+  ]
+}

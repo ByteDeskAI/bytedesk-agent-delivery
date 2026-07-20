@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/kms-signing-request/1.0.0",
+  "title": "KMS-only exact-digest signing request",
+  "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0",
+  "required": ["schema", "purpose", "credentialKind", "mediaType"],
+  "properties": {
+    "schema": {
+      "properties": {
+        "id": {
+          "const": "https://schemas.bytedesk.ai/agent-delivery/v1/kms-signing-request/1.0.0"
+        }
+      },
+      "required": ["id"]
+    },
+    "purpose": {
+      "not": {
+        "const": "contract-bundle-release-v1"
+      }
+    },
+    "credentialKind": {
+      "const": "kms_key"
+    },
+    "mediaType": {
+      "not": {
+        "enum": [
+          "application/vnd.bytedesk.agent.contract-bundle.v1+json",
+          "application/vnd.bytedesk.agent.contract-bundle.v1+tar"
+        ]
+      }
+    }
+  },
+  "unevaluatedProperties": false,
+  "description": "Closed role-specific refinement accepted by the KMS signing adapter. It admits only kms_key requests and independently excludes the contract-bundle signing purpose and both authoritative contract-bundle media representations before any provider call or signing side effect."
+}

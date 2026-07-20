@@ -1,0 +1,15 @@
+{
+  "contract": "bytedesk.canary-plan/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-plan/1.0.0", "digest": "sha256:bb3e9c6bef3cd1b26f602d94ba01ad8901714cf78b7913826f7b48f01c0431a0" },
+  "planId": "canary-plan-01", "rolloutId": "rollout-01", "nonce": "nonce_0123456789abcdef",
+  "candidateDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "desiredRevisionDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "releaseDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "deploymentDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "consumerId": "consumer-01", "subjectId": "subject-01", "targetId": "target-01", "slotId": "slot-01", "generation": 1, "activationMode": "isolated_candidate",
+  "authorityDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "policyDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "grantSetDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "workloadIdentityDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+  "expectedChecks": {
+    "host_reconciler": { "artifact_readback": "passed", "file_inventory": "passed", "slot_generation": "passed", "service_process": "passed", "resource_thresholds": "passed", "harness_readiness": "passed", "switch_marker": "passed" },
+    "consumer_capability_verifier": { "mode": "certified_not_applicable", "checks": { "certified_not_applicable": "not_applicable" }, "certificationDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "certificationPolicy": { "id": "no-capability-v1", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" } }
+  },
+  "evidenceSignerPolicies": { "host_reconciler": { "id": "host-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" }, "consumer_capability_verifier": { "id": "capability-v1", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" }, "authorization_decision": { "id": "authorization-v1", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" } },
+  "issuedAt": "2026-07-17T12:00:00Z", "expiresAt": "2026-07-17T12:05:00Z",
+  "force": true
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/application-config/1.0.0",
+  "title": "Closed non-secret Agent Delivery process configuration",
+  "type": "object",
+  "required": ["contract", "schema", "mode", "listen", "database", "registry", "archive", "identity", "telemetry", "limits"],
+  "properties": {
+    "contract": { "const": "bytedesk.application-config/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "mode": { "type": "string", "enum": ["api", "coordinator", "worker", "renderer_controller", "registry_publisher", "event_publisher", "evidence_archiver", "migration", "backup", "read_model", "signer_private_skill", "signer_deployment", "identity_registration"] },
+    "listen": {
+      "type": "object",
+      "required": ["address", "port"],
+      "properties": {
+        "address": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "database": {
+      "type": "object",
+      "required": ["endpoint", "database", "role", "tlsMode"],
+      "properties": {
+        "endpoint": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "database": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "role": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "tlsMode": { "const": "verify-full" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "registry": { "type": "string", "format": "uri", "pattern": "^https://", "maxLength": 2048 },
+    "archive": { "type": "string", "format": "uri", "pattern": "^https://", "maxLength": 2048 },
+    "identity": { "type": "string", "format": "uri", "pattern": "^spiffe://", "maxLength": 2048 },
+    "telemetry": { "type": "string", "format": "uri", "pattern": "^https://", "maxLength": 2048 },
+    "limits": {
+      "type": "object",
+      "required": ["objectBytes", "operations", "files", "expandedBytes", "rendererSeconds"],
+      "properties": {
+        "objectBytes": { "type": "integer", "minimum": 1, "maximum": 4194304 },
+        "operations": { "type": "integer", "minimum": 1, "maximum": 10000 },
+        "files": { "type": "integer", "minimum": 1, "maximum": 50000 },
+        "expandedBytes": { "type": "integer", "minimum": 1, "maximum": 10737418240 },
+        "rendererSeconds": { "type": "integer", "minimum": 1, "maximum": 600 }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Contains no secret values. Secret material is available only through workload identity or read-only secret-store files."
+}

@@ -1,0 +1,69 @@
+{
+  "contract": "bytedesk.contract-bundle/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle/1.0.0",
+    "digest": "sha256:c837834d0ae9241ca27065221d91ade54090f7c62026db4580b03f5d078cdf8a"
+  },
+  "bundleVersion": "1.0.0",
+  "productVersion": "1.0.0",
+  "createdAt": "2026-07-17T12:00:00Z",
+  "schemas": [
+    {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0",
+      "logicalContract": "bytedesk.agent-binding/1",
+      "version": "1.0.0",
+      "path": "schemas/v1/agent-binding.schema.json",
+      "mediaType": "application/schema+json",
+      "size": 2571,
+      "digest": "sha256:3c2b7490e808d3dd33ba6dea497a0b83b82545caa2b981b05ca997640490a2e7",
+      "trustPolicy": {
+        "id": "contract-bundle-release-v1",
+        "digest": "sha256:c02ce83cb387f9d51b97b3bee467157a217e4cf3ed79c8710183f9f3623bf4f5"
+      }
+    }
+  ],
+  "documents": [
+    {
+      "path": "api/openapi.json",
+      "digest": "sha256:9eac964dfb463e7188160ee482da1540ff9a1a84043781da5c01af5019a7eb7d",
+      "size": 32898,
+      "mode": "0644"
+    },
+    {
+      "path": "events/asyncapi.json",
+      "digest": "sha256:d843340aba61c8db992996d58b1d26f316a717e9917395ebf62746495b3d9619",
+      "size": 4348,
+      "mode": "0644"
+    }
+  ],
+  "fixtureIndex": {
+    "path": "fixtures/schema/index.json",
+    "digest": "sha256:05efba18d1021fdf86b6f17e794069d12044fc065891f4412e7b6d7a058af691",
+    "size": 74103,
+    "mode": "0644"
+  },
+  "schemaInventory": {
+    "path": "schema-inventory.json",
+    "digest": "sha256:0fb09810cb4eadec5a15ec09545b131925e7938ebba7b502131c57194b86e48b",
+    "size": 26053,
+    "mode": "0644"
+  },
+  "compatibility": {
+    "path": "compatibility/contract-compatibility.json",
+    "digest": "sha256:1715dfb631cd713fd20567da61bd3cd2558c6c5ea8e3746a0979a58de327ce53",
+    "size": 1007,
+    "mode": "0644"
+  },
+  "documentationMap": {
+    "path": "documentation-map.json",
+    "digest": "sha256:46d554104ac7938f0f52baf52425b880b02548d9b8a2f60f6e0becac2da0db0f",
+    "size": 25246,
+    "mode": "0644"
+  },
+  "buildInputDigest": "sha256:3add6f86757d382820e89f5386afe675e5f91774b7389b35df8e817080e53576",
+  "trustPolicy": {
+    "id": "contract-bundle-release-v1",
+    "digest": "sha256:c02ce83cb387f9d51b97b3bee467157a217e4cf3ed79c8710183f9f3623bf4f5"
+  },
+  "unknownAuthority": true
+}

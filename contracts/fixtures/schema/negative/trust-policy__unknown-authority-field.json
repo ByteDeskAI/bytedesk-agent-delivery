@@ -1,0 +1,94 @@
+{
+  "contract": "bytedesk.trust-policy/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+    "digest": "sha256:ea53b4814c96282ba5812c2573b4adf45a026340b1022503e25b9f391dcd1509"
+  },
+  "policyId": "product-release-v1",
+  "version": "1.0.0",
+  "effective": {
+    "notBefore": "2026-07-17T00:00:00Z",
+    "notAfter": "2027-07-17T00:00:00Z"
+  },
+  "scope": {
+    "repositories": [
+      "registry.example/product/agent-delivery",
+      "registry.example/product/builders",
+      "registry.example/product/contracts",
+      "registry.example/product/renderers"
+    ],
+    "mediaTypes": [
+      "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "application/vnd.oci.image.manifest.v1+json",
+      "application/vnd.bytedesk.agent-spec-semantics.v1+json",
+      "application/vnd.bytedesk.agent.product-distribution.v1+json",
+      "application/vnd.bytedesk.agent.product-release-manifest.v1+json",
+      "application/vnd.bytedesk.agent.renderer-allowlist.v1+json",
+      "application/vnd.bytedesk.agent.renderer-capability.v1+json",
+      "application/vnd.bytedesk.agent.renderer-release.v1+json",
+      "application/vnd.bytedesk.contract-release-evaluator-conformance.v1+json",
+      "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.signing-result.v1+json"
+    ],
+    "purposes": [
+      "product-release-v1"
+    ]
+  },
+  "signers": [
+    {
+      "purpose": "product-release-v1",
+      "credentialKind": "kms_key",
+      "keyVersion": "kms://product/product-release-v1/versions/1",
+      "publicKeyDigest": "sha256:0f34c7c967a701e9e1d4c031ef8e7ca1853d7eeb4211d3d6c3dfd6ab82ce3a4a",
+      "algorithm": "ECDSA_P256_SHA256",
+      "workloadIdentity": "spiffe://bytedesk.ai/agent-delivery/product-release",
+      "claims": {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audience": "agent-delivery-product-release-v1",
+        "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:product-release-v1",
+        "repository": "ByteDeskAI/bytedesk-agent-delivery",
+        "workflow": ".github/workflows/product-release-v1.yml",
+        "ref": "refs/tags/v1.0.0",
+        "environment": "product-release-v1",
+        "builderDigest": "sha256:25653bf4af960608d9b32541b3d4a4c811fffe0a7f4c6c9cc750f5740bbffeff"
+      }
+    }
+  ],
+  "requiredEvidence": [
+    "schema",
+    "provenance",
+    "sbom",
+    "vulnerability",
+    "license",
+    "compatibility",
+    "readiness",
+    "conformance",
+    "determinism",
+    "malware",
+    "secret_scan",
+    "executed_distribution",
+    "scan_completeness"
+  ],
+  "rules": {
+    "freshnessSeconds": 900,
+    "requireNonce": true,
+    "requirePredecessor": true,
+    "denyDowngrade": true,
+    "withdrawal": "deny_new_use",
+    "outage": "fail_closed_new_work"
+  },
+  "revocations": {
+    "keyVersions": [],
+    "digests": [],
+    "workflows": [],
+    "builders": [],
+    "schemas": [],
+    "renderers": [],
+    "content": []
+  },
+  "failureMode": "fail_closed",
+  "predecessor": {
+    "kind": "none"
+  },
+  "unknownAuthority": true
+}

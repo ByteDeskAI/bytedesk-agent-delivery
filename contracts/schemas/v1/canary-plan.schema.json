@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-plan/1.0.0",
+  "title": "Nonce-bound promotion canary challenge",
+  "type": "object",
+  "required": [
+    "contract", "schema", "planId", "rolloutId", "nonce", "candidateDigest",
+    "desiredRevisionDigest", "releaseDigest", "deploymentDigest", "consumerId",
+    "subjectId", "targetId", "slotId", "generation", "activationMode",
+    "authorityDigest", "policyDigest", "grantSetDigest", "workloadIdentityDigest",
+    "expectedChecks", "evidenceSignerPolicies", "issuedAt", "expiresAt"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.canary-plan/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "planId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "rolloutId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "nonce": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonce" },
+    "candidateDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "desiredRevisionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "releaseDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "deploymentDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "subjectId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "slotId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "generation": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "activationMode": { "type": "string", "enum": ["isolated_candidate", "guarded_in_place"] },
+    "authorityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "policyDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "grantSetDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "workloadIdentityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "expectedChecks": {
+      "type": "object",
+      "required": ["host_reconciler", "consumer_capability_verifier"],
+      "properties": {
+        "host_reconciler": { "$ref": "#/$defs/hostExpectedChecks" },
+        "consumer_capability_verifier": { "$ref": "#/$defs/capabilityExpectedChecks" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "evidenceSignerPolicies": {
+      "type": "object",
+      "required": ["host_reconciler", "consumer_capability_verifier", "authorization_decision"],
+      "properties": {
+        "host_reconciler": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+        "consumer_capability_verifier": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+        "authorization_decision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "issuedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "expiresAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+  },
+  "$defs": {
+    "hostExpectedChecks": {
+      "type": "object",
+      "required": ["candidate_ready", "active_readback"],
+      "properties": {
+        "candidate_ready": {
+          "type": "object",
+          "required": ["artifact_readback", "file_inventory", "slot_generation", "service_process", "resource_thresholds", "harness_readiness"],
+          "properties": {
+            "artifact_readback": { "const": "passed" },
+            "file_inventory": { "const": "passed" },
+            "slot_generation": { "const": "passed" },
+            "service_process": { "const": "passed" },
+            "resource_thresholds": { "const": "passed" },
+            "harness_readiness": { "const": "passed" }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        "active_readback": {
+          "type": "object",
+          "required": ["switch_marker", "active_pointer", "file_inventory", "service_process"],
+          "properties": {
+            "switch_marker": { "const": "passed" },
+            "active_pointer": { "const": "passed" },
+            "file_inventory": { "const": "passed" },
+            "service_process": { "const": "passed" }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "capabilityDescriptor": {
+      "type": "object",
+      "required": ["id", "digest"],
+      "properties": {
+        "id": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "capabilityExpectedChecks": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["mode", "checks", "permittedCapability", "deniedSentinel"],
+          "properties": {
+            "mode": { "const": "required" },
+            "checks": {
+              "type": "object",
+              "required": ["workload_login", "permitted_capability", "denied_sentinel"],
+              "properties": {
+                "workload_login": { "const": "passed" },
+                "permitted_capability": { "const": "permitted" },
+                "denied_sentinel": { "const": "policy_denied" }
+              },
+              "additionalProperties": false,
+              "unevaluatedProperties": false
+            },
+            "permittedCapability": { "$ref": "#/$defs/capabilityDescriptor" },
+            "deniedSentinel": {
+              "type": "object",
+              "required": ["id", "digest", "expectedDecisionCode"],
+              "properties": {
+                "id": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+                "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+                "expectedDecisionCode": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }
+              },
+              "additionalProperties": false,
+              "unevaluatedProperties": false
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["mode", "checks", "certificationDigest", "certificationPolicy"],
+          "properties": {
+            "mode": { "const": "certified_not_applicable" },
+            "checks": {
+              "type": "object",
+              "required": ["certified_not_applicable"],
+              "properties": { "certified_not_applicable": { "const": "not_applicable" } },
+              "additionalProperties": false,
+              "unevaluatedProperties": false
+            },
+            "certificationDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+            "certificationPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "The plan is consumer-targeted evidence input, never package authority. It fixes separate candidate-ready and active-readback Host check sets plus either exact capability probes or independently certified non-applicability. The Coordinator applies activation-mode ordering from the downstream protocol profile."
+}

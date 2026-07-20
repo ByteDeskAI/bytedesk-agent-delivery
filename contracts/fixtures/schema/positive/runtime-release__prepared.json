@@ -1,0 +1,154 @@
+{
+  "contract": "bytedesk.runtime-release/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/runtime-release/1.0.0",
+    "digest": "sha256:779e295ad1873547d458b51da5efd8a1547c0e9866233148805a574240d80ddc"
+  },
+  "releaseId": "runtime-release-01",
+  "consumerId": "consumer-01",
+  "targetId": "runtime-prod-01",
+  "candidate": {
+    "repository": "registry.example/consumer/candidates",
+    "digest": "sha256:48059a5b7f805f96d5a57157611d1a7067afec0fef3f0d79857953916c4aeb29",
+    "mediaType": "application/vnd.bytedesk.agent.candidate.v1+json",
+    "size": 1032,
+    "trustPolicy": {
+      "id": "consumer-authority-v1",
+      "digest": "sha256:b3ce055867a5266be015caee83e17cf48e101a7929da88d69f4b1f5219918e08"
+    }
+  },
+  "desiredRevision": {
+    "revision": 42,
+    "digest": "sha256:1b77839011c8fc6563db26fc7c6bbd794a5a6779979cbc2e77cfe669798ad58a"
+  },
+  "predecessor": {
+    "kind": "match",
+    "revision": 41,
+    "digest": "sha256:06e7c83933271e84152cf3984eea7b233681a695d3d655bc656d091941ec4e7b"
+  },
+  "activationMode": "isolated_candidate",
+  "releaseStatusEligibility": {
+    "repository": "registry.example/consumer/status-eligibility",
+    "digest": "sha256:edaecd4bc1bed7b49b582a2a5e61265ce9b134a3071fbf42d1eabe498b96a900",
+    "mediaType": "application/vnd.bytedesk.agent.release-status-eligibility-evidence.v1+json",
+    "size": 11326,
+    "trustPolicy": {
+      "id": "consumer-release-status-eligibility-v1",
+      "digest": "sha256:9d300a55ffeabc00b586c41988f6555ffed52c02d5ef1e32d71e070b4e71db6c"
+    }
+  },
+  "releaseStatusEligibilityDigest": "sha256:fabac754e4f4cc3eafc8dbfa052e40c3d55a5115eb9f112d4946864d4d58ed58",
+  "releaseStatusEligibilityVerificationEvidenceDigest": "sha256:e248e50ac76179f41919e08f41b3e27694b4bb317285d90ad5d2d9b841bc259f",
+  "trustPolicyPinSetDigest": "sha256:af930a54ebfeb738c4c22d2163be6251706592a41ef9b17c68e2fd9f5aaec697",
+  "trustPolicyPinSetProviderEvidenceDigest": "sha256:75330f4899c397803881bd2b71c157f97b574e1599e6bfc2e9cd2b3684569d67",
+  "deployments": [
+    {
+      "subjectId": "agent-finance-01",
+      "deployment": {
+        "repository": "registry.example/consumer/deployments",
+        "digest": "sha256:75638dd8b7da92798c0acf2d179348068a478926c5e0089d5e652faccb692d47",
+        "mediaType": "application/vnd.bytedesk.agent.consumer-deployment.v1+json",
+        "size": 28812,
+        "trustPolicy": {
+          "id": "consumer-deployment-v1",
+          "digest": "sha256:7f50fbbe75fd862d68e995e369148b3f066939ee131490999e03b392041f08f8"
+        }
+      },
+      "compilationEvidence": {
+        "repository": "registry.example/consumer/compilation-evidence",
+        "digest": "sha256:9fc52c20fe117bc1507966719e6481a4659d09bb61adf08d8229e1317b7f6dd4",
+        "mediaType": "application/vnd.bytedesk.agent.private-compilation-evidence.v1+json",
+        "size": 8237,
+        "trustPolicy": {
+          "id": "consumer-compilation-evidence-v1",
+          "digest": "sha256:ab671ee0361b8095630b6a5a79ef5b8b9a2ade3630c2798b6ed55036e85b5362"
+        }
+      },
+      "slotId": "candidate-b",
+      "generation": 9
+    },
+    {
+      "subjectId": "agent-finance-02",
+      "deployment": {
+        "repository": "registry.example/consumer/deployments",
+        "digest": "sha256:d14037c8b05e6e3f9fc5716603d93038d87853dd299a3d84974260c6655059c3",
+        "mediaType": "application/vnd.bytedesk.agent.consumer-deployment.v1+json",
+        "size": 28812,
+        "trustPolicy": {
+          "id": "consumer-deployment-v1",
+          "digest": "sha256:7f50fbbe75fd862d68e995e369148b3f066939ee131490999e03b392041f08f8"
+        }
+      },
+      "compilationEvidence": {
+        "repository": "registry.example/consumer/compilation-evidence",
+        "digest": "sha256:51a0b88397e0110b3ba8e7ab6f451e0e89c804091bcfd1033e7c78ba7308091a",
+        "mediaType": "application/vnd.bytedesk.agent.private-compilation-evidence.v1+json",
+        "size": 8237,
+        "trustPolicy": {
+          "id": "consumer-compilation-evidence-v1",
+          "digest": "sha256:ab671ee0361b8095630b6a5a79ef5b8b9a2ade3630c2798b6ed55036e85b5362"
+        }
+      },
+      "slotId": "candidate-b",
+      "generation": 9
+    }
+  ],
+  "activationConstraints": {
+    "trustPolicy": {
+      "id": "consumer-deployment-v1",
+      "digest": "sha256:7f50fbbe75fd862d68e995e369148b3f066939ee131490999e03b392041f08f8"
+    },
+    "authorityPolicyDigest": "sha256:bcae86217895f43835e224d4bec009fc7b84fef600a0d19594bcef4f99598fba",
+    "canaryPolicyDigest": "sha256:734192d9ba14dee2cc68c6b3a71d134738f39ef898ffc852424378cf71cd7ca7",
+    "recoveryPolicyDigest": "sha256:165f92d6e62ee69f1c4720b5cd04e29a3f4ff1049c557333dc28020e3574ca4c"
+  },
+  "compilationEpoch": "2026-07-17T12:00:10Z",
+  "preparedAt": "2026-07-17T12:00:10Z",
+  "trustPolicy": {
+    "id": "consumer-runtime-release-v1",
+    "digest": "sha256:bb58fe7a2f6deec387528f986626156ea1c02b5583c457c1aada5487e86fd7a6"
+  },
+  "releaseDigest": "sha256:c4d10057a2058fbce0edbee1bd7841175df0e9a572b67eafb0b17ef2d3a88d48",
+  "signingResult": {
+    "contract": "bytedesk.signing-result/1",
+    "schema": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0",
+      "digest": "sha256:a64e23f1ae5a04e0c26c67085a41e8d0d70a9df9d45b1ec789c72c7634543ede"
+    },
+    "requestId": "consumer-runtime-release-v1-request-c4d10057a2058fbce0edbee1",
+    "requestDigest": "sha256:fc200fef5964020e9bc490a2df301aeee6ee3a2ec7248b5605b7dce8c6b302ff",
+    "purpose": "consumer-runtime-release-v1",
+    "keyVersion": "kms://consumer-01/consumer-runtime-release-v1/versions/1",
+    "algorithm": "ECDSA_P256_SHA256",
+    "publicKeyDigest": "sha256:62b15ce22c75ce9ddce41082f7585302d536246930cbdf95bc19256c9a9165e8",
+    "repository": "registry.example/consumer/runtime-releases",
+    "subjectDigest": "sha256:c4d10057a2058fbce0edbee1bd7841175df0e9a572b67eafb0b17ef2d3a88d48",
+    "subjectMediaType": "application/vnd.bytedesk.agent.runtime-release-statement.v1+json",
+    "signatureBundle": {
+      "repository": "registry.example/consumer/runtime-releases",
+      "digest": "sha256:7e2a3df7089b3ffb96df6681516bb29d9449afc3745db59f2424b13500105ec1",
+      "mediaType": "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "size": 2304,
+      "trustPolicy": {
+        "id": "consumer-runtime-release-v1",
+        "digest": "sha256:bb58fe7a2f6deec387528f986626156ea1c02b5583c457c1aada5487e86fd7a6"
+      }
+    },
+    "trustPolicy": {
+      "id": "consumer-runtime-release-v1",
+      "digest": "sha256:bb58fe7a2f6deec387528f986626156ea1c02b5583c457c1aada5487e86fd7a6"
+    },
+    "providerAuditEvidence": {
+      "repository": "registry.example/consumer/runtime-releases",
+      "digest": "sha256:1f16625da0e7abfa7d94ac752f8f16812e42f333cf0c9b7e0949371c8b314c28",
+      "mediaType": "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "size": 1855,
+      "trustPolicy": {
+        "id": "consumer-runtime-release-v1",
+        "digest": "sha256:bb58fe7a2f6deec387528f986626156ea1c02b5583c457c1aada5487e86fd7a6"
+      }
+    },
+    "signedAt": "2026-07-17T12:00:10Z",
+    "consumerId": "consumer-01"
+  }
+}

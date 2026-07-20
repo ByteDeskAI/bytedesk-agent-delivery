@@ -1,0 +1,56 @@
+{
+  "contract": "bytedesk.release-status-head-checkpoint/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status-head-checkpoint/1.0.0",
+    "digest": "sha256:7809c9ee1610ef0dc4e02d4823df6bb2b2a61a1571f936817e7ea251f1105b49"
+  },
+  "checkpointId": "status-head-first-contact-sequence-7",
+  "requestNonce": "status_head_nonce_status-head-first-contact-sequence-7_0123456789abcdef",
+  "subjectKind": "renderer_release",
+  "subject": {
+    "repository": "registry.example/product/renderers",
+    "digest": "sha256:a4a2020fae4cae1471bd13441bf53085757c52523ad78c76046fe80bcbb8160f",
+    "mediaType": "application/vnd.bytedesk.agent.renderer-release.v1+json",
+    "size": 100,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:a80850c38ad05f095146c0075910ced54b678a2975bb92611a83b810292de757"
+    }
+  },
+  "sequence": 7,
+  "treeSize": 7,
+  "head": {
+    "repository": "registry.example/product/status",
+    "digest": "sha256:aac0832221b692d5ff4fe1e8bb1e987eb4d2767cfe74ed0445122c13e20406a3",
+    "mediaType": "application/vnd.bytedesk.agent.release-status.v1+json",
+    "size": 2732,
+    "trustPolicy": {
+      "id": "release-status-v1",
+      "digest": "sha256:050cc2bb0b00d65f5531f508c9927d55e599f40b207313707ef19346842eea87"
+    }
+  },
+  "headDigest": "sha256:aac0832221b692d5ff4fe1e8bb1e987eb4d2767cfe74ed0445122c13e20406a3",
+  "headLeafDigest": "sha256:204dc52616f0ca2bba8fbe016605472c4db903dc7e08e593b1f79f9fa8673741",
+  "headInclusionProof": {
+    "repository": "registry.example/product/status-heads",
+    "digest": "sha256:42e1b287a79d32ec3bec1bfac760817aa8f03899a8832f98226c09c50de4cd12",
+    "mediaType": "application/vnd.bytedesk.agent.release-status-log-inclusion-proof.v1+json",
+    "size": 1237,
+    "trustPolicy": {
+      "id": "release-status-head-v1",
+      "digest": "sha256:6d815798af5b075b271a71366f3f085fae5e48eed0f61c7c5c03b71c046ab036"
+    }
+  },
+  "epoch": 1,
+  "logRootDigest": "sha256:a3454b1b2a4aa480527e3cbde983be85b95f7b1a1a410a06b84a17777b134f4c",
+  "clientPriorState": {
+    "kind": "none"
+  },
+  "consistencyProof": null,
+  "verifiedAt": "2026-07-17T12:00:03.750000Z",
+  "expiresAt": "2026-07-17T12:05:00Z",
+  "trustPolicy": {
+    "id": "release-status-head-v1",
+    "digest": "sha256:6d815798af5b075b271a71366f3f085fae5e48eed0f61c7c5c03b71c046ab036"
+  }
+}

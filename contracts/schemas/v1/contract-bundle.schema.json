@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/contract-bundle/1.0.0",
+  "title": "Signed offline contract bundle manifest",
+  "type": "object",
+  "required": ["contract", "schema", "bundleVersion", "productVersion", "createdAt", "schemas", "documents", "fixtureIndex", "schemaInventory", "compatibility", "documentationMap", "buildInputDigest", "trustPolicy"],
+  "properties": {
+    "contract": { "const": "bytedesk.contract-bundle/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "bundleVersion": { "type": "string", "maxLength": 128, "pattern": "^[1-9][0-9]*\\.[0-9]+\\.[0-9]+$" },
+    "productVersion": { "type": "string", "maxLength": 128, "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$" },
+    "createdAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "schemas": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "required": ["id", "logicalContract", "version", "path", "mediaType", "size", "digest", "trustPolicy"],
+        "properties": {
+          "id": { "type": "string", "format": "uri", "maxLength": 2048, "pattern": "^https://schemas\\.bytedesk\\.ai/agent-delivery/v1/" },
+          "logicalContract": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/contractName" },
+          "version": { "type": "string", "maxLength": 128, "pattern": "^[1-9][0-9]*\\.[0-9]+\\.[0-9]+$" },
+          "path": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/portablePath" },
+          "mediaType": { "const": "application/schema+json" },
+          "size": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonNegativeSafeInteger" },
+          "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+          "trustPolicy": { "$ref": "#/$defs/contractBundleTrust" }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    },
+    "documents": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 100000,
+      "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/fileInventoryEntry" }
+    },
+    "fixtureIndex": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/fileInventoryEntry" },
+    "schemaInventory": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/fileInventoryEntry" },
+    "compatibility": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/fileInventoryEntry" },
+    "documentationMap": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/fileInventoryEntry" },
+    "buildInputDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "trustPolicy": { "$ref": "#/$defs/contractBundleTrust" }
+  },
+  "$defs": {
+    "contractBundleTrust": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+        {
+          "properties": { "id": { "const": "contract-bundle-release-v1" } },
+          "required": ["id"]
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

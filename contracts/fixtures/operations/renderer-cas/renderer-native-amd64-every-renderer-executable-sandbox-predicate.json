@@ -1,0 +1,115 @@
+{
+  "contract": "bytedesk.release-qualification-predicate/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-qualification-predicate/1.0.0",
+    "digest": "sha256:342bb04ac88a12d89e84bc1b265b403525674dfe3d2d6db604dfc1af8e28bdf9"
+  },
+  "predicateId": "renderer-native-amd64-every-renderer-executable-sandbox",
+  "requirementId": "every-renderer-executable-sandbox",
+  "role": "sandbox",
+  "subjectRole": "renderer_executable",
+  "subject": {
+    "repository": "registry.example/product/renderers",
+    "digest": "sha256:6deb558ce84c0fe6bfa0475a6a0e7f9c177cf169e75d66a5bebf6703a366ed37",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "size": 326,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:a80850c38ad05f095146c0075910ced54b678a2975bb92611a83b810292de757"
+    }
+  },
+  "qualificationSuite": {
+    "repository": "registry.example/product/qualification",
+    "digest": "sha256:a7ababe043e74e70abe866293249e8f00159ab00ef520edd41f8d3b984c65148",
+    "mediaType": "application/vnd.bytedesk.agent.renderer-qualification-suite.v1+json",
+    "size": 8405,
+    "trustPolicy": {
+      "id": "release-qualification-policy-v1",
+      "digest": "sha256:a06d60512fb61f5e9aa1c9b5815a13ac122b29d0ae081d74b6fe95dec2bf5670"
+    }
+  },
+  "qualificationSelectionDigest": "sha256:417cef39e81e578cd3a4f53df705f2469acef4920c03c3bc110db90a11fdb562",
+  "qualificationReceiptDigest": "sha256:59e550041b7c735c6bcbaa8bfacea76f60ec7bf608e14ea1cb8190ce19b42a25",
+  "conformancePlanDigest": "sha256:02553fcdb228176babeafc445489685c040278e74fe8bcb2c3e4556d1d25fbaf",
+  "inputCorpusDigest": "sha256:36d2ace03f79ea1827d60db53341635989941c7163c197a215b56938e1a80bf2",
+  "evaluatorDistribution": {
+    "repository": "registry.example/product/qualification",
+    "digest": "sha256:146c5b8a1faa79183e822a1b8cfd5d8cbaf0b1b2ccb60502eb78b0c0dd4a816d",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "size": 331,
+    "trustPolicy": {
+      "id": "release-qualification-policy-v1",
+      "digest": "sha256:a06d60512fb61f5e9aa1c9b5815a13ac122b29d0ae081d74b6fe95dec2bf5670"
+    }
+  },
+  "evidenceTree": {
+    "repository": "registry.example/product/qualification",
+    "digest": "sha256:a247abc9e4fdf31ad2667fef4b35cfdc6452531dbb716ce25a7e2d49e94d0f34",
+    "mediaType": "application/vnd.bytedesk.agent.renderer-qualification-evidence-tree.v1+json",
+    "size": 114459,
+    "trustPolicy": {
+      "id": "release-qualification-receipt-v1",
+      "digest": "sha256:1f76531220688a488b931c4c5233ccb7064e359488f86d84f2d48a6d20dd8bb3"
+    }
+  },
+  "evidenceLeafIndex": 16,
+  "evidenceLeafDigest": "sha256:bf7be3b0089786f34b831c44b7e63b9010bb2362110026c571ee1f4165f7af2e",
+  "evidenceLeafStatementDigest": "sha256:149366cf32b6c2fb5d36fdb5e0d266c74ed956e86f8acea03b19aab431a0e7b0",
+  "evidenceLeafSigningResult": {
+    "contract": "bytedesk.signing-result/1",
+    "schema": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0",
+      "digest": "sha256:a64e23f1ae5a04e0c26c67085a41e8d0d70a9df9d45b1ec789c72c7634543ede"
+    },
+    "requestId": "sign-renderer-native-amd64-every-renderer-executable-sandbox-leaf",
+    "requestDigest": "sha256:716ec2c480e881838ac55788225c996e48589f43476013e3fc6162cf46613a99",
+    "purpose": "release-qualification-evidence-v1",
+    "keyVersion": "kms://product/release-qualification-evidence-v1/versions/1",
+    "algorithm": "ECDSA_P256_SHA256",
+    "publicKeyDigest": "sha256:80639d1cd23518517bd75136ab9ad00176ac230ca01a31ce8bfb95a2e991253c",
+    "repository": "registry.example/product/qualification",
+    "subjectDigest": "sha256:149366cf32b6c2fb5d36fdb5e0d266c74ed956e86f8acea03b19aab431a0e7b0",
+    "subjectMediaType": "application/vnd.bytedesk.agent.renderer-qualification-evidence-leaf-statement.v1+json",
+    "signatureBundle": {
+      "repository": "registry.example/product/qualification",
+      "digest": "sha256:2e3d416ac5ea62119280fe94a70cc20750af94d0a06bfeee8be7b08fda185590",
+      "mediaType": "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "size": 2365,
+      "trustPolicy": {
+        "id": "release-qualification-evidence-v1",
+        "digest": "sha256:85c3b7627c1c2d075f7f78dc274c8b9550a7ef773840c5a91a15a2d6f9620256"
+      }
+    },
+    "trustPolicy": {
+      "id": "release-qualification-evidence-v1",
+      "digest": "sha256:85c3b7627c1c2d075f7f78dc274c8b9550a7ef773840c5a91a15a2d6f9620256"
+    },
+    "providerAuditEvidence": {
+      "repository": "registry.example/product/qualification",
+      "digest": "sha256:5db796932eeb3f0c31d3c71a913ac0fe5acbbb1188027030d302be5c03c57136",
+      "mediaType": "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "size": 1933,
+      "trustPolicy": {
+        "id": "release-qualification-evidence-v1",
+        "digest": "sha256:85c3b7627c1c2d075f7f78dc274c8b9550a7ef773840c5a91a15a2d6f9620256"
+      }
+    },
+    "signedAt": "2026-07-17T12:00:01Z"
+  },
+  "details": {
+    "repository": "registry.example/product/qualification-details",
+    "digest": "sha256:fe13256ec78e48727bf8e76c0dcde11e4b987c6e281a6453586e72b761e078d6",
+    "mediaType": "application/vnd.bytedesk.agent.release-qualification-details.v1+json",
+    "size": 370,
+    "trustPolicy": {
+      "id": "release-qualification-evidence-v1",
+      "digest": "sha256:85c3b7627c1c2d075f7f78dc274c8b9550a7ef773840c5a91a15a2d6f9620256"
+    }
+  },
+  "result": "pass",
+  "producedAt": "2026-07-17T12:00:00Z",
+  "trustPolicy": {
+    "id": "release-qualification-evidence-v1",
+    "digest": "sha256:85c3b7627c1c2d075f7f78dc274c8b9550a7ef773840c5a91a15a2d6f9620256"
+  }
+}

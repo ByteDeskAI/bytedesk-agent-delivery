@@ -1,0 +1,41 @@
+{
+  "contract": "bytedesk.canary-evidence/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-evidence/1.0.0",
+    "digest": "sha256:5eb14e112b0176232119f753eac423d615796103f780e4e08afc0f7b3af76af9"
+  },
+  "evidenceId": "canary-evidence-active-readback-01",
+  "actor": "host_reconciler",
+  "rolloutId": "rollout-01",
+  "planDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "nonce": "nonce_0123456789abcdef",
+  "candidateDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "desiredRevisionDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "releaseDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "deploymentDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "consumerId": "consumer-01",
+  "subjectId": "subject-01",
+  "targetId": "target-01",
+  "slotId": "slot-01",
+  "generation": 1,
+  "authorityDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+  "policyDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+  "grantSetDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+  "workloadIdentityDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+  "actorIdentity": "spiffe://consumer.example/host",
+  "actorVersion": "1.0.0",
+  "signerPolicy": {
+    "id": "host-technical-evidence-v1",
+    "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "results": {
+    "phase": "active_readback",
+    "switch_marker": { "actual": "passed", "trace": { "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "classification": "restricted" } },
+    "active_pointer": { "actual": "passed", "trace": { "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "classification": "restricted" } },
+    "file_inventory": { "actual": "passed", "trace": { "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "classification": "restricted" } },
+    "service_process": { "actual": "passed", "trace": { "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "classification": "restricted" } }
+  },
+  "issuedAt": "2026-07-17T12:02:00Z",
+  "expiresAt": "2026-07-17T12:05:00Z",
+  "trace": { "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "classification": "restricted" }
+}

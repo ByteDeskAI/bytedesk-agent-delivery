@@ -1,0 +1,143 @@
+name: contract-release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contract-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-candidate:
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      CONTRACT_RELEASE_REPOSITORY: ${{ vars.CONTRACT_RELEASE_REPOSITORY }}
+      CONTRACT_RELEASE_TRUST_POLICY_ID: ${{ vars.CONTRACT_RELEASE_TRUST_POLICY_ID }}
+      CONTRACT_RELEASE_TRUST_POLICY_DIGEST: ${{ vars.CONTRACT_RELEASE_TRUST_POLICY_DIGEST }}
+      CONTRACT_RELEASE_ARTIFACT_NAME: contract-release-candidate-${{ github.run_id }}-${{ github.run_attempt }}
+    outputs:
+      artifact-name: ${{ steps.candidate.outputs.artifact-name }}
+    steps:
+      - name: Check out the immutable candidate tag without credentials
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Install exact Go toolchain
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version-file: go.mod
+          check-latest: false
+          cache: true
+          cache-dependency-path: go.sum
+
+      - name: Install locked uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: 0.11.21
+          enable-cache: false
+
+      - name: Install exact Python and locked dependencies
+        run: |
+          uv python install 3.13.14
+          uv sync --frozen
+
+      - name: Validate unprivileged release inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([+-][0-9A-Za-z.-]+)?$ ]]
+          [[ "$GITHUB_SHA" =~ ^[a-f0-9]{40}$ ]]
+          [[ "$CONTRACT_RELEASE_REPOSITORY" =~ ^[^@[:space:]]+/[^@[:space:]]+$ ]]
+          [[ "$CONTRACT_RELEASE_TRUST_POLICY_ID" =~ ^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$ ]]
+          [[ "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]
+
+      - name: Verify source contracts and build the production-policy candidate twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          PRODUCT_VERSION="${GITHUB_REF_NAME#v}"
+          CREATED_AT="$(git show -s --format=%cI "$GITHUB_SHA")"
+          make verify
+          uv run --frozen python scripts/contracts/build_bundle.py \
+            --output-dir dist/release-a \
+            --bundle-version 1.0.0 \
+            --product-version "$PRODUCT_VERSION" \
+            --created-at "$CREATED_AT" \
+            --trust-policy-id "$CONTRACT_RELEASE_TRUST_POLICY_ID" \
+            --trust-policy-digest "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST"
+          uv run --frozen python scripts/contracts/build_bundle.py \
+            --output-dir dist/release-b \
+            --bundle-version 1.0.0 \
+            --product-version "$PRODUCT_VERSION" \
+            --created-at "$CREATED_AT" \
+            --trust-policy-id "$CONTRACT_RELEASE_TRUST_POLICY_ID" \
+            --trust-policy-digest "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST"
+          cmp dist/release-a/agent-delivery-contracts-v1.tar \
+            dist/release-b/agent-delivery-contracts-v1.tar
+          cmp dist/release-a/agent-delivery-contracts-v1.manifest.json \
+            dist/release-b/agent-delivery-contracts-v1.manifest.json
+          uv run --frozen python scripts/contracts/verify_bundle.py \
+            --bundle dist/release-a/agent-delivery-contracts-v1.tar \
+            --manifest dist/release-a/agent-delivery-contracts-v1.manifest.json \
+            --expected-trust-policy-id "$CONTRACT_RELEASE_TRUST_POLICY_ID" \
+            --expected-trust-policy-digest "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST" \
+            --allow-unsigned-structure \
+            --evidence dist/release-a/unsigned-structure-verification.json
+
+      - name: Freeze the candidate artifact and exact source metadata
+        id: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -d -m 0755 dist/release-candidate
+          install -m 0444 dist/release-a/agent-delivery-contracts-v1.tar \
+            dist/release-candidate/agent-delivery-contracts-v1.tar
+          install -m 0444 dist/release-a/agent-delivery-contracts-v1.manifest.json \
+            dist/release-candidate/agent-delivery-contracts-v1.manifest.json
+          install -m 0444 dist/release-a/agent-delivery-contracts-v1.manifest.sha256 \
+            dist/release-candidate/agent-delivery-contracts-v1.manifest.sha256
+          BUNDLE_DIGEST="sha256:$(sha256sum dist/release-candidate/agent-delivery-contracts-v1.tar | cut -d' ' -f1)"
+          MANIFEST_DIGEST="sha256:$(sha256sum dist/release-candidate/agent-delivery-contracts-v1.manifest.json | cut -d' ' -f1)"
+          jq -cnS \
+            --arg sourceRepository "$GITHUB_REPOSITORY" \
+            --arg sourceRef "$GITHUB_REF" \
+            --arg sourceCommit "$GITHUB_SHA" \
+            --arg bundleDigest "$BUNDLE_DIGEST" \
+            --arg manifestDigest "$MANIFEST_DIGEST" \
+            --arg policyId "$CONTRACT_RELEASE_TRUST_POLICY_ID" \
+            --arg policyDigest "$CONTRACT_RELEASE_TRUST_POLICY_DIGEST" \
+            '{profile:"bytedesk.contract-release-candidate/1",sourceRepository:$sourceRepository,sourceRef:$sourceRef,sourceCommit:$sourceCommit,bundleDigest:$bundleDigest,manifestDigest:$manifestDigest,trustPolicy:{id:$policyId,digest:$policyDigest},authorityIssued:false}' \
+            > dist/release-candidate/candidate-metadata.json
+          chmod 0444 dist/release-candidate/candidate-metadata.json
+          echo "artifact-name=$CONTRACT_RELEASE_ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Upload the unprivileged candidate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ steps.candidate.outputs.artifact-name }}
+          path: dist/release-candidate/
+          if-no-files-found: error
+          retention-days: 7
+
+  sign-candidate:
+    needs: build-candidate
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+    # Fail closed while revised signer bytes are reviewed and committed. The
+    # activation commit replaces this bootstrap sentinel with that exact SHA.
+    uses: ByteDeskAI/bytedesk-agent-delivery/.github/workflows/contract-release-signer.yml@0000000000000000000000000000000000000000
+    with:
+      artifact-name: ${{ needs.build-candidate.outputs.artifact-name }}
+      source-commit: ${{ github.sha }}
+      source-ref: ${{ github.ref }}

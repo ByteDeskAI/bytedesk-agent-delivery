@@ -1,0 +1,28 @@
+{
+  "contract": "bytedesk.verification-result/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+    "digest": "sha256:0acdbdbfeb5c84af9ab26a32b9d5a5e49dba4a1dd45189ac1e82a635bb5ab9b6"
+  },
+  "verificationId": "qualification-finalization-renderer-hermes-1.0.0-checkpoint-authentication-verification",
+  "subject": {
+    "repository": "registry.example/product/status-heads",
+    "digest": "sha256:2f32753d74a9b455723502e29691d49de40f6aebb3ac88eeb963a262e02678d1",
+    "mediaType": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json",
+    "size": 2726,
+    "trustPolicy": {
+      "id": "release-status-head-v1",
+      "digest": "sha256:6d815798af5b075b271a71366f3f085fae5e48eed0f61c7c5c03b71c046ab036"
+    }
+  },
+  "policy": {
+    "id": "release-status-head-v1",
+    "digest": "sha256:6d815798af5b075b271a71366f3f085fae5e48eed0f61c7c5c03b71c046ab036"
+  },
+  "evaluatedAt": "2026-07-17T12:00:03.900000Z",
+  "outcome": "permitted",
+  "reasonCodes": [],
+  "evidenceDigests": [
+    "sha256:6059a3d7d70572a7dff0ec62cdaec9cf8ddd82c40b23e47a08f10896f181e8a3"
+  ]
+}

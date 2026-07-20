@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-render/1.0.0",
+  "title": "Tenant-free public harness render manifest",
+  "x-bytedesk-digestAuthority": { "profile": "bytedesk.public-harness-render-authority-digest/1", "exclude": ["contract", "schema", "authorityDigest", "signingResult"] },
+  "type": "object",
+  "required": ["contract", "schema", "source", "publicSkills", "publicSourceAuthenticationEvidence", "productRelease", "releaseQualification", "releaseStatusEligibility", "releaseStatusEligibilityDigest", "releaseStatusEligibilityVerificationEvidenceDigest", "rendererRelease", "executedDistribution", "platform", "productDistributionDigest", "compiledAllowlistDigest", "rendererSchemas", "normalizedParametersDigest", "rendererSelection", "rendererAttemptAuthority", "rendererAttemptAuthenticationEvidence", "rendererExecutionReceipt", "rendererExecutionAuthenticationEvidence", "renderManifest", "outputArchive", "compatibility", "outputLayer", "files", "createdAt", "trustPolicy", "authorityDigest", "signingResult"],
+  "properties": {
+    "contract": { "const": "bytedesk.harness-render/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "source": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "publicSkills": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" } },
+    "publicSourceAuthenticationEvidence": { "type": "array", "minItems": 1, "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" } },
+    "productRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "releaseQualification": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "releaseStatusEligibility": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.release-status-eligibility-evidence.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "release-status-eligibility-v1" } }, "required": ["id"] }
+          },
+          "required": ["mediaType", "trustPolicy"]
+        }
+      ],
+      "description": "Fresh public_render_finalization-stage eligibility for the exact product release and every renderer release used by this render. Selection-time evidence is not reusable."
+    },
+    "releaseStatusEligibilityDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "The resolved eligibility object's domain-separated eligibilityDigest; releaseStatusEligibility.digest separately binds its exact raw JCS bytes."
+    },
+    "releaseStatusEligibilityVerificationEvidenceDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Canonical digest of the exact permitted bytedesk.verification-result/1 evaluated by the public-render finalizer for releaseStatusEligibility."
+    },
+    "rendererRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "executedDistribution": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "platform": { "type": "string", "enum": ["linux/amd64", "linux/arm64"] },
+    "productDistributionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "compiledAllowlistDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "rendererSchemas": { "type": "array", "minItems": 1, "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" } },
+    "normalizedParametersDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "rendererSelection": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "rendererAttemptAuthority": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "rendererAttemptAuthenticationEvidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "rendererExecutionReceipt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "rendererExecutionAuthenticationEvidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "renderManifest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "outputArchive": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "compatibility": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "outputLayer": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "files": { "type": "array", "maxItems": 50000, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/fileInventoryEntry" } },
+    "createdAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "trustPolicy": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+        { "properties": { "id": { "const": "public-render-v1" } }, "required": ["id"] }
+      ]
+    },
+    "authorityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "signingResult": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0" },
+        { "properties": { "purpose": { "const": "public-render-v1" }, "subjectMediaType": { "const": "application/vnd.bytedesk.agent.render.v1+json" } }, "required": ["purpose", "subjectMediaType"] }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "No binding, consumer identifier, private skill, private customization, authority snapshot, or secret reference is representable."
+}

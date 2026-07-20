@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/authorization-decision-proof/1.0.0",
+  "title": "Consumer authorization decision proof",
+  "type": "object",
+  "required": [
+    "contract", "schema", "proofId", "actor", "planDigest", "nonce",
+    "consumerId", "subjectId", "targetId", "candidateDigest", "releaseDigest", "deploymentDigest",
+    "capability", "policyDigest", "grantSetDigest", "workloadIdentityDigest",
+    "decision", "signerIdentity", "signerPolicy", "transport", "issuedAt",
+    "expiresAt", "trace"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.authorization-decision-proof/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "proofId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "actor": { "const": "consumer_authorization_system" },
+    "planDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "nonce": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonce" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "subjectId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "candidateDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "releaseDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "deploymentDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "capability": {
+      "type": "object",
+      "required": ["id", "digest"],
+      "properties": {
+        "id": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "policyDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "grantSetDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "workloadIdentityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "decision": {
+      "type": "object",
+      "required": ["class", "code"],
+      "properties": {
+        "class": { "type": "string", "enum": ["permitted", "policy_denied"] },
+        "code": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "signerIdentity": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "signerPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+    "transport": {
+      "oneOf": [
+        { "$ref": "#/$defs/httpsTransport" },
+        { "$ref": "#/$defs/grpcTransport" },
+        { "$ref": "#/$defs/consumerNativeTransport" }
+      ]
+    },
+    "issuedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "expiresAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "trace": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/redactedEvidenceRef" }
+  },
+  "$defs": {
+    "httpsTransport": {
+      "type": "object",
+      "required": ["outcome", "protocol", "statusCode", "authenticated", "completed", "parsed", "responseMediaType", "responseDigest"],
+      "properties": {
+        "outcome": { "const": "successful_authorization_response" },
+        "protocol": { "const": "https" },
+        "statusCode": { "type": "integer", "minimum": 200, "maximum": 299 },
+        "authenticated": { "const": true },
+        "completed": { "const": true },
+        "parsed": { "const": true },
+        "responseMediaType": { "type": "string", "pattern": "^[a-z0-9!#$&^_.+-]+/[a-z0-9!#$&^_.+-]+(?:;[ -~]+)?$", "maxLength": 255 },
+        "responseDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "grpcTransport": {
+      "type": "object",
+      "required": ["outcome", "protocol", "statusCode", "authenticated", "completed", "parsed", "responseMediaType", "responseDigest"],
+      "properties": {
+        "outcome": { "const": "successful_authorization_response" },
+        "protocol": { "const": "grpc" },
+        "statusCode": { "const": 0 },
+        "authenticated": { "const": true },
+        "completed": { "const": true },
+        "parsed": { "const": true },
+        "responseMediaType": { "type": "string", "pattern": "^[a-z0-9!#$&^_.+-]+/[a-z0-9!#$&^_.+-]+(?:;[ -~]+)?$", "maxLength": 255 },
+        "responseDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "consumerNativeTransport": {
+      "type": "object",
+      "required": ["outcome", "protocol", "statusCode", "authenticated", "completed", "parsed", "responseMediaType", "responseDigest"],
+      "properties": {
+        "outcome": { "const": "successful_authorization_response" },
+        "protocol": { "const": "consumer_native" },
+        "statusCode": { "const": 0 },
+        "authenticated": { "const": true },
+        "completed": { "const": true },
+        "parsed": { "const": true },
+        "responseMediaType": { "type": "string", "pattern": "^[a-z0-9!#$&^_.+-]+/[a-z0-9!#$&^_.+-]+(?:;[ -~]+)?$", "maxLength": 255 },
+        "responseDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Authenticated consumer-owned evidence of one completed and parsed authorization decision. It is never package, grant, identity, credential, or promotion authority. Network, timeout, 404, parser, and unavailable outcomes cannot be encoded as policy_denied proof."
+}

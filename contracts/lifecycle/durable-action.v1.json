@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+  "profile": "bytedesk.durable-action-lifecycle/1",
+  "version": 1,
+  "initialStates": ["queued"],
+  "states": [
+    {"name": "queued", "terminal": false},
+    {"name": "claimed", "terminal": false},
+    {"name": "running", "terminal": false},
+    {"name": "retry_wait", "terminal": false},
+    {"name": "cancellation_requested", "terminal": false},
+    {"name": "succeeded", "terminal": true},
+    {"name": "failed", "terminal": true},
+    {"name": "cancelled", "terminal": true},
+    {"name": "dead_lettered", "terminal": true}
+  ],
+  "transitions": [
+    {"name": "claim", "from": ["queued", "retry_wait"], "to": "claimed", "actor": "action-worker", "guard": "ready_time_elapsed_quota_available_and_new_fencing_token_issued", "cas": "action-row-match", "effects": ["append_attempt", "set_lease_and_fencing_token"], "event": "action.claimed.v1", "retryable": false},
+    {"name": "start", "from": ["claimed"], "to": "running", "actor": "action-worker", "guard": "lease_and_fencing_token_current", "cas": "action-row-match", "effects": ["append_transition", "record_started_at"], "event": "action.running.v1", "retryable": false},
+    {"name": "complete", "from": ["running"], "to": "succeeded", "actor": "action-worker", "guard": "lease_and_fencing_token_current_and_result_durable", "cas": "action-row-match", "effects": ["append_transition", "append_result_reference", "append_outbox_event"], "event": "action.succeeded.v1", "retryable": false},
+    {"name": "retry", "from": ["claimed", "running"], "to": "retry_wait", "actor": "action-worker", "guard": "retryable_failure_and_attempt_budget_remaining_and_no_irreversible_side_effect", "cas": "action-row-match", "effects": ["append_transition", "append_redacted_problem", "set_full_jitter_backoff"], "event": "action.retry-wait.v1", "retryable": true},
+    {"name": "request_cancellation", "from": ["queued", "claimed", "running", "retry_wait"], "to": "cancellation_requested", "actor": "promotion-coordinator", "guard": "action_declares_cancellable_and_no_noncompensable_side_effect", "cas": "action-row-match", "effects": ["append_transition", "signal_current_attempt"], "event": "action.cancellation-requested.v1", "retryable": false},
+    {"name": "cancel", "from": ["cancellation_requested"], "to": "cancelled", "actor": "action-worker", "guard": "attempt_stopped_and_no_unrecorded_side_effect", "cas": "action-row-match", "effects": ["append_transition", "append_cancellation_evidence"], "event": "action.cancelled.v1", "retryable": false},
+    {"name": "terminal_failure", "from": ["claimed", "running", "cancellation_requested"], "to": "failed", "actor": "action-worker", "guard": "nonretryable_failure_with_complete_side_effect_evidence", "cas": "action-row-match", "effects": ["append_transition", "append_redacted_problem", "append_outbox_event"], "event": "action.failed.v1", "retryable": false},
+    {"name": "dead_letter", "from": ["claimed", "running", "retry_wait"], "to": "dead_lettered", "actor": "action-worker", "guard": "retry_budget_exhausted", "cas": "action-row-match", "effects": ["append_transition", "append_redacted_problem", "append_dead_letter_evidence"], "event": "action.dead-lettered.v1", "retryable": false},
+    {"name": "lease_expired_retry", "from": ["claimed", "running"], "to": "retry_wait", "actor": "action-sweeper", "guard": "database_lease_expired_and_retry_budget_remaining_and_new_fencing_token_issued", "cas": "action-row-match", "effects": ["append_transition", "append_stale_attempt_fence_evidence", "discard_stale_attempt_output", "set_full_jitter_backoff", "enqueue_retry"], "event": "action.retry-wait.v1", "retryable": true},
+    {"name": "reclaim_cancellation", "from": ["cancellation_requested"], "to": "cancellation_requested", "actor": "action-sweeper", "guard": "database_lease_expired_and_retry_budget_remaining_and_new_fencing_token_issued", "cas": "action-row-match", "effects": ["append_transition", "append_stale_attempt_fence_evidence", "discard_stale_attempt_output", "append_attempt", "signal_current_attempt"], "event": "action.cancellation-reclaimed.v1", "retryable": true},
+    {"name": "lease_expired_exhausted", "from": ["claimed", "running", "cancellation_requested"], "to": "dead_lettered", "actor": "action-sweeper", "guard": "database_lease_expired_and_retry_budget_exhausted_and_new_fencing_token_issued", "cas": "action-row-match", "effects": ["append_transition", "append_stale_attempt_fence_evidence", "discard_stale_attempt_output", "append_dead_letter_evidence"], "event": "action.dead-lettered.v1", "retryable": false}
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0",
+  "title": "Purpose-bound non-exportable KMS signing result",
+  "type": "object",
+  "required": ["contract", "schema", "requestId", "requestDigest", "purpose", "keyVersion", "algorithm", "publicKeyDigest", "repository", "subjectDigest", "subjectMediaType", "signatureBundle", "trustPolicy", "providerAuditEvidence", "signedAt"],
+  "properties": {
+    "contract": { "const": "bytedesk.signing-result/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "requestId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "requestDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "purpose": { "type": "string", "enum": ["product-release-v1", "public-source-v1", "public-render-v1", "consumer-private-skill-v1", "consumer-authority-v1", "consumer-deployment-v1", "consumer-runtime-release-v1", "release-qualification-policy-v1", "release-qualification-attempt-v1", "release-qualification-receipt-v1", "release-qualification-evidence-v1", "release-qualification-decision-v1", "release-status-v1", "release-status-head-v1", "release-status-eligibility-v1", "consumer-release-status-eligibility-v1", "renderer-attempt-v1", "renderer-execution-v1", "consumer-compilation-input-v1", "consumer-compilation-evidence-v1", "consumer-activation-authorization-v1"] },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "keyVersion": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "algorithm": { "const": "ECDSA_P256_SHA256" },
+    "publicKeyDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "repository": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/ociRepository" },
+    "subjectDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "subjectMediaType": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/mediaType" },
+    "signatureBundle": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+    "providerAuditEvidence": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor",
+      "description": "Exact descriptor for a closed signer-authentication-evidence object. The signature bundle must bind this descriptor and verifiers must resolve it offline."
+    },
+    "signedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "purpose": { "enum": ["consumer-private-skill-v1", "consumer-authority-v1", "consumer-deployment-v1", "consumer-runtime-release-v1", "consumer-compilation-input-v1", "consumer-compilation-evidence-v1", "consumer-release-status-eligibility-v1", "consumer-activation-authorization-v1"] } }, "required": ["purpose"] },
+      "then": { "required": ["consumerId"] }
+    },
+    {
+      "if": { "properties": { "purpose": { "enum": ["product-release-v1", "public-source-v1", "public-render-v1", "release-qualification-policy-v1", "release-qualification-attempt-v1", "release-qualification-receipt-v1", "release-qualification-evidence-v1", "release-qualification-decision-v1", "release-status-v1", "release-status-head-v1", "release-status-eligibility-v1", "renderer-attempt-v1", "renderer-execution-v1"] } }, "required": ["purpose"] },
+      "then": { "not": { "required": ["consumerId"] } }
+    },
+    {
+      "not": {
+        "properties": {
+          "subjectMediaType": {
+            "enum": [
+              "application/vnd.bytedesk.agent.contract-bundle.v1+json",
+              "application/vnd.bytedesk.agent.contract-bundle.v1+tar"
+            ]
+          }
+        },
+        "required": ["subjectMediaType"]
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Contains signature/public verification material and an exact offline provider signer-authentication evidence descriptor. Private-key bytes, credentials, and bearer tokens are forbidden."
+}

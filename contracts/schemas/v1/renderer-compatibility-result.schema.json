@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-compatibility-result/1.0.0",
+  "title": "Deterministic renderer compatibility result",
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "scope",
+    "harnessId",
+    "rendererId",
+    "rendererVersion",
+    "productRelease",
+    "rendererRelease",
+    "executedDistribution",
+    "platform",
+    "agentSpecVersion",
+    "productDistributionDigest",
+    "compiledAllowlistDigest",
+    "rendererSchemas",
+    "normalizationProfile",
+    "capabilityDigest",
+    "capabilityCoverageDigest",
+    "inputDigest",
+    "coverageDigest",
+    "outcome",
+    "semanticResults",
+    "diagnostics",
+    "outputProduced",
+    "approvalRequired",
+    "automaticPromotionEligible"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.renderer-compatibility-result/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "scope": { "type": "string", "enum": ["public", "private"] },
+    "harnessId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "rendererId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "rendererVersion": { "type": "string", "maxLength": 128, "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "productRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "rendererRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "executedDistribution": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "platform": { "type": "string", "enum": ["linux/amd64", "linux/arm64"] },
+    "agentSpecVersion": { "const": "26.1.2" },
+    "productDistributionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "compiledAllowlistDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "rendererSchemas": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" }
+    },
+    "normalizationProfile": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "capabilityDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "SHA-256 of the RFC 8785 JCS bytes of the complete renderer-capability object used for evaluation."
+    },
+    "capabilityCoverageDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Must equal coverageDigest in the exact capability object identified by capabilityDigest."
+    },
+    "inputDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Must equal effectiveInputDigest in the render manifest that embeds this exact result."
+    },
+    "coverageDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "SHA-256 of RFC 8785 JCS bytes for {profile:'bytedesk.renderer-compatibility-coverage/1',capabilityDigest,capabilityCoverageDigest,inputDigest,semanticResults}, with exactly those members."
+    },
+    "outcome": { "type": "string", "enum": ["exact", "warning", "lossy", "unsupported"] },
+    "semanticResults": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/semanticResult" },
+      "description": "Entries are unique and strictly increasing by semanticId UTF-8 bytes, contain every semantic used by the exact input once, and match the status declared by the bound capability object."
+    },
+    "diagnostics": {
+      "type": "array",
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/diagnostic" }
+    },
+    "outputProduced": { "type": "boolean" },
+    "approvalRequired": { "type": "boolean" },
+    "automaticPromotionEligible": {
+      "type": "boolean",
+      "description": "Functional compatibility prerequisite only; true never authorizes promotion or satisfies consumer policy, authority, approval, evaluation, or canary gates."
+    }
+  },
+  "$defs": {
+    "diagnosticCode": {
+      "type": "string",
+      "enum": [
+        "renderer_default_applied",
+        "renderer_loss_approval_required",
+        "renderer_private_configuration_required",
+        "renderer_semantic_lossy",
+        "renderer_semantic_unsupported",
+        "renderer_target_constraint",
+        "renderer_value_normalized"
+      ]
+    },
+    "semanticResult": {
+      "type": "object",
+      "required": ["semanticId", "status"],
+      "properties": {
+        "semanticId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "status": { "type": "string", "enum": ["exact", "warning", "lossy", "unsupported"] }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["code", "semanticId", "severity"],
+      "properties": {
+        "code": { "$ref": "#/$defs/diagnosticCode" },
+        "semanticId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "severity": { "type": "string", "enum": ["warning", "error"] },
+        "path": {
+          "type": "string",
+          "maxLength": 4096,
+          "pattern": "^(?:|(?:/(?:[^~/]|~0|~1)*)+)$"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome": { "const": "exact" } }, "required": ["outcome"] },
+      "then": {
+        "properties": {
+          "semanticResults": { "items": { "properties": { "status": { "const": "exact" } } } },
+          "diagnostics": { "maxItems": 0 },
+          "outputProduced": { "const": true },
+          "approvalRequired": { "const": false },
+          "automaticPromotionEligible": { "const": true }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "outcome": { "const": "warning" } }, "required": ["outcome"] },
+      "then": {
+        "properties": {
+          "semanticResults": {
+            "items": { "properties": { "status": { "enum": ["exact", "warning"] } } },
+            "contains": { "properties": { "status": { "const": "warning" } }, "required": ["status"] }
+          },
+          "diagnostics": { "minItems": 1 },
+          "outputProduced": { "const": true },
+          "approvalRequired": { "const": false },
+          "automaticPromotionEligible": { "const": true }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "outcome": { "const": "lossy" } }, "required": ["outcome"] },
+      "then": {
+        "properties": {
+          "semanticResults": {
+            "items": { "properties": { "status": { "enum": ["exact", "warning", "lossy"] } } },
+            "contains": { "properties": { "status": { "const": "lossy" } }, "required": ["status"] }
+          },
+          "diagnostics": {
+            "minItems": 1,
+            "contains": { "properties": { "code": { "const": "renderer_semantic_lossy" } }, "required": ["code"] }
+          },
+          "outputProduced": { "const": true },
+          "approvalRequired": { "const": true },
+          "automaticPromotionEligible": { "const": false }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "outcome": { "const": "unsupported" } }, "required": ["outcome"] },
+      "then": {
+        "properties": {
+          "semanticResults": {
+            "contains": { "properties": { "status": { "const": "unsupported" } }, "required": ["status"] }
+          },
+          "diagnostics": {
+            "minItems": 1,
+            "contains": { "properties": { "code": { "const": "renderer_semantic_unsupported" } }, "required": ["code"] }
+          },
+          "outputProduced": { "const": false },
+          "approvalRequired": { "const": false },
+          "automaticPromotionEligible": { "const": false }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "This deterministic result reports functional representability. It does not grant approval, authorize promotion, or convey runtime authority. Eligibility is only one input to independent consumer policy. Unsupported input never yields successful output; lossy output is never automatically promotable and requires separately authenticated consumer approval."
+}

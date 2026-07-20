@@ -1,0 +1,40 @@
+{
+  "specversion": "1.0",
+  "id": "event-rollout-000011",
+  "source": "https://agent-delivery.example.invalid/v1",
+  "type": "ai.bytedesk.agent-delivery.rollout.changed.v1",
+  "subject": "rollout-000001",
+  "time": "2026-07-17T00:00:04Z",
+  "datacontenttype": "application/json",
+  "dataschema": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+  "data": {
+    "contract": "bytedesk.event-data/1",
+    "schema": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+      "digest": "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243"
+    },
+    "eventType": "ai.bytedesk.agent-delivery.rollout.changed.v1",
+    "dataSchema": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/event-data/1.0.0",
+      "digest": "sha256:b89b2091b29798a62b147da8132cde46bc42aae4beacf6709a03474bc6c90243"
+    },
+    "aggregate": {
+      "type": "rollout",
+      "id": "rollout-000001",
+      "revisionDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "sequence": 11
+    },
+    "resource": {
+      "uri": "/v1/targets/target-000001/rollouts/rollout-000001",
+      "etag": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "projectionSchema": {
+        "id": "https://schemas.bytedesk.ai/agent-delivery/v1/rollout/1.0.0",
+        "digest": "sha256:a3fef06c3c2b3967279f4e572dfb0730dea1dac953d2e672d1bd8c2f146eb200"
+      }
+    },
+    "consumerScope": "consumer-example",
+    "correlationId": "correlation-000011",
+    "causationId": "promotion-000011",
+    "redaction": "consumer-private"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-input-parameters/1.0.0",
+  "title": "Deterministic renderer input parameters",
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "scope",
+    "harnessId",
+    "rendererId",
+    "rendererRelease",
+    "harnessVersion",
+    "normalizationProfile",
+    "outputArchiveProfile",
+    "diagnosticProfile",
+    "resourceProfile",
+    "compatibilityMode",
+    "generatedText",
+    "archiveMetadata",
+    "payloadPolicy",
+    "sourceDateEpoch"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.renderer-input-parameters/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "scope": { "type": "string", "enum": ["public", "private"] },
+    "harnessId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "rendererId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "rendererRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "harnessVersion": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "normalizationProfile": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "outputArchiveProfile": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "diagnosticProfile": { "const": "bytedesk.renderer-diagnostics.v1" },
+    "resourceProfile": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "compatibilityMode": {
+      "type": "string",
+      "enum": ["exact_only", "allow_warning", "allow_approved_lossy"]
+    },
+    "generatedText": {
+      "type": "object",
+      "required": ["encoding", "lineEndings"],
+      "properties": {
+        "encoding": { "const": "UTF-8" },
+        "lineEndings": { "const": "LF" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "archiveMetadata": {
+      "type": "object",
+      "required": ["pathOrdering", "timestamps", "ownership", "modes"],
+      "properties": {
+        "pathOrdering": { "const": "nfc_utf8_lexical" },
+        "timestamps": { "const": "zero" },
+        "ownership": { "const": "uid_gid_zero_names_empty" },
+        "modes": { "const": "declared_safe_modes" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "payloadPolicy": { "const": "byte_exact" },
+    "sourceDateEpoch": { "const": 0 }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "scope": { "const": "public" } }, "required": ["scope"] },
+      "then": {
+        "properties": {
+          "compatibilityMode": { "enum": ["exact_only", "allow_warning"] }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "The parameter object contains only deterministic functional rendering choices. Adapter-specific functional values live in the separately validated harness configuration; caller-selected code, commands, plugins, trust, credentials, and security controls are not representable."
+}

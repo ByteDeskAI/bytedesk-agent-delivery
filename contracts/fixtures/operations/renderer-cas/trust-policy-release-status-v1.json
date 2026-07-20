@@ -1,0 +1,72 @@
+{
+  "contract": "bytedesk.trust-policy/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+    "digest": "sha256:ea53b4814c96282ba5812c2573b4adf45a026340b1022503e25b9f391dcd1509"
+  },
+  "policyId": "release-status-v1",
+  "version": "1.0.0",
+  "effective": {
+    "notBefore": "2026-07-17T00:00:00Z",
+    "notAfter": "2027-07-17T00:00:00Z"
+  },
+  "scope": {
+    "repositories": [
+      "registry.example/product/status"
+    ],
+    "mediaTypes": [
+      "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "application/vnd.bytedesk.agent.release-status.v1+json",
+      "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.signing-result.v1+json"
+    ],
+    "purposes": [
+      "release-status-v1"
+    ]
+  },
+  "signers": [
+    {
+      "purpose": "release-status-v1",
+      "credentialKind": "kms_key",
+      "keyVersion": "kms://product/release-status-v1/versions/1",
+      "publicKeyDigest": "sha256:1bcc1ebec398460538e74a62707562a741a42ad42a60168c421e53a3279c0226",
+      "algorithm": "ECDSA_P256_SHA256",
+      "workloadIdentity": "spiffe://bytedesk.ai/agent-delivery/release-status",
+      "claims": {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audience": "agent-delivery-release-status-v1",
+        "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:release-status-v1",
+        "repository": "ByteDeskAI/bytedesk-agent-delivery",
+        "workflow": ".github/workflows/release-status-v1.yml",
+        "ref": "refs/tags/v1.0.0",
+        "environment": "release-status-v1",
+        "builderDigest": "sha256:a0e0f8c73215f17171cfdd3cb2c94536fca9ab632e7396f36d2133cec5f1d9b1"
+      }
+    }
+  ],
+  "requiredEvidence": [
+    "schema",
+    "authority"
+  ],
+  "rules": {
+    "freshnessSeconds": 900,
+    "requireNonce": true,
+    "requirePredecessor": true,
+    "denyDowngrade": true,
+    "withdrawal": "deny_new_use",
+    "outage": "fail_closed_new_work"
+  },
+  "revocations": {
+    "keyVersions": [],
+    "digests": [],
+    "workflows": [],
+    "builders": [],
+    "schemas": [],
+    "renderers": [],
+    "content": []
+  },
+  "failureMode": "fail_closed",
+  "predecessor": {
+    "kind": "none"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "https://problems.bytedesk.ai/agent-delivery/precondition-failed",
+  "title": "The exact predecessor did not match",
+  "status": 412,
+  "code": "precondition_failed",
+  "portId": "bytedesk.port.control-plane-api-events/1",
+  "operationId": "submit-command",
+  "correlationId": "corr-01",
+  "retryable": false,
+  "sideEffectState": "not-committed",
+  "violations": [],
+  "expectedRevision": 8,
+  "expectedDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "currentRevision": 9,
+  "currentDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "documentation": "https://docs.bytedesk.ai/agent-delivery/problems/precondition-failed"
+}

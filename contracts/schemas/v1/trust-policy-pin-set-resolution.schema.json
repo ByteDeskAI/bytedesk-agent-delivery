@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-resolution/1.0.0",
+  "title": "Trust-policy provider resolution",
+  "x-bytedesk-digestAuthority": {
+    "profile": "bytedesk.trust-policy-pin-set-resolution-result/1",
+    "exclude": ["contract", "schema", "resolutionDigest"]
+  },
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "requestNonce",
+    "requestDigest",
+    "disposition",
+    "pinSet",
+    "pinSetDescriptor",
+    "providerEvidence",
+    "resolvedTrustPolicy",
+    "resolvedAt",
+    "resolutionDigest"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.trust-policy-pin-set-resolution/1" },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "requestNonce": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonce"
+    },
+    "requestDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "disposition": {
+      "type": "string",
+      "enum": [
+        "activation_committed",
+        "activation_pending",
+        "activation_not_found",
+        "current_for_new_use",
+        "historical_verification"
+      ]
+    },
+    "pinSet": {
+      "oneOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set/1.0.0" },
+        { "type": "null" }
+      ]
+    },
+    "pinSetDescriptor": {
+      "oneOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-descriptor/1.0.0" },
+        { "type": "null" }
+      ]
+    },
+    "providerEvidence": {
+      "oneOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-provider-evidence/1.0.0" },
+        { "type": "null" }
+      ]
+    },
+    "resolvedTrustPolicy": {
+      "oneOf": [
+        { "$ref": "#/$defs/trustPolicyReference" },
+        { "type": "null" }
+      ]
+    },
+    "resolvedAt": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp"
+    },
+    "resolutionDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "trustPolicyReference": {
+      "type": "object",
+      "required": ["id", "digest"],
+      "properties": {
+        "id": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "disposition": { "enum": ["activation_pending", "activation_not_found"] }
+        },
+        "required": ["disposition"]
+      },
+      "then": {
+        "properties": {
+          "pinSet": { "type": "null" },
+          "pinSetDescriptor": { "type": "null" },
+          "providerEvidence": { "type": "null" },
+          "resolvedTrustPolicy": { "type": "null" }
+        }
+      },
+      "else": {
+        "properties": {
+          "pinSet": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set/1.0.0" },
+          "pinSetDescriptor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-descriptor/1.0.0" },
+          "providerEvidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-provider-evidence/1.0.0" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "disposition": { "enum": ["current_for_new_use", "historical_verification"] }
+        },
+        "required": ["disposition"]
+      },
+      "then": { "properties": { "resolvedTrustPolicy": { "$ref": "#/$defs/trustPolicyReference" } } },
+      "else": { "properties": { "resolvedTrustPolicy": { "type": "null" } } }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "An authenticated exact provider resolution. Non-terminal activation states carry no authority. Successful current or historical policy resolution returns the complete active pin set, descriptor, provider activation/readback evidence, and exact policy reference. Revoked, expired, rolled-back, equivocated, or use-ineligible policies are typed operation failures and are never representable as success."
+}

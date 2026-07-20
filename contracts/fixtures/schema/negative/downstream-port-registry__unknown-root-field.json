@@ -1,0 +1,330 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/downstream-port-registry/1.0.0",
+  "compatibility": "Port major, operation identifier, request contract, and result contract are stable. Closed requests reject unknown fields. Additive result evolution requires declared minor compatibility.",
+  "contractFixtures": "contracts/ports/v1/contract-fixtures.json",
+  "ports": [
+    {
+      "contractPaths": [
+        "contracts/schemas/v1/catalog-index.schema.json",
+        "contracts/schemas/v1/agent-source.schema.json",
+        "docs/planning/tasks/AD-02-marketplace-bootstrap.md"
+      ],
+      "kind": "adapter",
+      "operations": [
+        {
+          "authentication": "optional-client-identity",
+          "authorization": "public catalog read or consumer catalog-read scope",
+          "commitUncertainty": "not-applicable",
+          "compatibility": "cursor is bound to catalog digest and port major",
+          "errors": [
+            {
+              "code": "authentication_failed",
+              "sideEffectState": "none"
+            },
+            {
+              "code": "authorization_denied",
+              "sideEffectState": "none"
+            },
+            {
+              "code": "resource_not_found",
+              "sideEffectState": "none"
+            },
+            {
+              "code": "dependency_unavailable",
+              "sideEffectState": "none"
+            }
+          ],
+          "failureSemantics": "fail-closed-read-only",
+          "idempotency": "safe paginated read against one verified signed catalog snapshot",
+          "operationId": "list-catalog-releases",
+          "owner": "catalog",
+          "requestContract": "bytedesk.port.catalog.list-catalog-releases.request/1",
+          "requestFields": [
+            {
+              "name": "cursor",
+              "required": true,
+              "schemaRef": "primitive:opaque-token",
+              "type": "string-or-null",
+              "valueType": "bytedesk.port-field.catalog.list-catalog-releases.request.cursor/1"
+            },
+            {
+              "name": "limit",
+              "required": true,
+              "schemaRef": "primitive:nonnegative-integer",
+              "type": "integer",
+              "valueType": "bytedesk.port-field.catalog.list-catalog-releases.request.limit/1"
+            }
+          ],
+          "resultContract": "bytedesk.port.catalog.list-catalog-releases.result/1",
+          "resultFields": [
+            {
+              "name": "releases",
+              "required": true,
+              "schemaRef": "catalog-index#/$defs/catalogRelease",
+              "type": "array",
+              "valueType": "bytedesk.port-field.catalog.list-catalog-releases.result.releases/1"
+            },
+            {
+              "name": "nextCursor",
+              "required": true,
+              "schemaRef": "primitive:opaque-token",
+              "type": "string-or-null",
+              "valueType": "bytedesk.port-field.catalog.list-catalog-releases.result.next-cursor/1"
+            }
+          ],
+          "suite": "downstream.catalog.v1"
+        },
+        {
+          "authentication": "optional-client-identity",
+          "authorization": "public catalog read or consumer catalog-read scope",
+          "commitUncertainty": "not-applicable",
+          "compatibility": "tags and channels are discovery metadata only",
+          "errors": [
+            {
+              "code": "invalid_request",
+              "sideEffectState": "none"
+            },
+            {
+              "code": "resource_not_found",
+              "sideEffectState": "none"
+            },
+            {
+              "code": "digest_mismatch",
+              "sideEffectState": "none"
+            },
+            {
+              "code": "trust_verification_failed",
+              "sideEffectState": "none"
+            },
+            {
+              "code": "dependency_unavailable",
+              "sideEffectState": "none"
+            }
+          ],
+          "failureSemantics": "fail-closed-read-only",
+          "idempotency": "safe discovery read; returned exact digest, never channel, is authority",
+          "operationId": "resolve-catalog-release",
+          "owner": "catalog",
+          "requestContract": "bytedesk.port.catalog.resolve-catalog-release.request/1",
+          "requestFields": [
+            {
+              "name": "releaseId",
+              "required": true,
+              "schemaRef": "common#/$defs/identifier",
+              "type": "identifier",
+              "valueType": "bytedesk.port-field.catalog.resolve-catalog-release.request.release-id/1"
+            },
+            {
+              "name": "channel",
+              "required": true,
+              "schemaRef": "primitive:string",
+              "type": "string",
+              "valueType": "bytedesk.port-field.catalog.resolve-catalog-release.request.channel/1"
+            }
+          ],
+          "resultContract": "bytedesk.port.catalog.resolve-catalog-release.result/1",
+          "resultFields": [
+            {
+              "name": "catalogRelease",
+              "required": true,
+              "schemaRef": "catalog-index#/$defs/catalogRelease",
+              "type": "object",
+              "valueType": "bytedesk.port-field.catalog.resolve-catalog-release.result.catalog-release/1"
+            },
+            {
+              "name": "catalogDigest",
+              "required": true,
+              "schemaRef": "common#/$defs/digest",
+              "type": "digest",
+              "valueType": "bytedesk.port-field.catalog.resolve-catalog-release.result.catalog-digest/1"
+            },
+            {
+              "name": "releaseDigest",
+              "required": true,
+              "schemaRef": "common#/$defs/digest",
+              "type": "digest",
+              "valueType": "bytedesk.port-field.catalog.resolve-catalog-release.result.release-digest/1"
+            }
+          ],
+          "suite": "downstream.catalog.v1"
+        },
+        {
+          "authentication": "optional-client-identity",
+          "authorization": "catalog object read scope",
+          "commitUncertainty": "not-applicable",
+          "compatibility": "byte-exact object identity by digest",
+          "errors": [
+            {
+              "code": "resource_not_found",
+              "sideEffectState": "none"
+            },
+            {
+              "code": "digest_mismatch",
+              "sideEffectState": "none"
+            },
+            {
+              "code": "artifact_unsafe",
+              "sideEffectState": "none"
+            },
+            {
+              "code": "dependency_unavailable",
+              "sideEffectState": "none"
+            }
+          ],
+          "failureSemantics": "fail-closed-read-only",
+          "idempotency": "safe content-addressed read",
+          "operationId": "fetch-catalog-object",
+          "owner": "catalog",
+          "requestContract": "bytedesk.port.catalog.fetch-catalog-object.request/1",
+          "requestFields": [
+            {
+              "name": "catalogDigest",
+              "required": true,
+              "schemaRef": "common#/$defs/digest",
+              "type": "digest",
+              "valueType": "bytedesk.port-field.catalog.fetch-catalog-object.request.catalog-digest/1"
+            },
+            {
+              "name": "objectDigest",
+              "required": true,
+              "schemaRef": "common#/$defs/digest",
+              "type": "digest",
+              "valueType": "bytedesk.port-field.catalog.fetch-catalog-object.request.object-digest/1"
+            },
+            {
+              "name": "maximumBytes",
+              "required": true,
+              "schemaRef": "primitive:nonnegative-integer",
+              "type": "integer",
+              "valueType": "bytedesk.port-field.catalog.fetch-catalog-object.request.maximum-bytes/1"
+            }
+          ],
+          "resultContract": "bytedesk.port.catalog.fetch-catalog-object.result/1",
+          "resultFields": [
+            {
+              "name": "objectBytes",
+              "required": true,
+              "schemaRef": "primitive:bounded-bytes",
+              "type": "bytes",
+              "valueType": "bytedesk.port-field.catalog.fetch-catalog-object.result.object-bytes/1"
+            },
+            {
+              "name": "mediaType",
+              "required": true,
+              "schemaRef": "primitive:string",
+              "type": "string",
+              "valueType": "bytedesk.port-field.catalog.fetch-catalog-object.result.media-type/1"
+            },
+            {
+              "name": "verifiedObjectDigest",
+              "required": true,
+              "schemaRef": "common#/$defs/digest",
+              "type": "digest",
+              "valueType": "bytedesk.port-field.catalog.fetch-catalog-object.result.verified-object-digest/1"
+            }
+          ],
+          "suite": "downstream.catalog.v1"
+        },
+        {
+          "authentication": "operator-or-ci-identity",
+          "authorization": "catalog-publish scope and current publication policy",
+          "commitUncertainty": "resolve-by-idempotency-key-then-digest-readback",
+          "compatibility": "exact catalog schema digest and monotonic revision",
+          "errors": [
+            {
+              "code": "invalid_request",
+              "sideEffectState": "not-committed"
+            },
+            {
+              "code": "precondition_failed",
+              "sideEffectState": "not-committed"
+            },
+            {
+              "code": "idempotency_collision",
+              "sideEffectState": "not-committed"
+            },
+            {
+              "code": "trust_verification_failed",
+              "sideEffectState": "not-committed"
+            },
+            {
+              "code": "registry_commit_unknown",
+              "sideEffectState": "commit-unknown"
+            }
+          ],
+          "failureSemantics": "fail-closed-remote-commit",
+          "idempotency": "mandatory key bound to canonical request digest",
+          "operationId": "publish-catalog-release",
+          "owner": "catalog",
+          "requestContract": "bytedesk.port.catalog.publish-catalog-release.request/1",
+          "requestFields": [
+            {
+              "name": "catalogIndex",
+              "required": true,
+              "schemaRef": "catalog-index",
+              "type": "object",
+              "valueType": "bytedesk.port-field.catalog.publish-catalog-release.request.catalog-index/1"
+            },
+            {
+              "name": "precondition",
+              "required": true,
+              "schemaRef": "precondition",
+              "type": "object",
+              "valueType": "bytedesk.port-field.catalog.publish-catalog-release.request.precondition/1"
+            },
+            {
+              "name": "idempotencyKey",
+              "required": true,
+              "schemaRef": "common#/$defs/identifier",
+              "type": "identifier",
+              "valueType": "bytedesk.port-field.catalog.publish-catalog-release.request.idempotency-key/1"
+            }
+          ],
+          "resultContract": "bytedesk.port.catalog.publish-catalog-release.result/1",
+          "resultFields": [
+            {
+              "name": "revision",
+              "required": true,
+              "schemaRef": "primitive:nonnegative-integer",
+              "type": "integer",
+              "valueType": "bytedesk.port-field.catalog.publish-catalog-release.result.revision/1"
+            },
+            {
+              "name": "catalogDigest",
+              "required": true,
+              "schemaRef": "common#/$defs/digest",
+              "type": "digest",
+              "valueType": "bytedesk.port-field.catalog.publish-catalog-release.result.catalog-digest/1"
+            },
+            {
+              "name": "publicationEvidence",
+              "required": true,
+              "schemaRef": "bytedesk.port.publication-evidence/1",
+              "type": "object",
+              "valueType": "bytedesk.port-field.catalog.publish-catalog-release.result.publication-evidence/1"
+            }
+          ],
+          "suite": "downstream.catalog.v1"
+        }
+      ],
+      "owner": "catalog",
+      "portId": "bytedesk.port.catalog/1",
+      "promisedSchemas": [],
+      "protocolProfiles": [
+        "bytedesk.oci-archive-layout/1",
+        "bytedesk.oci-artifact-profile/1"
+      ],
+      "suite": "downstream.catalog.v1",
+      "tasks": [
+        "AD-02",
+        "AD-03",
+        "AD-10",
+        "AD-15"
+      ]
+    }
+  ],
+  "profile": "bytedesk.downstream-port-registry/1",
+  "typeCatalog": "contracts/ports/v1/type-catalog.json",
+  "version": 1,
+  "unexpectedAuthority": "must-be-rejected"
+}

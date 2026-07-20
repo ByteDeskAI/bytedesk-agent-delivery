@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/event-types/1.0.0",
+  "profile": "bytedesk.event-types/1",
+  "cloudEventsVersion": "1.0.2",
+  "delivery": "at-least-once",
+  "ordering": "per-aggregate-sequence",
+  "authority": "notification-only",
+  "eventTypes": [
+    {
+      "type": "ai.bytedesk.agent-delivery.installation.changed.v1",
+      "aggregateType": "installation",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0",
+      "resourceSchemaDigest": "sha256:af01882c9dc8dbf80fc753f148a35fd916d4bdbe5d93b6a8938c0b10f58ff8dc",
+      "resourceUriTemplate": "/v1/installations/{installationId}",
+      "resynchronizeOperationId": "getInstallation",
+      "redaction": "consumer-private"
+    }
+  ],
+  "registryCompatibility": "Event type, resource schema ID and digest, URI template, redaction class, and resynchronization operation are immutable within v1.",
+  "resynchronization": {
+    "authority": "authenticated-api-read",
+    "on": [
+      "unknown-event-type",
+      "unknown-schema-id-or-digest",
+      "aggregate-sequence-gap",
+      "etag-mismatch"
+    ],
+    "resumeAfter": "exact-resource-schema-and-etag-verified"
+  },
+  "unexpectedAuthority": "must-be-rejected"
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/functional-customization-profile/1.0.0",
+  "title": "Closed functional customization target profile",
+  "type": "object",
+  "required": ["$schema", "profile", "version", "jsonPatchProfile", "targets", "separateOperations"],
+  "properties": {
+    "$schema": { "const": "https://schemas.bytedesk.ai/agent-delivery/v1/functional-customization-profile/1.0.0" },
+    "profile": { "const": "bytedesk.functional-customization/1" },
+    "version": { "const": "1.0.0" },
+    "jsonPatchProfile": { "const": "bytedesk.json-patch/1" },
+    "targets": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "type": "object",
+          "required": ["document", "schemaAuthority", "rootMutation", "nonRootFunctionalMutation", "authorityPlanePresent"],
+          "properties": {
+            "document": { "const": "agent-spec" },
+            "schemaAuthority": { "const": "official-agent-spec-sdk" },
+            "rootMutation": { "const": false },
+            "nonRootFunctionalMutation": { "const": true },
+            "authorityPlanePresent": { "const": false }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["document", "schemaAuthority", "rootMutation", "nonRootFunctionalMutation", "authorityPlanePresent"],
+          "properties": {
+            "document": { "const": "renderer-functional-config" },
+            "schemaAuthority": { "const": "exact-renderer-release-schema" },
+            "rootMutation": { "const": false },
+            "nonRootFunctionalMutation": { "const": true },
+            "authorityPlanePresent": { "const": false }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      ],
+      "items": false
+    },
+    "separateOperations": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        { "const": "bytedesk.file-operations/1" },
+        { "const": "bytedesk.skill-operations/1" }
+      ],
+      "items": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Only complete functional documents are patch targets. Consumer authority, identity, grants, credentials, trust, and mandatory security policy are separate schemas and never patch targets."
+}

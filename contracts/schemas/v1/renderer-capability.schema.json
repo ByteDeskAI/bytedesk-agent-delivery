@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-capability/1.0.0",
+  "title": "Exact renderer semantic capability matrix",
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "harnessId",
+    "rendererId",
+    "rendererVersion",
+    "rendererContractVersion",
+    "source",
+    "agentSpecVersion",
+    "supportedHarnessVersions",
+    "supportedPlatforms",
+    "supportedScopes",
+    "activationMode",
+    "semanticRegistry",
+    "semanticCount",
+    "semantics",
+    "coverageDigest",
+    "schemas",
+    "publishedAt",
+    "trustPolicy"
+  ],
+  "properties": {
+    "contract": { "const": "bytedesk.renderer-capability/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "harnessId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "rendererId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "rendererVersion": { "type": "string", "maxLength": 128, "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "rendererContractVersion": { "type": "string", "maxLength": 128, "pattern": "^[1-9][0-9]*\\.[0-9]+\\.[0-9]+$" },
+    "source": {
+      "type": "object",
+      "required": ["repository", "commit", "treeDigest"],
+      "properties": {
+        "repository": { "type": "string", "format": "uri", "maxLength": 2048 },
+        "commit": { "type": "string", "maxLength": 64, "pattern": "^[0-9a-f]{40,64}$" },
+        "treeDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false,
+      "description": "Pre-release source identity. A capability object never contains or predicts its enclosing renderer-release descriptor."
+    },
+    "agentSpecVersion": { "const": "26.1.2" },
+    "supportedHarnessVersions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+    },
+    "supportedPlatforms": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "enum": ["linux/amd64", "linux/arm64"] }
+    },
+    "supportedScopes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "enum": ["public", "private"] }
+    },
+    "activationMode": {
+      "type": "string",
+      "enum": ["not_applicable", "isolated_candidate", "guarded_in_place"]
+    },
+    "semanticRegistry": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor",
+      "description": "Exact signed registry whose complete semantic ID set must be resolved offline and represented exactly once in semantics."
+    },
+    "semanticCount": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10000,
+      "description": "Must equal the exact length of semantics; enforced by renderer digest conformance."
+    },
+    "semantics": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/semanticCapability" },
+      "description": "Entries are unique and strictly increasing by semanticId UTF-8 bytes and contain every ID from semanticRegistry exactly once. Registry equality, ordering, and count are verified by renderer conformance."
+    },
+    "coverageDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "SHA-256 of RFC 8785 JCS bytes for {profile:'bytedesk.renderer-capability-coverage/1',semanticRegistry,semantics}, with exactly those members."
+    },
+    "schemas": {
+      "type": "object",
+      "required": ["inputParameters", "harnessConfiguration", "compatibilityResult", "renderManifest"],
+      "properties": {
+        "inputParameters": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+        "harnessConfiguration": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+        "compatibilityResult": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+        "renderManifest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "publishedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "trustPolicy": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+        { "properties": { "id": { "const": "product-release-v1" } }, "required": ["id"] }
+      ]
+    }
+  },
+  "$defs": {
+    "diagnosticCode": {
+      "type": "string",
+      "enum": [
+        "renderer_default_applied",
+        "renderer_loss_approval_required",
+        "renderer_private_configuration_required",
+        "renderer_semantic_lossy",
+        "renderer_semantic_unsupported",
+        "renderer_target_constraint",
+        "renderer_value_normalized"
+      ]
+    },
+    "semanticCapability": {
+      "type": "object",
+      "required": ["semanticId", "scopes", "status", "diagnosticCodes", "outputRoles", "approvalRequired"],
+      "properties": {
+        "semanticId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "scopes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["public", "private"] }
+        },
+        "status": { "type": "string", "enum": ["exact", "warning", "lossy", "unsupported"] },
+        "diagnosticCodes": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/diagnosticCode" }
+        },
+        "outputRoles": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }
+        },
+        "approvalRequired": { "type": "boolean" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "exact" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "diagnosticCodes": { "maxItems": 0 },
+              "approvalRequired": { "const": false }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "warning" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "diagnosticCodes": { "minItems": 1 },
+              "approvalRequired": { "const": false }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "lossy" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "diagnosticCodes": {
+                "minItems": 1,
+                "contains": { "const": "renderer_semantic_lossy" }
+              },
+              "approvalRequired": { "const": true }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "unsupported" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "diagnosticCodes": {
+                "minItems": 1,
+                "contains": { "const": "renderer_semantic_unsupported" }
+              },
+              "approvalRequired": { "const": false }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "This is functional renderer coverage only. It grants no identity, tool, MCP, provider, credential, trust, approval, sandbox, or authorization capability."
+}

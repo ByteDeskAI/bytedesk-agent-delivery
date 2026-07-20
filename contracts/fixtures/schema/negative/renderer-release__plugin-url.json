@@ -1,0 +1,8 @@
+{
+  "contract": "bytedesk.renderer-release/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-release/1.0.0",
+    "digest": "sha256:fec8fe534d7d51129cca211fa12583410c58bc47c9c1b90ec00b77299a64e80b"
+  },
+  "pluginUrl": "https://attacker.example/renderer.so"
+}

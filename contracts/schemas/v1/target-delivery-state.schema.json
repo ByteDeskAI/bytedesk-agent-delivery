@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0",
+  "title": "Sole-writer target desired-state aggregate",
+  "type": "object",
+  "required": ["contract", "schema", "consumerId", "targetId", "revision", "precondition", "predecessor", "condition", "activeRelease", "pendingRollout", "constraints", "slotGeneration", "transitionRefs"],
+  "properties": {
+    "contract": { "const": "bytedesk.target-delivery-state/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "revision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" },
+    "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0" },
+    "condition": { "type": "string", "enum": ["idle", "rollout_pending", "recovery_planning", "operator_required", "retired"] },
+    "activeRelease": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerRuntimeReleaseDescriptor" }
+      ]
+    },
+    "pendingRollout": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["rolloutId", "rolloutDigest", "candidate", "proposalInputDigest"],
+          "properties": {
+            "rolloutId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+            "rolloutDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+            "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/consumerRuntimeReleaseDescriptor" },
+            "proposalInputDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      ]
+    },
+    "constraints": {
+      "type": "object",
+      "required": ["trustPolicy", "authorityPolicyDigest", "canaryPolicyDigest", "recoveryPolicyDigest"],
+      "properties": {
+        "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+        "authorityPolicyDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "canaryPolicyDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "recoveryPolicyDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "slotGeneration": {
+      "type": "object",
+      "required": ["slotId", "generation"],
+      "properties": {
+        "slotId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "generation": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "transitionRefs": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" } }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "condition": { "const": "rollout_pending" } }, "required": ["condition"] },
+      "then": { "properties": { "pendingRollout": { "type": "object", "maxProperties": 4 } } }
+    },
+    {
+      "if": {
+        "properties": {
+          "condition": { "enum": ["idle", "recovery_planning", "operator_required", "retired"] }
+        },
+        "required": ["condition"]
+      },
+      "then": { "properties": { "pendingRollout": { "type": "null" } } }
+    },
+    {
+      "if": { "properties": { "condition": { "const": "retired" } }, "required": ["condition"] },
+      "then": { "properties": { "activeRelease": { "type": "null" } } }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Only the Promotion Coordinator may create this object. pendingRollout.proposalInputDigest binds the canonical proposal input and is deliberately not the impossible self-digest of the containing target state; callers compute the authoritative target-state digest over the complete accepted object. Git, compilers, bots, hosts, observations, and consumer applications may not write it."
+}

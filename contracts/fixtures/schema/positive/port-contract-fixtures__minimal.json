@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/port-contract-fixtures/1.0.0",
+  "contracts": [
+    {
+      "contractId": "bytedesk.port.catalog.list-catalog-releases.request/1",
+      "semanticDenials": [
+        {
+          "expectedKeyword": "oneOf",
+          "instance": {
+            "cursor": "cursor-0000000001",
+            "limit": 100,
+            "snapshotDigest": null
+          },
+          "kind": "continuation-without-snapshot"
+        }
+      ],
+      "structuralDenials": [
+        {
+          "expectedKeyword": "additionalProperties",
+          "instance": {
+            "__unknown": true,
+            "cursor": null,
+            "limit": 100,
+            "snapshotDigest": null
+          },
+          "kind": "unknown-field"
+        },
+        {
+          "expectedKeyword": "oneOf",
+          "instance": {
+            "limit": 100,
+            "snapshotDigest": null
+          },
+          "kind": "missing-required"
+        },
+        {
+          "expectedKeyword": "type",
+          "instance": {
+            "cursor": null,
+            "limit": null,
+            "snapshotDigest": null
+          },
+          "kind": "illegal-null"
+        }
+      ],
+      "valid": {
+        "cursor": null,
+        "limit": 100,
+        "snapshotDigest": null
+      }
+    }
+  ],
+  "profile": "bytedesk.port-contract-fixtures/1",
+  "registryDigest": "sha256:a81ed4c4d2e0715d5a39e801dfb27ae3c914c5bf11c50f547d270744d6a2b0ef",
+  "version": 1
+}

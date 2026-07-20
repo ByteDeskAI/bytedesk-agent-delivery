@@ -2,59 +2,252 @@
 
 ## Principles
 
-- Exact digests are identity and authority.
-- Tags, SemVer, and channels aid discovery only.
-- Each artifact has one versioned media type and canonical serialization.
-- Referrers are local to the subject repository.
-- Cross-repository edges are explicit, signed descriptors.
-- Public and private artifact scopes are separated.
+- Exact digests are identity and authority; tags, SemVer, and channels are
+  discovery.
+- Every authoritative object has an exact JSON Schema Draft 2020-12 ID/digest
+  from an independently trusted signed contract bundle and an RFC 8785 identity.
+- An OCI `subject` and its referrers are repository-local. Cross-repository
+  edges are complete exact descriptors in signed downstream manifests.
+- Product/public and per-consumer private artifacts use separate repositories,
+  credentials, trust purposes, and privacy policy.
+- Artifact provenance, consumer authority, skill approval, desired state,
+  canary evidence, and runtime observation remain distinct evidence planes.
+
+The production reference in
+[ADR-0002](adr/0002-implementation-stack-and-reference-topology.md) synchronously
+pushes and digest-verifies this graph through active and recovery-region Harbor
+HA endpoints. Each endpoint owns one versioned encrypted region-local S3
+backend and an isolated metadata plane; a separate dual-region Object Lock
+archive retains evidence. Distribution 3 is the local/protocol profile.
+Registry and storage remain replaceable Adapters; exact OCI descriptors and
+digests remain authority, and neither storage nor Registry metadata replaces
+PostgreSQL command/CAS state.
 
 ## Graph
 
 ```text
-signed catalog index
-        |
-        +--> public agent source digest
-                  |
-                  +--> public harness render digest
-                              |
-                              +--> private consumer deployment digest
-                                           |
-                                           +--> private runtime release digest
+signed product release
+  +--> contract bundle digest
+  |      +--> non-authority keyless verification receipt
+  |              +--> exact signing-request and Sigstore-bundle blobs
+  +--> compiled renderer allowlist digest
+  +--> renderer-release digest(s) --> exact worker/platform digest(s)
+  +--> qualification policy + suite + minimum coverage digest
+  +--> signed release-qualification decision
+          +--> typed evidence/predicates/tree/attempt/receipt for every
+               renderer release and required platform
 
-Each node <- same-repository signature / provenance / SBOM / policy referrers
+append-only signed release status
+  +--> fresh nonce-bound authenticated head checkpoint
+  +--> exact consistency proof when the accepted head advances
+
+signed catalog index
+  +--> public Agent/ SpecializedAgent source digest
+  |      +--> exact public skill digest(s)
+  +--> public render digest
+          +--> source/skills
+          +--> product/renderer releases + qualification/current status
+          +--> selection + issued attempt + authenticated actual execution
+          +--> render manifest + archive/layer + schemas
+          +--> schema-owned authority digest + public-render signing result
+
+private binding + exact skill approvals + current authority snapshot
+  +--> per-consumer private deployment digest
+          +--> embedded effective render manifest + exact payload descriptor
+          +--> issued-attempt and authenticated-execution preimages
+  +--> separate signed private-compilation-evidence digest
+
+per-consumer runtime release digest
+  +--> exact canonical private deployment descriptor(s)
+  +--> one exact private-compilation-evidence descriptor per deployment
+  +--> target identity, system-package membership, and activation constraints
+
+one TargetDeliveryState revision
+  +--> prepared release
+  +--> nonce-bound canary plan
+  +--> Host technical evidence
+  +--> Consumer capability evidence
+  +--> promoted revision or new forward recovery plan/revision
+
+Each OCI subject <- same-repository signature/provenance/SBOM/evidence referrers
 ```
 
-The arrow is not inferred from referrer discovery when repositories differ.
-The downstream signed manifest carries the upstream repository, digest, media
-type, and expected signer-policy identifier.
+An arrow uses OCI `subject` only when both objects are in the same repository.
+Otherwise the signed downstream object records repository, digest, media type,
+size, policy ID, and immutable policy digest and the verifier traverses it
+explicitly.
 
-## Determinism
+## Contract and renderer artifacts
 
-Canonical builders fix JSON/YAML normalization, file order, UTF-8, LF endings,
-archive timestamps, modes, ownership, compression, and annotation ordering.
-Two clean builds with the same normalized inputs must produce the same digest.
+The signed contract bundle contains schemas and transitive references,
+OpenAPI, AsyncAPI, compatibility metadata, and fixtures. Runtime resolution is
+offline; an object cannot fetch or supply the schema used to validate itself.
+Historical bundles remain available for receipt verification.
 
-## Public artifacts
+A renderer release is trusted executable product code. Its manifest binds
+source/build/toolchain/dependency digests, supported Agent Spec and harness
+versions, platform worker descriptors, embedded allowlist, renderer-owned
+schemas, normalization, SBOM, vulnerability/license, compatibility,
+determinism, and SLSA/in-toto evidence. Every render additionally records the
+actual executing distribution/platform digest. A semantic version, source
+commit, image tag, or PATH binary is not renderer authority.
 
-Source and render artifacts contain no tenant identifiers, private policy,
-credentials, or secret references. Public attestations contain no private
-consumer data.
+The signed product release is not eligible solely because that signature
+verifies. It pins the exact qualification policy, suite, and required coverage.
+It also binds a non-authority keyless verification receipt for the exact
+contract bundle. Consumers resolve and replay that receipt through their
+trusted verifier; the product-release KMS signature authenticates the receipt's
+inclusion but does not prove the underlying Fulcio/Rekor/Cosign result.
+The signed qualification decision reaches every typed evidence leaf,
+predicate, evidence tree, attempt, receipt, renderer release, and executable
+platform. Current eligibility is a separate append-only status chain verified
+through a fresh caller-nonce-bound authenticated head checkpoint and an exact
+consistency proof on advancement.
 
-## Private deployment artifacts
+## Determinism and payload identity
 
-A private deployment binds public content to one consumer installation and
-runtime target. It carries opaque consumer-owned policy/authority subdigests,
-not reusable grants. The release manifest aggregates exact deployment
-subdigests for a target and makes changes to a system package explicitly
-runtime-wide.
+Builders validate accepted JSON or constrained YAML through the exact contract
+schema and serialize authoritative values with RFC 8785. YAML presentation is
+never authority. Builders fix operation order, generated UTF-8/LF text, file
+order, normalized safe paths, timestamps, modes, ownership class, compression,
+and annotations. Contract role rather than filename selects structured parsing;
+arbitrary `.yaml`, `.json`, and binary payloads preserve exact raw bytes.
 
-## Retention roots
+Two clean builds with identical schema, source, skill, renderer release,
+execution variant, allowlist, parameter, authority-relevant, and normalized
+inputs must produce the same declared output. Cross-platform renderer variants
+under one release use distinct platform selection keys and exact executable
+descriptors but must emit byte-identical logical files and deterministic archive
+bytes from the same platform-independent functional input. Their file inventory,
+tree digest, archive digest, archive size, and payload bytes are equal. Their
+platform, executed-distribution descriptor, platform-bound effective-input and
+compatibility identities, reproducibility identity, and complete render-
+manifest digest are distinct and remain in lineage. A release cannot erase
+those execution differences by substituting the logical tree digest for the
+platform-bound manifest.
 
-Registry garbage collection must preserve all digests referenced by active,
-last-known-good, rollback-source, audit, incident, or legal-hold records. A
-withdrawn digest may remain retained for evidence while becoming ineligible for
-new activation.
+## Public source, skill, and render
 
-See [OCI media types v1](../standards/oci-media-types-v1.md) for the contract
-registry.
+Public source explicitly declares `agent` or `specialized-agent`; `Agent` is the
+default and a complete public `SpecializedAgent` is portable source, not private
+customization. Public source, skill, and render objects contain no consumer
+identifier, private policy, credential, secret reference, grant, or workload
+identity.
+
+Skills may carry arbitrary regular files, including executable content, but are
+untrusted non-executing input. Publisher signatures prove origin. Runtime use
+requires separate current consumer approval of each exact skill digest.
+
+A public render derives only from unchanged source and its declared public
+skills. It records the complete renderer-release descriptor, actual executing
+distribution/platform, allowlist, renderer schemas, parameters, compatibility,
+output archive/layer, and file inventory. It also binds the exact product
+release and qualification decision, unchanged renderer selection, issued
+attempt, authenticated execution, and complete render manifest. Its
+schema-owned authority digest and `public-render-v1` signing result authenticate
+the complete tenant-free lineage.
+
+Verification walks every descriptor plus every OCI manifest, config, layer,
+and blob recursively by exact repository, digest, size, media type, semantic
+role, schema, trust policy, and signature. Repository prefixes and tags do not
+classify objects. Missing content, duplicate roles, cycles, an unregistered
+media/role pair, or a graph that exceeds the declared traversal limits fails
+closed.
+
+## Consumer-private artifacts
+
+A binding carries the exact schema/source/renderer descriptors, closed
+functional property/file/skill operations, exact skill set, update policy, and
+absent-or-match revision/digest precondition. It cannot contain authority or
+write desired state.
+
+A short-lived consumer-authority snapshot independently binds current identity,
+policy, grants, credential set, workload identity, lifecycle, mandatory
+sandbox/network/approval controls, target, candidate, desired revision,
+operation, nonce, predecessor, and time. Each skill has separate consumer
+approval evidence. These envelopes are opaque to Agent Delivery and contain no
+reusable credential.
+
+The private deployment binds the exact canonical private-input lock, exact
+public lineage, binding/customization, approved skills, compilation authority
+snapshot, current consumer subdigests, issued-attempt and authenticated-renderer
+execution evidence, installation, subject, target, and slot. It embeds the
+complete effective render manifest and an exact payload descriptor and is
+signed under a purpose-separated key isolated to that consumer. The payload
+contains only rendered runtime files: it excludes the manifest, evidence,
+deployment, compilation evidence, and enclosing OCI metadata.
+
+The canonical consumer-deployment artifact descriptor is the sole deployment
+identity. A separately signed private-compilation-evidence artifact binds the
+request, lock, deployment descriptor, render lineage, payload, actual compiler
+and renderer distributions, and compiler signer policy. The deployment does
+not reference that evidence or a runtime release, so the graph is acyclic.
+
+The compiler reconstructs and revalidates the complete effective Agent Spec and
+fully rerenders with the same exact current trusted renderer release as public
+lineage. It never patches public output. V1 has no private-render artifact.
+Public bytes are reusable only for empty customization when every input and
+identity matches.
+
+A runtime release aggregates, for each subject, the exact canonical deployment
+descriptor and the separate exact private-compilation-evidence descriptor for
+one target. It has no parallel deployment subdigest and must equal each resolved
+deployment/evidence pair's target, revision, candidate, predecessor, epoch,
+subject, slot, and generation. It is signed with
+`consumer-runtime-release-v1` and is prepared content, not desired state. Only
+the Promotion Coordinator can reference it from the target aggregate through
+exact CAS.
+
+## Desired-state and evidence artifacts
+
+Each target has one `TargetDeliveryState` in one selected `DesiredStateStore`.
+The Promotion Coordinator alone advances its revision/digest and predecessor.
+The Host Reconciler and Consumer Capability Verifier return separate evidence
+bound to the Coordinator's signed canary plan, rollout, nonce, candidate,
+desired revision, authority/policy, target, slot/generation, and expiry.
+
+Technical evidence proves exact staged/active artifact, files, process/service,
+ownership/modes/resources, parser/readiness, switch phase, and recovery marker.
+Capability evidence proves candidate workload login, one permitted capability,
+and one sentinel capability denied by the normal authorization engine with the
+expected policy class. Transport failure or absence is not denial proof.
+
+Promotion is the Coordinator's atomic new target revision after fresh matching
+evidence. A post-switch failure becomes `recovery_required`, not a relabeled old
+state.
+
+## Forward recovery
+
+Historical known-good is evidence, not automatic activation eligibility.
+Recovery creates a new prepared deployment/release and target revision using
+eligible historical functional source/customization/file/skill descriptors,
+current trusted schemas and renderer/compiler tooling, current content trust
+and skill approvals, a fresh authority snapshot, full evaluation, and fresh
+canary evidence.
+
+The graph records current predecessor, failed rollout, historical
+`recoverySource`, current-tooling substitution, eligibility result, and every
+new output/evidence digest. It never reactivates the old deployment, render
+bundle, desired record, receipt, signature, authority snapshot, credential
+state, or revoked renderer. Explicitly withdrawn or compromised content is
+ineligible.
+
+## Retention and restore roots
+
+Garbage collection preserves active and pending releases, historical known-good
+and recovery-eligible functional content, contract/renderer releases and policy
+snapshots required for historical verification, approvals, observations,
+incidents, audit, and legal holds. A withdrawn digest may remain evidence while
+being ineligible for new use.
+
+Default evidence retention is 400 days. Contract bundles, renderer release
+manifests, and trust snapshots remain available for at least seven years and
+never less than consumer evidence retention. Restore verifies manifests, blobs,
+referrers, signatures, schemas, trust, desired state, observations, and receipts
+as one graph before signing or promotion resumes.
+
+See [OCI media types v1](../standards/oci-media-types-v1.md),
+[Renderer identity v1](../standards/renderer-identity-v1.md),
+[Release qualification and status v1](../standards/release-qualification-v1.md),
+[Consumer authority and private signing v1](../standards/consumer-authority-v1.md),
+and [Delivery lifecycle v1](../standards/delivery-lifecycle-v1.md).

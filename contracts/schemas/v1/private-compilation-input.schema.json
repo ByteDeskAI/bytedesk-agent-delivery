@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/private-compilation-input/1.0.0",
+  "title": "Closed exact-input lock for private deployment compilation",
+  "type": "object",
+  "required": ["contract", "schema", "inputs", "compilationInputDigest"],
+  "properties": {
+    "contract": { "const": "bytedesk.private-compilation-input/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "inputs": { "$ref": "#/$defs/lockedInputs" },
+    "compilationInputDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Procedurally verified SHA-256 digest of the domain-separated RFC 8785 preimage defined by this contract; it is not a digest of an object containing itself."
+    }
+  },
+  "$defs": {
+    "desiredRevision": {
+      "type": "object",
+      "required": ["revision", "digest"],
+      "properties": {
+        "revision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "runtimeSlot": {
+      "type": "object",
+      "required": ["slotId", "generation"],
+      "properties": {
+        "slotId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "generation": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "effectiveSkillSet": {
+      "type": "object",
+      "required": ["publicSkills", "privateSkills", "digest"],
+      "properties": {
+        "publicSkills": {
+          "type": "array",
+          "maxItems": 100000,
+          "uniqueItems": true,
+          "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+          "description": "Exact public skill descriptors, procedurally required to be unique and strictly increasing by repository UTF-8 bytes then digest."
+        },
+        "privateSkills": {
+          "type": "array",
+          "maxItems": 100000,
+          "uniqueItems": true,
+          "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+          "description": "Exact consumer-private skill descriptors, procedurally required to be unique and strictly increasing by repository UTF-8 bytes then digest."
+        },
+        "digest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "Exact bytedesk.renderer-effective-skill-set/1 digest of publicSkills and privateSkills."
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "skillApprovalBinding": {
+      "type": "object",
+      "required": ["skill", "approval"],
+      "properties": {
+        "skill": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "approval": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "policyDigests": {
+      "type": "object",
+      "required": ["policy", "grantSet", "credentialSet", "workloadIdentity", "lifecycle", "mandatorySandbox", "network", "approvalPolicy", "targetBinding"],
+      "properties": {
+        "policy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "grantSet": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "credentialSet": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "workloadIdentity": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "lifecycle": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "mandatorySandbox": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "network": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "approvalPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "targetBinding": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false,
+      "description": "Opaque current consumer-owned authority and mandatory-control subdigests. They are comparison inputs, not authority granted by this lock."
+    },
+    "lockedInputs": {
+      "type": "object",
+      "required": ["consumerId", "subjectId", "installationId", "harnessId", "targetId", "candidate", "desiredRevision", "predecessor", "runtimeSlot", "activationMode", "reproducibleEpoch", "publicArtifact", "binding", "customizationDigest", "effectiveSkillSet", "skillApprovals", "inputAuthentication", "authoritySnapshot", "authorizedPrivateInputDigest", "contractBundle", "rendererSelection", "rendererSelectionDigest", "releaseStatusEligibility", "releaseStatusEligibilityDigest", "releaseStatusEligibilityVerificationEvidenceDigest", "trustPolicyPinSetDigest", "trustPolicyPinSetProviderEvidenceDigest", "policyDigests"],
+      "properties": {
+        "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "subjectId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "installationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "harnessId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "desiredRevision": { "$ref": "#/$defs/desiredRevision" },
+        "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/predecessor" },
+        "runtimeSlot": { "$ref": "#/$defs/runtimeSlot" },
+        "activationMode": { "type": "string", "enum": ["isolated_candidate", "guarded_in_place"] },
+        "reproducibleEpoch": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+        "publicArtifact": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "binding": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "customizationDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "effectiveSkillSet": { "$ref": "#/$defs/effectiveSkillSet" },
+        "skillApprovals": {
+          "type": "array",
+          "maxItems": 100000,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/skillApprovalBinding" },
+          "description": "Exactly one current approval descriptor for each effective skill. Entries must be unique and strictly increasing by skill repository UTF-8 bytes then skill digest; approval descriptors must also be unique. These cross-item invariants are verified procedurally."
+        },
+        "inputAuthentication": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor",
+          "description": "Exact production-reachable detached authentication bundle for every authority-bearing public, private, approval, binding, candidate, and authority input. The bundle is resolved and verified before compilation and is itself bound by compilationInputDigest."
+        },
+        "authoritySnapshot": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        "authorizedPrivateInputDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "Domain-separated digest over lock.contract, the exact lock.schema descriptor, and all functional/authority inputs except inputAuthentication, authoritySnapshot, and authorizedPrivateInputDigest. Detached proof references are excluded to avoid a signature cycle; compilationInputDigest still binds them. The value must equal the current compile authority snapshot."
+        },
+        "contractBundle": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/contractBundleDescriptor" },
+        "rendererSelection": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-selection/1.0.0" },
+        "rendererSelectionDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "Must equal rendererSelection.selectionDigest after its complete domain-separated preimage is recomputed."
+        },
+        "releaseStatusEligibility": {
+          "allOf": [
+            { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+            {
+              "properties": {
+                "mediaType": { "const": "application/vnd.bytedesk.agent.release-status-eligibility-evidence.v1+json" },
+                "trustPolicy": {
+                  "properties": { "id": { "const": "consumer-release-status-eligibility-v1" } },
+                  "required": ["id"]
+                }
+              },
+              "required": ["mediaType", "trustPolicy"]
+            }
+          ],
+          "description": "Fresh private_compilation-stage evidence for the exact product release and every renderer release used by this lock."
+        },
+        "releaseStatusEligibilityDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "Must equal eligibilityDigest in the resolved releaseStatusEligibility object."
+        },
+        "releaseStatusEligibilityVerificationEvidenceDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "Exact trusted-KMS Adapter verification evidence digest for the eligibility object's purpose-separated signature at reproducibleEpoch."
+        },
+        "trustPolicyPinSetDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "Exact active consumer trust-policy pin-set digest independently resolved for this compilation."
+        },
+        "trustPolicyPinSetProviderEvidenceDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "Exact trusted provider activation/readback evidence digest for trustPolicyPinSetDigest."
+        },
+        "policyDigests": { "$ref": "#/$defs/policyDigests" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Schema-validity is necessary but not sufficient. Validation also recomputes effectiveSkillSet.digest, rendererSelectionDigest, authorizedPrivateInputDigest, and compilationInputDigest; resolves every descriptor offline; compares the authority snapshot and all identities/subdigests; and enforces canonical skill and approval ordering and uniqueness. authorizedPrivateInputDigest is sha256(JCS({profile:'bytedesk.authorized-private-compilation-input/1',contract:<contract>,schema:<schema>,inputs:<inputs with inputAuthentication, authoritySnapshot, and authorizedPrivateInputDigest removed>})). compilationInputDigest is sha256(JCS({profile:'bytedesk.private-compilation-input-digest/1',contract:<contract>,schema:<schema>,inputs:<inputs>}))."
+}

@@ -1,0 +1,1282 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/protocol-profiles/1.0.0",
+  "profile": "bytedesk.protocol-profiles/1",
+  "version": 1,
+  "profiles": [
+    {
+      "profileId": "bytedesk.worker-framing/1",
+      "ownerTask": "AD-04",
+      "repoPaths": [
+        "contracts/schemas/v1/renderer-release.schema.json",
+        "contracts/schemas/v1/renderer-capability.schema.json",
+        "docs/planning/tasks/AD-04-renderer-contract.md"
+      ],
+      "requirements": {
+        "framing": "uint32-be-length-prefixed",
+        "payloadEncoding": "rfc8785-jcs-json",
+        "oneRequestPerProcess": true,
+        "maxRequestBytes": 4194304,
+        "maxResponseBytes": 4194304,
+        "maxDiagnosticsBytes": 65536,
+        "deadlineSource": "launcher-monotonic-clock",
+        "workerStdin": "launcher-private-anonymous-pipe-single-framed-request",
+        "workerStdout": "launcher-private-anonymous-pipe-single-framed-response-and-eof",
+        "workerStderr": "launcher-private-anonymous-pipe-bounded-untrusted-diagnostics-to-output-file",
+        "launcherContainerStdout": "empty-or-fixed-non-content-lifecycle-codes",
+        "launcherContainerStderr": "empty-or-fixed-non-content-lifecycle-codes",
+        "contentStreamIsolation": "renderer-response-and-diagnostics-never-reach-cri-node-kubernetes-event-or-telemetry-logs",
+        "diagnosticHandling": "bounded-untrusted-private-output-file-hash-redact-evidence-destroy-with-attempt",
+        "inheritedFileDescriptors": "closed-except-launcher-private-worker-pipes-and-launcher-owned-directories",
+        "network": "denied",
+        "secrets": "none",
+        "filesystem": {
+          "root": "read-only",
+          "input": "read-only-exact-tree",
+          "output": "empty-launcher-owned-directory",
+          "temporary": "bounded-private-directory",
+          "executable": "exact-allowlisted-digest"
+        },
+        "failureMapping": {
+          "malformedFrame": "worker_protocol_failed",
+          "oversizedFrame": "worker_protocol_failed",
+          "timeout": "worker_protocol_failed",
+          "extraStdout": "worker_protocol_failed",
+          "containerStreamContent": "artifact_unsafe",
+          "outputValidation": "renderer_output_invalid"
+        }
+      }
+    },
+    {
+      "profileId": "bytedesk.oci-archive-layout/1",
+      "ownerTask": "AD-07",
+      "repoPaths": [
+        "docs/standards/oci-media-types-v1.md",
+        "contracts/schemas/v1/archive-root.schema.json",
+        "contracts/schemas/v1/consumer-deployment.schema.json",
+        "docs/planning/tasks/AD-07-oci-packaging.md"
+      ],
+      "requirements": {
+        "referenceAuthority": "repository-plus-sha256-digest-only",
+        "tagAndChannelUse": "discovery-only",
+        "manifestEncoding": "rfc8785-jcs-json",
+        "layerOrder": [
+          "portable-definition",
+          "public-skills",
+          "public-render",
+          "private-customization",
+          "approved-private-skills",
+          "effective-private-render",
+          "evidence"
+        ],
+        "publicArtifactRule": "tenant-free-and-secret-free",
+        "privateArtifactRule": "consumer-scoped-effective-render-with-redacted-lineage",
+        "archiveFormat": "deterministic-posix-ustar",
+        "archiveMetadata": {
+          "uid": 0,
+          "gid": 0,
+          "uname": "",
+          "gname": "",
+          "mtime": 0,
+          "modeProfile": "regular-or-directory-only"
+        },
+        "pathProfile": "bytedesk.portable-path/1",
+        "rejectLinksAndSpecialFiles": true,
+        "rejectDuplicatePortablePaths": true,
+        "maximumExpandedBytes": 67108864,
+        "maximumMemberBytes": 16777216,
+        "maximumMembers": 20000,
+        "archiveRootMutation": "absent-create-or-exact-revision-plus-digest-match",
+        "restoreRule": "verify-byte-digests-and-current-trust-before-republication; never-activate"
+      }
+    },
+    {
+      "profileId": "bytedesk.supply-chain-pins/1",
+      "ownerTask": "AD-08",
+      "repoPaths": [
+        ".github/workflows/contracts.yml",
+        "uv.lock",
+        "go.mod",
+        "contracts/schemas/v1/component-lock.schema.json",
+        "docs/planning/tasks/AD-08-signing-and-attestations.md"
+      ],
+      "requirements": {
+        "actionReferences": "full-commit-sha",
+        "containerReferences": "registry-plus-sha256-digest",
+        "languageDependencies": "exact-version-plus-lock-digest",
+        "schemaReferences": "schema-id-plus-exact-schema-digest",
+        "trustReferences": "policy-id-plus-exact-policy-digest",
+        "rendererReferences": "complete-signed-release-descriptor-plus-executable-digest",
+        "scannerReferences": "image-digest-plus-ruleset-or-database-snapshot-digest",
+        "sourceReferences": "repository-plus-immutable-commit-plus-tree-digest",
+        "forbiddenSelectors": [
+          "latest",
+          "stable-tag",
+          "branch-head",
+          "path-binary",
+          "ambient-installed-version",
+          "unversioned-plugin",
+          "floating-range"
+        ],
+        "unavailableBehavior": "fail-closed-with-no-fallback",
+        "evidence": "record-every-resolved-input-id-and-digest"
+      }
+    },
+    {
+      "profileId": "bytedesk.renderer-contract/1",
+      "ownerTask": "AD-04",
+      "repoPaths": [
+        "contracts/schemas/v1/renderer-release.schema.json",
+        "contracts/schemas/v1/renderer-capability.schema.json",
+        "contracts/schemas/v1/renderer-input-parameters.schema.json",
+        "contracts/schemas/v1/harness-configuration.schema.json",
+        "contracts/schemas/v1/renderer-compatibility-result.schema.json",
+        "contracts/schemas/v1/render-manifest.schema.json",
+        "contracts/fixtures/operations/renderer-digest.cases.json"
+      ],
+      "requirements": {
+        "promisedSchemaIds": [
+          "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-capability/1.0.0",
+          "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-input-parameters/1.0.0",
+          "https://schemas.bytedesk.ai/agent-delivery/v1/harness-configuration/1.0.0",
+          "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-compatibility-result/1.0.0",
+          "https://schemas.bytedesk.ai/agent-delivery/v1/render-manifest/1.0.0"
+        ],
+        "selection": "compiled-allowlist-and-complete-exact-signed-renderer-release",
+        "forbiddenSelection": [
+          "artifact-hook",
+          "runtime-plugin",
+          "tag",
+          "path",
+          "local-build",
+          "different-installed-renderer",
+          "fallback"
+        ],
+        "invocation": "bytedesk.worker-framing/1",
+        "inputIdentity": "bytedesk.renderer-digest-authority/1",
+        "outputIdentity": "bytedesk.renderer-digest-authority/1",
+        "executeArtifactContent": false,
+        "normalization": "structured-control-json-to-jcs; arbitrary-payload-bytes-preserved",
+        "publicRender": "tenant-free",
+        "privateRender": "full-rerender-over-public-definition-customization-and-exact-approved-skill-set",
+        "wayflowAuthority": "compatibility-evidence-only-native-agent-spec-remains-authoritative"
+      }
+    },
+    {
+      "profileId": "bytedesk.desired-state-store/1",
+      "ownerTask": "AD-09",
+      "repoPaths": [
+        "contracts/schemas/v1/target-delivery-state.schema.json",
+        "contracts/schemas/v1/precondition.schema.json",
+        "docs/planning/tasks/AD-09-bindings-and-receipts.md",
+        "docs/planning/tasks/AD-11-git-desired-state.md"
+      ],
+      "requirements": {
+        "selectedStoreCardinality": "exactly-one-per-consumer-runtime-target",
+        "supportedStoreClasses": [
+          "managed",
+          "consumer-native"
+        ],
+        "soleLogicalWriter": "Promotion Coordinator",
+        "nonWriters": [
+          "hosts",
+          "git",
+          "compilers",
+          "bots",
+          "observations",
+          "consumer-applications",
+          "api-clients"
+        ],
+        "read": {
+          "consistency": "authoritative",
+          "returns": [
+            "state",
+            "revision",
+            "digest",
+            "regionEpoch"
+          ]
+        },
+        "watch": {
+          "authority": "notification-hint-only",
+          "resumeToken": "opaque",
+          "onGap": "authoritative-read-resync",
+          "maximumPollIntervalSeconds": 30
+        },
+        "createPrecondition": {
+          "kind": "absent",
+          "omission": "reject",
+          "null": "reject"
+        },
+        "updatePrecondition": {
+          "kind": "match",
+          "required": [
+            "exactRevision",
+            "exactDigest"
+          ],
+          "wildcard": "reject",
+          "force": "reject",
+          "digestOnly": "reject"
+        },
+        "idempotency": {
+          "keyBinding": "canonical-request-digest",
+          "collision": "reject",
+          "uncertainCommit": [
+            "resolve-idempotency",
+            "read-target-state",
+            "compare-exact-intended-digest"
+          ]
+        },
+        "migration": {
+          "mode": "quiesce-copy-verify-cutover",
+          "dualWrite": false,
+          "checkpointed": true,
+          "sourceReadOnlyAfterCutover": true,
+          "rollback": "new-migration-from-current-authority"
+        },
+        "regionFencing": {
+          "required": true,
+          "monotonicEpoch": true,
+          "staleWriter": "reject"
+        }
+      }
+    },
+    {
+      "profileId": "bytedesk.api-events/1",
+      "ownerTask": "AD-10",
+      "repoPaths": [
+        "contracts/openapi/v1/agent-delivery.openapi.json",
+        "contracts/asyncapi/v1/agent-delivery.asyncapi.json",
+        "contracts/events/v1/event-types.json",
+        "contracts/schemas/v1/event-data-envelope.schema.json"
+      ],
+      "requirements": {
+        "httpContract": "OpenAPI-3.2.0",
+        "eventContract": "AsyncAPI-3.1.0",
+        "cloudEventsVersion": "1.0.2",
+        "delivery": "at-least-once",
+        "ordering": "per-aggregate-sequence",
+        "authority": "notification-only",
+        "transports": [
+          "application-cloudevents+json",
+          "text/event-stream"
+        ],
+        "sse": {
+          "resumeHeader": "Last-Event-ID",
+          "allowedOnlyOn": "event-subscription",
+          "heartbeat": "comment-frame",
+          "disconnect": "no-action-cancellation"
+        },
+        "eventTypes": [
+          "ai.bytedesk.agent-delivery.installation.changed.v1",
+          "ai.bytedesk.agent-delivery.action.changed.v1",
+          "ai.bytedesk.agent-delivery.candidate.changed.v1",
+          "ai.bytedesk.agent-delivery.rollout.changed.v1",
+          "ai.bytedesk.agent-delivery.target-delivery-state.changed.v1",
+          "ai.bytedesk.agent-delivery.observation.appended.v1",
+          "ai.bytedesk.agent-delivery.receipt.appended.v1"
+        ],
+        "unknownSchema": "stop-projection-and-resynchronize",
+        "sequenceGap": "stop-projection-and-resynchronize",
+        "deduplication": [
+          "eventId",
+          "aggregateType",
+          "aggregateId",
+          "aggregateSequence"
+        ],
+        "mutationPreconditions": "strong-etag-plus-absent-or-exact-match",
+        "problemContract": "rfc9457-plus-stable-code-side-effect-state-and-retryability"
+      }
+    },
+    {
+      "profileId": "bytedesk.promotion-coordinator/1",
+      "ownerTask": "AD-12",
+      "repoPaths": [
+        "contracts/schemas/v1/rollout.schema.json",
+        "contracts/schemas/v1/candidate.schema.json",
+        "contracts/schemas/v1/target-delivery-state.schema.json",
+        "docs/planning/tasks/AD-12-update-promotion.md"
+      ],
+      "requirements": {
+        "soleWriter": "Promotion Coordinator",
+        "isolatedCandidateOrdering": [
+          "read-and-fence-target-state",
+          "compile-and-verify-candidate",
+          "stage-candidate",
+          "preflight-isolated-candidate",
+          "append-candidate-ready-technical-evidence",
+          "dispatch-nonce-bound-capability-check",
+          "verify-consumer-capability-result",
+          "evaluate-all-evidence-and-current-authority",
+          "authorize-activation",
+          "atomic-switch",
+          "active-readback",
+          "compare-and-swap-target-state",
+          "append-deployment-receipt"
+        ],
+        "guardedInPlaceOrdering": [
+          "read-and-fence-target-state",
+          "compile-and-verify-candidate",
+          "stage-candidate",
+          "preflight-without-capability-claim",
+          "evaluate-pre-switch-technical-evidence-and-current-authority",
+          "authorize-provisional-activation",
+          "atomic-switch",
+          "active-readback",
+          "dispatch-nonce-bound-capability-check",
+          "verify-consumer-capability-result",
+          "evaluate-all-evidence",
+          "compare-and-swap-target-state",
+          "append-deployment-receipt"
+        ],
+        "managedCommitPoint": "successful-target-delivery-state-cas",
+        "externalCommitPoints": [
+          "registry-digest-publication",
+          "consumer-projection-commit",
+          "host-atomic-switch",
+          "region-epoch-activation"
+        ],
+        "cancellation": {
+          "allowed": "only-before-the-next-irrevocable-commit-point",
+          "afterClientTimeout": "action-continues",
+          "afterTargetStateCas": "terminal-success-or-forward-recovery"
+        },
+        "fences": [
+          "target-revision",
+          "target-digest",
+          "region-epoch",
+          "rollout-generation",
+          "slot-generation",
+          "nonce",
+          "validity-interval"
+        ],
+        "crashRecovery": {
+          "beforeRemoteCommit": "resume-or-retry-by-idempotency-key",
+          "commitResponseLost": "resolve-idempotency-then-authoritative-readback",
+          "afterHostSwitchBeforeDesiredCas": "recover-journal-readback-and-resume-evaluation",
+          "afterDesiredCasBeforeReceipt": "append-missing-receipt-from-committed-state-with-new-sequence",
+          "staleCoordinator": "fenced-and-no-write"
+        },
+        "recovery": "new-revision-from-eligible-historical-functional-content-with-current-tooling-authority-evaluation-and-canary-evidence"
+      }
+    },
+    {
+      "profileId": "bytedesk.host-switch-journal/1",
+      "ownerTask": "AD-14",
+      "repoPaths": [
+        "contracts/schemas/v1/host-reconciliation-attempt.schema.json",
+        "contracts/schemas/v1/host-switch-journal-entry.schema.json",
+        "contracts/schemas/v1/runtime-slot.schema.json",
+        "contracts/schemas/v1/observation.schema.json",
+        "docs/planning/tasks/AD-14-runtime-reconciler.md"
+      ],
+      "requirements": {
+        "journalIdentity": [
+          "consumerId",
+          "targetId",
+          "slotId",
+          "attemptId",
+          "rolloutId",
+          "targetRevision",
+          "targetDigest",
+          "releaseDigest",
+          "deployableGraphDigest",
+          "slotGeneration"
+        ],
+        "phases": [
+          "accepted",
+          "artifact_verified",
+          "staged",
+          "preflight_passed",
+          "candidate_ready_recorded",
+          "activation_authorized",
+          "switch_intent_durable",
+          "switched",
+          "readback_verified",
+          "observation_accepted",
+          "cleanup_eligible",
+          "completed"
+        ],
+        "appendRule": "monotonic-sequence-checksummed-records",
+        "durability": "fsync-record-then-fsync-parent-directory-before-dependent-side-effect",
+        "switchPrimitive": "one-target-wide-atomic-filesystem-pointer-or-consumer-adapter-equivalent-for-the-complete-runtime-release-graph",
+        "switchIntent": "durable-before-switch-and-bound-to-runtime-release-digest-complete-deployable-graph-digest-activation-authorization-digest-and-distinct-fresh-host-eligibility-verification-evidence-digest-not-one-subject-deployment-digest",
+        "switchMarker": "durable-after-one-target-wide-switch-with-old-and-new-generation-release-digests-and-the-journals-unchanged-graph-authorization-and-host-verification-digests",
+        "generationFence": "stale-generation-cannot-stage-or-preflight-any-subject-switch-the-graph-observe-or-clean-active-content",
+        "crashDisposition": {
+          "beforeIntent": "resume-staging-or-preflight",
+          "afterIntentBeforeSwitch": "read-active-pointer; switch-complete-graph-only-if-old-generation-still-active-and-authorization-plus-fresh-host-use-time-eligibility-verification-remain-valid",
+          "duringSwitch": "read-active-pointer-release-digest-and-complete-graph-identity; never-guess",
+          "afterSwitchBeforeMarker": "read-active-pointer-then-append-marker-if-exact-new-generation-release-and-graph-or-report-indeterminate",
+          "afterMarkerBeforeObservation": "readback-verify-every-canonical-deployment-then-resubmit-idempotent-observation",
+          "staleAttempt": "quarantine-output-and-retain-journal-until-coordinator-authorized-cleanup"
+        },
+        "cleanup": "never-delete-any-active-graph-subject-predecessor-required-evidence-or-unresolved-attempt-output",
+        "executionBoundary": "validation-staging-and-activation-never-execute-skill-or-artifact-files"
+      }
+    },
+    {
+      "profileId": "bytedesk.capability-verification/1",
+      "ownerTask": "AD-14",
+      "repoPaths": [
+        "contracts/schemas/v1/authorization-decision-proof.schema.json",
+        "contracts/schemas/v1/canary-evidence.schema.json",
+        "docs/planning/tasks/AD-14-runtime-reconciler.md"
+      ],
+      "requirements": {
+        "dispatchActor": "Promotion Coordinator",
+        "verificationActor": "consumer-owned-capability-verifier",
+        "forbiddenDispatchActors": [
+          "host-reconciler",
+          "artifact",
+          "skill",
+          "renderer",
+          "cli"
+        ],
+        "bindingFields": [
+          "consumerId",
+          "targetId",
+          "candidateDigest",
+          "checkProfileDigest",
+          "dispatchNonce",
+          "authorizationDecisionDigest",
+          "issuedAt",
+          "expiresAt"
+        ],
+      "chainBindings": {
+          "dispatchReceiptFields": [
+            "checkId",
+            "requestDigest",
+            "consumerId",
+            "targetId",
+            "candidateDigest",
+            "checkProfileDigest",
+            "nonce",
+            "authorizationDecisionDigest",
+            "endpoint",
+            "coordinatorFencingToken",
+            "issuedAt",
+            "expiresAt"
+          ],
+        "verificationRequestFields": [
+          "dispatchReceipt",
+          "dispatchReceiptDigest",
+          "capabilityEvidence",
+          "verificationProofs",
+          "authenticatedEvidence",
+          "expectations",
+          "receivedAt"
+          ],
+          "evidenceDispatchFields": [
+            "requestDigest",
+            "receiptDigest",
+            "checkProfileDigest",
+            "authorizationDecisionDigest"
+          ],
+          "acceptedResultFields": [
+            "acceptedEvidenceDigest",
+            "policyOutcome",
+            "freshUntil"
+          ],
+          "comparison": "exact-jcs-sha256-and-field-equality",
+        "mismatch": "evidence_invalid"
+      },
+      "outcomeDerivation": [
+        {"mode": "required", "workloadLogin": "passed", "requiredCapability": "permitted", "deniedSentinel": "policy_denied", "outcome": "permitted"},
+        {"mode": "required", "workloadLogin": "passed", "requiredCapability": "permitted", "deniedSentinel": "permitted", "outcome": "denied"},
+        {"mode": "required", "workloadLogin": "passed", "requiredCapability": "policy_denied", "deniedSentinel": "policy_denied", "outcome": "denied"},
+        {"mode": "required", "workloadLogin": "passed", "requiredCapability": "policy_denied", "deniedSentinel": "permitted", "outcome": "denied"},
+        {"mode": "required", "workloadLogin": "failed", "requiredCapability": "permitted", "deniedSentinel": "policy_denied", "outcome": "denied"},
+        {"mode": "required", "workloadLogin": "failed", "requiredCapability": "permitted", "deniedSentinel": "permitted", "outcome": "denied"},
+        {"mode": "required", "workloadLogin": "failed", "requiredCapability": "policy_denied", "deniedSentinel": "policy_denied", "outcome": "denied"},
+        {"mode": "required", "workloadLogin": "failed", "requiredCapability": "policy_denied", "deniedSentinel": "permitted", "outcome": "denied"},
+        {"mode": "certified_not_applicable", "certifiedResult": "not_applicable", "outcome": "permitted"},
+        {"mode": "certified_not_applicable", "certifiedResult": "failed", "outcome": "denied"}
+      ],
+      "outcomes": [
+          "permitted",
+          "denied"
+        ],
+        "denialProof": "explicit-current-consumer-signed-policy-denial-for-exact-nonce-bound-request",
+        "notDenial": [
+          "timeout",
+          "connection-failure",
+          "missing-result",
+          "malformed-result",
+          "expired-result",
+          "unknown-signer"
+        ],
+        "freshness": "received-and-verified-before-expiry-under-current-policy-and-authority",
+        "isolatedCandidateSequence": [
+          "candidate-ready",
+          "dispatch",
+          "execute-isolated-check",
+          "verify-result",
+          "evaluate",
+          "authorize-switch"
+        ],
+        "guardedInPlaceSequence": [
+          "candidate-ready",
+          "authorize-provisional-switch",
+          "switch-and-readback",
+          "dispatch",
+          "verify-result",
+          "evaluate-before-target-state-cas"
+        ],
+        "evidenceSeparation": "host-technical-evidence-and-consumer-capability-evidence-use-distinct-authentication-and-append-operations",
+        "failureMapping": {
+          "invalid_inputs": "evidence_invalid",
+          "invalid_contract": "evidence_invalid",
+          "binding_mismatch": "evidence_invalid",
+          "stale_evidence": "evidence_invalid",
+          "permit_authorization_proof_missing": "evidence_invalid",
+          "permit_authorization_decision_mismatch": "evidence_invalid",
+          "host_canary_check_failed": "evidence_invalid",
+          "workload_login_failed": "evidence_invalid",
+          "not_applicable_check_failed": "evidence_invalid",
+          "uncertified_not_applicable": "evidence_invalid",
+          "signer_mismatch": "trust_verification_failed",
+          "unauthenticated_evidence": "trust_verification_failed",
+          "unauthenticated_authorization_proof": "trust_verification_failed",
+          "capability_denial_not_proven": "capability_denial_not_proven",
+          "authorization_transport_failure": "capability_transport_failed"
+        }
+      }
+    },
+    {
+      "profileId": "bytedesk.cli-automation/1",
+      "ownerTask": "AD-15",
+      "repoPaths": [
+        "contracts/schemas/v1/action.schema.json",
+        "contracts/schemas/v1/problem-details.schema.json",
+        "contracts/openapi/v1/agent-delivery.openapi.json",
+        "docs/planning/tasks/AD-15-cli.md"
+      ],
+      "requirements": {
+        "executable": "bd-agent",
+        "commandTree": [
+          "contract verify",
+          "catalog list",
+          "catalog show",
+          "package validate",
+          "package build",
+          "render",
+          "artifact publish",
+          "artifact pull",
+          "artifact inspect",
+          "artifact verify",
+          "install preview",
+          "install apply",
+          "binding show",
+          "update preview",
+          "update apply",
+          "deployment status",
+          "deployment recover",
+          "receipt verify"
+        ],
+        "outputModes": [
+          "human",
+          "bytedesk.cli-result/1-json"
+        ],
+        "jsonEncoding": "rfc8785-jcs-for-authoritative-or-digest-bearing-objects",
+        "stdout": "result-only",
+        "stderr": "progress-warnings-and-redacted-diagnostics-only",
+        "secretHandling": "never-print-never-persist-by-default",
+        "mutationConfirmation": "interactive-exact-digest-preview-or-explicit-noninteractive-acknowledgement",
+        "asyncProgress": {
+          "fields": [
+            "phase",
+            "completed",
+            "total",
+            "checkpoint"
+          ],
+          "pollBackoff": "bounded-exponential",
+          "maximumPollSeconds": 30,
+          "waitTimeout": "does-not-cancel-without-explicit-flag"
+        },
+        "exitCodes": {
+          "success": 0,
+          "usage_or_configuration": 2,
+          "validation": 3,
+          "compatibility": 4,
+          "trust": 5,
+          "authentication": 6,
+          "authorization_or_policy": 7,
+          "conflict_or_precondition": 8,
+          "unavailable_or_retryable": 9,
+          "terminal_operation_failure": 10,
+          "cancelled": 11,
+          "client_wait_timeout": 12,
+          "protocol_or_contract": 13
+        },
+        "compatibility": "command-names-result-variants-problem-codes-and-exit-codes-stable-within-cli-major"
+      }
+    },
+    {
+      "profileId": "bytedesk.external-input-lock/1",
+      "ownerTask": "AD-18",
+      "repoPaths": [
+        "contracts/schemas/v1/external-input-lock.schema.json",
+        "docs/planning/tasks/AD-03-baseline-catalog.md",
+        "docs/planning/tasks/AD-18-certification.md"
+      ],
+      "requirements": {
+        "artifactProfile": "bytedesk.external-input-lock/1",
+        "schemaContract": "https://schemas.bytedesk.ai/agent-delivery/v1/external-input-lock/1.0.0",
+        "requiredFields": [
+          "contract",
+          "schema",
+          "lockId",
+          "role",
+          "repository",
+          "commit",
+          "treeDigest",
+          "paths",
+          "validators",
+          "compatibilityEvidenceOnly",
+          "retrievedAt"
+        ],
+        "roles": [
+          "compatibility_evidence",
+          "migration_input",
+          "reference_consumer_certification"
+        ],
+        "repository": {
+          "required": true,
+          "scheme": "https",
+          "normalization": "exact-canonical-repository-url"
+        },
+        "commit": {
+          "required": true,
+          "pattern": "^[0-9a-f]{40,64}$",
+          "branchOrTag": "forbidden"
+        },
+        "treeDigest": {
+          "required": true,
+          "algorithm": "sha256",
+          "recomputeFromFetchedTree": true
+        },
+        "paths": {
+          "required": true,
+          "minimumItems": 1,
+          "maximumItems": 100000,
+          "ordering": "strict-ascending-portable-path-utf8",
+          "entryFields": [
+            "path",
+            "digest",
+            "size"
+          ],
+          "duplicatePaths": "reject",
+          "missingOrExtraPaths": "reject",
+          "pathProfile": "bytedesk.portable-path/1",
+          "fileBytes": "byte-exact"
+        },
+        "validators": {
+          "required": true,
+          "minimumItems": 1,
+          "maximumItems": 64,
+          "identity": "exact-artifact-descriptor-digest"
+        },
+        "compatibilityEvidenceOnly": true,
+        "fetch": "bounded-read-only-no-hooks-no-submodules-no-lfs-smudge-no-package-lifecycle",
+        "verification": "authenticate-source-fetch-verify-commit-tree-and-every-inventory-entry-before-use",
+        "forbiddenSelectors": [
+          "branch",
+          "tag",
+          "release-channel",
+          "latest",
+          "head",
+          "path-binary",
+          "ambient-cache-without-digest"
+        ],
+        "unavailableBehavior": "fail-closed-with-no-substitution",
+        "authorityBoundary": "external implementation is compatibility evidence only and never a runtime renderer dependency or consumer authority source"
+      }
+    },
+    {
+      "profileId": "bytedesk.oci-artifact-profile/1",
+      "ownerTask": "AD-07",
+      "repoPaths": [
+        "docs/standards/oci-media-types-v1.md",
+        "docs/confluence/05-oci-artifact-graph.md",
+        "contracts/schemas/v1/archive-root.schema.json",
+        "contracts/schemas/v1/common.schema.json"
+      ],
+      "requirements": {
+        "manifest": {
+          "mediaType": "application/vnd.oci.image.manifest.v1+json",
+          "schemaVersion": 2,
+          "encoding": "rfc8785-jcs-json",
+          "requiredMembers": [
+            "schemaVersion",
+            "mediaType",
+            "artifactType",
+            "config",
+            "layers"
+          ],
+          "optionalMembers": [
+            "subject",
+            "annotations"
+          ],
+          "unknownMembers": "reject",
+          "digestAlgorithm": "sha256"
+        },
+        "index": {
+          "mediaType": "application/vnd.oci.image.index.v1+json",
+          "authorityUse": "multi-platform-product-distribution-only",
+          "descriptorSelection": "exact-platform-plus-exact-manifest-digest",
+          "tagSelection": "forbidden"
+        },
+        "config": {
+          "mediaType": "application/vnd.oci.empty.v1+json",
+          "bytesUtf8": "{}",
+          "size": 2,
+          "digest": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "semanticAuthority": false
+        },
+        "artifactTypes": {
+          "contractBundle": "application/vnd.bytedesk.agent.contract-bundle.v1+json",
+          "productDistribution": "application/vnd.bytedesk.agent.product-distribution.v1+json",
+          "productRelease": "application/vnd.bytedesk.agent.product-release-manifest.v1+json",
+          "rendererAllowlist": "application/vnd.bytedesk.agent.renderer-allowlist.v1+json",
+          "rendererRelease": "application/vnd.bytedesk.agent.renderer-release.v1+json",
+          "qualificationPolicy": "application/vnd.bytedesk.agent.release-qualification-policy.v1+json",
+          "qualificationSuite": "application/vnd.bytedesk.agent.renderer-qualification-suite.v1+json",
+          "qualificationSelection": "application/vnd.bytedesk.agent.renderer-qualification-selection.v1+json",
+          "qualificationAttempt": "application/vnd.bytedesk.agent.renderer-qualification-attempt.v1+json",
+          "qualificationAttemptAuthentication": "application/vnd.bytedesk.agent.renderer-qualification-attempt-authentication-evidence.v1+json",
+          "qualificationEvidenceTree": "application/vnd.bytedesk.agent.renderer-qualification-evidence-tree.v1+json",
+          "qualificationReceipt": "application/vnd.bytedesk.agent.renderer-qualification-receipt.v1+json",
+          "qualificationReceiptAuthentication": "application/vnd.bytedesk.agent.renderer-qualification-receipt-authentication-evidence.v1+json",
+          "qualificationEvidence": "application/vnd.bytedesk.agent.release-qualification-evidence.v1+json",
+          "qualificationFinalizationMatrix": "application/vnd.bytedesk.agent.release-qualification-finalization-matrix.v1+json",
+          "qualificationPredicate": "application/vnd.bytedesk.agent.release-qualification-predicate.v1+json",
+          "qualificationDecision": "application/vnd.bytedesk.agent.release-qualification.v1+json",
+          "releaseStatus": "application/vnd.bytedesk.agent.release-status.v1+json",
+          "statusInclusionProof": "application/vnd.bytedesk.agent.release-status-log-inclusion-proof.v1+json",
+          "statusConsistencyProof": "application/vnd.bytedesk.agent.release-status-log-consistency-proof.v1+json",
+          "statusHeadCheckpoint": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json",
+          "statusHeadAuthentication": "application/vnd.bytedesk.agent.release-status-head-authentication-evidence.v1+json",
+          "releaseStatusEligibility": "application/vnd.bytedesk.agent.release-status-eligibility-evidence.v1+json",
+          "releaseStatusAppendResolution": "application/vnd.bytedesk.agent.release-status-append-resolution.v1+json",
+          "catalogIndex": "application/vnd.bytedesk.agent.catalog.v1+json",
+          "agentSource": "application/vnd.bytedesk.agent.source.v1+json",
+          "skillPackage": "application/vnd.bytedesk.agent.skill.v1+json",
+          "rendererSelection": "application/vnd.bytedesk.agent.renderer-selection.v1+json",
+          "rendererAttemptAuthority": "application/vnd.bytedesk.agent.renderer-attempt-authority.v1+json",
+          "rendererAttemptAuthentication": "application/vnd.bytedesk.agent.renderer-attempt-authentication-evidence.v1+json",
+          "rendererExecutionReceipt": "application/vnd.bytedesk.agent.renderer-execution-receipt.v1+json",
+          "rendererExecutionAuthentication": "application/vnd.bytedesk.agent.renderer-execution-authentication-evidence.v1+json",
+          "renderManifest": "application/vnd.bytedesk.agent.render-manifest.v1+json",
+          "harnessRender": "application/vnd.bytedesk.agent.render.v1+json",
+          "publicationEvidence": "application/vnd.bytedesk.agent.publication-evidence.v1+json",
+          "consumerAuthority": "application/vnd.bytedesk.agent.consumer-authority.v1+json",
+          "skillApproval": "application/vnd.bytedesk.agent.skill-approval.v1+json",
+          "privateCompilationInput": "application/vnd.bytedesk.agent.private-compilation-input.v1+json",
+          "privateInputAuthentication": "application/vnd.bytedesk.agent.private-input-authentication.v1+json",
+          "consumerDeployment": "application/vnd.bytedesk.agent.consumer-deployment.v1+json",
+          "privateCompilationEvidence": "application/vnd.bytedesk.agent.private-compilation-evidence.v1+json",
+          "runtimeRelease": "application/vnd.bytedesk.agent.runtime-release.v1+json",
+          "activationAuthorization": "application/vnd.bytedesk.agent.activation-authorization.v1+json",
+          "targetDeliveryState": "application/vnd.bytedesk.agent.target-delivery-state.v1+json",
+          "canaryPlan": "application/vnd.bytedesk.agent.canary-plan.v1+json",
+          "canaryEvidence": "application/vnd.bytedesk.agent.canary-evidence.v1+json",
+          "authorizationDecisionProof": "application/vnd.bytedesk.agent.authorization-decision-proof.v1+json",
+          "recoveryPlan": "application/vnd.bytedesk.agent.recovery-plan.v1+json",
+          "compatibilityAttestation": "application/vnd.bytedesk.agent.compatibility.v1+json",
+          "evaluationAttestation": "application/vnd.bytedesk.agent.evaluation.v1+json",
+          "policyAttestation": "application/vnd.bytedesk.agent.policy.v1+json",
+          "deploymentReceipt": "application/vnd.bytedesk.agent.receipt.v1+json",
+          "readinessReport": "application/vnd.bytedesk.agent.readiness.v1+json"
+        },
+        "layers": {
+          "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+          "roleOrder": [
+            "portable-definition",
+            "public-skills",
+            "public-render",
+            "private-customization",
+            "approved-private-skills",
+            "effective-private-render",
+            "evidence"
+          ],
+          "omittedRole": "allowed-only-when-contract-declares-role-not-applicable",
+          "undeclaredOrDuplicateRole": "reject",
+          "descriptorRequired": [
+            "mediaType",
+            "digest",
+            "size",
+            "annotations"
+          ],
+          "roleAnnotation": "ai.bytedesk.agent-delivery.layer-role",
+          "archiveProfile": "deterministic-posix-ustar",
+          "tar": {
+            "pathOrder": "strict-ascending-portable-path-utf8",
+            "pathProfile": "bytedesk.portable-path/1",
+            "uid": 0,
+            "gid": 0,
+            "uname": "",
+            "gname": "",
+            "mtime": 0,
+            "regularModes": [
+              "0644",
+              "0755"
+            ],
+            "directoryMode": "0755",
+            "acceptedTypes": [
+              "regular-file",
+              "directory"
+            ],
+            "linksAndSpecialFiles": "reject"
+          },
+          "gzip": {
+            "algorithm": "deflate",
+            "level": 9,
+            "mtime": 0,
+            "operatingSystemByte": 255,
+            "filename": "",
+            "comment": "",
+            "extraFields": "none",
+            "concatenatedMembers": "reject"
+          },
+          "arbitraryPayloadBytes": "byte-exact-no-extension-based-parsing"
+        },
+        "subject": {
+          "requiredMembers": [
+            "mediaType",
+            "digest",
+            "size"
+          ],
+          "repositoryRule": "same-repository-as-referrer",
+          "digestAlgorithm": "sha256",
+          "tagOrAnnotationAuthority": "forbidden",
+          "missingWrongOrCrossRepository": "reject"
+        },
+        "referrers": {
+          "repositoryScope": "same-repository-as-subject",
+          "discoveryAuthority": "none",
+          "requiredDescriptorVerification": [
+            "digest",
+            "size",
+            "mediaType",
+            "artifactType",
+            "subject"
+          ],
+          "allowedArtifactTypes": [
+            "application/vnd.dev.cosign.simplesigning.v1+json",
+            "application/vnd.dev.sigstore.bundle.v0.3+json",
+            "application/vnd.in-toto+json",
+            "application/spdx+json",
+            "application/vnd.bytedesk.scan.v1+json",
+            "application/vnd.bytedesk.malware-scan.v1+json",
+            "application/vnd.bytedesk.secret-scan.v1+json",
+            "application/vnd.bytedesk.scan-completeness.v1+json",
+            "application/vnd.bytedesk.license.v1+json",
+            "application/vnd.bytedesk.conformance.v1+json",
+            "application/vnd.bytedesk.determinism.v1+json",
+            "application/vnd.bytedesk.sandbox-conformance.v1+json",
+            "application/vnd.bytedesk.executed-distribution.v1+json"
+          ],
+          "missingRequiredReferrer": "reject"
+        },
+        "crossRepositoryEdges": {
+          "ociSubjectUse": "forbidden",
+          "requiredDescriptorMembers": [
+            "repository",
+            "digest",
+            "mediaType",
+            "size",
+            "trustPolicy"
+          ],
+          "trustPolicyMembers": [
+            "id",
+            "digest"
+          ],
+          "verification": "fetch-and-verify-each-repository-independently",
+          "artifactProvidedTrustRoot": "forbidden"
+        },
+        "graphBounds": {
+          "maximumDepth": 32,
+          "maximumDescriptors": 10000,
+          "maximumManifestBytes": 4194304,
+          "maximumBlobBytes": 67108864,
+          "maximumExpandedBytes": 1073741824,
+          "maximumTraversalSeconds": 300,
+          "cycleBehavior": "reject-when-dag-required-otherwise-deduplicate-by-repository-and-digest"
+        },
+        "publication": {
+          "buildCount": 2,
+          "equality": "byte-for-byte-manifest-and-layer-digest-equality",
+          "commitResolution": "idempotency-key-then-head-by-exact-digest",
+          "tagWrite": "optional-after-digest-publication-and-never-authoritative"
+        },
+        "verification": {
+          "order": [
+            "manifest-jcs",
+            "manifest-digest",
+            "artifact-type",
+            "empty-config",
+            "ordered-layer-descriptors",
+            "layer-digests-and-sizes",
+            "subject",
+            "required-referrers",
+            "cross-repository-edges",
+            "trust-policy",
+            "archive-safety"
+          ],
+          "unknownSchemaMediaTypeLayerRoleOrEdge": "reject",
+          "extraction": "only-after-complete-graph-and-archive-verification",
+          "execution": "never"
+        },
+        "archive": {
+          "format": "posix-ustar",
+          "maximumMembers": 20000,
+          "maximumMemberBytes": 16777216,
+          "maximumExpandedBytes": 67108864,
+          "rootCreatePrecondition": "absent",
+          "rootUpdatePrecondition": "exact-revision-plus-digest-match",
+          "restore": "exact-byte-current-trust-republication-only-never-activation"
+        }
+      }
+    },
+    {
+      "profileId": "bytedesk.signing-evidence-profile/1",
+      "ownerTask": "AD-08",
+      "repoPaths": [
+        "contracts/schemas/v1/signing-request.schema.json",
+        "contracts/schemas/v1/signing-result.schema.json",
+        "contracts/schemas/v1/trust-policy.schema.json",
+        "docs/standards/trust-policy-v1.md",
+        "docs/architecture/adr/0002-implementation-stack-and-reference-topology.md"
+      ],
+      "requirements": {
+        "cryptographicProfile": {
+          "contractName": "ECDSA_P256_SHA256",
+          "keyType": "ECDSA",
+          "curve": "NIST-P-256",
+          "digest": "SHA-256",
+          "providerSigningAlgorithm": "ECDSA_SHA_256",
+          "signatureEncoding": "ASN.1-DER",
+          "publicKeyEncoding": "DER-SubjectPublicKeyInfo",
+          "privateKeyExport": "forbidden"
+        },
+        "kmsProfile": {
+          "firstProvider": "AWS-KMS-with-GitHub-or-Kubernetes-OIDC",
+          "keySpec": "ECC_NIST_P256",
+          "keyUsage": "SIGN_VERIFY",
+          "immutableVersionIdentity": "full-provider-key-version-resource",
+          "workloadPermission": [
+            "GetPublicKey",
+            "Sign"
+          ],
+          "forbiddenPermissions": [
+            "CreateKey",
+            "PutKeyPolicy",
+            "CreateAlias",
+            "UpdateAlias",
+            "DisableKey",
+            "ScheduleKeyDeletion",
+            "Export"
+          ],
+          "authentication": "short-lived-OIDC-or-WIF-only",
+          "providerAuditEvidence": "required-and-bound-to-request-result",
+          "alternativeProviders": "allowed-only-after-identical-conformance-suite-no-weaker-fallback"
+        },
+        "purposeProfiles": {
+          "productRelease": "product-release-v1",
+          "publicSource": "public-source-v1",
+          "publicRender": "public-render-v1",
+          "consumerPrivateSkill": "consumer-private-skill-v1",
+          "consumerAuthority": "consumer-authority-v1",
+          "consumerDeployment": "consumer-deployment-v1",
+          "consumerRuntimeRelease": "consumer-runtime-release-v1",
+          "releaseQualificationPolicy": "release-qualification-policy-v1",
+          "releaseQualificationAttempt": "release-qualification-attempt-v1",
+          "releaseQualificationReceipt": "release-qualification-receipt-v1",
+          "releaseQualificationEvidence": "release-qualification-evidence-v1",
+          "releaseQualificationDecision": "release-qualification-decision-v1",
+          "releaseStatus": "release-status-v1",
+          "releaseStatusHead": "release-status-head-v1",
+          "releaseStatusEligibility": "release-status-eligibility-v1",
+          "rendererAttempt": "renderer-attempt-v1",
+          "rendererExecution": "renderer-execution-v1",
+          "consumerReleaseStatusEligibility": "consumer-release-status-eligibility-v1",
+          "consumerCompilationInput": "consumer-compilation-input-v1",
+          "consumerCompilationEvidence": "consumer-compilation-evidence-v1",
+          "consumerActivationAuthorization": "consumer-activation-authorization-v1"
+        },
+        "isolation": {
+          "productPurposes": "dedicated-product-key-per-purpose",
+          "privatePurposes": "separate-key-workload-role-queue-and-cell-per-consumer-and-purpose",
+          "consumerAuthoritySignerAccessFromAgentDelivery": "forbidden",
+          "crossConsumerPrivateKey": "forbidden",
+          "hostedProfile": "explicit-opt-in-tenant-dedicated-key-only",
+          "preferredProfile": "consumer-owned-non-exportable-kms",
+          "dispatcherSignPermission": "none"
+        },
+        "signingRequest": {
+          "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-request/1.0.0",
+          "canonicalEncoding": "rfc8785-jcs-json",
+          "requiredBindings": [
+            "requestId",
+            "canonicalRequestDigest",
+            "purpose",
+            "immutableKeyVersion",
+            "repository",
+            "subjectDigest",
+            "mediaType",
+            "trustPolicyId",
+            "trustPolicyDigest",
+            "nonce",
+            "issuedAt",
+            "expiresAt",
+            "consumerId-when-private"
+          ],
+          "idempotency": "request-id-plus-canonical-request-digest",
+          "replayWithDifferentDigest": "reject"
+        },
+        "signingResult": {
+          "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0",
+          "requiredBindings": [
+            "requestDigest",
+            "purpose",
+            "algorithm",
+            "publicKeyDigest",
+            "subject",
+            "signatureBundle",
+            "trustPolicy",
+            "providerAuditEvidence",
+            "signedAt"
+          ],
+          "wrongPurposeSubjectConsumerKeyOrPolicy": "reject"
+        },
+        "cosign": {
+          "version": "3.0.6",
+          "executableAuthority": "exact-component-lock-descriptor-and-sha256-digest",
+          "bundleMediaType": "application/vnd.dev.sigstore.bundle.v0.3+json",
+          "subjectSelection": "repository-plus-exact-digest",
+          "tagSigning": "forbidden",
+          "transparencyForPrivateConsumerArtifacts": "disabled-unless-consumer-explicitly-accepts-disclosure"
+        },
+        "sbom": {
+          "specification": "SPDX-2.3",
+          "interoperabilityProfile": "agent-delivery-v1-spdx-2.3-json",
+          "versionPolicy": "interoperability-pin-not-latest-version-claim",
+          "mediaType": "application/spdx+json",
+          "encoding": "rfc8785-jcs-json",
+          "requiredInputs": [
+            "artifactDigest",
+            "generatorImageDigest",
+            "componentLockDigest"
+          ],
+          "requiredFor": [
+            "product-distribution",
+            "renderer-release",
+            "artifact-with-executable-skill-file",
+            "artifact-with-code-or-dependency"
+          ],
+          "requiredSections": [
+            "SPDXID",
+            "spdxVersion",
+            "dataLicense",
+            "documentNamespace",
+            "creationInfo",
+            "packages",
+            "files",
+            "relationships"
+          ],
+          "fileChecksum": "SHA256",
+          "packageVerificationCode": "required-when-files-analyzed",
+          "generatorInput": "exact-generator-image-digest-plus-component-lock-digest",
+          "missingIncompleteOrUnknownComponent": "reject"
+        },
+        "provenance": {
+          "specification": "SLSA-v1.2",
+          "statementType": "https://in-toto.io/Statement/v1",
+          "predicateType": "https://slsa.dev/provenance/v1",
+          "mediaType": "application/vnd.in-toto+json",
+          "targetBuildLevel": 3,
+          "requiredInputs": [
+            "subjectDigest",
+            "buildType",
+            "builderId",
+            "invocationId",
+            "externalParametersDigest",
+            "resolvedDependencies",
+            "startedOn",
+            "finishedOn"
+          ],
+          "requiredSubject": "exact-output-name-and-sha256-digest",
+          "requiredPredicateFields": [
+            "buildDefinition.buildType",
+            "buildDefinition.externalParameters",
+            "buildDefinition.resolvedDependencies",
+            "runDetails.builder.id",
+            "runDetails.metadata.invocationId",
+            "runDetails.metadata.startedOn",
+            "runDetails.metadata.finishedOn"
+          ],
+          "requiredMaterials": [
+            "source-commit-and-tree",
+            "builder",
+            "workflow",
+            "toolchain",
+            "component-lock",
+            "renderer-release",
+            "public-and-private-skill-digests",
+            "policy-binding-customization-digests-when-private",
+            "test-evidence"
+          ],
+          "builderAndWorkflowAuthority": "exact-pinned-identities",
+          "mismatchedMissingOrUnpinnedMaterial": "reject"
+        },
+        "vulnerabilityScan": {
+          "mediaType": "application/vnd.bytedesk.scan.v1+json",
+          "requiredInputs": [
+            "artifactDigest",
+            "sbomDigest",
+            "scannerImageDigest",
+            "scannerRulesDigest",
+            "advisorySnapshotDigest",
+            "severityPolicyDigest",
+            "scanTime"
+          ],
+          "resultClasses": [
+            "pass",
+            "deny",
+            "indeterminate"
+          ],
+          "denialThresholds": [
+            "known-exploited-any-severity",
+            "critical-any-reachability",
+            "high-reachable"
+          ],
+          "indeterminateConditions": [
+            "scanner-unavailable",
+            "advisory-snapshot-unavailable",
+            "incomplete-sbom",
+            "unknown-severity-policy",
+            "partial-scan"
+          ],
+          "indeterminatePromotionEligible": false,
+          "artifactExecution": "forbidden"
+        },
+        "malwareScan": {
+          "mediaType": "application/vnd.bytedesk.malware-scan.v1+json",
+          "requiredInputs": [
+            "artifactDigest",
+            "scannerImageDigest",
+            "signatureDatabaseDigest",
+            "sandboxProfileDigest",
+            "scanTime"
+          ],
+          "requiredCoverage": "every-regular-file-byte-including-nested-archives-with-bounds",
+          "detectedOrCoverageIncomplete": "deny",
+          "artifactExecution": "forbidden"
+        },
+        "secretScan": {
+          "mediaType": "application/vnd.bytedesk.secret-scan.v1+json",
+          "requiredInputs": [
+            "artifactDigest",
+            "scannerImageDigest",
+            "rulesetDigest",
+            "allowlistDigest",
+            "scanTime"
+          ],
+          "requiredCoverage": "manifest-layer-and-every-regular-file-byte",
+          "rawSecretInArtifact": "deny",
+          "opaqueSecretReference": "allowed-only-by-functional-contract-and-never-resolved-during-build",
+          "findingsRedaction": "location-and-class-only-no-secret-bytes"
+        },
+        "scanCompleteness": {
+          "mediaType": "application/vnd.bytedesk.scan-completeness.v1+json",
+          "requiredInputs": [
+            "artifactDigest",
+            "inventoryDigest",
+            "vulnerabilityReportDigest",
+            "malwareReportDigest",
+            "secretScanReportDigest",
+            "evaluatorImageDigest",
+            "evaluationTime"
+          ],
+          "requiredReports": [
+            "vulnerability",
+            "malware",
+            "secret"
+          ],
+          "completePassRequirement": "exact-inventory-and-all-three-exact-report-digests-with-complete-coverage",
+          "missingMismatchedOrIncomplete": "deny",
+          "evidenceCannotGrantRuntimeAuthority": true
+        },
+        "licenseEvaluation": {
+        "mediaType": "application/vnd.bytedesk.license.v1+json",
+        "expressionSyntax": "SPDX-2.3-license-expression",
+        "expressionParserProfile": "spdx-license-expression-2.3-strict/1",
+        "licenseListVersion": "3.28.0",
+        "licenseListSource": "https://github.com/spdx/license-list-data/tree/v3.28.0/json",
+        "licenseListDigest": "sha256:f728c534d8bd1044fc515a2ddb2292be99559021d830bfa3281be0bcd36302ee",
+        "exceptionListDigest": "sha256:bd145bb558f44432fcd6f0d7e956ed0124dff72af7641a7cfcb1b557dc390a5b",
+        "parserDistributionAuthority": "evaluatorImageDigest",
+        "licenseRefRule": "LicenseRef and DocumentRef expressions resolve only from extracted licensing information in the exact sbomDigest and dispositions in the exact licensePolicyDigest; absent or unknown references are indeterminate",
+        "requiredInputs": [
+          "sbomDigest",
+          "licensePolicyId",
+          "licensePolicyDigest",
+          "evaluatorImageDigest",
+          "expressionParserProfile",
+          "licenseListVersion",
+          "licenseListDigest",
+          "exceptionListDigest",
+          "evaluationTime"
+          ],
+          "resultClasses": [
+            "pass",
+            "deny",
+            "indeterminate"
+          ],
+        "unknownOrUnlicensedExpression": "indeterminate-and-not-promotion-eligible",
+        "policyUnavailable": "dependency_unavailable-operation-problem-no-report",
+        "invalidExpression": "evidence_invalid-operation-problem-no-report",
+        "deniedExpression": "deny",
+          "evidenceCannotGrantRuntimeAuthority": true
+        },
+        "evidenceAttachment": {
+          "relationship": "same-repository-OCI-referrer-to-exact-subject",
+          "descriptorBindings": [
+            "subjectDigest",
+            "artifactType",
+            "evidenceDigest",
+            "size",
+            "trustPolicyId",
+            "trustPolicyDigest"
+          ],
+          "crossRepositoryEvidence": "explicit-signed-common-descriptor-not-OCI-subject",
+          "requiredEvidenceSet": [
+            "signature",
+            "provenance",
+            "sbom-when-required",
+            "vulnerability",
+            "malware",
+            "secret-scan",
+            "scan-completeness",
+            "license",
+            "compatibility-or-evaluation-as-applicable"
+          ]
+        },
+        "rotationAndRevocation": {
+          "verificationTrustSet": "current-and-next-immutable-public-key-versions-during-overlap",
+          "priorSignatureMutation": "forbidden",
+          "revokedKeyOrDigest": "deny-new-import-activation-and-recovery",
+          "historicalEvidence": "retain-for-receipt-verification",
+          "compromisedSignerResponse": "new-key-version-new-signature-and-new-artifact-revision-under-current-policy"
+        },
+        "failureBehavior": {
+          "kmsUnavailable": "dependency_unavailable-retry-same-request-id-and-digest-only-after-resolution",
+          "signingResponseLost": "resolve-signing-request-before-retry",
+          "scannerUnavailable": "indeterminate-not-denied-and-not-promotion-eligible",
+          "policyUnavailable": "fail-closed",
+          "missingEvidence": "fail-closed",
+          "artifactOrSkillFilesExecuted": "nonconforming"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+seed: &seed ["lol", "lol", "lol", "lol", "lol", "lol", "lol", "lol"]
+level1: &level1 [*seed, *seed, *seed, *seed, *seed, *seed, *seed, *seed]
+level2: [*level1, *level1, *level1, *level1, *level1, *level1, *level1, *level1]

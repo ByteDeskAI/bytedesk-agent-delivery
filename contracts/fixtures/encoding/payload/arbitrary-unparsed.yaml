@@ -1,0 +1,7 @@
+%YAML 1.2
+--- !consumer/arbitrary-payload
+duplicate: first-byte-preserved-value
+duplicate: second-byte-preserved-value
+undefined-alias: *must-not-be-resolved
+quoted-scalar: "\\u0000 is payload text, not a contract escape"
+...

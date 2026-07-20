@@ -1,0 +1,267 @@
+{
+  "profile": "bytedesk.agent-spec-source-resolution-fixtures/1",
+  "cases": [
+    {
+      "name": "direct-agent-is-a-complete-source",
+      "declaredKind": "agent",
+      "document": {
+        "agentspec_version": "26.1.2",
+        "component_type": "Agent",
+        "id": "portable-agent",
+        "name": "Portable agent",
+        "llm_config": {
+          "component_type": "OpenAiConfig",
+          "id": "portable-model",
+          "name": "Logical default",
+          "model_id": "default"
+        },
+        "system_prompt": "Provide reviewed assistance."
+      },
+      "officialValid": true,
+      "valid": true,
+      "expectedBaseId": "portable-agent"
+    },
+    {
+      "name": "specialized-agent-embeds-one-complete-agent",
+      "declaredKind": "specialized-agent",
+      "document": {
+        "agentspec_version": "26.1.2",
+        "component_type": "SpecializedAgent",
+        "id": "portable-specialized-agent",
+        "name": "Portable specialized agent",
+        "agent": {
+          "component_type": "Agent",
+          "id": "portable-base-agent",
+          "name": "Portable base agent",
+          "llm_config": {
+            "component_type": "OpenAiConfig",
+            "id": "portable-model",
+            "name": "Logical default",
+            "model_id": "default"
+          },
+          "system_prompt": "Provide reviewed assistance."
+        },
+        "agent_specialization_parameters": {
+          "component_type": "AgentSpecializationParameters",
+          "id": "portable-specialization",
+          "name": "Reviewed specialization",
+          "additional_instructions": "Use the reviewed specialization."
+        }
+      },
+      "officialValid": true,
+      "valid": true,
+      "expectedBaseId": "portable-base-agent"
+    },
+    {
+      "name": "declared-kind-must-match-official-document-kind",
+      "declaredKind": "agent",
+      "document": {
+        "agentspec_version": "26.1.2",
+        "component_type": "SpecializedAgent",
+        "id": "mismatched-specialized-agent",
+        "name": "Mismatched specialized agent",
+        "agent": {
+          "component_type": "Agent",
+          "id": "base-agent",
+          "name": "Base agent",
+          "llm_config": {
+            "component_type": "OpenAiConfig",
+            "id": "portable-model",
+            "name": "Logical default",
+            "model_id": "default"
+          },
+          "system_prompt": "Provide reviewed assistance."
+        },
+        "agent_specialization_parameters": {
+          "component_type": "AgentSpecializationParameters",
+          "id": "specialization",
+          "name": "Specialization"
+        }
+      },
+      "officialValid": true,
+      "valid": false
+    },
+    {
+      "name": "specialized-agent-cannot-resolve-a-remote-base",
+      "declaredKind": "specialized-agent",
+      "document": {
+        "agentspec_version": "26.1.2",
+        "component_type": "SpecializedAgent",
+        "id": "remote-base",
+        "name": "Remote-base specialized agent",
+        "agent": "https://example.invalid/base-agent.json",
+        "agent_specialization_parameters": {
+          "component_type": "AgentSpecializationParameters",
+          "id": "specialization",
+          "name": "Specialization"
+        }
+      },
+      "officialValid": false,
+      "valid": false
+    },
+    {
+      "name": "specialized-agent-cannot-use-generic-ref",
+      "declaredKind": "specialized-agent",
+      "document": {
+        "agentspec_version": "26.1.2",
+        "component_type": "SpecializedAgent",
+        "id": "escaping-base",
+        "name": "Escaping-base specialized agent",
+        "agent": {
+          "$ref": "../base-agent.json"
+        },
+        "agent_specialization_parameters": {
+          "component_type": "AgentSpecializationParameters",
+          "id": "specialization",
+          "name": "Specialization"
+        }
+      },
+      "officialValid": false,
+      "valid": false
+    },
+    {
+      "name": "specialized-agent-cannot-form-a-resolution-cycle",
+      "declaredKind": "specialized-agent",
+      "document": {
+        "agentspec_version": "26.1.2",
+        "component_type": "SpecializedAgent",
+        "id": "cyclic-source",
+        "name": "Cyclic specialized agent",
+        "agent": {
+          "component_type": "SpecializedAgent",
+          "id": "nested-specialized-agent",
+          "name": "Nested specialized agent"
+        },
+        "agent_specialization_parameters": {
+          "component_type": "AgentSpecializationParameters",
+          "id": "specialization",
+          "name": "Specialization"
+        }
+      },
+      "officialValid": false,
+      "valid": false
+    },
+    {
+      "name": "specialization-parameters-must-be-embedded",
+      "declaredKind": "specialized-agent",
+      "document": {
+        "agentspec_version": "26.1.2",
+        "component_type": "SpecializedAgent",
+        "id": "escaping-specialization",
+        "name": "Escaping-specialization agent",
+        "agent": {
+          "component_type": "Agent",
+          "id": "base-agent",
+          "name": "Base agent",
+          "llm_config": {
+            "component_type": "OpenAiConfig",
+            "id": "portable-model",
+            "name": "Logical default",
+            "model_id": "default"
+          },
+          "system_prompt": "Provide reviewed assistance."
+        },
+        "agent_specialization_parameters": {
+          "$ref": "https://example.invalid/specialization.json"
+        }
+      },
+      "officialValid": false,
+      "valid": false
+    },
+    {
+      "name": "official-component-references-cannot-escape-inline-delivery-source",
+      "declaredKind": "specialized-agent",
+      "document": {
+        "$referenced_components": {
+          "base": {
+            "component_type": "Agent",
+            "id": "portable-base-agent",
+            "name": "Portable base agent",
+            "llm_config": {
+              "component_type": "OpenAiConfig",
+              "id": "portable-model",
+              "name": "Logical default",
+              "model_id": "default"
+            },
+            "system_prompt": "Provide reviewed assistance."
+          },
+          "params": {
+            "component_type": "AgentSpecializationParameters",
+            "id": "portable-specialization",
+            "name": "Reviewed specialization",
+            "additional_instructions": "Use the reviewed specialization."
+          }
+        },
+        "agentspec_version": "26.1.2",
+        "component_type": "SpecializedAgent",
+        "id": "referenced-specialized-agent",
+        "name": "Referenced specialized agent",
+        "agent": {
+          "$component_ref": "base"
+        },
+        "agent_specialization_parameters": {
+          "$component_ref": "params"
+        }
+      },
+      "officialValid": true,
+      "valid": false
+    },
+    {
+      "name": "newer-official-document-version-is-not-the-pinned-delivery-version",
+      "declaredKind": "agent",
+      "document": {
+        "agentspec_version": "26.2.0",
+        "component_type": "Agent",
+        "id": "newer-version-agent",
+        "name": "Newer-version agent",
+        "llm_config": {
+          "component_type": "OpenAiConfig",
+          "id": "portable-model",
+          "name": "Logical default",
+          "model_id": "default"
+        },
+        "system_prompt": "Provide reviewed assistance."
+      },
+      "officialValid": true,
+      "valid": false
+    },
+    {
+      "name": "implicit-official-document-version-is-not-exact-authority",
+      "declaredKind": "agent",
+      "document": {
+        "component_type": "Agent",
+        "id": "implicit-version-agent",
+        "name": "Implicit-version agent",
+        "llm_config": {
+          "component_type": "OpenAiConfig",
+          "id": "portable-model",
+          "name": "Logical default",
+          "model_id": "default"
+        },
+        "system_prompt": "Provide reviewed assistance."
+      },
+      "officialValid": true,
+      "officialWarningCount": 1,
+      "valid": false
+    },
+    {
+      "name": "legacy-air-version-cannot-substitute-for-exact-agent-spec-version",
+      "declaredKind": "agent",
+      "document": {
+        "air_version": "26.1.2",
+        "component_type": "Agent",
+        "id": "legacy-version-agent",
+        "name": "Legacy-version agent",
+        "llm_config": {
+          "component_type": "OpenAiConfig",
+          "id": "portable-model",
+          "name": "Logical default",
+          "model_id": "default"
+        },
+        "system_prompt": "Provide reviewed assistance."
+      },
+      "officialValid": true,
+      "valid": false
+    }
+  ]
+}

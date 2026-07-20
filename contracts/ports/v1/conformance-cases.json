@@ -1,0 +1,4219 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/downstream-conformance-cases/1.0.0",
+  "cases": [
+    {
+      "caseId": "PORT-001-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "list-catalog-releases",
+          "portId": "bytedesk.port.catalog/1"
+        },
+        {
+          "operationId": "resolve-catalog-release",
+          "portId": "bytedesk.port.catalog/1"
+        },
+        {
+          "operationId": "fetch-catalog-object",
+          "portId": "bytedesk.port.catalog/1"
+        },
+        {
+          "operationId": "publish-catalog-release",
+          "portId": "bytedesk.port.catalog/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-02",
+      "portSuites": [
+        "downstream.catalog.v1"
+      ],
+      "suite": "downstream.marketplace.v1"
+    },
+    {
+      "caseId": "PORT-002-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "receive-webhook",
+          "portId": "bytedesk.port.scm/1"
+        },
+        {
+          "operationId": "fetch-commit",
+          "portId": "bytedesk.port.scm/1"
+        },
+        {
+          "operationId": "scan-repository",
+          "portId": "bytedesk.port.scm/1"
+        },
+        {
+          "operationId": "publish-candidate-signal",
+          "portId": "bytedesk.port.scm/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-11",
+      "portSuites": [
+        "downstream.scm.v1"
+      ],
+      "suite": "downstream.scm-intake.v1"
+    },
+    {
+      "caseId": "PORT-003-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "validate-agent-spec",
+          "portId": "bytedesk.port.agent-spec-validator/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.agent-spec-validator.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "PORT-004-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "describe-capabilities",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        },
+        {
+          "operationId": "select-renderer",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        },
+        {
+          "operationId": "render",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-strategy.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "PORT-005-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "render",
+          "portId": "bytedesk.port.renderer-adapter/1"
+        },
+        {
+          "operationId": "validate-output",
+          "portId": "bytedesk.port.renderer-adapter/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-adapter.v1"
+      ],
+      "suite": "downstream.native-renderer.v1"
+    },
+    {
+      "caseId": "PORT-006-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "execute-renderer",
+          "portId": "bytedesk.port.renderer-sandbox/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-sandbox.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "PORT-007-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "verify-native-output",
+          "portId": "bytedesk.port.wayflow-compatibility/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.wayflow-compatibility.v1"
+      ],
+      "suite": "downstream.native-renderer.v1"
+    },
+    {
+      "caseId": "PORT-008-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "head-artifact",
+          "portId": "bytedesk.port.oci-registry/1"
+        },
+        {
+          "operationId": "pull-artifact",
+          "portId": "bytedesk.port.oci-registry/1"
+        },
+        {
+          "operationId": "push-artifact",
+          "portId": "bytedesk.port.oci-registry/1"
+        },
+        {
+          "operationId": "list-referrers",
+          "portId": "bytedesk.port.oci-registry/1"
+        },
+        {
+          "operationId": "verify-artifact-graph",
+          "portId": "bytedesk.port.oci-registry/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.oci-registry.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "PORT-009-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "sign-digest",
+          "portId": "bytedesk.port.kms-signing/1"
+        },
+        {
+          "operationId": "resolve-signing-request",
+          "portId": "bytedesk.port.kms-signing/1"
+        },
+        {
+          "operationId": "verify-signature",
+          "portId": "bytedesk.port.kms-signing/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.kms-signing.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "PORT-010-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "generate-sbom",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        },
+        {
+          "operationId": "generate-provenance",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        },
+        {
+          "operationId": "scan-vulnerabilities",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        },
+        {
+          "operationId": "evaluate-licenses",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "PORT-011-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "put-evidence",
+          "portId": "bytedesk.port.evidence-archive/1"
+        },
+        {
+          "operationId": "read-evidence",
+          "portId": "bytedesk.port.evidence-archive/1"
+        },
+        {
+          "operationId": "advance-archive-root",
+          "portId": "bytedesk.port.evidence-archive/1"
+        },
+        {
+          "operationId": "restore-evidence",
+          "portId": "bytedesk.port.evidence-archive/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.evidence-archive.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "PORT-012-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "resolve-authority-snapshot",
+          "portId": "bytedesk.port.consumer-authority-approval/1"
+        },
+        {
+          "operationId": "resolve-skill-approval",
+          "portId": "bytedesk.port.consumer-authority-approval/1"
+        },
+        {
+          "operationId": "verify-private-authority",
+          "portId": "bytedesk.port.consumer-authority-approval/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-09",
+      "portSuites": [
+        "downstream.consumer-authority.v1"
+      ],
+      "suite": "downstream.consumer-state.v1"
+    },
+    {
+      "caseId": "PORT-013-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "resolve-consumer-subject",
+          "portId": "bytedesk.port.consumer-projection/1"
+        },
+        {
+          "operationId": "project-consumer-receipt",
+          "portId": "bytedesk.port.consumer-projection/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-09",
+      "portSuites": [
+        "downstream.consumer-projection.v1"
+      ],
+      "suite": "downstream.consumer-state.v1"
+    },
+    {
+      "caseId": "PORT-014-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "read-target-state",
+          "portId": "bytedesk.port.desired-state-store/1"
+        },
+        {
+          "operationId": "watch-target-state",
+          "portId": "bytedesk.port.desired-state-store/1"
+        },
+        {
+          "operationId": "compare-and-swap-target-state",
+          "portId": "bytedesk.port.desired-state-store/1"
+        },
+        {
+          "operationId": "resolve-idempotency",
+          "portId": "bytedesk.port.desired-state-store/1"
+        },
+        {
+          "operationId": "read-target-history",
+          "portId": "bytedesk.port.desired-state-store/1"
+        },
+        {
+          "operationId": "migrate-target-state",
+          "portId": "bytedesk.port.desired-state-store/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-09",
+      "portSuites": [
+        "downstream.desired-state.v1"
+      ],
+      "suite": "downstream.consumer-state.v1"
+    },
+    {
+      "caseId": "PORT-015-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "submit-command",
+          "portId": "bytedesk.port.control-plane-api-events/1"
+        },
+        {
+          "operationId": "read-resource",
+          "portId": "bytedesk.port.control-plane-api-events/1"
+        },
+        {
+          "operationId": "append-host-observation",
+          "portId": "bytedesk.port.control-plane-api-events/1"
+        },
+        {
+          "operationId": "append-capability-evidence",
+          "portId": "bytedesk.port.control-plane-api-events/1"
+        },
+        {
+          "operationId": "subscribe-events",
+          "portId": "bytedesk.port.control-plane-api-events/1"
+        },
+        {
+          "operationId": "resynchronize-events",
+          "portId": "bytedesk.port.control-plane-api-events/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-10",
+      "portSuites": [
+        "downstream.control-plane-api-events.v1"
+      ],
+      "suite": "downstream.api-events.v1"
+    },
+    {
+      "caseId": "PORT-016-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "start-rollout",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        },
+        {
+          "operationId": "evaluate-evidence",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        },
+        {
+          "operationId": "authorize-activation",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        },
+        {
+          "operationId": "commit-promotion",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        },
+        {
+          "operationId": "plan-forward-recovery",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        },
+        {
+          "operationId": "cancel-rollout",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract",
+          "authorize activation canonical per-subject arrays each cover the deployable graph exactly once",
+          "authorization nonce slot identity and operation time are bound into the request digest and signed authorization",
+          "authorization result returns exact release graph eligibility verification and authorization digests"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-12",
+      "portSuites": [
+        "downstream.promotion-coordinator.v1"
+      ],
+      "suite": "downstream.promotion.v1"
+    },
+    {
+      "caseId": "PORT-017-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        },
+        {
+          "operationId": "resolve-compile-attempt",
+          "portId": "bytedesk.port.private-compiler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-13",
+      "portSuites": [
+        "downstream.private-compiler.v1"
+      ],
+      "suite": "downstream.private-compiler.v1"
+    },
+    {
+      "caseId": "PORT-018-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "stage-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "preflight-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "activate-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "readback-active-state",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "append-host-observation",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "recover-attempt-journal",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "cleanup-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract",
+          "stage preflight and readback execute once for every canonical deployment while one target-wide journal binds the runtime-release digest and complete deployable-graph digest",
+          "one atomic activation returns the exact release graph activation-authorization and fresh Host eligibility-verification evidence digests",
+          "promotion waits for complete canonical per-subject active readback and deployment receipt sets"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.host-reconciler.v1"
+    },
+    {
+      "caseId": "PORT-019-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "dispatch-capability-check",
+          "portId": "bytedesk.port.capability-verifier/1"
+        },
+        {
+          "operationId": "verify-capability-result",
+          "portId": "bytedesk.port.capability-verifier/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.capability-verifier.v1"
+      ],
+      "suite": "downstream.capability-verifier.v1"
+    },
+    {
+      "caseId": "PORT-020-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "execute-local",
+          "portId": "bytedesk.port.cli-automation/1"
+        },
+        {
+          "operationId": "execute-remote",
+          "portId": "bytedesk.port.cli-automation/1"
+        },
+        {
+          "operationId": "watch-action",
+          "portId": "bytedesk.port.cli-automation/1"
+        },
+        {
+          "operationId": "verify-receipt",
+          "portId": "bytedesk.port.cli-automation/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-15",
+      "portSuites": [
+        "downstream.cli-automation.v1"
+      ],
+      "suite": "downstream.cli-automation.v1"
+    },
+    {
+      "caseId": "PORT-021-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "prepare-region-fence",
+          "portId": "bytedesk.port.region-fence/1"
+        },
+        {
+          "operationId": "activate-recovery-region",
+          "portId": "bytedesk.port.region-fence/1"
+        },
+        {
+          "operationId": "verify-region-fence",
+          "portId": "bytedesk.port.region-fence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "strict request decoding",
+          "exact schema and digest verification",
+          "declared authentication and authorization",
+          "declared idempotency behavior",
+          "declared result contract"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-18",
+      "portSuites": [
+        "downstream.region-fence.v1"
+      ],
+      "suite": "downstream.certification.v1"
+    },
+    {
+      "caseId": "LOCK-001-floating-selector-rejected",
+      "category": "external-input-lock-denial",
+      "covers": [
+        {
+          "operationId": "scan-repository",
+          "portId": "bytedesk.port.scm/1"
+        },
+        {
+          "operationId": "select-renderer",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        },
+        {
+          "operationId": "scan-vulnerabilities",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "external_input_unpinned",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "replace an immutable commit or image digest with tag branch HEAD PATH binary or ambient version",
+        "rejectingOperation": "bytedesk.port.scm/1#scan-repository"
+      },
+      "ownerTask": "AD-18",
+      "portSuites": [
+        "downstream.scm.v1",
+        "downstream.renderer-strategy.v1",
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.certification.v1"
+    },
+    {
+      "caseId": "CAT-001-channel-is-discovery-only",
+      "category": "authority-boundary",
+      "covers": [
+        {
+          "operationId": "resolve-catalog-release",
+          "portId": "bytedesk.port.catalog/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "use channel rather than returned verified digest as downstream authority",
+        "rejectingOperation": "bytedesk.port.catalog/1#resolve-catalog-release"
+      },
+      "ownerTask": "AD-02",
+      "portSuites": [
+        "downstream.catalog.v1"
+      ],
+      "suite": "downstream.marketplace.v1"
+    },
+    {
+      "caseId": "CAT-002-reference-catalog-exact-inventory",
+      "category": "reference-catalog",
+      "covers": [
+        {
+          "operationId": "fetch-catalog-object",
+          "portId": "bytedesk.port.catalog/1"
+        },
+        {
+          "operationId": "validate-agent-spec",
+          "portId": "bytedesk.port.agent-spec-validator/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "every source object and definition validates by exact digest without consumer data",
+        "fixture": "exact 34+1 locked source and provenance inventory"
+      },
+      "ownerTask": "AD-03",
+      "portSuites": [
+        "downstream.catalog.v1",
+        "downstream.agent-spec-validator.v1"
+      ],
+      "suite": "downstream.reference-catalog.v1"
+    },
+    {
+      "caseId": "SCM-001-webhook-replay-collision",
+      "category": "idempotency-collision",
+      "covers": [
+        {
+          "operationId": "receive-webhook",
+          "portId": "bytedesk.port.scm/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "idempotency_collision",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "reuse provider delivery ID with different authenticated payload bytes",
+        "rejectingOperation": "bytedesk.port.scm/1#receive-webhook"
+      },
+      "ownerTask": "AD-11",
+      "portSuites": [
+        "downstream.scm.v1"
+      ],
+      "suite": "downstream.scm-intake.v1"
+    },
+    {
+      "caseId": "RENDER-001-output-schema-substitution",
+      "category": "renderer-output-denial",
+      "covers": [
+        {
+          "operationId": "validate-output",
+          "portId": "bytedesk.port.renderer-adapter/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "renderer_output_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "emit manifest with unpromised schema ID or wrong exact schema digest",
+        "rejectingOperation": "bytedesk.port.renderer-adapter/1#validate-output"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-adapter.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-002-worker-extra-stdout",
+      "category": "worker-framing-denial",
+      "covers": [
+        {
+          "operationId": "execute-renderer",
+          "portId": "bytedesk.port.renderer-sandbox/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "worker_protocol_failed",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "write bytes after the single framed response or exceed a frame bound",
+        "rejectingOperation": "bytedesk.port.renderer-sandbox/1#execute-renderer"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-sandbox.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-003-container-stream-content-denied",
+      "category": "sandbox-stream-isolation-denial",
+      "covers": [
+        {
+          "operationId": "execute-renderer",
+          "portId": "bytedesk.port.renderer-sandbox/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "artifact_unsafe",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "worker response and diagnostic canaries remain only on launcher-private pipes and bounded output files; container and platform log captures contain no renderer-derived bytes",
+        "mutation": "execution-spy routes a distinct response or diagnostic canary to launcher container stdout/stderr, CRI, node logs, Kubernetes events, or telemetry",
+        "rejectingOperation": "bytedesk.port.renderer-sandbox/1#execute-renderer"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-sandbox.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-004-target-platform-required",
+      "category": "renderer-selection-denial",
+      "covers": [
+        {
+          "operationId": "select-renderer",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "invalid_request",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "omit targetPlatform from the closed renderer selection request",
+        "rejectingOperation": "bytedesk.port.renderer-strategy/1#select-renderer"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-strategy.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-005-unsupported-target-platform",
+      "category": "renderer-selection-denial",
+      "covers": [
+        {
+          "operationId": "select-renderer",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "renderer_not_allowlisted",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "request darwin/arm64 or any platform absent from the signed release and compiled allowlist",
+        "rejectingOperation": "bytedesk.port.renderer-strategy/1#select-renderer"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-strategy.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-006-selection-platform-mismatch",
+      "category": "renderer-selection-substitution",
+      "covers": [
+        {
+          "operationId": "select-renderer",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "return a selection whose targetPlatform or executableDistribution differs from the requested signed-release platform entry",
+        "rejectingOperation": "bytedesk.port.renderer-strategy/1#select-renderer"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-strategy.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-007-renderer-release-substitution",
+      "category": "renderer-selection-substitution",
+      "covers": [
+        {
+          "operationId": "render",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "replace the selected release descriptor or recompute only a partial selection while retaining the original selectionDigest",
+        "rejectingOperation": "bytedesk.port.renderer-strategy/1#render"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-strategy.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-008-executable-distribution-swap",
+      "category": "renderer-execution-substitution",
+      "covers": [
+        {
+          "operationId": "execute-renderer",
+          "portId": "bytedesk.port.renderer-sandbox/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "launch a PATH binary, tag resolution, another platform child, or any distribution not equal to rendererSelection.executableDistribution",
+        "rejectingOperation": "bytedesk.port.renderer-sandbox/1#execute-renderer"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-sandbox.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-009-compiled-allowlist-swap",
+      "category": "renderer-selection-substitution",
+      "covers": [
+        {
+          "operationId": "render",
+          "portId": "bytedesk.port.renderer-adapter/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "replace compiledAllowlistDigest after Strategy selection or accept a runtime-expanded allowlist",
+        "rejectingOperation": "bytedesk.port.renderer-adapter/1#render"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-adapter.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-010-ambient-architecture-change",
+      "category": "renderer-execution-substitution",
+      "covers": [
+        {
+          "operationId": "execute-renderer",
+          "portId": "bytedesk.port.renderer-sandbox/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "schedule on a different host architecture and re-resolve the executable instead of honoring the exact selected platform and distribution",
+        "rejectingOperation": "bytedesk.port.renderer-sandbox/1#execute-renderer"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-sandbox.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-011-execution-readback-mismatch",
+      "category": "renderer-execution-attestation-denial",
+      "covers": [
+        {
+          "operationId": "validate-output",
+          "portId": "bytedesk.port.renderer-adapter/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "trust_verification_failed",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "selection, authenticated receipt, receipt digest, render manifest, input tree, response, and output tree agree exactly",
+        "mutation": "alter actual platform/distribution, launcher identity, fencing token, profile, input/output digest, receipt digest, or authentication evidence",
+        "rejectingOperation": "bytedesk.port.renderer-adapter/1#validate-output"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-adapter.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-012-release-allowlist-product-selection-mismatch",
+      "category": "renderer-release-graph-substitution",
+      "covers": [
+        {
+          "operationId": "select-renderer",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "resolve the exact product-release manifest, product distribution, compiled allowlist, and renderer release offline; require the product distribution embedded-allowlist readback to equal the manifest allowlist and require the selection P/A/R/platform/distribution identities to equal that closed graph",
+        "mutation": "substitute M, P, A, R, the product distribution embedded allowlist, target platform, or executable distribution while retaining any other graph member or selectionDigest",
+        "rejectingOperation": "bytedesk.port.renderer-strategy/1#select-renderer"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-strategy.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-013-qualification-selection-production-denied",
+      "category": "qualification-authority-boundary",
+      "covers": [
+        {
+          "operationId": "render",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        },
+        {
+          "operationId": "execute-renderer",
+          "portId": "bytedesk.port.renderer-sandbox/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "invalid_request",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "renderer-qualification-selection/1 is accepted only by execute-qualification and always has productionEligible=false",
+        "mutation": "submit a schema-valid QS to any production render or renderer execution request",
+        "rejectingOperation": "bytedesk.port.renderer-strategy/1#render"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-strategy.v1",
+        "downstream.renderer-sandbox.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "RENDER-014-qualification-attempt-authentication-mismatch",
+      "category": "qualification-execution-attestation-denial",
+      "covers": [
+        {
+          "operationId": "execute-qualification",
+          "portId": "bytedesk.port.renderer-sandbox/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "trust_verification_failed",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "QS, fenced attempt, issuer proof, contract bundle, suite, actual executable, request/response/evidence tree, receipt, and receipt authentication agree exactly",
+        "mutation": "alter QS digest, fence, issuer proof, bundle, suite, executable, framed bytes, evidence tree, receipt digest, or authentication purpose",
+        "rejectingOperation": "bytedesk.port.renderer-sandbox/1#execute-qualification"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-sandbox.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "NATIVE-001-wayflow-is-evidence-only",
+      "category": "authority-boundary",
+      "covers": [
+        {
+          "operationId": "verify-native-output",
+          "portId": "bytedesk.port.wayflow-compatibility/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "compatibility_denied",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "select WayFlow as renderer output or runtime dependency",
+        "rejectingOperation": "bytedesk.port.wayflow-compatibility/1#verify-native-output"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.wayflow-compatibility.v1"
+      ],
+      "suite": "downstream.native-renderer.v1"
+    },
+    {
+      "caseId": "HERMES-001-untrusted-files-never-executed",
+      "category": "execution-boundary",
+      "covers": [
+        {
+          "operationId": "render",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        },
+        {
+          "operationId": "render",
+          "portId": "bytedesk.port.renderer-adapter/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "renderer treats every file as untrusted bytes and executes none",
+        "fixture": "skill and payload tree includes executable regular files and lifecycle scripts"
+      },
+      "ownerTask": "AD-05",
+      "portSuites": [
+        "downstream.renderer-strategy.v1",
+        "downstream.renderer-adapter.v1"
+      ],
+      "suite": "downstream.hermes-renderer.v1"
+    },
+    {
+      "caseId": "OPENCLAW-001-private-functional-rerender",
+      "category": "private-functional-extension",
+      "covers": [
+        {
+          "operationId": "render",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        },
+        {
+          "operationId": "validate-output",
+          "portId": "bytedesk.port.renderer-adapter/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "full rerender succeeds while security authority remains consumer-owned",
+        "fixture": "valid private delta changes all functional properties and adds replaces and removes regular files and skills"
+      },
+      "ownerTask": "AD-06",
+      "portSuites": [
+        "downstream.renderer-strategy.v1",
+        "downstream.renderer-adapter.v1"
+      ],
+      "suite": "downstream.openclaw-renderer.v1"
+    },
+    {
+      "caseId": "OCI-001-tag-cannot-authorize-pull",
+      "category": "authority-boundary",
+      "covers": [
+        {
+          "operationId": "pull-artifact",
+          "portId": "bytedesk.port.oci-registry/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "invalid_request",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "omit exact digest and resolve only by tag",
+        "rejectingOperation": "bytedesk.port.oci-registry/1#pull-artifact"
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.oci-registry.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "OCI-002-push-response-lost",
+      "category": "commit-uncertainty",
+      "covers": [
+        {
+          "operationId": "push-artifact",
+          "portId": "bytedesk.port.oci-registry/1"
+        },
+        {
+          "operationId": "head-artifact",
+          "portId": "bytedesk.port.oci-registry/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "fault": "registry commits exact graph and drops response",
+        "recovery": "resolve key then verify complete graph by digest"
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.oci-registry.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "SIGN-001-purpose-separated-signer",
+      "category": "authorization-denial",
+      "covers": [
+        {
+          "operationId": "sign-digest",
+          "portId": "bytedesk.port.kms-signing/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "signer_purpose_mismatch",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "use authority signer for deployment or private-skill signing purpose",
+        "rejectingOperation": "bytedesk.port.kms-signing/1#sign-digest"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.kms-signing.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "SIGN-002-request-replay-different-bytes",
+      "category": "idempotency-collision",
+      "covers": [
+        {
+          "operationId": "resolve-signing-request",
+          "portId": "bytedesk.port.kms-signing/1"
+        },
+        {
+          "operationId": "sign-digest",
+          "portId": "bytedesk.port.kms-signing/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "idempotency_collision",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "reuse signing request ID with a different canonical request digest",
+        "rejectingOperation": "bytedesk.port.kms-signing/1#resolve-signing-request"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.kms-signing.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "ARCHIVE-001-restore-never-activates",
+      "category": "recovery-boundary",
+      "covers": [
+        {
+          "operationId": "restore-evidence",
+          "portId": "bytedesk.port.evidence-archive/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "restore republishes verified bytes with fresh evidence and performs no target or host mutation",
+        "fixture": "valid archived evidence under current trust"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.evidence-archive.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "AUTH-001-expired-authority",
+      "category": "authority-denial",
+      "covers": [
+        {
+          "operationId": "verify-private-authority",
+          "portId": "bytedesk.port.consumer-authority-approval/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "authority_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "verification time falls outside consumer-signed validity interval",
+        "rejectingOperation": "bytedesk.port.consumer-authority-approval/1#verify-private-authority"
+      },
+      "ownerTask": "AD-09",
+      "portSuites": [
+        "downstream.consumer-authority.v1"
+      ],
+      "suite": "downstream.consumer-state.v1"
+    },
+    {
+      "caseId": "AUTH-002-skill-digest-substitution",
+      "category": "authority-denial",
+      "covers": [
+        {
+          "operationId": "resolve-skill-approval",
+          "portId": "bytedesk.port.consumer-authority-approval/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "skill_approval_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "approved skill digest differs from effective private skill digest",
+        "rejectingOperation": "bytedesk.port.consumer-authority-approval/1#resolve-skill-approval"
+      },
+      "ownerTask": "AD-09",
+      "portSuites": [
+        "downstream.consumer-authority.v1"
+      ],
+      "suite": "downstream.consumer-state.v1"
+    },
+    {
+      "caseId": "AUTH-003-private-input-digest-mismatch",
+      "category": "authority-denial",
+      "covers": [
+        {
+          "operationId": "verify-private-authority",
+          "portId": "bytedesk.port.consumer-authority-approval/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "verification returns no success result or authorized digest",
+        "mutation": "expectedPrivateInputDigest differs from the authorizedPrivateInputDigest inside the authenticated consumer-signed compile authority snapshot",
+        "rejectingOperation": "bytedesk.port.consumer-authority-approval/1#verify-private-authority"
+      },
+      "ownerTask": "AD-09",
+      "portSuites": [
+        "downstream.consumer-authority.v1"
+      ],
+      "suite": "downstream.consumer-state.v1"
+    },
+    {
+      "caseId": "AUTH-004-denied-private-authority-has-no-success-result",
+      "category": "authority-denial",
+      "covers": [
+        {
+          "operationId": "verify-private-authority",
+          "portId": "bytedesk.port.consumer-authority-approval/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "authority_denied",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "a denied signed decision is an operation error and never returns authorizedPrivateInputDigest",
+        "mutation": "consumer-authority decision is denied even though its compile input digest is otherwise well formed",
+        "rejectingOperation": "bytedesk.port.consumer-authority-approval/1#verify-private-authority"
+      },
+      "ownerTask": "AD-09",
+      "portSuites": [
+        "downstream.consumer-authority.v1"
+      ],
+      "suite": "downstream.consumer-state.v1"
+    },
+    {
+      "caseId": "STATE-001-omitted-or-partial-cas",
+      "category": "cas-denial",
+      "covers": [
+        {
+          "operationId": "compare-and-swap-target-state",
+          "portId": "bytedesk.port.desired-state-store/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "invalid_request",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutations": [
+          "omitted precondition",
+          "null",
+          "wildcard",
+          "force",
+          "digest-only",
+          "revision-only"
+        ],
+        "rejectingOperation": "bytedesk.port.desired-state-store/1#compare-and-swap-target-state"
+      },
+      "ownerTask": "AD-09",
+      "portSuites": [
+        "downstream.desired-state.v1"
+      ],
+      "suite": "downstream.consumer-state.v1"
+    },
+    {
+      "caseId": "STATE-002-stale-exact-cas",
+      "category": "cas-denial",
+      "covers": [
+        {
+          "operationId": "compare-and-swap-target-state",
+          "portId": "bytedesk.port.desired-state-store/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "desired_state_cas_mismatch",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "submit exact but stale revision-plus-digest pair",
+        "rejectingOperation": "bytedesk.port.desired-state-store/1#compare-and-swap-target-state"
+      },
+      "ownerTask": "AD-09",
+      "portSuites": [
+        "downstream.desired-state.v1"
+      ],
+      "suite": "downstream.consumer-state.v1"
+    },
+    {
+      "caseId": "STATE-003-cas-response-lost",
+      "category": "commit-uncertainty",
+      "covers": [
+        {
+          "operationId": "compare-and-swap-target-state",
+          "portId": "bytedesk.port.desired-state-store/1"
+        },
+        {
+          "operationId": "resolve-idempotency",
+          "portId": "bytedesk.port.desired-state-store/1"
+        },
+        {
+          "operationId": "read-target-state",
+          "portId": "bytedesk.port.desired-state-store/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "fault": "store commits and drops response",
+        "recovery": "resolve key then read exact state and never blindly retry with a new key"
+      },
+      "ownerTask": "AD-09",
+      "portSuites": [
+        "downstream.desired-state.v1"
+      ],
+      "suite": "downstream.consumer-state.v1"
+    },
+    {
+      "caseId": "STATE-004-dual-write-migration-denied",
+      "category": "migration-denial",
+      "covers": [
+        {
+          "operationId": "migrate-target-state",
+          "portId": "bytedesk.port.desired-state-store/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "migration_quiesce_required",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "write source and destination without coordinator quiescence",
+        "rejectingOperation": "bytedesk.port.desired-state-store/1#migrate-target-state"
+      },
+      "ownerTask": "AD-09",
+      "portSuites": [
+        "downstream.desired-state.v1"
+      ],
+      "suite": "downstream.consumer-state.v1"
+    },
+    {
+      "caseId": "API-001-event-gap-forces-resync",
+      "category": "event-gap",
+      "covers": [
+        {
+          "operationId": "subscribe-events",
+          "portId": "bytedesk.port.control-plane-api-events/1"
+        },
+        {
+          "operationId": "resynchronize-events",
+          "portId": "bytedesk.port.control-plane-api-events/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "event_sequence_gap",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "projection stops and performs authoritative API resynchronization",
+        "fault": "aggregate sequence skips a value",
+        "rejectingOperation": "bytedesk.port.control-plane-api-events/1#subscribe-events"
+      },
+      "ownerTask": "AD-10",
+      "portSuites": [
+        "downstream.control-plane-api-events.v1"
+      ],
+      "suite": "downstream.api-events.v1"
+    },
+    {
+      "caseId": "API-002-last-event-id-scope",
+      "category": "protocol-denial",
+      "covers": [
+        {
+          "operationId": "read-resource",
+          "portId": "bytedesk.port.control-plane-api-events/1"
+        },
+        {
+          "operationId": "subscribe-events",
+          "portId": "bytedesk.port.control-plane-api-events/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "protocol_violation",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "send Last-Event-ID on ordinary resource GET",
+        "rejectingOperation": "bytedesk.port.control-plane-api-events/1#read-resource"
+      },
+      "ownerTask": "AD-10",
+      "portSuites": [
+        "downstream.control-plane-api-events.v1"
+      ],
+      "suite": "downstream.api-events.v1"
+    },
+    {
+      "caseId": "API-003-capability-authentication-separated",
+      "category": "authentication-denial",
+      "covers": [
+        {
+          "operationId": "append-capability-evidence",
+          "portId": "bytedesk.port.control-plane-api-events/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "authorization_denied",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "append capability evidence using host identity",
+        "rejectingOperation": "bytedesk.port.control-plane-api-events/1#append-capability-evidence"
+      },
+      "ownerTask": "AD-10",
+      "portSuites": [
+        "downstream.control-plane-api-events.v1"
+      ],
+      "suite": "downstream.api-events.v1"
+    },
+    {
+      "caseId": "COORD-001-caller-conclusion-ignored",
+      "category": "evidence-denial",
+      "covers": [
+        {
+          "operationId": "evaluate-evidence",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "promotion_evidence_missing",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "caller claims permitted without exact technical and capability evidence",
+        "rejectingOperation": "bytedesk.port.promotion-coordinator/1#evaluate-evidence"
+      },
+      "ownerTask": "AD-12",
+      "portSuites": [
+        "downstream.promotion-coordinator.v1"
+      ],
+      "suite": "downstream.promotion.v1"
+    },
+    {
+      "caseId": "COORD-002-crash-after-switch-before-cas",
+      "category": "crash-recovery",
+      "covers": [
+        {
+          "operationId": "commit-promotion",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        },
+        {
+          "operationId": "readback-active-state",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "read-target-state",
+          "portId": "bytedesk.port.desired-state-store/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "fault": "coordinator crashes after switch and readback but before desired-state CAS",
+        "recovery": "journal and readback prove state then fresh evidence evaluation resumes exact CAS"
+      },
+      "ownerTask": "AD-12",
+      "portSuites": [
+        "downstream.promotion-coordinator.v1",
+        "downstream.host-reconciler.v1",
+        "downstream.desired-state.v1"
+      ],
+      "suite": "downstream.promotion.v1"
+    },
+    {
+      "caseId": "COORD-003-stale-writer-fenced",
+      "category": "fencing",
+      "covers": [
+        {
+          "operationId": "commit-promotion",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        },
+        {
+          "operationId": "compare-and-swap-target-state",
+          "portId": "bytedesk.port.desired-state-store/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "region_epoch_stale",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "writer uses old target revision rollout generation or region epoch",
+        "rejectingOperation": "bytedesk.port.promotion-coordinator/1#commit-promotion"
+      },
+      "ownerTask": "AD-12",
+      "portSuites": [
+        "downstream.promotion-coordinator.v1",
+        "downstream.desired-state.v1"
+      ],
+      "suite": "downstream.promotion.v1"
+    },
+    {
+      "caseId": "COORD-004-activation-release-status-must-be-fresh",
+      "category": "authority-denial",
+      "covers": [
+        {
+          "operationId": "authorize-activation",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "trust_verification_failed",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "omit, expire, roll back, withdraw, revoke, or bind the wrong authorizationNonce operationTime pin set status head product release renderer release or subject in the activation-time eligibility evidence or return a non-permitted or mismatched verification result",
+        "rejectingOperation": "bytedesk.port.promotion-coordinator/1#authorize-activation"
+      },
+      "ownerTask": "AD-12",
+      "portSuites": [
+        "downstream.promotion-coordinator.v1"
+      ],
+      "suite": "downstream.promotion.v1"
+    },
+    {
+      "caseId": "COORD-005-activation-deployable-graph-substitution-denied",
+      "category": "exact-binding-denial",
+      "covers": [
+        {
+          "operationId": "authorize-activation",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "substitute runtimeRelease releaseDigest one deployment or compilation-evidence descriptor one subject slot or generation one product or renderer release deployableGraphDigest authorizationNonce or target slot",
+        "rejectingOperation": "bytedesk.port.promotion-coordinator/1#authorize-activation"
+      },
+      "ownerTask": "AD-12",
+      "portSuites": [
+        "downstream.promotion-coordinator.v1"
+      ],
+      "suite": "downstream.promotion.v1"
+    },
+    {
+      "caseId": "COORD-006-incomplete-activation-subject-sets-denied",
+      "category": "exact-binding-denial",
+      "covers": [
+        {
+          "operationId": "authorize-activation",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "omit duplicate reorder or substitute a subject in candidateReadyEvidence authoritySnapshots or authorizationDecisionProofs or let any set differ from the complete canonical deployableGraph coverage",
+        "rejectingOperation": "bytedesk.port.promotion-coordinator/1#authorize-activation"
+      },
+      "ownerTask": "AD-12",
+      "portSuites": [
+        "downstream.promotion-coordinator.v1"
+      ],
+      "suite": "downstream.promotion.v1"
+    },
+    {
+      "caseId": "COORD-007-activation-result-binding-denied",
+      "category": "exact-binding-denial",
+      "covers": [
+        {
+          "operationId": "authorize-activation",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "return an activationAuthorizationDigest releaseDigest deployableGraphDigest releaseEligibilityDigest releaseEligibilityVerificationEvidenceDigest authorizationNonce slotId or operationTime that does not exactly equal the signed activation authorization and verified request",
+        "rejectingOperation": "bytedesk.port.promotion-coordinator/1#authorize-activation"
+      },
+      "ownerTask": "AD-12",
+      "portSuites": [
+        "downstream.promotion-coordinator.v1"
+      ],
+      "suite": "downstream.promotion.v1"
+    },
+    {
+      "caseId": "COMPILE-001-security-authority-mutation-denied",
+      "category": "authority-denial",
+      "covers": [
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "compile_denied",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "fixture": "functional delta attempts to alter identity grant credential trust approval workload identity or mandatory security policy",
+        "rejectingOperation": "bytedesk.port.private-compiler/1#compile-private-deployment"
+      },
+      "ownerTask": "AD-13",
+      "portSuites": [
+        "downstream.private-compiler.v1"
+      ],
+      "suite": "downstream.private-compiler.v1"
+    },
+    {
+      "caseId": "COMPILE-002-arbitrary-functional-files-allowed",
+      "category": "functional-extension",
+      "covers": [
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "compile succeeds without executing payload; runtime approval remains digest and policy gated",
+        "fixture": "valid delta changes all functional properties and adds replaces or removes arbitrary regular files including executable bytes"
+      },
+      "ownerTask": "AD-13",
+      "portSuites": [
+        "downstream.private-compiler.v1"
+      ],
+      "suite": "downstream.private-compiler.v1"
+    },
+    {
+      "caseId": "COMPILE-003-changed-approval-denied",
+      "category": "private-input-lock-denial",
+      "covers": [
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "skill_approval_invalid",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "change, omit, expire, or substitute any exact skill-approval descriptor after authority verification",
+        "rejectingOperation": "bytedesk.port.private-compiler/1#compile-private-deployment"
+      },
+      "ownerTask": "AD-13",
+      "portSuites": [
+        "downstream.private-compiler.v1"
+      ],
+      "suite": "downstream.private-compiler.v1"
+    },
+    {
+      "caseId": "COMPILE-004-duplicate-or-reordered-approvals-denied",
+      "category": "private-input-canonicalization-denial",
+      "covers": [
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "skill_approval_invalid",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "assertion": "load contracts/fixtures/schema/negative/private-compilation-input__duplicate-skill-approval.json and contracts/fixtures/schema/negative/private-compilation-input__reordered-skill-approvals.json as structurally valid semantic-denial inputs",
+        "mutation": "supply duplicate skill keys, duplicate approval descriptors, or a non-canonical approval order even when the object is structurally schema-valid",
+        "rejectingOperation": "bytedesk.port.private-compiler/1#compile-private-deployment"
+      },
+      "ownerTask": "AD-13",
+      "portSuites": [
+        "downstream.private-compiler.v1"
+      ],
+      "suite": "downstream.private-compiler.v1"
+    },
+    {
+      "caseId": "COMPILE-005-cross-consumer-or-target-denied",
+      "category": "consumer-isolation-denial",
+      "covers": [
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "authority_invalid",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "mix consumer, subject, installation, harness, target, candidate, revision, predecessor, or authority-snapshot identity from another scope",
+        "rejectingOperation": "bytedesk.port.private-compiler/1#compile-private-deployment"
+      },
+      "ownerTask": "AD-13",
+      "portSuites": [
+        "downstream.private-compiler.v1"
+      ],
+      "suite": "downstream.private-compiler.v1"
+    },
+    {
+      "caseId": "COMPILE-006-contract-bundle-substitution-denied",
+      "category": "private-input-lock-denial",
+      "covers": [
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "replace the exact contract-bundle descriptor, schema set, or offline resolved bytes after compilationInputDigest was fixed",
+        "rejectingOperation": "bytedesk.port.private-compiler/1#compile-private-deployment"
+      },
+      "ownerTask": "AD-13",
+      "portSuites": [
+        "downstream.private-compiler.v1"
+      ],
+      "suite": "downstream.private-compiler.v1"
+    },
+    {
+      "caseId": "COMPILE-007-policy-drift-denied",
+      "category": "authority-snapshot-denial",
+      "covers": [
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "authority_invalid",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "change policy, grant, credential, workload-identity, lifecycle, sandbox, network, approval-policy, or target-binding digest after the current authority snapshot was issued",
+        "rejectingOperation": "bytedesk.port.private-compiler/1#compile-private-deployment"
+      },
+      "ownerTask": "AD-13",
+      "portSuites": [
+        "downstream.private-compiler.v1"
+      ],
+      "suite": "downstream.private-compiler.v1"
+    },
+    {
+      "caseId": "COMPILE-008-renderer-selection-substitution-denied",
+      "category": "private-input-lock-denial",
+      "covers": [
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "change renderer release, harness/version, platform, executable, allowlist, schema, worker profile, normalization profile, or selection digest from public lineage",
+        "rejectingOperation": "bytedesk.port.private-compiler/1#compile-private-deployment"
+      },
+      "ownerTask": "AD-13",
+      "portSuites": [
+        "downstream.private-compiler.v1"
+      ],
+      "suite": "downstream.private-compiler.v1"
+    },
+    {
+      "caseId": "COMPILE-009-expanded-input-idempotency-collision",
+      "category": "idempotency-collision",
+      "covers": [
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "idempotency_collision",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "reuse consumerId and idempotencyKey with a different compilationInputDigest or compileRequestDigest, including inputs resolved dynamically on the first attempt",
+        "rejectingOperation": "bytedesk.port.private-compiler/1#compile-private-deployment"
+      },
+      "ownerTask": "AD-13",
+      "portSuites": [
+        "downstream.private-compiler.v1"
+      ],
+      "suite": "downstream.private-compiler.v1"
+    },
+    {
+      "caseId": "COMPILE-010-request-digest-mismatch-denied",
+      "category": "request-identity-denial",
+      "covers": [
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "omit, alter, or compute compileRequestDigest over anything other than the exact domain-separated consumerId, idempotencyKey, and compilationInputDigest preimage",
+        "rejectingOperation": "bytedesk.port.private-compiler/1#compile-private-deployment"
+      },
+      "ownerTask": "AD-13",
+      "portSuites": [
+        "downstream.private-compiler.v1"
+      ],
+      "suite": "downstream.private-compiler.v1"
+    },
+    {
+      "caseId": "HOST-001-crash-before-switch-intent",
+      "category": "crash-recovery",
+      "covers": [
+        {
+          "operationId": "activate-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "recover-attempt-journal",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "fault": "process exits before durable switch intent",
+        "recovery": "resume staging or preflight and leave active pointer unchanged"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.host-reconciler.v1"
+    },
+    {
+      "caseId": "HOST-002-crash-after-intent-before-switch",
+      "category": "crash-recovery",
+      "covers": [
+        {
+          "operationId": "activate-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "recover-attempt-journal",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "fault": "process exits after fsynced intent before switch",
+        "recovery": "read pointer and switch only if old generation remains active and authorization is fresh"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.host-reconciler.v1"
+    },
+    {
+      "caseId": "HOST-003-crash-during-switch-indeterminate",
+      "category": "crash-recovery",
+      "covers": [
+        {
+          "operationId": "activate-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "readback-active-state",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "host_switch_indeterminate",
+        "sideEffectState": "commit-unknown"
+      },
+      "fixture": {
+        "assertion": "report indeterminate and never guess or discard either slot",
+        "fault": "active pointer cannot be read conclusively after switch fault",
+        "rejectingOperation": "bytedesk.port.host-reconciler/1#activate-candidate"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.host-reconciler.v1"
+    },
+    {
+      "caseId": "HOST-004-crash-after-switch-before-marker",
+      "category": "crash-recovery",
+      "covers": [
+        {
+          "operationId": "recover-attempt-journal",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "readback-active-state",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "fault": "new generation is active but durable marker absent",
+        "recovery": "verify pointer and exact digest then append marker and observation idempotently"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.host-reconciler.v1"
+    },
+    {
+      "caseId": "HOST-005-stale-attempt-quarantined",
+      "category": "fencing",
+      "covers": [
+        {
+          "operationId": "cleanup-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "host_fenced",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "assertion": "quarantine output and retain journal pending coordinator-authorized cleanup",
+        "mutation": "stale generation cleans unresolved or active output",
+        "rejectingOperation": "bytedesk.port.host-reconciler/1#cleanup-candidate"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.host-reconciler.v1"
+    },
+    {
+      "caseId": "HOST-006-digest-only-activation-authority-denied",
+      "category": "authorization-denial",
+      "covers": [
+        {
+          "operationId": "activate-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "authorization_denied",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "supply only an activation-authorization digest, omit the complete signed object, or substitute its attempt, target, runtime release, deployable graph, generation, epoch, or expiry",
+        "rejectingOperation": "bytedesk.port.host-reconciler/1#activate-candidate"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.host-reconciler.v1"
+    },
+    {
+      "caseId": "HOST-007-activation-status-eligibility-invalid",
+      "category": "authority-denial",
+      "covers": [
+        {
+          "operationId": "activate-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "trust_verification_failed",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "activation eligibility is missing, expired, wrong-stage, wrong-consumer, wrong-nonce, rolled back, withdrawn, revoked, or incomplete for the renderer set reachable from the runtime-release graph",
+        "rejectingOperation": "bytedesk.port.host-reconciler/1#activate-candidate"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.host-reconciler.v1"
+    },
+    {
+      "caseId": "HOST-008-target-wide-graph-journal",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "stage-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "preflight-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "activate-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "readback-active-state",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "recover-attempt-journal",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertions": [
+          "stage and preflight each canonical subject exactly once while every result echoes one runtime-release digest and deployable-graph digest",
+          "activation persists one switch intent marker and journal chain for the complete graph and binds activationAuthorizationDigest plus hostEligibilityVerificationEvidenceDigest rather than one journal per deployment",
+          "readback runs once for every canonical deployment after the atomic switch and the complete set covers the graph before target-state CAS",
+          "journal recovery matches the exact runtime-release descriptor release digest and deployable-graph digest before resuming"
+        ],
+        "kind": "official-valid-sequence"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.host-reconciler.v1"
+    },
+    {
+      "caseId": "HOST-009-journal-graph-substitution-denied",
+      "category": "exact-binding-denial",
+      "covers": [
+        {
+          "operationId": "stage-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "preflight-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "activate-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        },
+        {
+          "operationId": "recover-attempt-journal",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "omit or substitute runtimeRelease releaseDigest or deployableGraphDigest use one subject deploymentDigest as the journal identity or recover a journal against a reordered partial or different graph",
+        "rejectingOperation": "bytedesk.port.host-reconciler/1#activate-candidate"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.host-reconciler.v1"
+    },
+    {
+      "caseId": "HOST-010-fresh-use-time-eligibility-required",
+      "category": "trust-freshness-denial",
+      "covers": [
+        {
+          "operationId": "activate-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "trust_verification_failed",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "reuse the Coordinator historical eligibility verification result as the Host result omit hostEligibilityVerificationEvidenceDigest or bind it to a different operationTime release graph status head pin set or activationAuthorizationDigest",
+        "rejectingOperation": "bytedesk.port.host-reconciler/1#activate-candidate"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.host-reconciler.v1"
+    },
+    {
+      "caseId": "CAP-001-transport-failure-is-not-denial",
+      "category": "false-denial-prevention",
+      "covers": [
+        {
+          "operationId": "dispatch-capability-check",
+          "portId": "bytedesk.port.capability-verifier/1"
+        },
+        {
+          "operationId": "verify-capability-result",
+          "portId": "bytedesk.port.capability-verifier/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "capability_transport_failed",
+        "sideEffectState": "commit-unknown"
+      },
+      "fixture": {
+        "assertion": "return capability_transport_failed or evidence_invalid as an operation problem; never synthesize a permitted or denied domain result",
+        "fault": "timeout connection failure missing result or malformed result",
+        "rejectingOperation": "bytedesk.port.capability-verifier/1#dispatch-capability-check"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.capability-verifier.v1"
+      ],
+      "suite": "downstream.capability-verifier.v1"
+    },
+    {
+      "caseId": "CAP-002-denial-requires-exact-proof",
+      "category": "false-denial-prevention",
+      "covers": [
+        {
+          "operationId": "verify-capability-result",
+          "portId": "bytedesk.port.capability-verifier/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "capability_denial_not_proven",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "capability-dispatch-authorization-proof",
+          "capability-permitted-decision-proof",
+          "capability-denied-sentinel-decision-proof",
+          "capability-dispatch-request",
+          "capability-dispatch-receipt",
+          "capability-dispatch-result",
+          "capability-evidence",
+          "capability-verification-request",
+          "capability-accepted-result"
+        ],
+        "protocolMutationIds": [
+          "CAP-002-denied-proof-digest-mismatch",
+          "CAP-002-false-denial-outcome"
+        ],
+        "rejectingOperation": "bytedesk.port.capability-verifier/1#verify-capability-result"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.capability-verifier.v1"
+      ],
+      "suite": "downstream.capability-verifier.v1"
+    },
+    {
+      "caseId": "CAP-003-host-cannot-dispatch",
+      "category": "actor-separation",
+      "covers": [
+        {
+          "operationId": "dispatch-capability-check",
+          "portId": "bytedesk.port.capability-verifier/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "authorization_denied",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "host identity attempts capability dispatch",
+        "rejectingOperation": "bytedesk.port.capability-verifier/1#dispatch-capability-check"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.capability-verifier.v1"
+      ],
+      "suite": "downstream.capability-verifier.v1"
+    },
+    {
+      "caseId": "CAP-004-exact-binding-mismatch",
+      "category": "exact-binding-denial",
+      "covers": [
+        {
+          "operationId": "verify-capability-result",
+          "portId": "bytedesk.port.capability-verifier/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "evidence_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "capability-dispatch-authorization-proof",
+          "capability-permitted-decision-proof",
+          "capability-denied-sentinel-decision-proof",
+          "capability-dispatch-request",
+          "capability-dispatch-receipt",
+          "capability-dispatch-result",
+          "capability-evidence",
+          "capability-verification-request",
+          "capability-accepted-result"
+        ],
+        "protocolMutationIds": [
+          "CAP-004-consumer-mismatch",
+          "CAP-004-target-mismatch",
+          "CAP-004-candidate-mismatch",
+          "CAP-004-check-profile-mismatch",
+          "CAP-004-nonce-mismatch",
+          "CAP-004-authorization-decision-mismatch",
+          "CAP-004-issued-at-mismatch",
+          "CAP-004-expires-at-mismatch",
+          "CAP-004-dispatch-proof-candidate-mismatch",
+          "CAP-004-dispatch-proof-profile-mismatch",
+          "CAP-004-dispatch-proof-window-mismatch",
+          "CAP-004-dispatch-result-digest-mismatch",
+          "CAP-004-request-digest-mismatch",
+          "CAP-004-receipt-digest-mismatch",
+          "CAP-004-evidence-issued-at-mismatch",
+          "CAP-004-evidence-expires-at-mismatch",
+          "CAP-004-evidence-authority-context-mismatch",
+          "CAP-004-permitted-proof-digest-mismatch",
+          "CAP-004-verification-receipt-object-mismatch",
+          "CAP-004-verification-receipt-digest-mismatch",
+          "CAP-004-verification-evidence-object-mismatch",
+          "CAP-004-received-before-issued",
+          "CAP-004-received-at-expiry",
+          "CAP-004-evidence-digest-mismatch",
+          "CAP-004-fresh-until-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.capability-verifier/1#verify-capability-result"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.capability-verifier.v1"
+      ],
+      "suite": "downstream.capability-verifier.v1"
+    },
+    {
+      "caseId": "CAP-005-certified-not-applicable-binding",
+      "category": "exact-binding-denial",
+      "covers": [
+        {
+          "operationId": "verify-capability-result",
+          "portId": "bytedesk.port.capability-verifier/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "evidence_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "capability-not-applicable-certification",
+          "capability-evidence-not-applicable",
+          "capability-verification-request-not-applicable",
+          "capability-accepted-result-not-applicable"
+        ],
+        "protocolMutationIds": [
+          "CAP-005-certification-digest-mismatch",
+          "CAP-005-certification-context-mismatch",
+          "CAP-005-certification-expired",
+          "CAP-005-not-applicable-failed",
+          "CAP-005-false-denial-outcome"
+        ],
+        "rejectingOperation": "bytedesk.port.capability-verifier/1#verify-capability-result"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.capability-verifier.v1"
+      ],
+      "suite": "downstream.capability-verifier.v1"
+    },
+    {
+      "caseId": "CAP-006-authenticated-denial-outcome",
+      "category": "false-denial-prevention",
+      "covers": [
+        {
+          "operationId": "verify-capability-result",
+          "portId": "bytedesk.port.capability-verifier/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "capability_denial_not_proven",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "capability-required-denied-decision-proof",
+          "capability-evidence-denied",
+          "capability-verification-request-denied",
+          "capability-accepted-result-denied"
+        ],
+        "protocolMutationIds": [
+          "CAP-006-false-permit-outcome"
+        ],
+        "rejectingOperation": "bytedesk.port.capability-verifier/1#verify-capability-result"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.capability-verifier.v1"
+      ],
+      "suite": "downstream.capability-verifier.v1"
+    },
+    {
+      "caseId": "CAP-007-certified-not-applicable-trust",
+      "category": "authentication-denial",
+      "covers": [
+        {
+          "operationId": "verify-capability-result",
+          "portId": "bytedesk.port.capability-verifier/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "trust_verification_failed",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "capability-not-applicable-certification",
+          "capability-evidence-not-applicable"
+        ],
+        "protocolMutationIds": [
+          "CAP-005-certification-policy-mismatch",
+          "CAP-005-certification-signer-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.capability-verifier/1#verify-capability-result"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.capability-verifier.v1"
+      ],
+      "suite": "downstream.capability-verifier.v1"
+    },
+    {
+      "caseId": "CAP-008-denied-proof-binding",
+      "category": "exact-binding-denial",
+      "covers": [
+        {
+          "operationId": "verify-capability-result",
+          "portId": "bytedesk.port.capability-verifier/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "evidence_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "capability-required-denied-decision-proof",
+          "capability-evidence-denied"
+        ],
+        "protocolMutationIds": [
+          "CAP-006-required-denial-proof-digest-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.capability-verifier/1#verify-capability-result"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.capability-verifier.v1"
+      ],
+      "suite": "downstream.capability-verifier.v1"
+    },
+    {
+      "caseId": "CAP-009-independent-authentication-record",
+      "category": "authentication-denial",
+      "covers": [
+        {
+          "operationId": "verify-capability-result",
+          "portId": "bytedesk.port.capability-verifier/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "trust_verification_failed",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "capability-verification-request",
+          "capability-verification-request-not-applicable"
+        ],
+        "protocolMutationIds": [
+          "CAP-009-evidence-auth-subject-mismatch",
+          "CAP-009-proof-auth-signer-mismatch",
+          "CAP-009-proof-auth-policy-mismatch",
+          "CAP-009-auth-evidence-absent",
+          "CAP-009-certification-auth-subject-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.capability-verifier/1#verify-capability-result"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.capability-verifier.v1"
+      ],
+      "suite": "downstream.capability-verifier.v1"
+    },
+    {
+      "caseId": "CAP-010-authentication-record-time",
+      "category": "exact-binding-denial",
+      "covers": [
+        {
+          "operationId": "verify-capability-result",
+          "portId": "bytedesk.port.capability-verifier/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "evidence_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "capability-verification-request"
+        ],
+        "protocolMutationIds": [
+          "CAP-009-auth-verified-after-receipt"
+        ],
+        "rejectingOperation": "bytedesk.port.capability-verifier/1#verify-capability-result"
+      },
+      "ownerTask": "AD-14",
+      "portSuites": [
+        "downstream.capability-verifier.v1"
+      ],
+      "suite": "downstream.capability-verifier.v1"
+    },
+    {
+      "caseId": "CLI-001-wait-timeout-does-not-cancel",
+      "category": "client-timeout",
+      "covers": [
+        {
+          "operationId": "watch-action",
+          "portId": "bytedesk.port.cli-automation/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "client_wait_timeout",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "exit 12 and action continues unless explicit cancellation is confirmed",
+        "fault": "client wait expires before remote terminal state",
+        "rejectingOperation": "bytedesk.port.cli-automation/1#watch-action"
+      },
+      "ownerTask": "AD-15",
+      "portSuites": [
+        "downstream.cli-automation.v1"
+      ],
+      "suite": "downstream.cli-automation.v1"
+    },
+    {
+      "caseId": "CLI-002-json-is-machine-stable",
+      "category": "automation-contract",
+      "covers": [
+        {
+          "operationId": "execute-local",
+          "portId": "bytedesk.port.cli-automation/1"
+        },
+        {
+          "operationId": "execute-remote",
+          "portId": "bytedesk.port.cli-automation/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "byte-identical JCS stdout and progress or redacted diagnostics only on stderr",
+        "fixture": "same authoritative result rendered twice in JSON mode"
+      },
+      "ownerTask": "AD-15",
+      "portSuites": [
+        "downstream.cli-automation.v1"
+      ],
+      "suite": "downstream.cli-automation.v1"
+    },
+    {
+      "caseId": "CUTOVER-001-bytedesk-hermes-boundary",
+      "category": "reference-cutover",
+      "covers": [
+        {
+          "operationId": "verify-private-authority",
+          "portId": "bytedesk.port.consumer-authority-approval/1"
+        },
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        },
+        {
+          "operationId": "activate-candidate",
+          "portId": "bytedesk.port.host-reconciler/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "cutover proves parity without transferring identity grants credentials or policy authority",
+        "fixture": "locked 34+1 Hermes inventory with consumer authority and full private rerender"
+      },
+      "ownerTask": "AD-16",
+      "portSuites": [
+        "downstream.consumer-authority.v1",
+        "downstream.private-compiler.v1",
+        "downstream.host-reconciler.v1"
+      ],
+      "suite": "downstream.bytedesk-hermes.v1"
+    },
+    {
+      "caseId": "CUTOVER-002-bytedesk-openclaw-map-owner",
+      "category": "reference-cutover",
+      "covers": [
+        {
+          "operationId": "verify-private-authority",
+          "portId": "bytedesk.port.consumer-authority-approval/1"
+        },
+        {
+          "operationId": "compile-private-deployment",
+          "portId": "bytedesk.port.private-compiler/1"
+        },
+        {
+          "operationId": "validate-output",
+          "portId": "bytedesk.port.renderer-adapter/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "AD-06 generic renderer remains consumer-neutral and map never becomes core authority",
+        "fixture": "AD-17 consumer-owned migration map bound by exact external-input lock"
+      },
+      "ownerTask": "AD-17",
+      "portSuites": [
+        "downstream.consumer-authority.v1",
+        "downstream.private-compiler.v1",
+        "downstream.renderer-adapter.v1"
+      ],
+      "suite": "downstream.bytedesk-openclaw.v1"
+    },
+    {
+      "caseId": "REGION-001-source-not-fenced",
+      "category": "regional-fencing",
+      "covers": [
+        {
+          "operationId": "activate-recovery-region",
+          "portId": "bytedesk.port.region-fence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "region_fence_unproven",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "destination activation lacks exact source write-fence evidence",
+        "rejectingOperation": "bytedesk.port.region-fence/1#activate-recovery-region"
+      },
+      "ownerTask": "AD-18",
+      "portSuites": [
+        "downstream.region-fence.v1"
+      ],
+      "suite": "downstream.certification.v1"
+    },
+    {
+      "caseId": "REGION-002-response-lost-after-epoch",
+      "category": "commit-uncertainty",
+      "covers": [
+        {
+          "operationId": "activate-recovery-region",
+          "portId": "bytedesk.port.region-fence/1"
+        },
+        {
+          "operationId": "verify-region-fence",
+          "portId": "bytedesk.port.region-fence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "fault": "region epoch commits and activation response is lost",
+        "recovery": "resolve idempotency then verify one writable region and exact monotonic epoch"
+      },
+      "ownerTask": "AD-18",
+      "portSuites": [
+        "downstream.region-fence.v1"
+      ],
+      "suite": "downstream.certification.v1"
+    },
+    {
+      "caseId": "CERT-001-all-task-suites-required",
+      "category": "ga-gate",
+      "covers": [
+        {
+          "operationId": "validate-agent-spec",
+          "portId": "bytedesk.port.agent-spec-validator/1"
+        },
+        {
+          "operationId": "evaluate-evidence",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        },
+        {
+          "operationId": "verify-region-fence",
+          "portId": "bytedesk.port.region-fence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "every AD-02 through AD-17 task-owned suite passes without waiver and signed evidence is retained"
+      },
+      "ownerTask": "AD-18",
+      "portSuites": [
+        "downstream.agent-spec-validator.v1",
+        "downstream.promotion-coordinator.v1",
+        "downstream.region-fence.v1"
+      ],
+      "suite": "downstream.certification.v1"
+    },
+    {
+      "caseId": "OCI-003-empty-config-digest-mismatch",
+      "category": "oci-config-denial",
+      "covers": [
+        {
+          "operationId": "verify-artifact-graph",
+          "portId": "bytedesk.port.oci-registry/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "oci-empty-config"
+        ],
+        "protocolMutationIds": [
+          "OCI-003-empty-config-digest-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.oci-registry/1#verify-artifact-graph"
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.oci-registry.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "OCI-004-layer-profile-drift",
+      "category": "oci-layer-denial",
+      "covers": [
+        {
+          "operationId": "verify-artifact-graph",
+          "portId": "bytedesk.port.oci-registry/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "artifact_unsafe",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "oci-deterministic-layer"
+        ],
+        "protocolMutationIds": [
+          "OCI-004-layer-profile-drift"
+        ],
+        "rejectingOperation": "bytedesk.port.oci-registry/1#verify-artifact-graph"
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.oci-registry.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "OCI-005-cross-repository-subject",
+      "category": "oci-subject-denial",
+      "covers": [
+        {
+          "operationId": "verify-artifact-graph",
+          "portId": "bytedesk.port.oci-registry/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "artifact_unsafe",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "use OCI subject for a cross-repository edge instead of an explicit signed common descriptor",
+        "rejectingOperation": "bytedesk.port.oci-registry/1#verify-artifact-graph"
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.oci-registry.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "OCI-006-manifest-config-binding-mismatch",
+      "category": "oci-config-denial",
+      "covers": [
+        {
+          "operationId": "verify-artifact-graph",
+          "portId": "bytedesk.port.oci-registry/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "oci-artifact-manifest"
+        ],
+        "protocolMutationIds": [
+          "OCI-006-manifest-config-binding-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.oci-registry/1#verify-artifact-graph"
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.oci-registry.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "OCI-007-chunk-layout-invalid",
+      "category": "protocol-denial",
+      "covers": [
+        {
+          "operationId": "push-artifact",
+          "portId": "bytedesk.port.oci-registry/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "invalid_request",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "oci-chunked-layer-blob"
+        ],
+        "protocolMutationIds": [
+          "OCI-007-chunk-offset-gap",
+          "OCI-008-chunk-offset-overlap",
+          "OCI-009-chunk-order-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.oci-registry/1#push-artifact"
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.oci-registry.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "OCI-008-chunk-digest-invalid",
+      "category": "protocol-denial",
+      "covers": [
+        {
+          "operationId": "push-artifact",
+          "portId": "bytedesk.port.oci-registry/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "oci-chunked-layer-blob"
+        ],
+        "protocolMutationIds": [
+          "OCI-010-chunk-digest-mismatch",
+          "OCI-011-aggregate-digest-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.oci-registry/1#push-artifact"
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.oci-registry.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "SIGN-003-key-algorithm-substitution",
+      "category": "signing-profile-denial",
+      "covers": [
+        {
+          "operationId": "sign-digest",
+          "portId": "bytedesk.port.kms-signing/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "trust_verification_failed",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "substitute key version algorithm public-key digest consumer or signer purpose after request validation",
+        "rejectingOperation": "bytedesk.port.kms-signing/1#sign-digest"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.kms-signing.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "SIGN-004-keyless-contract-bundle-rejected-by-kms-port",
+      "category": "signing-profile-denial",
+      "covers": [
+        {
+          "operationId": "sign-digest",
+          "portId": "bytedesk.port.kms-signing/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "invalid_request",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutation": "submit a sigstore_keyless contract-bundle JSON or tar signing request to the KMS-only sign-digest operation",
+        "rejectingOperation": "bytedesk.port.kms-signing/1#sign-digest"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.kms-signing.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-001-incomplete-required-sbom",
+      "category": "sbom-denial",
+      "covers": [
+        {
+          "operationId": "generate-sbom",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "artifact_unsafe",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "spdx-2.3-document",
+          "supply-generate-sbom-request",
+          "supply-generate-sbom-result"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-001-incomplete-required-sbom",
+          "EVIDENCE-008-generate-sbom-result-digest-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#generate-sbom"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-002-provenance-builder-mismatch",
+      "category": "provenance-denial",
+      "covers": [
+        {
+          "operationId": "generate-provenance",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "evidence_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "slsa-v1.2-provenance",
+          "supply-generate-provenance-request",
+          "supply-generate-provenance-result"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-002-provenance-builder-mismatch",
+          "EVIDENCE-009-generate-provenance-result-digest-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#generate-provenance"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-003-unpinned-scan-snapshot",
+      "category": "scanner-input-denial",
+      "covers": [
+        {
+          "operationId": "scan-vulnerabilities",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "external_input_unpinned",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "vulnerability-report",
+          "supply-scan-vulnerabilities-request",
+          "supply-scan-vulnerabilities-result"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-003-unpinned-scan-snapshot"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#scan-vulnerabilities"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-004-scan-coverage-incomplete",
+      "category": "scanner-coverage-denial",
+      "covers": [
+        {
+          "operationId": "scan-malware",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "artifact_unsafe",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "malware-report",
+          "supply-scan-malware-request",
+          "supply-scan-malware-result"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-004-malware-coverage-incomplete-pass",
+          "EVIDENCE-011-scan-malware-result-digest-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#scan-malware"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-005-license-policy-unavailable",
+      "category": "license-evaluation-denial",
+      "covers": [
+        {
+          "operationId": "evaluate-licenses",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "dependency_unavailable",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "return dependency_unavailable as an operation problem; unknown and unlicensed expressions are instead authenticated indeterminate domain reports",
+        "fault": "the exact policy or pinned SPDX License List parser inputs cannot be loaded; no license report is returned",
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#evaluate-licenses"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-010-license-deny-outcome-binding",
+      "category": "license-evaluation-denial",
+      "covers": [
+        {
+          "operationId": "evaluate-licenses",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "evidence_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "license-report-deny",
+          "supply-evaluate-licenses-request-deny",
+          "supply-evaluate-licenses-result-deny"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-015-license-deny-false-pass"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#evaluate-licenses"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-011-license-indeterminate-outcome-binding",
+      "category": "license-evaluation-denial",
+      "covers": [
+        {
+          "operationId": "evaluate-licenses",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "evidence_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "spdx-2.3-document-unknown-license",
+          "license-report-indeterminate",
+          "supply-evaluate-licenses-request-indeterminate",
+          "supply-evaluate-licenses-result-indeterminate"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-016-license-indeterminate-false-pass"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#evaluate-licenses"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-012-license-expression-invalid",
+      "category": "license-evaluation-denial",
+      "covers": [
+        {
+          "operationId": "evaluate-licenses",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "evidence_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "license-report"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-017-license-expression-invalid"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#evaluate-licenses"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-013-license-list-pin",
+      "category": "external-input-lock-denial",
+      "covers": [
+        {
+          "operationId": "evaluate-licenses",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "external_input_unpinned",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "license-report"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-018-license-list-unpinned",
+          "EVIDENCE-019-exception-list-unpinned",
+          "EVIDENCE-020-license-parser-profile-unpinned",
+          "EVIDENCE-021-license-list-version-unpinned"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#evaluate-licenses"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-006-secret-scan-coverage-incomplete",
+      "category": "scanner-coverage-denial",
+      "covers": [
+        {
+          "operationId": "scan-secrets",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "artifact_unsafe",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "secret-scan-report",
+          "supply-scan-secrets-request",
+          "supply-scan-secrets-result"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-005-secret-coverage-incomplete-pass",
+          "EVIDENCE-012-scan-secrets-result-digest-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#scan-secrets"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-007-completeness-false-pass",
+      "category": "evidence-denial",
+      "covers": [
+        {
+          "operationId": "attest-scan-completeness",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "evidence_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "scan-completeness-report",
+          "supply-attest-scan-completeness-request",
+          "supply-attest-scan-completeness-result"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-006-scan-completeness-false-pass",
+          "EVIDENCE-013-attest-scan-completeness-result-digest-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#attest-scan-completeness"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-008-license-input-mismatch",
+      "category": "license-evaluation-denial",
+      "covers": [
+        {
+          "operationId": "evaluate-licenses",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "evidence_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "license-report",
+          "supply-evaluate-licenses-request",
+          "supply-evaluate-licenses-result"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-007-license-input-mismatch",
+          "EVIDENCE-014-evaluate-licenses-result-digest-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#evaluate-licenses"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "EVIDENCE-009-vulnerability-result-binding",
+      "category": "evidence-denial",
+      "covers": [
+        {
+          "operationId": "scan-vulnerabilities",
+          "portId": "bytedesk.port.supply-chain-evidence/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "artifact_unsafe",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "protocolFixtureIds": [
+          "supply-scan-vulnerabilities-result"
+        ],
+        "protocolMutationIds": [
+          "EVIDENCE-010-scan-vulnerabilities-result-digest-mismatch"
+        ],
+        "rejectingOperation": "bytedesk.port.supply-chain-evidence/1#scan-vulnerabilities"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.supply-chain-evidence.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "STATUS-APPEND-001-response-lost-after-publication",
+      "category": "commit-uncertainty",
+      "covers": [
+        {
+          "operationId": "append-release-status",
+          "portId": "bytedesk.port.release-status-head/1"
+        },
+        {
+          "operationId": "resolve-append-attempt",
+          "portId": "bytedesk.port.release-status-head/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "fault": "the exact status artifact commits and is read back, but the append response is lost",
+        "recovery": "resolve the original key and request digest and return the immutable original append result, including the exact publication evidence, without reconstructing or republishing it"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.release-status-head.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "STATUS-APPEND-002-pending-reservation-does-not-retry",
+      "category": "crash-recovery",
+      "covers": [
+        {
+          "operationId": "append-release-status",
+          "portId": "bytedesk.port.release-status-head/1"
+        },
+        {
+          "operationId": "resolve-append-attempt",
+          "portId": "bytedesk.port.release-status-head/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "fault": "the authoritative journal contains the exact reservation while publication completion is unresolved",
+        "recovery": "return pending with the original key and request digest and null appendResult; poll resolution and never retry append while the reservation remains pending"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.release-status-head.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "STATUS-APPEND-003-stable-not-found-allows-same-retry",
+      "category": "commit-uncertainty",
+      "covers": [
+        {
+          "operationId": "append-release-status",
+          "portId": "bytedesk.port.release-status-head/1"
+        },
+        {
+          "operationId": "resolve-append-attempt",
+          "portId": "bytedesk.port.release-status-head/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "fault": "the client loses the append connection before the authoritative journal durably reserves the key",
+        "recovery": "a linearizable lookup returns not-found with the original key and request digest and null appendResult, after which only the same append request may be retried"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.release-status-head.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "STATUS-APPEND-004-resolver-request-digest-collision",
+      "category": "idempotency-collision",
+      "covers": [
+        {
+          "operationId": "resolve-append-attempt",
+          "portId": "bytedesk.port.release-status-head/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "idempotency_collision",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutation": "reuse an existing release-status append idempotency key with a different canonical request digest",
+        "rejectingOperation": "bytedesk.port.release-status-head/1#resolve-append-attempt"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.release-status-head.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "QUAL-SELECT-001-exact-qualification-renderer",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "select-qualification-renderer",
+          "portId": "bytedesk.port.renderer-strategy/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "Selection resolves only the complete exact signed qualification renderer release and executable distribution from the compiled allowlist."
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.renderer-strategy.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "STATUS-HEAD-001-fresh-authenticated-resolution",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "resolve-status-head",
+          "portId": "bytedesk.port.release-status-head/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "A fresh caller nonce and exact persisted client prior state produce authenticated current head, inclusion, and required consistency evidence."
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.release-status-head.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "STATUS-HEAD-002-rollback-or-fork-denied",
+      "category": "trust-freshness-denial",
+      "covers": [
+        {
+          "operationId": "resolve-status-head",
+          "portId": "bytedesk.port.release-status-head/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "status_head_rollback",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutations": [
+          "return a checkpoint older than clientPriorState",
+          "return a same-epoch checkpoint whose root is inconsistent with clientPriorState"
+        ],
+        "rejectingOperation": "bytedesk.port.release-status-head/1#resolve-status-head"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.release-status-head.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "TRUST-PIN-001-activate-and-read-back",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "activate-pin-set",
+          "portId": "bytedesk.port.trust-policy-provider/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "Exact revision-and-digest CAS, authenticated provider activation, and byte-exact readback produce immutable provider evidence."
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.trust-policy-provider.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "TRUST-PIN-002-activation-response-lost",
+      "category": "commit-uncertainty",
+      "covers": [
+        {
+          "operationId": "activate-pin-set",
+          "portId": "bytedesk.port.trust-policy-provider/1"
+        },
+        {
+          "operationId": "resolve-pin-set",
+          "portId": "bytedesk.port.trust-policy-provider/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "commit-unknown"
+      },
+      "fixture": {
+        "fault": "the provider commits and reads back the exact pin-set revision but the activation response is lost",
+        "recovery": "resolve the original activation attempt and return the immutable original provider evidence without activating again"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.trust-policy-provider.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "TRUST-PIN-003-current-resolution",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "resolve-pin-set",
+          "portId": "bytedesk.port.trust-policy-provider/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "Current resolution returns the exact active revision, raw descriptor digest, domain-separated pin-set digest, provider evidence, and resolved trust policy."
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.trust-policy-provider.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "TRUST-PIN-004-rollback-or-equivocation-denied",
+      "category": "trust-freshness-denial",
+      "covers": [
+        {
+          "operationId": "resolve-pin-set",
+          "portId": "bytedesk.port.trust-policy-provider/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "trust_pin_rollback",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutations": [
+          "resolve a revision below the persisted clientPriorState",
+          "return different raw bytes for an already observed pin-set revision"
+        ],
+        "rejectingOperation": "bytedesk.port.trust-policy-provider/1#resolve-pin-set"
+      },
+      "ownerTask": "AD-08",
+      "portSuites": [
+        "downstream.trust-policy-provider.v1"
+      ],
+      "suite": "downstream.signing-evidence.v1"
+    },
+    {
+      "caseId": "QUAL-FINAL-001-complete-exact-matrix",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "finalize-release-qualification",
+          "portId": "bytedesk.port.release-qualification-finalizer/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "The pure finalizer verifies the exact product, matrix, policy, suite, ordered selections, attempts, receipts, evidence tree, fresh qualification-stage status eligibility, pin/provider evidence, and purpose-separated KMS result without OCI publication."
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.release-qualification-finalizer.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "QUAL-FINAL-002-matrix-or-authority-substitution",
+      "category": "qualification-authority-boundary",
+      "covers": [
+        {
+          "operationId": "finalize-release-qualification",
+          "portId": "bytedesk.port.release-qualification-finalizer/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "evidence_invalid",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutations": [
+          "omit or duplicate a required matrix evidence role",
+          "substitute a selection, attempt, receipt, or evidence-tree digest",
+          "supply stale or wrong-stage status eligibility",
+          "sign with the wrong KMS purpose"
+        ],
+        "rejectingOperation": "bytedesk.port.release-qualification-finalizer/1#finalize-release-qualification"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.release-qualification-finalizer.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "PUBLIC-FINAL-001-tenant-free-finalization",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "finalize-public-render",
+          "portId": "bytedesk.port.public-render-finalizer/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "The protocol verifies exact public lineage and fresh public_render_finalization eligibility, signs the tenant-free harness render, and emits deterministic OCI bytes without registry I/O."
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.public-render-finalizer.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "PUBLIC-FINAL-002-status-or-private-input-denied",
+      "category": "trust-freshness-denial",
+      "covers": [
+        {
+          "operationId": "finalize-public-render",
+          "portId": "bytedesk.port.public-render-finalizer/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "trust_verification_failed",
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "mutations": [
+          "reuse qualification-stage or stale status eligibility",
+          "omit a used renderer from eligibility",
+          "include a private skill or consumer identifier",
+          "substitute output archive bytes"
+        ],
+        "rejectingOperation": "bytedesk.port.public-render-finalizer/1#finalize-public-render"
+      },
+      "ownerTask": "AD-04",
+      "portSuites": [
+        "downstream.public-render-finalizer.v1"
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    },
+    {
+      "caseId": "PUBLIC-PUBLISH-001-fresh-authorized-publication",
+      "category": "valid-contract-sequence",
+      "covers": [
+        {
+          "operationId": "publish-public-render",
+          "portId": "bytedesk.port.public-render-publisher/1"
+        }
+      ],
+      "expected": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "fixture": {
+        "assertion": "The protocol verifies signed harness-render authority, exact graph bytes, fresh publication-stage eligibility, and an explicit authorizationContextDigest before authenticated OCI commit and readback."
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.public-render-publisher.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "PUBLIC-PUBLISH-002-payload-or-authorization-substitution",
+      "category": "exact-binding-denial",
+      "covers": [
+        {
+          "operationId": "publish-public-render",
+          "portId": "bytedesk.port.public-render-publisher/1"
+        },
+        {
+          "operationId": "push-artifact",
+          "portId": "bytedesk.port.oci-registry/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutations": [
+          "substitute manifest or blob bytes after finalization",
+          "reuse public_render_finalization eligibility",
+          "change authorizationContextDigest between publisher and OCI push",
+          "return publication evidence with a different authorizationContextDigest"
+        ],
+        "rejectingOperation": "bytedesk.port.public-render-publisher/1#publish-public-render"
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.public-render-publisher.v1",
+        "downstream.oci-registry.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "PUBLIC-PUBLISH-003-response-lost-after-commit",
+      "category": "commit-uncertainty",
+      "covers": [
+        {
+          "operationId": "publish-public-render",
+          "portId": "bytedesk.port.public-render-publisher/1"
+        }
+      ],
+      "expected": {
+        "outcome": "recover",
+        "problemCode": null,
+        "sideEffectState": "commit-unknown"
+      },
+      "fixture": {
+        "fault": "the exact graph commits and reads back but the publisher response is lost",
+        "recovery": "repeat with the identical key and canonical request digest until the immutable original publication evidence is returned"
+      },
+      "ownerTask": "AD-07",
+      "portSuites": [
+        "downstream.public-render-publisher.v1"
+      ],
+      "suite": "downstream.oci-registry.v1"
+    },
+    {
+      "caseId": "PROMOTION-RECEIPT-001-complete-subject-sets",
+      "category": "exact-binding-denial",
+      "covers": [
+        {
+          "operationId": "commit-promotion",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "promotion_evidence_missing",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutations": [
+          "omit a runtime-release subject evidence entry",
+          "duplicate a subject with a different deployment",
+          "reorder the canonical subject evidence set",
+          "substitute authority, candidate-ready, active-readback, capability, or activation-authorization evidence"
+        ],
+        "rejectingOperation": "bytedesk.port.promotion-coordinator/1#commit-promotion"
+      },
+      "ownerTask": "AD-12",
+      "portSuites": [
+        "downstream.promotion-coordinator.v1"
+      ],
+      "suite": "downstream.promotion.v1"
+    },
+    {
+      "caseId": "PROMOTION-RECEIPT-002-complete-receipt-set",
+      "category": "exact-binding-denial",
+      "covers": [
+        {
+          "operationId": "commit-promotion",
+          "portId": "bytedesk.port.promotion-coordinator/1"
+        }
+      ],
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "promotion_evidence_missing",
+        "sideEffectState": "not-committed"
+      },
+      "fixture": {
+        "mutations": [
+          "omit a per-subject deployment receipt",
+          "duplicate a subject receipt",
+          "reorder the canonical receipt set",
+          "substitute receipt identity, digest, deployment, activationAuthorization, or activationAuthorizationDigest"
+        ],
+        "rejectingOperation": "bytedesk.port.promotion-coordinator/1#commit-promotion"
+      },
+      "ownerTask": "AD-12",
+      "portSuites": [
+        "downstream.promotion-coordinator.v1"
+      ],
+      "suite": "downstream.promotion.v1"
+    }
+  ],
+  "profile": "bytedesk.downstream-conformance-cases/1",
+  "version": 1
+}

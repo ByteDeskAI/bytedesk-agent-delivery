@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/region-fence/1.0.0",
+  "title": "Two-person signed regional single-writer fence attestation",
+  "type": "object",
+  "required": ["contract", "schema", "operationId", "sourceRegion", "recoveryRegion", "previousEpoch", "newEpoch", "precondition", "oldWriterProof", "recoveryPositions", "graphVerification", "approvers", "decision", "issuedAt", "trustPolicy"],
+  "properties": {
+    "contract": { "const": "bytedesk.region-fence/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "operationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "sourceRegion": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "recoveryRegion": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "previousEpoch": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonNegativeSafeInteger" },
+    "newEpoch": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "precondition": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/precondition/1.0.0" },
+    "oldWriterProof": {
+      "type": "object",
+      "required": ["ingressClosed", "workloadRolesRevoked", "storageWritesDenied", "databaseWritesDenied", "endpointProbeDigest"],
+      "properties": {
+        "ingressClosed": { "const": true },
+        "workloadRolesRevoked": { "const": true },
+        "storageWritesDenied": { "const": true },
+        "databaseWritesDenied": { "const": true },
+        "endpointProbeDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "recoveryPositions": {
+      "type": "object",
+      "required": ["application", "identity", "outbox", "inbox"],
+      "properties": {
+        "application": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "identity": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "outbox": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "inbox": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "graphVerification": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "approvers": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["identity", "decisionReferenceDigest"],
+        "properties": {
+          "identity": { "type": "string", "minLength": 1, "maxLength": 2048 },
+          "decisionReferenceDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    },
+    "decision": { "type": "string", "enum": ["promote_recovery_region", "remain_read_only"] },
+    "issuedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "decision": { "const": "promote_recovery_region" } }, "required": ["decision"] },
+      "then": {
+        "properties": {
+          "newEpoch": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Unreachable is not fenced. A promotion decision is invalid unless independent proof shows the old writer and identities cannot write."
+}

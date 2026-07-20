@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/functional-customization-profile/1.0.0",
+  "profile": "bytedesk.functional-customization/1",
+  "version": "1.0.0",
+  "jsonPatchProfile": "bytedesk.json-patch/1",
+  "targets": [
+    {
+      "document": "consumer-authority",
+      "schemaAuthority": "caller-selected",
+      "rootMutation": true,
+      "nonRootFunctionalMutation": true,
+      "authorityPlanePresent": true
+    }
+  ],
+  "separateOperations": ["bytedesk.file-operations/1", "bytedesk.skill-operations/1"]
+}

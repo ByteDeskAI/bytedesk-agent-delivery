@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/signer-identity/1.0.0",
+  "title": "Exact purpose-separated signing identity",
+  "type": "object",
+  "required": [
+    "purpose",
+    "credentialKind",
+    "algorithm",
+    "workloadIdentity",
+    "claims"
+  ],
+  "properties": {
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "product-release-v1",
+        "contract-bundle-release-v1",
+        "public-source-v1",
+        "public-render-v1",
+        "consumer-private-skill-v1",
+        "consumer-authority-v1",
+        "consumer-deployment-v1",
+        "consumer-runtime-release-v1",
+        "release-qualification-policy-v1",
+        "release-qualification-attempt-v1",
+        "release-qualification-receipt-v1",
+        "release-qualification-evidence-v1",
+        "release-qualification-decision-v1",
+        "release-status-v1",
+        "release-status-head-v1",
+        "release-status-eligibility-v1",
+        "consumer-release-status-eligibility-v1",
+        "renderer-attempt-v1",
+        "renderer-execution-v1",
+        "consumer-compilation-input-v1",
+        "consumer-compilation-evidence-v1",
+        "consumer-activation-authorization-v1"
+      ]
+    },
+    "credentialKind": {
+      "type": "string",
+      "enum": ["kms_key", "sigstore_keyless"]
+    },
+    "keyVersion": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "publicKeyDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "trustedRootDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+    },
+    "algorithm": { "const": "ECDSA_P256_SHA256" },
+    "workloadIdentity": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "claims": {
+      "type": "object",
+      "required": [
+        "issuer",
+        "audience",
+        "subject",
+        "repository",
+        "workflow",
+        "ref",
+        "environment",
+        "builderDigest"
+      ],
+      "properties": {
+        "issuer": { "type": "string", "format": "uri", "maxLength": 2048 },
+        "audience": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "repository": { "type": "string", "maxLength": 1024 },
+        "workflow": { "type": "string", "maxLength": 1024 },
+        "ref": { "type": "string", "maxLength": 1024 },
+        "environment": { "type": "string", "maxLength": 256 },
+        "builderDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "credentialKind": { "const": "kms_key" } },
+        "required": ["credentialKind"]
+      },
+      "then": {
+        "required": ["keyVersion", "publicKeyDigest"],
+        "not": { "required": ["trustedRootDigest"] }
+      }
+    },
+    {
+      "if": {
+        "properties": { "credentialKind": { "const": "sigstore_keyless" } },
+        "required": ["credentialKind"]
+      },
+      "then": {
+        "required": ["trustedRootDigest"],
+        "properties": {
+          "purpose": { "const": "contract-bundle-release-v1" }
+        },
+        "not": {
+          "anyOf": [
+            { "required": ["keyVersion"] },
+            { "required": ["publicKeyDigest"] }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "purpose": { "const": "contract-bundle-release-v1" } },
+        "required": ["purpose"]
+      },
+      "then": {
+        "properties": {
+          "credentialKind": { "const": "sigstore_keyless" }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Closed signer identity independently pinned by trust policy. KMS identities bind an immutable key version and public-key digest; Sigstore keyless identities bind the exact trusted-root bytes by digest and authenticate certificate identity claims without pinning an ephemeral leaf key."
+}

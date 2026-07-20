@@ -1,0 +1,84 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/event-types/1.0.0",
+  "profile": "bytedesk.event-types/1",
+  "cloudEventsVersion": "1.0.2",
+  "delivery": "at-least-once",
+  "ordering": "per-aggregate-sequence",
+  "authority": "notification-only",
+  "eventTypes": [
+    {
+      "type": "ai.bytedesk.agent-delivery.installation.changed.v1",
+      "aggregateType": "installation",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/installation/1.0.0",
+      "resourceSchemaDigest": "sha256:af01882c9dc8dbf80fc753f148a35fd916d4bdbe5d93b6a8938c0b10f58ff8dc",
+      "resourceUriTemplate": "/v1/installations/{installationId}",
+      "resynchronizeOperationId": "getInstallation",
+      "redaction": "consumer-private"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.action.changed.v1",
+      "aggregateType": "action",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0",
+      "resourceSchemaDigest": "sha256:ddf0e484b8d35195f984204e130c9f3e88b5e347581722437aa763e28b2c346a",
+      "resourceUriTemplate": "/v1/actions/{actionId}",
+      "resynchronizeOperationId": "getAction",
+      "redaction": "consumer-private"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.candidate.changed.v1",
+      "aggregateType": "candidate",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/candidate/1.0.0",
+      "resourceSchemaDigest": "sha256:07964d57f89136a95950250c8790179a8765fd54788d81a7d1148d0cc8b8c2e5",
+      "resourceUriTemplate": "/v1/candidates/{candidateId}",
+      "resynchronizeOperationId": "getCandidate",
+      "redaction": "consumer-private"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.rollout.changed.v1",
+      "aggregateType": "rollout",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/rollout/1.0.0",
+      "resourceSchemaDigest": "sha256:a3fef06c3c2b3967279f4e572dfb0730dea1dac953d2e672d1bd8c2f146eb200",
+      "resourceUriTemplate": "/v1/targets/{targetId}/rollouts/{rolloutId}",
+      "resynchronizeOperationId": "getRollout",
+      "redaction": "consumer-private"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.target-delivery-state.changed.v1",
+      "aggregateType": "target-delivery-state",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0",
+      "resourceSchemaDigest": "sha256:5ea7f494cd955eb19f1a89c6e640ed963426b40eaf3eab42b6f58f446d7b64b6",
+      "resourceUriTemplate": "/v1/targets/{targetId}/state",
+      "resynchronizeOperationId": "getTargetDeliveryState",
+      "redaction": "consumer-private"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.observation.appended.v1",
+      "aggregateType": "target-delivery-state",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/observation/1.0.0",
+      "resourceSchemaDigest": "sha256:61cec89f0502071956315db65fabc3c0e7bb7c97b563711cfdb935987a3d5c92",
+      "resourceUriTemplate": "/v1/targets/{targetId}/observations/{observationId}",
+      "resynchronizeOperationId": "getObservation",
+      "redaction": "consumer-private"
+    },
+    {
+      "type": "ai.bytedesk.agent-delivery.receipt.appended.v1",
+      "aggregateType": "target-delivery-state",
+      "resourceSchemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0",
+      "resourceSchemaDigest": "sha256:a32cd43cf6e566da849f23f0d0a8ef6cec269f60387b8d019bcdfece4c36bd1a",
+      "resourceUriTemplate": "/v1/receipts/{receiptId}",
+      "resynchronizeOperationId": "getDeploymentReceipt",
+      "redaction": "consumer-private"
+    }
+  ],
+  "registryCompatibility": "Event type, resource schema ID and digest, URI template, redaction class, and resynchronization operation are immutable within v1.",
+  "resynchronization": {
+    "authority": "authenticated-api-read",
+    "on": [
+      "unknown-event-type",
+      "unknown-schema-id-or-digest",
+      "aggregate-sequence-gap",
+      "etag-mismatch"
+    ],
+    "resumeAfter": "exact-resource-schema-and-etag-verified"
+  }
+}

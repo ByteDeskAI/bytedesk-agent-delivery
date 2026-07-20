@@ -1,0 +1,8 @@
+{
+  "contract": "bytedesk.target-delivery-state/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/target-delivery-state/1.0.0",
+    "digest": "sha256:5ea7f494cd955eb19f1a89c6e640ed963426b40eaf3eab42b6f58f446d7b64b6"
+  },
+  "writer": "host_reconciler"
+}

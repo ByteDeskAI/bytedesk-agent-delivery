@@ -1,0 +1,14 @@
+{
+  "type": "https://problems.bytedesk.ai/agent-delivery/dependency-failed",
+  "title": "Dependency failed",
+  "status": 599,
+  "code": "dependency_failed",
+  "portId": "bytedesk.port.control-plane-api-events/1",
+  "operationId": "submit-command",
+  "correlationId": "corr-01",
+  "retryable": true,
+  "sideEffectState": "not-committed",
+  "retryAfterSeconds": 86400,
+  "violations": [],
+  "documentation": "https://docs.bytedesk.ai/agent-delivery/problems/dependency-failed"
+}

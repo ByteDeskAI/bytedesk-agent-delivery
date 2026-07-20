@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-qualification/1.0.0",
+  "title": "Signed production release qualification",
+  "x-bytedesk-digestAuthority": { "profile": "bytedesk.release-qualification-authority-digest/1", "exclude": ["contract", "schema", "authorityDigest", "signingResult"] },
+  "type": "object",
+  "required": ["contract", "schema", "qualificationId", "productRelease", "rendererReleases", "evidence", "policy", "finalizationMatrix", "finalizationMatrixDigest", "qualificationStatusEligibility", "qualificationStatusEligibilityDigest", "qualificationStatusEligibilityVerificationDigest", "pinSetDigest", "pinSetProviderEvidenceDigest", "policyVerificationDigest", "suiteVerificationDigest", "decision", "qualifiedAt", "expiresAt", "trustPolicy", "authorityDigest", "signingResult"],
+  "properties": {
+    "contract": { "const": "bytedesk.release-qualification/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "qualificationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "productRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "rendererReleases": { "type": "array", "minItems": 1, "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" } },
+    "evidence": { "type": "array", "minItems": 1, "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" } },
+    "policy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "finalizationMatrix": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.release-qualification-finalization-matrix.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "release-qualification-decision-v1" } }, "required": ["id"] }
+          },
+          "required": ["mediaType", "trustPolicy"]
+        }
+      ]
+    },
+    "finalizationMatrixDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "qualificationStatusEligibility": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.release-status-eligibility-evidence.v1+json" },
+            "trustPolicy": { "properties": { "id": { "const": "release-status-eligibility-v1" } }, "required": ["id"] }
+          },
+          "required": ["mediaType", "trustPolicy"]
+        }
+      ]
+    },
+    "qualificationStatusEligibilityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "qualificationStatusEligibilityVerificationDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Evidence digest of the permitted trusted-KMS verification result for the exact qualification-stage status eligibility signature at qualifiedAt."
+    },
+    "pinSetDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "pinSetProviderEvidenceDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "policyVerificationDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "suiteVerificationDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "decision": { "const": "qualified" },
+    "qualifiedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "expiresAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "trustPolicy": { "type": "object", "required": ["id", "digest"], "properties": { "id": { "const": "release-qualification-decision-v1" }, "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" } }, "additionalProperties": false, "unevaluatedProperties": false },
+    "authorityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "signingResult": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0" },
+        { "properties": { "purpose": { "const": "release-qualification-decision-v1" }, "subjectMediaType": { "const": "application/vnd.bytedesk.agent.release-qualification.v1+json" } }, "required": ["purpose", "subjectMediaType"] }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "G is a post-subject signed referrer. Its renderer release set equals the complete finalization matrix exactly; every evidence descriptor resolves to release-qualification-evidence/1 with a permitted role/subject/QS edge and the successful policy decision. finalizationMatrixDigest is the matrix's domain-separated digest and finalizationMatrix.digest is its exact raw-byte digest. qualificationStatusEligibility resolves to a fresh stage=qualification_finalization eligibility object whose eligibilityDigest, pinSetDigest, provider-evidence digest, permitted KMS verification digest, and operationTime=qualifiedAt bind exactly to these signed fields. Policy and suite verification digests are also signed. Selection-stage or reused status evidence, any matrix/evidence substitution, stale status, wrong nonce, non-permitted verification, pin/provider mismatch, or KMS result mismatch fails closed and produces no G."
+}

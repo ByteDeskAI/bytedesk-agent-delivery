@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-operations/1.0.0",
+  "title": "Digest-preconditioned skill package operations",
+  "type": "object",
+  "required": ["contract", "operations"],
+  "properties": {
+    "contract": { "const": "bytedesk.skill-operations/1" },
+    "operations": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["op", "packageId", "precondition", "descriptor"],
+            "properties": {
+              "op": { "const": "add" },
+              "packageId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+              "precondition": {
+                "type": "object",
+                "required": ["kind"],
+                "properties": { "kind": { "const": "absent" } },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              },
+              "descriptor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["op", "packageId", "precondition", "descriptor"],
+            "properties": {
+              "op": { "const": "replace" },
+              "packageId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+              "precondition": {
+                "type": "object",
+                "required": ["kind", "digest"],
+                "properties": {
+                  "kind": { "const": "match" },
+                  "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              },
+              "descriptor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["op", "packageId", "precondition"],
+            "properties": {
+              "op": { "const": "remove" },
+              "packageId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+              "precondition": {
+                "type": "object",
+                "required": ["kind", "digest"],
+                "properties": {
+                  "kind": { "const": "match" },
+                  "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+                },
+                "additionalProperties": false,
+                "unevaluatedProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

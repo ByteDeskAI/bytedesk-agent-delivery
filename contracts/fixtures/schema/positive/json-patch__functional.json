@@ -1,0 +1,21 @@
+{
+  "profile": "bytedesk.json-patch/1",
+  "operations": [
+    {
+      "op": "replace",
+      "path": "/system_prompt",
+      "value": "Follow the consuming organization guidance."
+    },
+    {
+      "op": "add",
+      "path": "/tools/-",
+      "value": {
+        "name": "consumer-configured-tool"
+      }
+    },
+    {
+      "op": "remove",
+      "path": "/metadata/deprecated_label"
+    }
+  ]
+}

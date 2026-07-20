@@ -1,0 +1,15 @@
+{
+  "contract": "bytedesk.agent-source/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-source/1.0.0", "digest": "sha256:44fa5624b641e046f04365c5230c83028d29396c596f6ab894526e28fc8328c8" },
+  "packageId": "chief-of-staff",
+  "agentSpecVersion": "26.1.2",
+  "sourceKind": "agent",
+  "selectable": true,
+  "systemPackage": false,
+  "sourceLayer": { "repository": "registry.example/agents/source", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip", "size": 4096, "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } },
+  "publicSkills": [],
+  "policyResult": { "repository": "registry.example/agents/evidence", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "mediaType": "application/vnd.bytedesk.agent.policy.v1+json", "size": 1024, "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } },
+  "publishedAt": "2026-07-17T12:00:00Z",
+  "withdrawal": "active",
+  "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" }
+}

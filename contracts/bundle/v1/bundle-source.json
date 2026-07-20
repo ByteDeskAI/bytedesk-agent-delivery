@@ -1,0 +1,26 @@
+{
+  "profile": "bytedesk.contract-bundle-source/1",
+  "include": [
+    "contracts/schemas/v1/*.schema.json",
+    "contracts/fixtures/schema/index.json",
+    "contracts/fixtures/encoding/**/*",
+    "contracts/fixtures/lifecycle/*.json",
+    "contracts/fixtures/operations/*.json",
+    "contracts/fixtures/operations/renderer-cas/**/*",
+    "contracts/fixtures/operations/private-compilation-cas/blobs/sha256/*",
+    "contracts/fixtures/operations/renderer-cas/blobs/sha256/*",
+    "contracts/lifecycle/*.json",
+    "contracts/compatibility/*.json",
+    "contracts/openapi/v1/*.json",
+    "contracts/asyncapi/v1/*.json",
+    "contracts/events/v1/**/*",
+    "contracts/ports/v1/**/*",
+    "contracts/vendor/**/*",
+    "contracts/bundle/v1/*.json",
+    "contracts/bundle/v1/*.md"
+  ],
+  "fixtureIndex": "contracts/fixtures/schema/index.json",
+  "schemaInventory": "contracts/bundle/v1/schema-inventory.json",
+  "compatibility": "contracts/bundle/v1/compatibility.json",
+  "documentationMap": "contracts/bundle/v1/documentation-map.json"
+}

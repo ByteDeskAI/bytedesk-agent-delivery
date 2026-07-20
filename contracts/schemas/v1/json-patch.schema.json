@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/json-patch/1.0.0",
+  "title": "bytedesk.json-patch/1 closed operation list",
+  "type": "object",
+  "required": ["profile", "operations"],
+  "properties": {
+    "profile": { "const": "bytedesk.json-patch/1" },
+    "operations": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["op", "path", "value"],
+            "properties": {
+              "op": { "const": "add" },
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "^/(?:[^~/]|~0|~1)*(?:/(?:[^~/]|~0|~1)*)*$",
+                "description": "RFC 6901 pointer in JSON string form. JSON Schema maxLength counts Unicode characters; the v1 semantic validator additionally limits the complete encoded pointer to 4096 UTF-8 bytes and requires every decoded token to be valid NFC Unicode."
+              },
+              "value": {}
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["op", "path", "value"],
+            "properties": {
+              "op": { "const": "replace" },
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "^/(?:[^~/]|~0|~1)*(?:/(?:[^~/]|~0|~1)*)*$",
+                "description": "RFC 6901 pointer in JSON string form. JSON Schema maxLength counts Unicode characters; the v1 semantic validator additionally limits the complete encoded pointer to 4096 UTF-8 bytes and requires every decoded token to be valid NFC Unicode."
+              },
+              "value": {}
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["op", "path"],
+            "properties": {
+              "op": { "const": "remove" },
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "^/(?:[^~/]|~0|~1)*(?:/(?:[^~/]|~0|~1)*)*$",
+                "description": "RFC 6901 pointer in JSON string form. JSON Schema maxLength counts Unicode characters; the v1 semantic validator additionally limits the complete encoded pointer to 4096 UTF-8 bytes and requires every decoded token to be valid NFC Unicode."
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

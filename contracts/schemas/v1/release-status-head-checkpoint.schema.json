@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status-head-checkpoint/1.0.0",
+  "title": "Nonce-bound current release-status head checkpoint",
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "checkpointId",
+    "requestNonce",
+    "subjectKind",
+    "subject",
+    "sequence",
+    "treeSize",
+    "head",
+    "headDigest",
+    "headLeafDigest",
+    "headInclusionProof",
+    "epoch",
+    "logRootDigest",
+    "clientPriorState",
+    "consistencyProof",
+    "verifiedAt",
+    "expiresAt",
+    "trustPolicy"
+  ],
+  "properties": {
+    "contract": {
+      "const": "bytedesk.release-status-head-checkpoint/1"
+    },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "checkpointId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier"
+    },
+    "requestNonce": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonce",
+      "description": "Fresh caller-provided nonce. Offline verification requires the value to equal the nonce in the request and detached authentication evidence."
+    },
+    "subjectKind": {
+      "type": "string",
+      "enum": [
+        "product_release",
+        "renderer_release"
+      ]
+    },
+    "subject": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor",
+      "description": "Exact immutable product-release or renderer-release descriptor whose append-only status chain was resolved."
+    },
+    "sequence": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger",
+      "description": "Monotonic sequence of the resolved release-status head. It must equal the sequence in the object resolved through head."
+    },
+    "treeSize": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger",
+      "description": "Exact Merkle tree size. Semantic verification requires it to equal sequence for the per-subject status log."
+    },
+    "head": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+        },
+        {
+          "properties": {
+            "mediaType": {
+              "const": "application/vnd.bytedesk.agent.release-status.v1+json"
+            }
+          },
+          "required": [
+            "mediaType"
+          ]
+        }
+      ],
+      "description": "Exact descriptor of the current append-only release-status head for subject."
+    },
+    "headDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Must equal head.digest and the canonical digest of the resolved release-status object."
+    },
+    "headLeafDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Domain-separated RFC 6962 leaf digest for subject, sequence, epoch, and the exact head descriptor."
+    },
+    "headInclusionProof": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+        },
+        {
+          "properties": {
+            "mediaType": {
+              "const": "application/vnd.bytedesk.agent.release-status-log-inclusion-proof.v1+json"
+            }
+          },
+          "required": ["mediaType"]
+        }
+      ]
+    },
+    "epoch": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger",
+      "description": "Monotonic epoch of the authoritative append-only status log."
+    },
+    "logRootDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Exact authenticated status-log root at epoch and sequence."
+    },
+    "clientPriorState": {
+      "$ref": "#/$defs/clientPriorState",
+      "description": "Echoes the caller's persisted high-water request mode. none is permitted only when the caller supplied no prior state; match binds the exact persisted checkpoint and consistency proof regardless of the current status sequence."
+    },
+    "consistencyProof": {
+      "oneOf": [
+        {
+          "allOf": [
+            {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+            },
+            {
+              "properties": {
+                "mediaType": {
+                  "const": "application/vnd.bytedesk.agent.release-status-log-consistency-proof.v1+json"
+                }
+              },
+              "required": ["mediaType"]
+            }
+          ]
+        },
+        { "type": "null" }
+      ],
+      "description": "Server-produced prefix consistency proof from clientPriorState to this checkpoint. Null for first contact or an unchanged refresh."
+    },
+    "verifiedAt": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp"
+    },
+    "expiresAt": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp",
+      "description": "Must be later than verifiedAt and no later than the exact trust policy freshness window permits."
+    },
+    "trustPolicy": {
+      "type": "object",
+      "required": [
+        "id",
+        "digest"
+      ],
+      "properties": {
+        "id": {
+          "const": "release-status-head-v1"
+        },
+        "digest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false,
+      "description": "Exact independently distributed trust-policy reference used to authenticate this checkpoint."
+    }
+  },
+  "$defs": {
+    "clientPriorState": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "none"
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "checkpoint",
+            "sequence",
+            "epoch",
+            "treeSize",
+            "logRootDigest",
+            "headLeafDigest"
+          ],
+          "properties": {
+            "kind": {
+              "const": "match"
+            },
+            "checkpoint": {
+              "allOf": [
+                {
+                  "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor"
+                },
+                {
+                  "properties": {
+                    "mediaType": {
+                      "const": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json"
+                    }
+                  },
+                  "required": [
+                    "mediaType"
+                  ]
+                }
+              ],
+              "description": "Exact persisted client checkpoint descriptor for the same subject; it need not be the immediately preceding status sequence."
+            },
+            "sequence": {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger",
+              "description": "Sequence bound by the persisted checkpoint; semantic verification requires it to be less than or equal to the enclosing sequence."
+            },
+            "epoch": {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger",
+              "description": "Epoch bound by the persisted checkpoint; semantic verification requires a nondecreasing enclosing epoch."
+            },
+            "treeSize": {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger"
+            },
+            "logRootDigest": {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+            },
+            "headLeafDigest": {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "A fresh, purpose-authenticated view of the highest release-status head. Consumers verify exact subject/head equality, nonce and time freshness, monotonic sequence and epoch, and append-only consistency before selecting or executing a release. Absence, outage, expiry, rollback, or an invalid consistency proof fails closed."
+}

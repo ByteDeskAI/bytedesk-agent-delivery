@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-source/1.0.0",
+  "title": "Portable public Agent Spec source manifest",
+  "type": "object",
+  "required": ["contract", "schema", "packageId", "agentSpecVersion", "sourceKind", "selectable", "systemPackage", "sourceLayer", "publicSkills", "policyResult", "publishedAt", "withdrawal", "trustPolicy"],
+  "properties": {
+    "contract": { "const": "bytedesk.agent-source/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "packageId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "agentSpecVersion": { "const": "26.1.2" },
+    "sourceKind": { "type": "string", "enum": ["agent", "specialized-agent"] },
+    "selectable": { "type": "boolean" },
+    "systemPackage": { "type": "boolean" },
+    "sourceLayer": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "publicSkills": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" } },
+    "policyResult": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "publishedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "withdrawal": { "type": "string", "enum": ["active", "withdrawn", "compromised"] },
+    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "systemPackage": { "const": true } }, "required": ["systemPackage"] },
+      "then": { "properties": { "selectable": { "const": false } } }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Consumer identifiers, credentials, provider grants, MCP/tool grants, workload identity, and mandatory security policy are structurally absent."
+}

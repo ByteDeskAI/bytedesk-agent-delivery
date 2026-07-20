@@ -1,0 +1,23 @@
+{
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/command-request/1.0.0",
+    "digest": "sha256:fdb077eb05d7943580f299461e91360c3630075e95bd68918e4bb600b5dd02fd"
+  },
+  "command": "publish",
+  "idempotencyKey": "publish-01",
+  "subject": {
+    "repository": "registry.example/agents/source:latest",
+    "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "mediaType": "application/vnd.bytedesk.agent.source.v1+json",
+    "size": 4096,
+    "trustPolicy": {
+      "id": "public-source-v1",
+      "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  },
+  "targetRepository": "registry.example/agents/source",
+  "purpose": "public-source-v1",
+  "precondition": {
+    "kind": "absent"
+  }
+}

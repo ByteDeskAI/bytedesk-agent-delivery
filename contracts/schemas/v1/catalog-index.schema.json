@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/catalog-index/1.0.0",
+  "title": "Signed catalog discovery index",
+  "type": "object",
+  "required": ["contract", "schema", "catalogId", "revision", "publishedAt", "entries", "trustPolicy"],
+  "properties": {
+    "contract": { "const": "bytedesk.catalog-index/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "catalogId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "revision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "publishedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "entries": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "required": ["packageId", "displayName", "selectable", "source", "publicSkills", "channels", "compatibility", "withdrawal"],
+        "properties": {
+          "packageId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+          "displayName": { "type": "string", "minLength": 1, "maxLength": 256 },
+          "selectable": { "type": "boolean" },
+          "source": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+          "publicSkills": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" } },
+          "channels": { "type": "array", "maxItems": 3, "uniqueItems": true, "items": { "type": "string", "enum": ["stable", "preview", "deprecated"] } },
+          "compatibility": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+          "withdrawal": { "type": "string", "enum": ["active", "withdrawn", "compromised"] }
+        },
+        "additionalProperties": false,
+        "unevaluatedProperties": false
+      }
+    },
+    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,38 @@
+{
+  "contract": "bytedesk.renderer-input-parameters/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-input-parameters/1.0.0",
+    "digest": "sha256:c3bcead71c99b53143f48046ca9ff9c4448717e17f8504692e4a7a5f0754470c"
+  },
+  "scope": "private",
+  "harnessId": "hermes",
+  "rendererId": "hermes",
+  "rendererRelease": {
+    "repository": "registry.example/product/renderers",
+    "digest": "sha256:8d50765e6239c3fb9b6836628870f7d598b045879b531005d86cab960bfd141f",
+    "mediaType": "application/vnd.bytedesk.renderer.release.v1+json",
+    "size": 335,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:a80850c38ad05f095146c0075910ced54b678a2975bb92611a83b810292de757"
+    }
+  },
+  "harnessVersion": "1.7.0",
+  "normalizationProfile": "bytedesk-render-normalization-v1",
+  "outputArchiveProfile": "bytedesk-render-archive-v1",
+  "diagnosticProfile": "bytedesk.renderer-diagnostics.v1",
+  "resourceProfile": "renderer-private-standard-v1",
+  "compatibilityMode": "allow_approved_lossy",
+  "generatedText": {
+    "encoding": "UTF-8",
+    "lineEndings": "LF"
+  },
+  "archiveMetadata": {
+    "pathOrdering": "nfc_utf8_lexical",
+    "timestamps": "zero",
+    "ownership": "uid_gid_zero_names_empty",
+    "modes": "declared_safe_modes"
+  },
+  "payloadPolicy": "byte_exact",
+  "sourceDateEpoch": 0
+}

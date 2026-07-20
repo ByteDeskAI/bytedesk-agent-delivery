@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status-head-authentication-evidence/1.0.0",
+  "title": "Detached release-status head checkpoint authentication evidence",
+  "x-bytedesk-digestAuthority": {
+    "profile": "bytedesk.release-status-head-authentication-evidence-digest/1",
+    "fields": [
+      "purpose",
+      "checkpointDigest",
+      "requestNonce",
+      "authorityBindingDigest",
+      "signingResult"
+    ]
+  },
+  "type": "object",
+  "required": [
+    "contract",
+    "schema",
+    "purpose",
+    "checkpointDigest",
+    "requestNonce",
+    "authorityBindingDigest",
+    "signingResult",
+    "evidenceDigest"
+  ],
+  "properties": {
+    "contract": {
+      "const": "bytedesk.release-status-head-authentication-evidence/1"
+    },
+    "schema": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor"
+    },
+    "purpose": {
+      "const": "release-status-head-v1"
+    },
+    "checkpointDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Canonical SHA-256 digest of the complete release-status-head checkpoint."
+    },
+    "requestNonce": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonce",
+      "description": "Must exactly equal the nonce bound inside the checkpoint and supplied by the caller."
+    },
+    "authorityBindingDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Exact digest of the complete permitted signer identity bound to the checkpoint trust-policy reference and signing repository."
+    },
+    "signingResult": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0"
+        },
+        {
+          "properties": {
+            "purpose": {
+              "const": "release-status-head-v1"
+            },
+            "subjectMediaType": {
+              "const": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json"
+            }
+          },
+          "required": [
+            "purpose",
+            "subjectMediaType"
+          ]
+        }
+      ],
+      "description": "Complete purpose-, repository-, subject-, key-, identity-, and trust-policy-bound signing result. Its subjectDigest must equal checkpointDigest."
+    },
+    "evidenceDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "SHA-256 of RFC 8785 JCS bytes for the exact bytedesk.release-status-head-authentication-evidence-digest/1 preimage declared by x-bytedesk-digestAuthority. evidenceDigest itself, contract, and schema are excluded from that preimage."
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Detached authentication avoids a checkpoint/signature content cycle. Offline verification recomputes the evidence digest, verifies the complete signing result against the exact status-head trust policy, and requires its purpose, subject digest, media type, nonce, and authority identity to match the checkpoint."
+}

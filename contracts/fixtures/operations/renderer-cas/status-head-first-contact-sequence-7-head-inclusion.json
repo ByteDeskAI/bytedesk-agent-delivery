@@ -1,0 +1,32 @@
+{
+  "contract": "bytedesk.release-status-log-inclusion-proof/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/release-status-log-inclusion-proof/1.0.0",
+    "digest": "sha256:9b4ba7aad522d3841db38af27f421142f95f4be59dae6de9d96a160338835a01"
+  },
+  "proofId": "status-head-first-contact-sequence-7-head-inclusion",
+  "subjectKind": "renderer_release",
+  "subject": {
+    "repository": "registry.example/product/renderers",
+    "digest": "sha256:a4a2020fae4cae1471bd13441bf53085757c52523ad78c76046fe80bcbb8160f",
+    "mediaType": "application/vnd.bytedesk.agent.renderer-release.v1+json",
+    "size": 100,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:a80850c38ad05f095146c0075910ced54b678a2975bb92611a83b810292de757"
+    }
+  },
+  "treeSize": 7,
+  "leafIndex": 6,
+  "leafDigest": "sha256:204dc52616f0ca2bba8fbe016605472c4db903dc7e08e593b1f79f9fa8673741",
+  "rootDigest": "sha256:a3454b1b2a4aa480527e3cbde983be85b95f7b1a1a410a06b84a17777b134f4c",
+  "algorithm": "bytedesk-rfc6962-head-inclusion-v1",
+  "auditPath": [
+    "sha256:472647fc9f018d3bdf26d85b0099a9c50095fb88490d62c0b4950de7ba9bfe47",
+    "sha256:3ec47127fe1f51ead373bd2a0379aabaebcf4b946f5a7b2bce3c400c6de92b03"
+  ],
+  "trustPolicy": {
+    "id": "release-status-head-v1",
+    "digest": "sha256:6d815798af5b075b271a71366f3f085fae5e48eed0f61c7c5c03b71c046ab036"
+  }
+}

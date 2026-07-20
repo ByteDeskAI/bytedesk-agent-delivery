@@ -1,0 +1,47 @@
+{
+  "contract": "bytedesk.trust-policy-pin-set-provider-evidence/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy-pin-set-provider-evidence/1.0.0",
+    "digest": "sha256:afd21a2b13bb106116b5f95e23d9f311d613fd41211f3f34208bf1adfdeded58"
+  },
+  "evidenceId": "product-trust-pins-activation-1",
+  "requestId": "activate-product-trust-pins-1",
+  "idempotencyKey": "activate-product-trust-pins-1",
+  "requestDigest": "sha256:1159a6417b61cc109786fb0d834b44bd5a976f02d587bf5f38b64fb31545c3fa",
+  "pinSet": {
+    "repository": "registry.example/product/trust-pins",
+    "digest": "sha256:1cb05ee6b17c84fcdb9644c37bd93c2d4eb1327af0cf55866cdc1747ce003c95",
+    "mediaType": "application/vnd.bytedesk.agent.trust-policy-pin-set.v1+json",
+    "size": 783,
+    "providerId": "product-trust-provider",
+    "providerAuthorityDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "pinSetId": "product-trust-pins",
+  "scope": "product",
+  "consumerId": null,
+  "revision": 1,
+  "pinSetDigest": "sha256:b0ecb2b107b57079ee416432285e5d77f3550e6ef7e5f5818dab737ec136398e",
+  "precondition": {
+    "kind": "absent"
+  },
+  "providerId": "product-trust-provider",
+  "providerAuthorityDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "providerRequestId": "provider-request-1",
+  "providerAuditId": "provider-audit-1",
+  "result": "active",
+  "activatedAt": "2026-07-17T12:00:00Z",
+  "readback": {
+    "pinSet": {
+      "repository": "registry.example/product/trust-pins",
+      "digest": "sha256:1cb05ee6b17c84fcdb9644c37bd93c2d4eb1327af0cf55866cdc1747ce003c95",
+      "mediaType": "application/vnd.bytedesk.agent.trust-policy-pin-set.v1+json",
+      "size": 783,
+      "providerId": "product-trust-provider",
+      "providerAuthorityDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "rawDigest": "sha256:1cb05ee6b17c84fcdb9644c37bd93c2d4eb1327af0cf55866cdc1747ce003c95",
+    "observedAt": "2026-07-17T12:00:01Z"
+  },
+  "evidenceDigest": "sha256:25c6ecd76617e91761d136a0b25af8debe4ae8b03361d23f5cbd7dc8a987bd31",
+  "selfAuthorized": true
+}

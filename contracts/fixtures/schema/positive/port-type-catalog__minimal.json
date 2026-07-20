@@ -1,0 +1,170 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/port-type-catalog/1.0.0",
+  "baseTypes": [
+    {
+      "fixture": {
+        "invalid": {
+          "expectedKeyword": "not",
+          "instance": null
+        },
+        "valid": {
+          "actionId": "action-stale-attempt",
+          "attempt": 5,
+          "cancellable": false,
+          "causationId": "desired-state-hint-01",
+          "contract": "bytedesk.action/1",
+          "correlationId": "correlation-stale-attempt",
+          "createdAt": "2026-07-17T12:00:00Z",
+          "deadLetterEvidence": {
+            "classification": "consumer-private",
+            "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+          },
+          "fenceEvidence": {
+            "classification": "consumer-private",
+            "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          },
+          "inputDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "kind": "reconcile",
+          "precondition": {
+            "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "kind": "match",
+            "revision": 5
+          },
+          "predecessor": {
+            "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "kind": "match",
+            "revision": 4
+          },
+          "progress": {
+            "completed": 3,
+            "phase": "resolving_fence",
+            "total": 5,
+            "unit": "steps",
+            "updatedAt": "2026-07-17T12:05:00Z"
+          },
+          "schema": {
+            "digest": "sha256:ddf0e484b8d35195f984204e130c9f3e88b5e347581722437aa763e28b2c346a",
+            "id": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0"
+          },
+          "scope": {
+            "consumerId": "consumer-01",
+            "kind": "consumer"
+          },
+          "state": "dead_lettered",
+          "updatedAt": "2026-07-17T12:05:00Z"
+        }
+      },
+      "schema": {
+        "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/ports/types/action/1.0.0",
+        "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0",
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "schemaDigest": "sha256:67ae88cb189c2eca186bb68f7a2bb038546eb2abfa821a426d43e8fbb13b3b81",
+      "schemaRef": "action",
+      "source": {
+        "jsonPointer": "",
+        "kind": "schema-target",
+        "schemaDigest": "sha256:ddf0e484b8d35195f984204e130c9f3e88b5e347581722437aa763e28b2c346a",
+        "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0"
+      },
+      "usageKinds": [
+        "object"
+      ]
+    }
+  ],
+  "contracts": [
+    {
+      "contractId": "bytedesk.port.catalog.list-catalog-releases.request/1",
+      "direction": "request",
+      "operationId": "list-catalog-releases",
+      "portId": "bytedesk.port.catalog/1",
+      "schema": {
+        "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/ports/contracts/catalog/list-catalog-releases/request/1.0.0",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/ports/types/bytedesk-port-field-catalog-list-catalog-releases-request-cursor-1/1.0.0"
+          },
+          "limit": {
+            "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/ports/types/bytedesk-port-field-catalog-list-catalog-releases-request-limit-1/1.0.0"
+          }
+        },
+        "required": [
+          "cursor",
+          "limit"
+        ],
+        "title": "bytedesk.port.catalog.list-catalog-releases.request/1",
+        "type": "object",
+        "unevaluatedProperties": false
+      },
+      "schemaDigest": "sha256:0d4dbcafd6cfabea406347c3a8d893d27913fea596ff9870963844106a104e28",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/ports/contracts/catalog/list-catalog-releases/request/1.0.0"
+    }
+  ],
+  "fixtures": {
+    "digest": "sha256:56a43277278c22d8b798c3e192e9afc4b41dc8b34addd99995d8feccec03d8a5",
+    "path": "contracts/ports/v1/contract-fixtures.json",
+    "profile": "bytedesk.port-contract-fixtures/1"
+  },
+  "profile": "bytedesk.port-type-catalog/1",
+  "registry": {
+    "digest": "sha256:c811de9d5c01763cb95ccacdc84dee9eba78bd115b77dfdcd1600f61dc48f6d2",
+    "path": "contracts/ports/v1/port-registry.json"
+  },
+  "schemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "schemaSources": [
+    {
+      "mediaType": "application/schema+json",
+      "repositoryPath": "contracts/schemas/v1/action.schema.json",
+      "schemaDigest": "sha256:ddf0e484b8d35195f984204e130c9f3e88b5e347581722437aa763e28b2c346a",
+      "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/action/1.0.0"
+    }
+  ],
+  "types": [
+    {
+      "baseSchemaRef": "primitive:opaque-token",
+      "direction": "request",
+      "fieldName": "cursor",
+      "fixture": {
+        "invalid": {
+          "expectedKeyword": "oneOf",
+          "instance": 17
+        },
+        "valid": null
+      },
+      "operationId": "list-catalog-releases",
+      "portId": "bytedesk.port.catalog/1",
+      "refinement": "base",
+      "schema": {
+        "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/ports/types/bytedesk-port-field-catalog-list-catalog-releases-request-cursor-1/1.0.0",
+        "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/ports/types/primitive-opaque-token/1.0.0",
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "schemaDigest": "sha256:8f32b48557cb2395a6767c7809db66b814fbd95f4b10a848a5c85e45f7e2cf05",
+      "typeId": "bytedesk.port-field.catalog.list-catalog-releases.request.cursor/1"
+    }
+  ],
+  "version": 1,
+  "wireProfile": {
+    "array": {
+      "maxItems": 1024,
+      "minItems": 0
+    },
+    "bytes": {
+      "encoding": "base64url-no-padding",
+      "maxDecodedBytes": 4194304,
+      "maxEncodedCharacters": 5592406
+    },
+    "integer": {
+      "maximum": 9007199254740991,
+      "minimum": 0
+    },
+    "jsonEncoding": "utf-8-rfc8785-jcs-json",
+    "nullability": "only-explicit-nullable-types",
+    "string": {
+      "maxCodePoints": 4096
+    },
+    "unknownFields": "reject"
+  }
+}

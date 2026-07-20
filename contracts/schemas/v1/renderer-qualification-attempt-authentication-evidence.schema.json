@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-qualification-attempt-authentication-evidence/1.0.0",
+  "title": "Qualification attempt issuer authentication",
+  "type": "object",
+  "required": ["contract", "schema", "purpose", "attemptAuthorityDigest", "issuerIdentityDigest", "signingResult", "evidenceDigest"],
+  "properties": {
+    "contract": { "const": "bytedesk.renderer-qualification-attempt-authentication-evidence/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "purpose": { "const": "release-qualification-attempt-v1" },
+    "attemptAuthorityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "issuerIdentityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "signingResult": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0" },
+    "evidenceDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

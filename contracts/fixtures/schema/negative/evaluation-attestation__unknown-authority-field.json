@@ -1,0 +1,45 @@
+{
+  "contract": "bytedesk.evaluation-attestation/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/evaluation-attestation/1.0.0",
+    "digest": "sha256:0423b027a5bedca4f1979f4204fffa38ff662ca277ea4666f3d448da3b5e690c"
+  },
+  "subject": {
+    "repository": "registry.example/agents/skills",
+    "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "mediaType": "application/vnd.bytedesk.agent.skill.v1+json",
+    "size": 4096,
+    "trustPolicy": {
+      "id": "public-source-v1",
+      "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  },
+  "policy": {
+    "id": "artifact-evaluation-v1",
+    "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "result": "passed",
+  "checks": [
+    {
+      "id": "malware_scan",
+      "result": "passed",
+      "evidenceDigest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    }
+  ],
+  "evaluatedAt": "2026-07-17T12:00:00Z",
+  "evaluator": {
+    "repository": "registry.example/product/evaluators",
+    "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "size": 2048,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    }
+  },
+  "trustPolicy": {
+    "id": "artifact-evaluation-v1",
+    "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "unknownAuthority": true
+}

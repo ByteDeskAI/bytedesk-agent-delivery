@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+  "profile": "bytedesk.host-reconciliation-attempt-lifecycle/1",
+  "version": 1,
+  "initialStates": ["claimed"],
+  "states": [
+    {"name": "claimed", "terminal": false},
+    {"name": "staging", "terminal": false},
+    {"name": "staged", "terminal": false},
+    {"name": "preflighting", "terminal": false},
+    {"name": "preflight_passed", "terminal": false},
+    {"name": "switching", "terminal": false},
+    {"name": "indeterminate", "terminal": false},
+    {"name": "verifying", "terminal": false},
+    {"name": "observing", "terminal": false},
+    {"name": "retry_wait", "terminal": false},
+    {"name": "succeeded", "terminal": true},
+    {"name": "cancelled", "terminal": true},
+    {"name": "fenced", "terminal": true},
+    {"name": "failed", "terminal": true}
+  ],
+  "transitions": [
+    {"name": "begin_stage", "from": ["claimed"], "to": "staging", "actor": "host-reconciler", "guard": "lease_and_fencing_token_current", "cas": "host-journal-match", "effects": ["append_journal", "create_staging_marker"], "event": "host-attempt.staging.v1", "retryable": false},
+    {"name": "stage_complete", "from": ["staging"], "to": "staged", "actor": "host-reconciler", "guard": "exact_artifact_inventory_verified_and_fsync_complete", "cas": "host-journal-match", "effects": ["append_journal", "fsync_staged_marker", "append_technical_observation"], "event": "host-attempt.staged.v1", "retryable": false},
+    {"name": "begin_preflight", "from": ["staged"], "to": "preflighting", "actor": "host-reconciler", "guard": "lease_and_desired_revision_current", "cas": "host-journal-match", "effects": ["append_journal"], "event": "host-attempt.preflighting.v1", "retryable": false},
+    {"name": "preflight_complete", "from": ["preflighting"], "to": "preflight_passed", "actor": "host-reconciler", "guard": "all_declared_technical_checks_pass", "cas": "host-journal-match", "effects": ["append_journal", "append_technical_observation"], "event": "host-attempt.preflight-passed.v1", "retryable": false},
+    {"name": "begin_switch", "from": ["preflight_passed"], "to": "switching", "actor": "host-reconciler", "guard": "activation_authorized_and_nonce_revision_slot_generation_match", "cas": "host-journal-match", "effects": ["append_journal", "fsync_switch_intent_marker"], "event": "host-attempt.switching.v1", "retryable": false},
+    {"name": "switch_complete", "from": ["switching"], "to": "verifying", "actor": "host-reconciler", "guard": "harness_safe_switch_committed", "cas": "host-journal-match", "effects": ["append_journal", "fsync_switch_committed_marker", "readback_active_identity"], "event": "host-attempt.verifying.v1", "retryable": false},
+    {"name": "verification_complete", "from": ["verifying"], "to": "observing", "actor": "host-reconciler", "guard": "active_identity_and_file_process_readback_match", "cas": "host-journal-match", "effects": ["append_journal", "append_technical_observation"], "event": "host-attempt.observing.v1", "retryable": false},
+    {"name": "observation_accepted", "from": ["observing"], "to": "succeeded", "actor": "host-reconciler", "guard": "observation_durably_accepted_for_current_attempt", "cas": "host-journal-match", "effects": ["append_journal", "close_attempt"], "event": "host-attempt.succeeded.v1", "retryable": false},
+    {"name": "retryable_failure", "from": ["claimed", "staging", "staged", "preflighting", "preflight_passed"], "to": "retry_wait", "actor": "host-reconciler", "guard": "no_switch_side_effect_and_retry_budget_remaining", "cas": "host-journal-match", "effects": ["append_journal", "append_redacted_problem", "schedule_backoff"], "event": "host-attempt.retry-wait.v1", "retryable": true},
+    {"name": "retry", "from": ["retry_wait"], "to": "claimed", "actor": "host-reconciler", "guard": "backoff_elapsed_and_new_lease_fencing_token_current", "cas": "host-journal-match", "effects": ["append_journal", "increment_attempt"], "event": "host-attempt.claimed.v1", "retryable": false},
+    {"name": "cancel_before_switch", "from": ["claimed", "staging", "staged", "preflighting", "preflight_passed", "retry_wait"], "to": "cancelled", "actor": "host-reconciler", "guard": "coordinator_cancel_current_and_switch_not_started", "cas": "host-journal-match", "effects": ["append_journal", "delete_uncommitted_stage", "append_technical_observation"], "event": "host-attempt.cancelled.v1", "retryable": false},
+    {"name": "fence_before_switch_intent", "from": ["claimed", "staging", "staged", "preflighting", "preflight_passed", "retry_wait"], "to": "fenced", "actor": "host-reconciler", "guard": "lease_or_fencing_token_lost_before_switch_intent", "cas": "host-journal-match", "effects": ["append_journal", "discard_uncommitted_stage", "append_technical_observation"], "event": "host-attempt.fenced.v1", "retryable": false},
+    {"name": "fence_or_crash_after_switch_intent", "from": ["switching", "verifying", "observing"], "to": "indeterminate", "actor": "host-reconciler", "guard": "switch_intent_exists_and_exact_active_generation_not_yet_proven", "cas": "host-journal-match", "effects": ["append_journal", "stop_serving", "preserve_candidate_and_predecessor", "readback_active_identity"], "event": "host-attempt.indeterminate.v1", "retryable": false},
+    {"name": "resolve_indeterminate_as_candidate", "from": ["indeterminate"], "to": "verifying", "actor": "host-reconciler", "guard": "journal_and_service_readback_prove_exact_candidate_generation", "cas": "host-journal-match", "effects": ["append_journal", "resume_candidate_service", "readback_active_identity"], "event": "host-attempt.verifying.v1", "retryable": false},
+    {"name": "resolve_indeterminate_as_predecessor", "from": ["indeterminate"], "to": "failed", "actor": "host-reconciler", "guard": "journal_and_service_readback_prove_exact_predecessor_generation", "cas": "host-journal-match", "effects": ["append_journal", "resume_predecessor_service", "append_recovery_required_observation"], "event": "host-attempt.failed.v1", "retryable": false},
+    {"name": "terminal_failure_before_switch", "from": ["claimed", "staging", "staged", "preflighting", "preflight_passed", "retry_wait"], "to": "failed", "actor": "host-reconciler", "guard": "nonretryable_failure_or_retry_budget_exhausted_and_switch_not_started", "cas": "host-journal-match", "effects": ["append_journal", "append_redacted_problem", "append_technical_observation"], "event": "host-attempt.failed.v1", "retryable": false},
+    {"name": "terminal_failure_after_switch", "from": ["switching", "indeterminate", "verifying", "observing"], "to": "failed", "actor": "host-reconciler", "guard": "switch_may_be_committed_and_exact_readback_proves_no_safe_success", "cas": "host-journal-match", "effects": ["append_journal", "preserve_switch_markers", "append_recovery_required_observation"], "event": "host-attempt.failed.v1", "retryable": false}
+  ]
+}

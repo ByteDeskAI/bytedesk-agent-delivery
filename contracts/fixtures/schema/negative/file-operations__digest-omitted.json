@@ -1,0 +1,12 @@
+{
+  "contract": "bytedesk.file-operations/1",
+  "operations": [
+    {
+      "op": "remove",
+      "path": "guidance/old.md",
+      "precondition": {
+        "kind": "match"
+      }
+    }
+  ]
+}

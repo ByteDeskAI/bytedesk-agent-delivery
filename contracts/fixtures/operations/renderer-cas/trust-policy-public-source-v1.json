@@ -1,0 +1,90 @@
+{
+  "contract": "bytedesk.trust-policy/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/trust-policy/1.0.0",
+    "digest": "sha256:ea53b4814c96282ba5812c2573b4adf45a026340b1022503e25b9f391dcd1509"
+  },
+  "policyId": "public-source-v1",
+  "version": "1.0.0",
+  "effective": {
+    "notBefore": "2026-07-17T00:00:00Z",
+    "notAfter": "2027-07-17T00:00:00Z"
+  },
+  "scope": {
+    "repositories": [
+      "registry.example/agents/evidence",
+      "registry.example/agents/skills",
+      "registry.example/agents/source",
+      "registry.example/catalog/agents",
+      "registry.example/catalog/skills"
+    ],
+    "mediaTypes": [
+      "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "application/vnd.bytedesk.agent.public-source-authentication-evidence.v1+json",
+      "application/spdx+json",
+      "application/vnd.bytedesk.agent.compatibility.v1+json",
+      "application/vnd.bytedesk.agent.policy.v1+json",
+      "application/vnd.bytedesk.agent.skill.v1+json",
+      "application/vnd.bytedesk.agent.source.v1+json",
+      "application/vnd.bytedesk.license.v1+json",
+      "application/vnd.bytedesk.scan.v1+json",
+      "application/vnd.oci.image.layer.v1.tar+gzip",
+      "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "application/vnd.bytedesk.agent.signing-result.v1+json"
+    ],
+    "purposes": [
+      "public-source-v1"
+    ]
+  },
+  "signers": [
+    {
+      "purpose": "public-source-v1",
+      "credentialKind": "kms_key",
+      "keyVersion": "kms://product/public-source-v1/versions/1",
+      "publicKeyDigest": "sha256:cbe9db5dd19435ced42088f762e8d750d0f7b07044a0e41c067b9c15d056089d",
+      "algorithm": "ECDSA_P256_SHA256",
+      "workloadIdentity": "spiffe://bytedesk.ai/agent-delivery/public-source",
+      "claims": {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audience": "agent-delivery-public-source-v1",
+        "subject": "repo:ByteDeskAI/bytedesk-agent-delivery:environment:public-source-v1",
+        "repository": "ByteDeskAI/bytedesk-agent-delivery",
+        "workflow": ".github/workflows/public-source-v1.yml",
+        "ref": "refs/tags/v1.0.0",
+        "environment": "public-source-v1",
+        "builderDigest": "sha256:9f5aa04f34d7542feb0c4641ec2a2e9c3697ba70883992bc4f638b727cfcb1d3"
+      }
+    }
+  ],
+  "requiredEvidence": [
+    "schema",
+    "provenance",
+    "sbom",
+    "vulnerability",
+    "license",
+    "malware",
+    "secret_scan",
+    "scan_completeness"
+  ],
+  "rules": {
+    "freshnessSeconds": 900,
+    "requireNonce": true,
+    "requirePredecessor": true,
+    "denyDowngrade": true,
+    "withdrawal": "deny_new_use",
+    "outage": "fail_closed_new_work"
+  },
+  "revocations": {
+    "keyVersions": [],
+    "digests": [],
+    "workflows": [],
+    "builders": [],
+    "schemas": [],
+    "renderers": [],
+    "content": []
+  },
+  "failureMode": "fail_closed",
+  "predecessor": {
+    "kind": "none"
+  }
+}

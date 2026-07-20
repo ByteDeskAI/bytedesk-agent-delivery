@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/downstream-conformance-cases/1.0.0",
+  "profile": "bytedesk.downstream-conformance-cases/1",
+  "version": 1,
+  "cases": [
+    {
+      "caseId": "CAT-999-missing-rejecting-operation",
+      "suite": "downstream.marketplace.v1",
+      "portSuites": [
+        "downstream.catalog.v1"
+      ],
+      "ownerTask": "AD-02",
+      "covers": [
+        {
+          "portId": "bytedesk.port.catalog/1",
+          "operationId": "resolve-catalog-release"
+        }
+      ],
+      "category": "exact-binding-denial",
+      "fixture": {
+        "mutation": "omit the operation that rejected this denial"
+      },
+      "expected": {
+        "outcome": "deny",
+        "problemCode": "digest_mismatch",
+        "sideEffectState": "none"
+      }
+    }
+  ]
+}

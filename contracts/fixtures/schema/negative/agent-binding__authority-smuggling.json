@@ -1,0 +1,18 @@
+{
+  "contract": "bytedesk.agent-binding/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/agent-binding/1.0.0", "digest": "sha256:3c2b7490e808d3dd33ba6dea497a0b83b82545caa2b981b05ca997640490a2e7" },
+  "agentId": "chief-of-staff",
+  "agentSpecVersion": "26.1.2",
+  "sourceKind": "agent",
+  "source": { "repository": "registry.example/agents/source", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "mediaType": "application/vnd.bytedesk.agent.source.v1+json", "size": 4096, "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } },
+  "renderer": { "harnessId": "hermes", "rendererId": "hermes", "version": "1.0.0", "release": { "repository": "registry.example/product/renderers", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "mediaType": "application/vnd.bytedesk.agent.renderer-release.v1+json", "size": 8192, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" } } },
+  "customization": {
+    "agentSpec": { "profile": "bytedesk.json-patch/1", "operations": [] },
+    "harnessConfiguration": { "profile": "bytedesk.json-patch/1", "operations": [] },
+    "files": { "contract": "bytedesk.file-operations/1", "operations": [] },
+    "skills": { "contract": "bytedesk.skill-operations/1", "operations": [] }
+  },
+  "updatePolicy": { "channel": "stable", "automaticCompatibleUpdates": false },
+  "precondition": { "kind": "absent" },
+  "grants": ["administrator"]
+}

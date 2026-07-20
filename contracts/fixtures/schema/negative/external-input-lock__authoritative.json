@@ -1,0 +1,5 @@
+{
+  "contract": "bytedesk.external-input-lock/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/external-input-lock/1.0.0", "digest": "sha256:0b8c314dfc6f25f150b92db704cd80358f43c8109bffc2a64d3f61ff67881faf" },
+  "lockId": "openclaw-invalid-authority", "role": "migration_input", "repository": "https://github.com/example/openclaw.git", "commit": "1111111111111111111111111111111111111111", "treeDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "paths": [{ "path": "agents/example/AGENTS.md", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "size": 1024 }], "validators": [{ "repository": "registry.example/validators/openclaw", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "mediaType": "application/vnd.oci.image.manifest.v1+json", "size": 4096, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555" } }], "compatibilityEvidenceOnly": false, "retrievedAt": "2026-07-17T12:00:00Z"
+}

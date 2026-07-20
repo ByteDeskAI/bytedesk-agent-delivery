@@ -1,0 +1,61 @@
+{
+  "contract": "bytedesk.public-source-authentication-evidence/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/public-source-authentication-evidence/1.0.0",
+    "digest": "sha256:6caa6caf1e6276a727cf032f37c1aabc911af7a52be7486666ea22c96ddfa424"
+  },
+  "purpose": "public-source-v1",
+  "subject": {
+    "repository": "registry.example/catalog/agents",
+    "digest": "sha256:8b86099f9a8a4b44d1e3e4ec9703f8c03fd6c859f35d1ca7647cc2f9ffd06736",
+    "mediaType": "application/vnd.bytedesk.agent.source.v1+json",
+    "size": 298,
+    "trustPolicy": {
+      "id": "public-source-v1",
+      "digest": "sha256:0098c5b042e3fcd5b4cc95cf9a822f4ee43d23f989255bae02fe623894155b2e"
+    }
+  },
+  "publisherIdentityDigest": "sha256:64a9e08f32147b63a44a433ba71d4e46ecb9718fcd64ef7b034073e57122b6ff",
+  "signingResult": {
+    "contract": "bytedesk.signing-result/1",
+    "schema": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0",
+      "digest": "sha256:a64e23f1ae5a04e0c26c67085a41e8d0d70a9df9d45b1ec789c72c7634543ede"
+    },
+    "requestId": "sign-native-linux-amd64-selection-execution-public-source-0",
+    "requestDigest": "sha256:fc2c835eebce5f4d2fd17241c4d7ab2d0e1b0f136de7c9852a886f677384b98d",
+    "purpose": "public-source-v1",
+    "keyVersion": "kms://product/public-source-v1/versions/1",
+    "algorithm": "ECDSA_P256_SHA256",
+    "publicKeyDigest": "sha256:cbe9db5dd19435ced42088f762e8d750d0f7b07044a0e41c067b9c15d056089d",
+    "repository": "registry.example/agents/evidence",
+    "subjectDigest": "sha256:8b86099f9a8a4b44d1e3e4ec9703f8c03fd6c859f35d1ca7647cc2f9ffd06736",
+    "subjectMediaType": "application/vnd.bytedesk.agent.source.v1+json",
+    "signatureBundle": {
+      "repository": "registry.example/agents/evidence",
+      "digest": "sha256:82adfe0fb67dd798a79c70c02fa91add0d0944dee2822e8c6cfbdddeb852eef2",
+      "mediaType": "application/vnd.dev.sigstore.bundle.v0.3+json",
+      "size": 2120,
+      "trustPolicy": {
+        "id": "public-source-v1",
+        "digest": "sha256:0098c5b042e3fcd5b4cc95cf9a822f4ee43d23f989255bae02fe623894155b2e"
+      }
+    },
+    "trustPolicy": {
+      "id": "public-source-v1",
+      "digest": "sha256:0098c5b042e3fcd5b4cc95cf9a822f4ee43d23f989255bae02fe623894155b2e"
+    },
+    "providerAuditEvidence": {
+      "repository": "registry.example/agents/evidence",
+      "digest": "sha256:3a93dbe55ef72a19aa72d56e8afaa6c7735b04283f7360c09b4667897059b467",
+      "mediaType": "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
+      "size": 1745,
+      "trustPolicy": {
+        "id": "public-source-v1",
+        "digest": "sha256:0098c5b042e3fcd5b4cc95cf9a822f4ee43d23f989255bae02fe623894155b2e"
+      }
+    },
+    "signedAt": "2026-07-17T12:00:01Z"
+  },
+  "evidenceDigest": "sha256:27c96880d530060f9de112b81cb408ae8054a518ba50f81c2057c4cc50eed6c2"
+}

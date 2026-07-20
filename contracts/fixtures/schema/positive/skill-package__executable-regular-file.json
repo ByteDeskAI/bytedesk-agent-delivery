@@ -1,0 +1,19 @@
+{
+  "contract": "bytedesk.skill-package/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-package/1.0.0", "digest": "sha256:c824ae5ffc5412196ccf08ed99607b10983b5fa7128ccb52faae7cc3d0818771" },
+  "packageId": "analysis-helper",
+  "version": "1.0.0",
+  "scope": "public",
+  "contentLayer": { "repository": "registry.example/agents/skills", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip", "size": 2048, "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } },
+  "files": [
+    { "path": "bin/analyze", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "size": 512, "mode": "0755" }
+  ],
+  "nestedArchiveDepth": 0,
+  "evidence": {
+    "sbom": { "repository": "registry.example/agents/evidence", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "mediaType": "application/spdx+json", "size": 1024, "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } },
+    "scan": { "repository": "registry.example/agents/evidence", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "mediaType": "application/vnd.bytedesk.scan.v1+json", "size": 1024, "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } },
+    "license": { "repository": "registry.example/agents/evidence", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "mediaType": "application/vnd.bytedesk.license.v1+json", "size": 1024, "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } }
+  },
+  "withdrawal": "active",
+  "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" }
+}

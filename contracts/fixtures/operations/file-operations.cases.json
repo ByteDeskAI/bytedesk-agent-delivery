@@ -1,0 +1,80 @@
+{
+  "profile": "bytedesk.file-operation-fixtures/1",
+  "cases": [
+    {
+      "name": "add-regular-file",
+      "initial": {},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "add", "path": "docs/guide.md", "precondition": {"kind": "absent"}, "content": {"repository": "registry.example/files/guide", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "mediaType": "text/markdown", "size": 12, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}]},
+      "valid": true,
+      "expected": {"docs/guide.md": {"content": {"repository": "registry.example/files/guide", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "mediaType": "text/markdown", "size": 12, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}}
+    },
+    {
+      "name": "replace-digest-match",
+      "initial": {"bin/tool": {"content": {"repository": "registry.example/files/tool-old", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "mediaType": "application/octet-stream", "size": 9, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0755"}},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "replace", "path": "bin/tool", "precondition": {"kind": "match", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}, "content": {"repository": "registry.example/files/tool", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "mediaType": "application/octet-stream", "size": 10, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0755"}]},
+      "valid": true,
+      "expected": {"bin/tool": {"content": {"repository": "registry.example/files/tool", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "mediaType": "application/octet-stream", "size": 10, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0755"}}
+    },
+    {
+      "name": "remove-digest-match",
+      "initial": {"obsolete.txt": {"content": {"repository": "registry.example/files/obsolete", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "mediaType": "text/plain", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "remove", "path": "obsolete.txt", "precondition": {"kind": "match", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"}}]},
+      "valid": true,
+      "expected": {}
+    },
+    {
+      "name": "digest-mismatch-denied",
+      "initial": {"bin/tool": {"content": {"repository": "registry.example/files/tool", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "mediaType": "application/octet-stream", "size": 9, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0755"}},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "remove", "path": "bin/tool", "precondition": {"kind": "match", "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"}}]},
+      "valid": false
+    },
+    {
+      "name": "duplicate-target-denied",
+      "initial": {},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "add", "path": "a.txt", "precondition": {"kind": "absent"}, "content": {"repository": "registry.example/files/a", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "mediaType": "text/plain", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}, {"op": "remove", "path": "a.txt", "precondition": {"kind": "match", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"}}]},
+      "valid": false
+    },
+    {
+      "name": "casefold-collision-denied",
+      "initial": {"Readme.md": {"content": {"repository": "registry.example/files/readme", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "mediaType": "text/markdown", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "add", "path": "README.md", "precondition": {"kind": "absent"}, "content": {"repository": "registry.example/files/readme-new", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "mediaType": "text/markdown", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}]},
+      "valid": false
+    },
+    {
+      "name": "regular-file-ancestor-denied",
+      "initial": {"a": {"content": {"repository": "registry.example/files/a", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "mediaType": "application/octet-stream", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "add", "path": "a/b", "precondition": {"kind": "absent"}, "content": {"repository": "registry.example/files/b", "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999", "mediaType": "application/octet-stream", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}]},
+      "valid": false
+    },
+    {
+      "name": "parent-traversal-denied",
+      "initial": {},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "add", "path": "../secret", "precondition": {"kind": "absent"}, "content": {"repository": "registry.example/files/secret", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "mediaType": "application/octet-stream", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}}, "mode": "0644"}]},
+      "valid": false
+    },
+    {
+      "name": "windows-ambiguous-path-denied",
+      "initial": {},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "add", "path": "docs/name. ", "precondition": {"kind": "absent"}, "content": {"repository": "registry.example/files/name", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "mediaType": "text/plain", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}]},
+      "valid": false
+    },
+    {
+      "name": "alternate-data-stream-path-denied",
+      "initial": {},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "add", "path": "docs/name.txt:secret", "precondition": {"kind": "absent"}, "content": {"repository": "registry.example/files/name", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "mediaType": "text/plain", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}]},
+      "valid": false
+    },
+    {
+      "name": "tagged-repository-denied",
+      "initial": {},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "add", "path": "docs/tagged", "precondition": {"kind": "absent"}, "content": {"repository": "registry.example/files/tagged:latest", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "mediaType": "application/octet-stream", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}]},
+      "valid": false
+    },
+    {
+      "name": "atomic-late-failure",
+      "initial": {},
+      "operations": {"contract": "bytedesk.file-operations/1", "operations": [{"op": "add", "path": "first.txt", "precondition": {"kind": "absent"}, "content": {"repository": "registry.example/files/first", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "mediaType": "text/plain", "size": 1, "trustPolicy": {"id": "consumer-private-skill-v1", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}, "mode": "0644"}, {"op": "remove", "path": "missing.txt", "precondition": {"kind": "match", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}}]},
+      "valid": false
+    }
+  ]
+}

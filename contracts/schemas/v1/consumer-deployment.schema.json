@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-deployment/1.0.0",
+  "title": "Consumer-private deployment manifest with exact compilation and render lineage",
+  "type": "object",
+  "required": ["contract", "schema", "deploymentId", "consumerId", "subjectId", "installationId", "harnessId", "targetId", "candidate", "desiredRevision", "predecessor", "runtimeSlot", "activationMode", "source", "publicRender", "binding", "approvedSkills", "skillApprovals", "compilationAuthority", "compilationInput", "compilationInputSigningResult", "compilationInputDigest", "rendererSelectionDigest", "releaseStatusEligibility", "releaseStatusEligibilityDigest", "releaseStatusEligibilityVerificationEvidenceDigest", "trustPolicyPinSetDigest", "trustPolicyPinSetProviderEvidenceDigest", "rendererExecution", "productRelease", "rendererRelease", "executedDistribution", "productDistributionDigest", "compiledAllowlistDigest", "opaqueConsumerDigests", "effectiveRender", "reproducibleEpoch", "createdAt", "trustPolicy"],
+  "properties": {
+    "contract": { "const": "bytedesk.consumer-deployment/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "deploymentId": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier",
+      "description": "Deterministically derived as deployment- plus the lowercase hexadecimal SHA-256 of the bytedesk.consumer-deployment-id/1 preimage over consumerId, subjectId, targetId, candidate digest, desired-revision digest, and compilationInputDigest."
+    },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "subjectId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "installationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "harnessId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "candidate": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "desiredRevision": {
+      "type": "object",
+      "required": ["revision", "digest"],
+      "properties": {
+        "revision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+        "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0" },
+    "runtimeSlot": {
+      "type": "object",
+      "required": ["slotId", "generation"],
+      "properties": {
+        "slotId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+        "generation": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "activationMode": { "type": "string", "enum": ["isolated_candidate", "guarded_in_place"] },
+    "source": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "publicRender": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "binding": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "approvedSkills": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" } },
+    "skillApprovals": { "type": "array", "maxItems": 100000, "uniqueItems": true, "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" } },
+    "compilationAuthority": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "compilationInput": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.private-compilation-input.v1+json" },
+            "trustPolicy": {
+              "properties": { "id": { "const": "consumer-compilation-input-v1" } },
+              "required": ["id"]
+            }
+          }
+        }
+      ],
+      "description": "Exact descriptor of the canonical private-compilation-input object used for this deployment. Its resolved compilationInputDigest must equal the adjacent field."
+    },
+    "compilationInputSigningResult": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0",
+      "description": "Detached consumer-compilation-input-v1 signature over the exact compilationInput descriptor digest and media type. The deployment signature transitively binds this result without creating an L self-cycle."
+    },
+    "compilationInputDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Must equal the independently recomputed compilationInputDigest in the exact resolved compilationInput object."
+    },
+    "rendererSelectionDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Must equal both the locked renderer selection digest and every selected/executed lineage member."
+    },
+    "releaseStatusEligibility": {
+      "allOf": [
+        { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+        {
+          "properties": {
+            "mediaType": { "const": "application/vnd.bytedesk.agent.release-status-eligibility-evidence.v1+json" },
+            "trustPolicy": {
+              "properties": { "id": { "const": "consumer-release-status-eligibility-v1" } },
+              "required": ["id"]
+            }
+          },
+          "required": ["mediaType", "trustPolicy"]
+        }
+      ]
+    },
+    "releaseStatusEligibilityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "releaseStatusEligibilityVerificationEvidenceDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "trustPolicyPinSetDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "trustPolicyPinSetProviderEvidenceDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "rendererExecution": {
+      "type": "object",
+      "required": ["attemptAuthority", "attemptAuthenticationEvidence", "receipt", "authenticationEvidence"],
+      "properties": {
+        "attemptAuthority": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-attempt-authority/1.0.0" },
+        "attemptAuthenticationEvidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-attempt-authentication-evidence/1.0.0" },
+        "receipt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-execution-receipt/1.0.0" },
+        "authenticationEvidence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-execution-authentication-evidence/1.0.0" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false,
+      "description": "Complete closed preimages for issued attempt authority, issuer authentication, actual execution, and execution authentication. Their domain-separated and canonical digests are recomputed and cross-checked procedurally."
+    },
+    "productRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "rendererRelease": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "executedDistribution": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "productDistributionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "compiledAllowlistDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "opaqueConsumerDigests": {
+      "type": "object",
+      "required": ["policy", "grantSet", "credentialSet", "workloadIdentity", "lifecycle", "sandbox", "network", "approvalPolicy", "targetBinding"],
+      "properties": {
+        "policy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "grantSet": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "credentialSet": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "workloadIdentity": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "lifecycle": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "sandbox": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "network": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "approvalPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "targetBinding": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "effectiveRender": {
+      "type": "object",
+      "required": ["manifest", "manifestDigest", "payload"],
+      "properties": {
+        "manifest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/render-manifest/1.0.0" },
+        "manifestDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+          "description": "Canonical RFC 8785 JCS SHA-256 digest of the complete adjacent manifest object."
+        },
+        "payload": {
+          "allOf": [
+            { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+            {
+              "properties": {
+                "mediaType": { "const": "application/vnd.bytedesk.render.bundle.v1+tar" },
+                "trustPolicy": {
+                  "properties": { "id": { "const": "consumer-deployment-v1" } },
+                  "required": ["id"]
+                }
+              }
+            }
+          ],
+          "description": "Exact rendered payload descriptor. Digest, media type, and size must equal manifest.output. The payload contains only manifest.files bytes and excludes the manifest, compatibility/evidence envelopes, this deployment, compilation evidence, and enclosing OCI config/manifest bytes."
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "reproducibleEpoch": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "createdAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "trustPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Carries opaque consumer authority digests but never credential values, grants, identity assertions, or mutable policy bytes. The canonical artifact descriptor of this complete object is its sole deployment identity; no second deployment subdigest exists. Validation resolves compilationInput offline and enforces exact identity/equality across the lock, renderer selection, issued attempt, attempt authentication, execution receipt, execution authentication, manifest, and payload. createdAt MUST equal the Coordinator-assigned reproducibleEpoch. The closed object deliberately cannot contain compilation evidence, a runtime release, or any backlink to either. Runtime release aggregation occurs only after this deployment is committed."
+}

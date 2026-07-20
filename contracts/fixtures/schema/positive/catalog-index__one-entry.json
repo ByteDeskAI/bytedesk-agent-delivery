@@ -1,0 +1,20 @@
+{
+  "contract": "bytedesk.catalog-index/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/catalog-index/1.0.0", "digest": "sha256:f7bdca8523a7c8c3de3dcc9909857217959ace7744550d35c4e5b3b429bded62" },
+  "catalogId": "public-catalog",
+  "revision": 1,
+  "publishedAt": "2026-07-17T12:00:00Z",
+  "entries": [
+    {
+      "packageId": "chief-of-staff",
+      "displayName": "Chief of Staff",
+      "selectable": true,
+      "source": { "repository": "registry.example/agents/source", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "mediaType": "application/vnd.bytedesk.agent.source.v1+json", "size": 4096, "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } },
+      "publicSkills": [],
+      "channels": ["stable"],
+      "compatibility": { "repository": "registry.example/agents/evidence", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "mediaType": "application/vnd.bytedesk.agent.compatibility.v1+json", "size": 1024, "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } },
+      "withdrawal": "active"
+    }
+  ],
+  "trustPolicy": { "id": "public-source-v1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" }
+}

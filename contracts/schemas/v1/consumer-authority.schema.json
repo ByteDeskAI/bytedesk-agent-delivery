@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/consumer-authority/1.0.0",
+  "title": "Short-lived consumer-signed opaque authority snapshot",
+  "type": "object",
+  "required": ["contract", "schema", "consumerId", "subjectId", "installationId", "harnessId", "targetId", "audience", "operation", "authorityRevision", "predecessor", "opaqueDigests", "decision", "signerPolicy", "signerIdentity", "issuedAt", "notBefore", "expiresAt", "nonce", "bindingDigest", "candidateDigest", "desiredRevisionDigest"],
+  "properties": {
+    "contract": { "const": "bytedesk.consumer-authority/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "subjectId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "installationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "harnessId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "audience": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "operation": { "type": "string", "enum": ["compile", "activate", "recover"] },
+    "authorityRevision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "predecessor": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/predecessor/1.0.0" },
+    "opaqueDigests": {
+      "type": "object",
+      "required": ["policy", "grantSet", "credentialSet", "workloadIdentity", "lifecycle", "mandatorySandbox", "network", "approvalPolicy", "targetBinding"],
+      "properties": {
+        "policy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "grantSet": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "credentialSet": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "workloadIdentity": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "lifecycle": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "mandatorySandbox": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "network": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "approvalPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "targetBinding": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "required": ["class", "code"],
+      "properties": {
+        "class": { "type": "string", "enum": ["permitted", "denied"] },
+        "code": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "businessApproval": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "signerPolicy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+    "signerIdentity": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "issuedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "notBefore": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "expiresAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "nonce": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/nonce" },
+    "bindingDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "candidateDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "desiredRevisionDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "authorizedPrivateInputDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Consumer-signed bytedesk.authorized-private-compilation-input/1 digest over the lock contract, exact lock schema descriptor, and all locked inputs except authoritySnapshot and this digest. Required only for compile authority and forbidden for activate or recover authority."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "operation": { "const": "compile" } },
+        "required": ["operation"]
+      },
+      "then": { "required": ["authorizedPrivateInputDigest"] },
+      "else": { "not": { "required": ["authorizedPrivateInputDigest"] } }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Subdocuments are opaque digests; no identity document, grant, credential, token, private key, or reusable workload credential is accepted. A compile snapshot additionally signs the complete authorized private-compilation input digest; that field cannot be reused for activation or recovery."
+}

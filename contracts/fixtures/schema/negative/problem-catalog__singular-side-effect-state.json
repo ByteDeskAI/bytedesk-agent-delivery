@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/problem-catalog/1.0.0",
+  "profile": "bytedesk.problem-catalog/1",
+  "version": 1,
+  "problems": [
+    {
+      "code": "resource_not_found",
+      "type": "https://problems.bytedesk.ai/agent-delivery/resource-not-found",
+      "status": 404,
+      "retryable": false,
+      "sideEffectState": "none",
+      "cliExit": 3
+    }
+  ]
+}

@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/protocol-fixtures/1.0.0",
+  "title": "Executable OCI, supply-chain, and capability protocol fixtures",
+  "type": "object",
+  "required": [
+    "$schema",
+    "profile",
+    "version",
+    "fixtures",
+    "materials",
+    "chains",
+    "mutations"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://schemas.bytedesk.ai/agent-delivery/v1/protocol-fixtures/1.0.0"
+    },
+    "profile": {
+      "const": "bytedesk.protocol-fixtures/1"
+    },
+    "version": {
+      "const": 1
+    },
+    "fixtures": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/fixture"
+      }
+    },
+    "materials": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/material"
+      }
+    },
+    "chains": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/chain"
+      }
+    },
+    "mutations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1024,
+      "items": {
+        "$ref": "#/$defs/mutation"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "maxLength": 71,
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "base64url": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4194304,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "fixture": {
+      "type": "object",
+      "required": [
+        "fixtureId",
+        "kind",
+        "mediaType",
+        "digest",
+        "size",
+        "contentBase64url"
+      ],
+      "properties": {
+        "fixtureId": {
+          "$ref": "#/$defs/identifier"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "oci-config",
+            "oci-layer",
+            "oci-blob-stream",
+            "oci-manifest",
+            "spdx-document",
+            "slsa-provenance",
+            "vulnerability-report",
+            "malware-report",
+            "secret-scan-report",
+            "scan-completeness-report",
+        "license-report",
+        "supply-chain-request",
+        "supply-chain-result",
+        "capability-authorization-proof",
+            "capability-not-applicable-certification",
+            "capability-dispatch-request",
+            "capability-dispatch-receipt",
+            "capability-dispatch-result",
+            "capability-evidence",
+            "capability-verification-request",
+            "capability-accepted-result"
+          ]
+        },
+        "mediaType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+/-]+$"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        },
+        "contentBase64url": {
+          "$ref": "#/$defs/base64url"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "material": {
+      "type": "object",
+      "required": [
+        "materialId",
+        "kind",
+        "uri",
+        "mediaType",
+        "digest",
+        "size",
+        "contentBase64url"
+      ],
+      "properties": {
+        "materialId": {
+          "$ref": "#/$defs/identifier"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "source-commit-and-tree",
+            "builder",
+            "workflow",
+            "toolchain",
+            "component-lock",
+            "renderer-release",
+            "public-skill",
+            "private-skill",
+            "policy-binding",
+            "customization",
+            "test-evidence"
+          ]
+        },
+        "uri": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "mediaType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&^_.+/-]+$"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        },
+        "contentBase64url": {
+          "$ref": "#/$defs/base64url"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "chain": {
+      "type": "object",
+      "required": [
+        "chainId",
+        "documents"
+      ],
+      "properties": {
+        "chainId": {
+          "$ref": "#/$defs/identifier"
+        },
+        "documents": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "required": [
+              "role",
+              "fixtureId"
+            ],
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": [
+                  "dispatch-authorization-proof",
+                  "dispatch-request",
+                  "dispatch-receipt",
+                  "dispatch-result",
+                  "required-capability-decision-proof",
+                  "denied-sentinel-decision-proof",
+                  "not-applicable-certification",
+                  "capability-evidence",
+                  "verification-request",
+                  "accepted-result"
+                ]
+              },
+              "fixtureId": {
+                "$ref": "#/$defs/identifier"
+              }
+            },
+            "additionalProperties": false,
+            "unevaluatedProperties": false
+          }
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "mutation": {
+      "type": "object",
+      "required": [
+        "mutationId",
+        "baseFixtureId",
+        "rejectingOperation",
+        "expectedProblemCode",
+        "mutatedFixture"
+      ],
+      "properties": {
+        "mutationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Z][A-Z0-9-]*-[0-9]{3}-[a-z0-9-]+$"
+        },
+        "baseFixtureId": {
+          "$ref": "#/$defs/identifier"
+        },
+        "chainRole": {
+          "type": "string",
+          "enum": [
+            "dispatch-authorization-proof",
+            "dispatch-request",
+            "dispatch-receipt",
+            "dispatch-result",
+            "required-capability-decision-proof",
+            "denied-sentinel-decision-proof",
+            "not-applicable-certification",
+            "capability-evidence",
+            "verification-request",
+            "accepted-result"
+          ]
+        },
+        "chainId": {
+          "$ref": "#/$defs/identifier"
+        },
+        "rejectingOperation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^bytedesk\\.port\\.[a-z0-9-]+/1#[a-z][a-z0-9-]*$"
+        },
+        "expectedProblemCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "mutatedFixture": {
+          "$ref": "#/$defs/fixture"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "chainRole"
+            ]
+          },
+          "then": {
+            "required": [
+              "chainId"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "chainId"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "chainId"
+            ]
+          },
+          "then": {
+            "required": [
+              "chainRole"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  }
+}

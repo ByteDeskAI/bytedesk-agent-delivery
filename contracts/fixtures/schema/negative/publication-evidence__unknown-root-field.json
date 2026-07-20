@@ -1,0 +1,62 @@
+{
+  "contract": "bytedesk.publication-evidence/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/publication-evidence/1.0.0",
+    "digest": "sha256:faf06f8d54c87fa7eeeb071b1ef6ce09a5a1036a6a9081aaea32d1714a9d28b3"
+  },
+  "idempotencyKey": "publish-release-status-01",
+  "requestDigest": "sha256:1000000000000000000000000000000000000000000000000000000000000001",
+  "authorizationContextDigest": "sha256:6000000000000000000000000000000000000000000000000000000000000006",
+  "repository": "registry.example/product/status",
+  "rootDescriptor": {
+    "repository": "registry.example/product/status",
+    "digest": "sha256:8d794844780203e464a07daad14c0f31a098c9dc0c2317d40c4e0a9ff4bdc5b4",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "artifactType": "application/vnd.bytedesk.agent.release-status.v1+json",
+    "size": 512,
+    "subjectDigest": null,
+    "annotationsDigest": null
+  },
+  "configDescriptor": {
+    "digest": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "mediaType": "application/vnd.oci.empty.v1+json",
+    "size": 2
+  },
+  "layerDescriptors": [
+    {
+      "digest": "sha256:2000000000000000000000000000000000000000000000000000000000000002",
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "size": 256
+    }
+  ],
+  "graphDigest": "sha256:3000000000000000000000000000000000000000000000000000000000000003",
+  "artifactType": "application/vnd.bytedesk.agent.release-status.v1+json",
+  "subject": null,
+  "registryIdentity": "spiffe://registry.example/workload/oci",
+  "registryIdentityDigest": "sha256:4000000000000000000000000000000000000000000000000000000000000004",
+  "registryRequestId": "registry-request-release-status-01",
+  "committedDescriptor": {
+    "repository": "registry.example/product/status",
+    "digest": "sha256:8d794844780203e464a07daad14c0f31a098c9dc0c2317d40c4e0a9ff4bdc5b4",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "artifactType": "application/vnd.bytedesk.agent.release-status.v1+json",
+    "size": 512,
+    "subjectDigest": null,
+    "annotationsDigest": null
+  },
+  "committedRawDigest": "sha256:8d794844780203e464a07daad14c0f31a098c9dc0c2317d40c4e0a9ff4bdc5b4",
+  "readbackDescriptor": {
+    "repository": "registry.example/product/status",
+    "digest": "sha256:8d794844780203e464a07daad14c0f31a098c9dc0c2317d40c4e0a9ff4bdc5b4",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "artifactType": "application/vnd.bytedesk.agent.release-status.v1+json",
+    "size": 512,
+    "subjectDigest": null,
+    "annotationsDigest": null
+  },
+  "readbackRawDigest": "sha256:8d794844780203e464a07daad14c0f31a098c9dc0c2317d40c4e0a9ff4bdc5b4",
+  "publishedAt": "2026-07-17T12:00:02Z",
+  "readbackAt": "2026-07-17T12:00:03Z",
+  "evidenceDigest": "sha256:5000000000000000000000000000000000000000000000000000000000000005",
+  "force": true
+}

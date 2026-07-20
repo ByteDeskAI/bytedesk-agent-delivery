@@ -1,0 +1,61 @@
+{
+  "contract": "bytedesk.skill-approval/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/skill-approval/1.0.0",
+    "digest": "sha256:f963d1810f8010bc0d1ae3110620a01d451e37a86eaea653b567f3eddb0a0e5f"
+  },
+  "packageId": "analysis-helper",
+  "skill": {
+    "repository": "registry.example/consumer/skills",
+    "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "mediaType": "application/vnd.bytedesk.agent.skill.v1+json",
+    "size": 4096,
+    "trustPolicy": {
+      "id": "consumer-private-skill-v1",
+      "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  },
+  "consumerId": "consumer-01",
+  "subjectId": "subject-01",
+  "installationId": "installation-01",
+  "targetClass": "hosted-hermes",
+  "useScope": {
+    "target": {
+      "kind": "target_class",
+      "targetClass": "hosted-hermes",
+      "targetClassDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "harnesses": [
+      "hermes"
+    ],
+    "operations": [
+      "compile",
+      "activate",
+      "recover",
+      "runtime_execute"
+    ]
+  },
+  "evidenceDigests": {
+    "scan": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "sbom": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "license": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "evaluation": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "riskDecision": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+  },
+  "approvalPolicy": {
+    "id": "consumer-skill-approval-v1",
+    "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "approverClass": "security-reviewer",
+  "decisionReference": "approval://consumer-01/skills/analysis-helper/1",
+  "issuedAt": "2026-07-17T12:00:00Z",
+  "expiresAt": "2026-08-17T12:00:00Z",
+  "revocation": {
+    "status": "active"
+  },
+  "signerPolicy": {
+    "id": "consumer-authority-v1",
+    "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "unknownAuthority": true
+}

@@ -1,0 +1,31 @@
+{
+  "contract": "bytedesk.region-fence/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/region-fence/1.0.0", "digest": "sha256:7dd201332b99965cff6f593a6b73629f9b2ed2268e4f44abf90b9e0a1b283f3a" },
+  "operationId": "region-fence-01",
+  "sourceRegion": "us-east-1",
+  "recoveryRegion": "us-west-2",
+  "previousEpoch": 8,
+  "newEpoch": 9,
+  "precondition": { "kind": "match", "revision": 8, "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+  "oldWriterProof": {
+    "ingressClosed": true,
+    "workloadRolesRevoked": false,
+    "storageWritesDenied": true,
+    "databaseWritesDenied": true,
+    "endpointProbeDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "recoveryPositions": {
+    "application": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "identity": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "outbox": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "inbox": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "graphVerification": { "repository": "registry.example/product/evidence", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "mediaType": "application/json", "size": 1024, "trustPolicy": { "id": "product-release-v1", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333" } },
+  "approvers": [
+    { "identity": "operator-a", "decisionReferenceDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444" },
+    { "identity": "operator-b", "decisionReferenceDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555" }
+  ],
+  "decision": "promote_recovery_region",
+  "issuedAt": "2026-07-17T12:00:00Z",
+  "trustPolicy": { "id": "product-release-v1", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333" }
+}

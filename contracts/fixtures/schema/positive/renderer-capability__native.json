@@ -1,0 +1,92 @@
+{
+  "contract": "bytedesk.renderer-capability/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-capability/1.0.0",
+    "digest": "sha256:353f0d13f2aa207d5689dc54d441a57a5498eaf136cb4668b6ce9cec31e17e73"
+  },
+  "harnessId": "native",
+  "rendererId": "native",
+  "rendererVersion": "1.0.0",
+  "rendererContractVersion": "1.0.0",
+  "agentSpecVersion": "26.1.2",
+  "supportedHarnessVersions": [
+    "26.1.2"
+  ],
+  "supportedPlatforms": [
+    "linux/amd64",
+    "linux/arm64"
+  ],
+  "supportedScopes": [
+    "public",
+    "private"
+  ],
+  "activationMode": "not_applicable",
+  "semanticRegistry": {
+    "repository": "registry.example/product/contracts",
+    "digest": "sha256:1e46a6b38982865be433f65f65cc8a8b5509772c74cc8884335abf723a43c7ec",
+    "mediaType": "application/vnd.bytedesk.agent-spec-semantics.v1+json",
+    "size": 402,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:a80850c38ad05f095146c0075910ced54b678a2975bb92611a83b810292de757"
+    }
+  },
+  "semanticCount": 2,
+  "semantics": [
+    {
+      "semanticId": "agentspec.instructions",
+      "scopes": [
+        "public",
+        "private"
+      ],
+      "status": "exact",
+      "diagnosticCodes": [],
+      "outputRoles": [
+        "agent-spec"
+      ],
+      "approvalRequired": false
+    },
+    {
+      "semanticId": "agentspec.skills",
+      "scopes": [
+        "public",
+        "private"
+      ],
+      "status": "exact",
+      "diagnosticCodes": [],
+      "outputRoles": [
+        "agent-spec-files"
+      ],
+      "approvalRequired": false
+    }
+  ],
+  "coverageDigest": "sha256:2b98c968075a101dd8d845009cae1d72354d7bf7b550e4ba6ef0c36c1b175408",
+  "schemas": {
+    "inputParameters": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-input-parameters/1.0.0",
+      "digest": "sha256:c3bcead71c99b53143f48046ca9ff9c4448717e17f8504692e4a7a5f0754470c"
+    },
+    "harnessConfiguration": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/harness-configuration/1.0.0",
+      "digest": "sha256:d12717fef52ade60c56a3d8389991d2a927948e21d753c66726defb49bbf3b31"
+    },
+    "compatibilityResult": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/renderer-compatibility-result/1.0.0",
+      "digest": "sha256:a2f39d702cd9b149bda5a33439026d15fddf86c18c3a6f9486d4395ceb6af961"
+    },
+    "renderManifest": {
+      "id": "https://schemas.bytedesk.ai/agent-delivery/v1/render-manifest/1.0.0",
+      "digest": "sha256:46ad38bfe2d711b45213b6eb520c5fbd9ea306976417c52264a64a76aa037151"
+    }
+  },
+  "publishedAt": "2026-07-17T12:00:00Z",
+  "trustPolicy": {
+    "id": "product-release-v1",
+    "digest": "sha256:a80850c38ad05f095146c0075910ced54b678a2975bb92611a83b810292de757"
+  },
+  "source": {
+    "repository": "https://github.com/ByteDeskAI/bytedesk-agent-delivery",
+    "commit": "1a0bee2ba92cec8f2e5c9932b1541545866ac93e",
+    "treeDigest": "sha256:cc17ff0a64e6ed9f8f70f648f000e1b87a5969fcfd1dfdace4fe91adab09fb0d"
+  }
+}

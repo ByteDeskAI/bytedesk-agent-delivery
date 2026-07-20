@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/transition-model/1.0.0",
+  "profile": "bytedesk.rollout-lifecycle/1",
+  "version": 1,
+  "initialStates": ["pending"],
+  "states": [
+    {"name": "pending", "terminal": false},
+    {"name": "staging", "terminal": false},
+    {"name": "staged", "terminal": false},
+    {"name": "preflight_passed", "terminal": false},
+    {"name": "canary_running", "terminal": false},
+    {"name": "canary_passed", "terminal": false},
+    {"name": "activation_authorized", "terminal": false},
+    {"name": "activating", "terminal": false},
+    {"name": "verifying_active", "terminal": false},
+    {"name": "provisional_active", "terminal": false},
+    {"name": "promoted", "terminal": true},
+    {"name": "cancelled", "terminal": true},
+    {"name": "superseded", "terminal": true},
+    {"name": "failed_pre_activation", "terminal": true},
+    {"name": "recovery_required", "terminal": true}
+  ],
+  "transitions": [
+    {"name": "begin_staging", "from": ["pending"], "to": "staging", "actor": "promotion-coordinator", "guard": "prepared_candidate_and_desired_revision_current", "cas": "match", "effects": ["append_transition", "enqueue_host_stage"], "event": "rollout.staging.v1", "retryable": false},
+    {"name": "stage_complete", "from": ["staging"], "to": "staged", "actor": "promotion-coordinator", "guard": "fresh_matching_host_stage_evidence", "cas": "match", "effects": ["append_transition", "append_host_evidence"], "event": "rollout.staged.v1", "retryable": false},
+    {"name": "preflight_complete", "from": ["staged"], "to": "preflight_passed", "actor": "promotion-coordinator", "guard": "fresh_matching_technical_preflight_evidence", "cas": "match", "effects": ["append_transition", "append_host_evidence"], "event": "rollout.preflight-passed.v1", "retryable": false},
+    {"name": "isolated_begin_canary", "from": ["preflight_passed"], "to": "canary_running", "actor": "promotion-coordinator", "guard": "activation_mode_isolated_and_fresh_canary_plan_published", "cas": "match", "effects": ["append_transition", "issue_canary_challenge"], "event": "rollout.canary-running.v1", "retryable": false},
+    {"name": "isolated_canary_pass", "from": ["canary_running"], "to": "canary_passed", "actor": "promotion-coordinator", "guard": "activation_mode_isolated_and_fresh_technical_and_capability_evidence_match", "cas": "match", "effects": ["append_transition", "append_canary_evidence"], "event": "rollout.canary-passed.v1", "retryable": false},
+    {"name": "isolated_authorize_activation", "from": ["canary_passed"], "to": "activation_authorized", "actor": "promotion-coordinator", "guard": "activation_mode_isolated_and_authority_policy_evidence_current", "cas": "match", "effects": ["append_transition", "append_activation_authority"], "event": "rollout.activation-authorized.v1", "retryable": false},
+    {"name": "guarded_authorize_activation", "from": ["preflight_passed"], "to": "activation_authorized", "actor": "promotion-coordinator", "guard": "activation_mode_guarded_in_place_and_authority_policy_evidence_current", "cas": "match", "effects": ["append_transition", "append_activation_authority"], "event": "rollout.activation-authorized.v1", "retryable": false},
+    {"name": "begin_activation", "from": ["activation_authorized"], "to": "activating", "actor": "promotion-coordinator", "guard": "activation_authority_fresh_and_host_attempt_current", "cas": "match", "effects": ["append_transition", "enqueue_host_switch"], "event": "rollout.activating.v1", "retryable": false},
+    {"name": "isolated_switch_complete", "from": ["activating"], "to": "verifying_active", "actor": "promotion-coordinator", "guard": "activation_mode_isolated_and_switch_marker_and_readback_match", "cas": "match", "effects": ["append_transition", "append_switch_evidence"], "event": "rollout.verifying-active.v1", "retryable": false},
+    {"name": "isolated_promote", "from": ["verifying_active"], "to": "promoted", "actor": "promotion-coordinator", "guard": "activation_mode_isolated_and_active_readback_matches_all_evidence", "cas": "match", "effects": ["append_transition", "atomically_replace_active_release", "clear_pending_rollout", "record_predecessor"], "event": "rollout.promoted.v1", "retryable": false},
+    {"name": "guarded_switch_complete", "from": ["activating"], "to": "provisional_active", "actor": "promotion-coordinator", "guard": "activation_mode_guarded_in_place_and_switch_marker_and_readback_match", "cas": "match", "effects": ["append_transition", "append_switch_evidence", "retain_predecessor"], "event": "rollout.provisional-active.v1", "retryable": false},
+    {"name": "guarded_begin_canary", "from": ["provisional_active"], "to": "canary_running", "actor": "promotion-coordinator", "guard": "activation_mode_guarded_in_place_and_fresh_canary_plan_published", "cas": "match", "effects": ["append_transition", "issue_canary_challenge"], "event": "rollout.canary-running.v1", "retryable": false},
+    {"name": "guarded_canary_pass", "from": ["canary_running"], "to": "canary_passed", "actor": "promotion-coordinator", "guard": "activation_mode_guarded_in_place_and_fresh_technical_and_capability_evidence_match", "cas": "match", "effects": ["append_transition", "append_canary_evidence"], "event": "rollout.canary-passed.v1", "retryable": false},
+    {"name": "guarded_promote", "from": ["canary_passed"], "to": "promoted", "actor": "promotion-coordinator", "guard": "activation_mode_guarded_in_place_and_provisional_readback_matches_all_evidence", "cas": "match", "effects": ["append_transition", "atomically_replace_active_release", "clear_pending_rollout", "record_predecessor"], "event": "rollout.promoted.v1", "retryable": false},
+    {"name": "cancel_before_authorization", "from": ["pending", "staging", "staged", "preflight_passed", "canary_running", "canary_passed"], "to": "cancelled", "actor": "promotion-coordinator", "guard": "consumer_cancel_authorized_and_activation_not_authorized", "cas": "match", "effects": ["append_transition", "cancel_host_attempt", "retain_predecessor"], "event": "rollout.cancelled.v1", "retryable": false},
+    {"name": "supersede_before_authorization", "from": ["pending", "staging", "staged", "preflight_passed", "canary_running", "canary_passed"], "to": "superseded", "actor": "promotion-coordinator", "guard": "newer_desired_revision_selected_and_activation_not_authorized", "cas": "match", "effects": ["append_transition", "cancel_host_attempt", "link_replacement_rollout", "retain_predecessor"], "event": "rollout.superseded.v1", "retryable": false},
+    {"name": "fail_before_switch", "from": ["pending", "staging", "staged", "preflight_passed", "canary_running", "canary_passed", "activation_authorized", "activating"], "to": "failed_pre_activation", "actor": "promotion-coordinator", "guard": "failure_confirmed_and_physical_switch_not_committed", "cas": "match", "effects": ["append_transition", "append_failure_evidence", "retain_predecessor"], "event": "rollout.failed-pre-activation.v1", "retryable": false},
+    {"name": "fail_after_switch", "from": ["activating", "provisional_active", "verifying_active", "canary_running", "canary_passed"], "to": "recovery_required", "actor": "promotion-coordinator", "guard": "physical_switch_committed_and_promotion_not_committed", "cas": "match", "effects": ["append_transition", "append_failure_evidence", "retain_recovery_source", "enqueue_forward_recovery_planning"], "event": "rollout.recovery-required.v1", "retryable": false}
+  ]
+}

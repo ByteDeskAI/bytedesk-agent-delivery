@@ -1,0 +1,815 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/port-type-catalog/1.0.0",
+  "title": "Closed offline downstream port type and contract catalog",
+  "type": "object",
+  "required": [
+    "$schema",
+    "profile",
+    "version",
+    "registry",
+    "schemaDialect",
+    "wireProfile",
+    "schemaSources",
+    "baseTypes",
+    "types",
+    "contracts",
+    "fixtures"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://schemas.bytedesk.ai/agent-delivery/v1/port-type-catalog/1.0.0"
+    },
+    "profile": {
+      "const": "bytedesk.port-type-catalog/1"
+    },
+    "version": {
+      "const": 1
+    },
+    "registry": {
+      "$ref": "#/$defs/registryBinding"
+    },
+    "schemaDialect": {
+      "const": "https://json-schema.org/draft/2020-12/schema"
+    },
+    "wireProfile": {
+      "$ref": "#/$defs/wireProfile"
+    },
+    "schemaSources": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/schemaSource"
+      }
+    },
+    "baseTypes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/baseType"
+      }
+    },
+    "types": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/fieldType"
+      }
+    },
+    "contracts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/contract"
+      }
+    },
+    "fixtures": {
+      "$ref": "#/$defs/fixtureBinding"
+    }
+  },
+  "$defs": {
+    "jsonValue": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "string",
+          "maxLength": 4194304
+        },
+        {
+          "type": "array",
+          "maxItems": 1024,
+          "items": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        },
+        {
+          "type": "object",
+          "maxProperties": 1024,
+          "propertyNames": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        }
+      ]
+    },
+    "schemaNode": {
+      "oneOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/$defs/schemaObject"
+        }
+      ]
+    },
+    "schemaObject": {
+      "type": "object",
+      "maxProperties": 24,
+      "properties": {
+        "$schema": {
+          "const": "https://json-schema.org/draft/2020-12/schema"
+        },
+        "$id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "pattern": "^https://schemas\\.bytedesk\\.ai/agent-delivery/v1/ports/(?:types|contracts)/[a-z0-9/-]+/1\\.0\\.0$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "array",
+            "boolean",
+            "integer",
+            "null",
+            "object",
+            "string"
+          ]
+        },
+        "required": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "properties": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/schemaNode"
+          }
+        },
+        "additionalProperties": {
+          "type": "boolean"
+        },
+        "unevaluatedProperties": {
+          "type": "boolean"
+        },
+        "allOf": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/schemaNode"
+          }
+        },
+        "oneOf": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/schemaNode"
+          }
+        },
+        "const": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "enum": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        },
+        "items": {
+          "$ref": "#/$defs/schemaNode"
+        },
+        "minItems": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxItems": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "minLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "minimum": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "maximum": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "pattern": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "date-time",
+            "uri"
+          ]
+        },
+        "contentEncoding": {
+          "const": "base64url-no-padding"
+        }
+      },
+      "patternProperties": {
+        "^\\$ref$": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "embeddedSchema": {
+      "allOf": [
+        {
+          "type": "object",
+          "maxProperties": 24,
+          "required": [
+            "$schema",
+            "$id"
+          ],
+          "properties": {
+            "$schema": {
+              "const": "https://json-schema.org/draft/2020-12/schema"
+            },
+            "$id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^https://schemas\\.bytedesk\\.ai/agent-delivery/v1/ports/(?:types|contracts)/[a-z0-9/-]+/1\\.0\\.0$"
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/schemaNode"
+        }
+      ]
+    },
+    "keyword": {
+      "type": "string",
+      "enum": [
+        "additionalProperties",
+        "contentEncoding",
+        "enum",
+        "format",
+        "maxItems",
+        "maxLength",
+        "minItems",
+        "minLength",
+        "not",
+        "oneOf",
+        "pattern",
+        "required",
+        "type"
+      ]
+    },
+    "testFixture": {
+      "type": "object",
+      "required": [
+        "valid",
+        "invalid"
+      ],
+      "properties": {
+        "valid": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "invalid": {
+          "type": "object",
+          "required": [
+            "instance",
+            "expectedKeyword"
+          ],
+          "properties": {
+            "instance": {
+              "$ref": "#/$defs/jsonValue"
+            },
+            "expectedKeyword": {
+              "type": "string",
+              "enum": [
+                "additionalProperties",
+                "contentEncoding",
+                "enum",
+                "format",
+                "maxItems",
+                "maxLength",
+                "minItems",
+                "minLength",
+                "not",
+                "oneOf",
+                "pattern",
+                "required",
+                "type"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "registryBinding": {
+      "type": "object",
+      "required": [
+        "path",
+        "digest"
+      ],
+      "properties": {
+        "path": {
+          "const": "contracts/ports/v1/port-registry.json"
+        },
+        "digest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "fixtureBinding": {
+      "type": "object",
+      "required": [
+        "profile",
+        "path",
+        "digest"
+      ],
+      "properties": {
+        "profile": {
+          "const": "bytedesk.port-contract-fixtures/1"
+        },
+        "path": {
+          "const": "contracts/ports/v1/contract-fixtures.json"
+        },
+        "digest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "wireProfile": {
+      "type": "object",
+      "required": [
+        "jsonEncoding",
+        "unknownFields",
+        "nullability",
+        "array",
+        "string",
+        "bytes",
+        "integer"
+      ],
+      "properties": {
+        "jsonEncoding": {
+          "const": "utf-8-rfc8785-jcs-json"
+        },
+        "unknownFields": {
+          "const": "reject"
+        },
+        "nullability": {
+          "const": "only-explicit-nullable-types"
+        },
+        "array": {
+          "type": "object",
+          "required": [
+            "minItems",
+            "maxItems"
+          ],
+          "properties": {
+            "minItems": {
+              "const": 0
+            },
+            "maxItems": {
+              "const": 1024
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        "string": {
+          "type": "object",
+          "required": [
+            "maxCodePoints"
+          ],
+          "properties": {
+            "maxCodePoints": {
+              "const": 4096
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        "bytes": {
+          "type": "object",
+          "required": [
+            "encoding",
+            "maxDecodedBytes",
+            "maxEncodedCharacters"
+          ],
+          "properties": {
+            "encoding": {
+              "const": "base64url-no-padding"
+            },
+            "maxDecodedBytes": {
+              "const": 4194304
+            },
+            "maxEncodedCharacters": {
+              "const": 5592406
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        "integer": {
+          "type": "object",
+          "required": [
+            "minimum",
+            "maximum"
+          ],
+          "properties": {
+            "minimum": {
+              "const": 0
+            },
+            "maximum": {
+              "const": 9007199254740991
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "schemaSource": {
+      "type": "object",
+      "required": [
+        "schemaId",
+        "schemaDigest",
+        "repositoryPath",
+        "mediaType"
+      ],
+      "properties": {
+        "schemaId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "pattern": "^https://schemas\\.bytedesk\\.ai/agent-delivery/v1/[a-z0-9-]+/1\\.0\\.0$"
+        },
+        "schemaDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        },
+        "repositoryPath": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^contracts/schemas/v1/[a-z0-9-]+\\.schema\\.json$"
+        },
+        "mediaType": {
+          "const": "application/schema+json"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "source": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "inline"
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "schemaId",
+            "schemaDigest",
+            "jsonPointer"
+          ],
+          "properties": {
+            "kind": {
+              "const": "schema-target"
+            },
+            "schemaId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^https://schemas\\.bytedesk\\.ai/agent-delivery/v1/[a-z0-9-]+/1\\.0\\.0$"
+            },
+            "schemaDigest": {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+            },
+            "jsonPointer": {
+              "type": "string",
+              "maxLength": 2048,
+              "pattern": "^(?:|/)"
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "repositoryPath",
+            "documentDigest",
+            "arrayPointer",
+            "valuePointer"
+          ],
+          "properties": {
+            "kind": {
+              "const": "derived-enum"
+            },
+            "repositoryPath": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024,
+              "pattern": "^(?:contracts|docs)/[^\\\\\\x00-\\x1f\\x7f]+$"
+            },
+            "documentDigest": {
+              "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+            },
+            "arrayPointer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^/"
+            },
+            "valuePointer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^/"
+            }
+          },
+          "additionalProperties": false,
+          "unevaluatedProperties": false
+        }
+      ]
+    },
+    "usageKind": {
+      "type": "string",
+      "enum": [
+        "array",
+        "boolean",
+        "bytes",
+        "digest",
+        "digest-or-null",
+        "identifier",
+        "integer",
+        "object",
+        "object-or-null",
+        "string",
+        "string-or-null",
+        "timestamp"
+      ]
+    },
+    "baseType": {
+      "type": "object",
+      "required": [
+        "schemaRef",
+        "usageKinds",
+        "source",
+        "schema",
+        "schemaDigest",
+        "fixture"
+      ],
+      "properties": {
+        "schemaRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "usageKinds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/usageKind"
+          }
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        },
+        "schema": {
+          "$ref": "#/$defs/embeddedSchema"
+        },
+        "schemaDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        },
+        "fixture": {
+          "$ref": "#/$defs/testFixture"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "fieldType": {
+      "type": "object",
+      "required": [
+        "typeId",
+        "portId",
+        "operationId",
+        "direction",
+        "fieldName",
+        "baseSchemaRef",
+        "refinement",
+        "schema",
+        "schemaDigest",
+        "fixture"
+      ],
+      "properties": {
+        "typeId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^bytedesk\\.port-field\\.[a-z0-9.-]+/1$"
+        },
+        "portId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^bytedesk\\.port\\.[a-z0-9-]+/1$"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "request",
+            "result"
+          ]
+        },
+        "fieldName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-z][A-Za-z0-9]*$"
+        },
+        "baseSchemaRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "refinement": {
+          "type": "string",
+          "enum": [
+            "audience-token",
+            "base",
+            "bounded-array",
+            "byte-limit-4mib",
+            "byte-limit-64mib",
+            "consumer-capability-verifier-actor",
+            "deadline-milliseconds",
+            "enum",
+            "exact-array-contract",
+            "filesystem-path",
+            "immutable-commit",
+            "media-type",
+            "nonce",
+            "oci-repository",
+            "opaque-token",
+            "pagination-limit",
+            "poll-maximum-seconds",
+            "positive-counter",
+            "reason-code",
+            "repository-uri",
+            "revision-token",
+            "semantic-version",
+            "timeout-seconds",
+            "uri",
+            "zero-based-cursor"
+          ]
+        },
+        "schema": {
+          "$ref": "#/$defs/embeddedSchema"
+        },
+        "schemaDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        },
+        "fixture": {
+          "$ref": "#/$defs/testFixture"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "contract": {
+      "type": "object",
+      "required": [
+        "contractId",
+        "portId",
+        "operationId",
+        "direction",
+        "schemaId",
+        "schema",
+        "schemaDigest"
+      ],
+      "properties": {
+        "contractId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^bytedesk\\.port\\.[a-z0-9-]+\\.[a-z0-9-]+\\.(?:request|result)/1$"
+        },
+        "portId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^bytedesk\\.port\\.[a-z0-9-]+/1$"
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "request",
+            "result"
+          ]
+        },
+        "schemaId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "pattern": "^https://schemas\\.bytedesk\\.ai/agent-delivery/v1/ports/contracts/[a-z0-9/-]+/1\\.0\\.0$"
+        },
+        "schema": {
+          "$ref": "#/$defs/embeddedSchema"
+        },
+        "schemaDigest": {
+          "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

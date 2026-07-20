@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/verification-result/1.0.0",
+  "title": "Exact graph verification result",
+  "type": "object",
+  "required": ["contract", "schema", "verificationId", "subject", "policy", "evaluatedAt", "outcome", "reasonCodes", "evidenceDigests"],
+  "properties": {
+    "contract": { "const": "bytedesk.verification-result/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "verificationId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "subject": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/artifactDescriptor" },
+    "policy": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/trustPolicyRef" },
+    "evaluatedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" },
+    "outcome": { "type": "string", "enum": ["permitted", "denied"] },
+    "reasonCodes": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "maxLength": 128,
+        "enum": [
+          "artifact_unavailable",
+          "artifact_withdrawn",
+          "archive_invalid",
+          "allowlist_mismatch",
+          "attestation_invalid",
+          "authority_invalid",
+          "builder_revoked",
+          "builder_untrusted",
+          "canary_invalid",
+          "compatibility_denied",
+          "consumer_scope_mismatch",
+          "content_revoked",
+          "digest_mismatch",
+          "executed_distribution_mismatch",
+          "evidence_invalid",
+          "evidence_missing",
+          "evidence_stale",
+          "evaluation_denied",
+          "freshness_expired",
+          "graph_limit_exceeded",
+          "identity_mismatch",
+          "key_revoked",
+          "license_denied",
+          "malware_detected",
+          "media_type_mismatch",
+          "nonce_invalid",
+          "policy_denied",
+          "policy_expired",
+          "policy_not_yet_effective",
+          "policy_unavailable",
+          "predecessor_mismatch",
+          "provenance_invalid",
+          "provenance_unavailable",
+          "purpose_mismatch",
+          "readiness_denied",
+          "reference_unresolved",
+          "renderer_revoked",
+          "replay_denied",
+          "repository_mismatch",
+          "revocation_state_unavailable",
+          "sbom_invalid",
+          "sbom_unavailable",
+          "scan_incomplete",
+          "schema_invalid",
+          "schema_revoked",
+          "schema_unavailable",
+          "signature_invalid",
+          "signer_untrusted",
+          "secret_detected",
+          "skill_approval_invalid",
+          "subject_size_mismatch",
+          "target_scope_mismatch",
+          "trust_policy_mismatch",
+          "vulnerability_denied",
+          "workflow_revoked"
+        ]
+      },
+      "description": "Closed stable machine reasons. Missing or unavailable verification inputs are never encoded as policy_denied."
+    },
+    "evidenceDigests": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+      "description": "Exact digests of authenticated or independently integrity-verified evidence used to reach this result."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "outcome": { "const": "permitted" } },
+        "required": ["outcome"]
+      },
+      "then": {
+        "properties": { "reasonCodes": { "maxItems": 0 } }
+      },
+      "else": {
+        "properties": { "reasonCodes": { "minItems": 1 } }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false
+}

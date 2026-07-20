@@ -1,0 +1,38 @@
+{
+  "contract": "bytedesk.archive-root/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/archive-root/1.0.0",
+    "digest": "sha256:b1c98f8b91576d8e371b4bf68baac2b268a89b51534329a16fba4b6e43371a09"
+  },
+  "rootId": "archive-root-01",
+  "revision": 1,
+  "precondition": {
+    "kind": "absent"
+  },
+  "predecessor": {
+    "kind": "none"
+  },
+  "primaryRepository": "s3://agent-delivery-evidence-primary",
+  "recoveryRepository": "s3://agent-delivery-evidence-recovery",
+  "entries": [
+    {
+      "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "mediaType": "application/vnd.bytedesk.agent.receipt.v1+json",
+      "size": 4096,
+      "classification": "consumer-private",
+      "retentionReason": "audit",
+      "primaryReadbackDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "recoveryReadbackDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ],
+  "retention": {
+    "retainUntil": "2033-07-17T12:00:00Z",
+    "legalHold": false
+  },
+  "createdAt": "2026-07-17T12:00:00Z",
+  "trustPolicy": {
+    "id": "product-release-v1",
+    "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "unknownAuthority": true
+}

@@ -1,0 +1,40 @@
+{
+  "contract": "bytedesk.canary-evidence/1",
+  "schema": { "id": "https://schemas.bytedesk.ai/agent-delivery/v1/canary-evidence/1.0.0", "digest": "sha256:5eb14e112b0176232119f753eac423d615796103f780e4e08afc0f7b3af76af9" },
+  "evidenceId": "canary-evidence-capability-01",
+  "actor": "consumer_capability_verifier",
+  "rolloutId": "rollout-01",
+  "planDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "nonce": "nonce_0123456789abcdef",
+  "candidateDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "desiredRevisionDigest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "releaseDigest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "deploymentDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "consumerId": "consumer-01",
+  "subjectId": "subject-01",
+  "targetId": "target-01",
+  "slotId": "slot-01",
+  "generation": 1,
+  "authorityDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+  "policyDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+  "grantSetDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+  "workloadIdentityDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+  "actorIdentity": "spiffe://consumer.example/capability-verifier",
+  "actorVersion": "1.0.0",
+  "signerPolicy": { "id": "consumer-capability-evidence-v1", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" },
+  "capabilityDispatch": {
+    "requestDigest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+    "receiptDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checkProfileDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "authorizationDecisionDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "results": {
+    "mode": "required",
+    "workload_login": { "actual": "passed", "trace": { "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "classification": "restricted" } },
+    "permitted_capability": { "outcome": "decision", "decisionClass": "permitted", "decisionCode": "allow_policy_match", "authorizationDecisionProofDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    "denied_sentinel": { "outcome": "decision", "decisionClass": "policy_denied", "decisionCode": "sentinel_denied", "authorizationDecisionProofDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" }
+  },
+  "issuedAt": "2026-07-17T12:01:00Z",
+  "expiresAt": "2026-07-17T12:05:00Z",
+  "trace": { "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "classification": "restricted" }
+}

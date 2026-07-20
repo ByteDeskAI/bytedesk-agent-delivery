@@ -1,0 +1,1 @@
+{"annotations":{"ai.bytedesk.artifact.id":"hermes-renderer-1.0.0-linux/amd64"},"config":{"digest":"sha256:1644d41906b54ff3ae189277e7ba597f5d529d5d9ba3aa107119484b0e530de2","mediaType":"application/vnd.oci.image.config.v1+json","size":123},"layers":[],"mediaType":"application/vnd.oci.image.manifest.v1+json","schemaVersion":2}

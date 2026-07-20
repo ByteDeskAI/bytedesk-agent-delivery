@@ -1,0 +1,139 @@
+{
+  "contract": "bytedesk.deployment-receipt/1",
+  "schema": {
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/deployment-receipt/1.0.0",
+    "digest": "sha256:a32cd43cf6e566da849f23f0d0a8ef6cec269f60387b8d019bcdfece4c36bd1a"
+  },
+  "receiptId": "receipt-01",
+  "consumerId": "consumer-01",
+  "subjectId": "subject-01",
+  "installationId": "installation-01",
+  "targetId": "target-01",
+  "desiredRevision": 9,
+  "desiredRevisionDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "predecessor": {
+    "kind": "match",
+    "revision": 8,
+    "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "release": {
+    "repository": "registry.example/consumer/releases",
+    "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "mediaType": "application/vnd.bytedesk.agent.runtime-release.v1+json",
+    "size": 8192,
+    "trustPolicy": {
+      "id": "consumer-runtime-release-v1",
+      "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    }
+  },
+  "deployment": {
+    "repository": "registry.example/consumer/deployments",
+    "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "mediaType": "application/vnd.bytedesk.agent.consumer-deployment.v1+json",
+    "size": 8192,
+    "trustPolicy": {
+      "id": "consumer-deployment-v1",
+      "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    }
+  },
+  "source": {
+    "repository": "registry.example/agents/source",
+    "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "mediaType": "application/vnd.bytedesk.agent.source.v1+json",
+    "size": 4096,
+    "trustPolicy": {
+      "id": "public-source-v1",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  },
+  "binding": {
+    "repository": "registry.example/consumer/bindings",
+    "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "mediaType": "application/vnd.bytedesk.agent.binding.v1+json",
+    "size": 2048,
+    "trustPolicy": {
+      "id": "consumer-authority-v1",
+      "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  },
+  "skills": [],
+  "rendererRelease": {
+    "repository": "registry.example/product/renderers",
+    "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+    "mediaType": "application/vnd.bytedesk.agent.renderer-release.v1+json",
+    "size": 8192,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+    }
+  },
+  "executedDistribution": {
+    "repository": "registry.example/product/images",
+    "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "size": 2048,
+    "trustPolicy": {
+      "id": "product-release-v1",
+      "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+    }
+  },
+  "contractBundleDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+  "trustEvaluations": [
+    {
+      "repository": "registry.example/consumer/evidence",
+      "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "mediaType": "application/vnd.bytedesk.agent.policy.v1+json",
+      "size": 1024,
+      "trustPolicy": {
+        "id": "consumer-authority-v1",
+        "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+      }
+    }
+  ],
+  "authority": {
+    "repository": "registry.example/consumer/authority",
+    "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "mediaType": "application/vnd.bytedesk.agent.consumer-authority.v1+json",
+    "size": 2048,
+    "trustPolicy": {
+      "id": "consumer-authority-v1",
+      "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  },
+  "activationAuthorization": {
+    "repository": "registry.example/consumer/activation-authorizations",
+    "digest": "sha256:adadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadad",
+    "mediaType": "application/vnd.bytedesk.agent.activation-authorization.v1+json",
+    "size": 4096,
+    "trustPolicy": {
+      "id": "consumer-activation-authorization-v1",
+      "digest": "sha256:aeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeae"
+    }
+  },
+  "activationAuthorizationDigest": "sha256:afafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafaf",
+  "canaryEvidence": [
+    {
+      "repository": "registry.example/consumer/evidence",
+      "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "mediaType": "application/vnd.bytedesk.agent.canary-evidence.v1+json",
+      "size": 2048,
+      "trustPolicy": {
+        "id": "consumer-authority-v1",
+        "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+      }
+    },
+    {
+      "repository": "registry.example/consumer/evidence",
+      "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "mediaType": "application/vnd.bytedesk.agent.canary-evidence.v1+json",
+      "size": 2048,
+      "trustPolicy": {
+        "id": "consumer-authority-v1",
+        "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+      }
+    }
+  ],
+  "result": "promoted",
+  "recordedAt": "2026-07-17T12:05:00Z",
+  "unknownAuthority": true
+}

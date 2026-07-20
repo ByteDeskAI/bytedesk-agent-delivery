@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.bytedesk.ai/agent-delivery/v1/host-switch-journal-entry/1.0.0",
+  "title": "Digest-chained Host Reconciler switch journal entry",
+  "type": "object",
+  "required": ["contract", "schema", "consumerId", "targetId", "slotId", "slotGeneration", "sequence", "previousEntry", "attemptId", "fencingToken", "regionEpoch", "rolloutId", "targetRevision", "targetDigest", "deployableGraphDigest", "predecessorGeneration", "candidateGeneration", "releaseDigest", "phase", "recordedAt"],
+  "properties": {
+    "contract": { "const": "bytedesk.host-switch-journal-entry/1" },
+    "schema": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/schemaDescriptor" },
+    "consumerId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "slotId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "slotGeneration": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "sequence": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "previousEntry": {
+      "oneOf": [
+        { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "none" } }, "additionalProperties": false, "unevaluatedProperties": false },
+        { "type": "object", "required": ["kind", "digest"], "properties": { "kind": { "const": "digest" }, "digest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" } }, "additionalProperties": false, "unevaluatedProperties": false }
+      ]
+    },
+    "attemptId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "fencingToken": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "regionEpoch": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "rolloutId": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/identifier" },
+    "targetRevision": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "targetDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "deployableGraphDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Exact target-wide deployableGraphDigest from the activation authorization. It binds the complete canonical subject/deployment graph selected for this one atomic target switch; a per-subject deployment digest is not a journal identity."
+    },
+    "predecessorGeneration": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "candidateGeneration": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+    "releaseDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+    "activationAuthorizationDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Exact schema-authoritative authorizationDigest of the verified target-wide activation authorization. Required from activation_authorized onward."
+    },
+    "hostEligibilityVerificationEvidenceDigest": {
+      "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256",
+      "description": "Exact digest of the Host's fresh use-time permitted verification result for the activation release-eligibility closure. It is distinct from the Coordinator's historical releaseEligibilityVerificationEvidenceDigest and is required from activation_authorized onward."
+    },
+    "phase": { "type": "string", "enum": ["accepted", "artifact_verified", "staged", "preflight_passed", "candidate_ready_recorded", "activation_authorized", "switch_intent_durable", "switched", "readback_verified", "observation_accepted", "cleanup_eligible", "completed"] },
+    "switchMarker": {
+      "type": "object",
+      "required": ["predecessorGeneration", "predecessorReleaseDigest", "candidateGeneration", "candidateReleaseDigest", "activePointerDigest", "durableAt"],
+      "properties": {
+        "predecessorGeneration": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+        "predecessorReleaseDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "candidateGeneration": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/positiveSafeInteger" },
+        "candidateReleaseDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "activePointerDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "durableAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "readback": {
+      "type": "object",
+      "required": ["activePointerDigest", "processIdentityDigest", "fileInventoryDigest", "serving", "readbackAt"],
+      "properties": {
+        "activePointerDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "processIdentityDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "fileInventoryDigest": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/sha256" },
+        "serving": { "type": "boolean" },
+        "readbackAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+      },
+      "additionalProperties": false,
+      "unevaluatedProperties": false
+    },
+    "recordedAt": { "$ref": "https://schemas.bytedesk.ai/agent-delivery/v1/common/1.0.0#/$defs/timestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "phase": { "enum": ["switched", "readback_verified", "observation_accepted", "cleanup_eligible", "completed"] } }, "required": ["phase"] },
+      "then": { "required": ["switchMarker"] }
+    },
+    {
+      "if": { "properties": { "phase": { "enum": ["accepted", "artifact_verified", "staged", "preflight_passed", "candidate_ready_recorded", "activation_authorized", "switch_intent_durable"] } }, "required": ["phase"] },
+      "then": { "not": { "required": ["switchMarker"] } }
+    },
+    {
+      "if": { "properties": { "phase": { "enum": ["readback_verified", "observation_accepted", "cleanup_eligible", "completed"] } }, "required": ["phase"] },
+      "then": { "required": ["readback"] }
+    },
+    {
+      "if": { "properties": { "phase": { "enum": ["accepted", "artifact_verified", "staged", "preflight_passed", "candidate_ready_recorded", "activation_authorized", "switch_intent_durable", "switched"] } }, "required": ["phase"] },
+      "then": { "not": { "required": ["readback"] } }
+    },
+    {
+      "if": { "properties": { "phase": { "enum": ["activation_authorized", "switch_intent_durable", "switched", "readback_verified", "observation_accepted", "cleanup_eligible", "completed"] } }, "required": ["phase"] },
+      "then": { "required": ["activationAuthorizationDigest", "hostEligibilityVerificationEvidenceDigest"] }
+    },
+    {
+      "if": { "properties": { "phase": { "enum": ["accepted", "artifact_verified", "staged", "preflight_passed", "candidate_ready_recorded"] } }, "required": ["phase"] },
+      "then": {
+        "not": {
+          "anyOf": [
+            { "required": ["activationAuthorizationDigest"] },
+            { "required": ["hostEligibilityVerificationEvidenceDigest"] }
+          ]
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "unevaluatedProperties": false,
+  "description": "Host-private technical recovery evidence for one target-wide atomic activation. Entries are RFC 8785 bytes in a digest chain and bind both releaseDigest and deployableGraphDigest; candidate content cannot write them and they convey no promotion or consumer authority."
+}

@@ -1,0 +1,200 @@
+{
+  "$schema": "https://schemas.bytedesk.ai/agent-delivery/v1/downstream-conformance-plan/1.0.0",
+  "cases": [
+    {
+      "caseId": "PORT-003-valid-contract-sequence",
+      "category": "valid-contract-sequence",
+      "execution": {
+        "adapterExecutionRequired": true,
+        "semanticImplementationGolden": false,
+        "sourceCasePath": "contracts/ports/v1/conformance-cases.json"
+      },
+      "oracle": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "ownerTask": "AD-04",
+      "sourceCaseDigest": "sha256:7cebd3640f3f26d1586d2247c4a9f41a271b222c3bc7838f7a3894c1f42eec06",
+      "steps": [
+        {
+          "harness": {
+            "action": "assert-requirement",
+            "directiveId": "bytedesk.conformance.case/PORT-003-valid-contract-sequence/1",
+            "directives": [
+              {
+                "kind": "harness-profile",
+                "value": "official-valid-sequence"
+              },
+              {
+                "kind": "assertion",
+                "value": "strict request decoding"
+              },
+              {
+                "kind": "assertion",
+                "value": "exact schema and digest verification"
+              },
+              {
+                "kind": "assertion",
+                "value": "declared authentication and authorization"
+              },
+              {
+                "kind": "assertion",
+                "value": "declared idempotency behavior"
+              },
+              {
+                "kind": "assertion",
+                "value": "declared result contract"
+              }
+            ],
+            "faultPhase": "verification",
+            "protocolFixtureIds": [],
+            "protocolMutationIds": [],
+            "sourceFixtureDigest": "sha256:0f99cd6b0961526d0792795d99f6f96b981a3343a025150d6c9f9423b9b2a18a"
+          },
+          "operationId": "validate-agent-spec",
+          "oracle": {
+            "outcome": "pass",
+            "problemCode": null,
+            "sideEffectState": "none"
+          },
+          "portId": "bytedesk.port.agent-spec-validator/1",
+          "protocolProfileIds": [],
+          "request": {
+            "contractId": "bytedesk.port.agent-spec-validator.validate-agent-spec.request/1",
+            "fixture": {
+              "catalogPath": "contracts/ports/v1/contract-fixtures.json",
+              "contractId": "bytedesk.port.agent-spec-validator.validate-agent-spec.request/1",
+              "instanceDigest": "sha256:4c286fd880c6a7c294eac51cd86828456738da50cd871e0768b56a465642816b",
+              "selector": "valid",
+              "validity": "schema-valid-structural-sample"
+            },
+            "schemaDigest": "sha256:6cbfa94875458f26862167d5c8330b381e193468db880c15191a8b6e58101238",
+            "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/ports/contracts/agent-spec-validator/validate-agent-spec/request/1.0.0"
+          },
+          "result": {
+            "contractId": "bytedesk.port.agent-spec-validator.validate-agent-spec.result/1",
+            "fixture": {
+              "catalogPath": "contracts/ports/v1/contract-fixtures.json",
+              "contractId": "bytedesk.port.agent-spec-validator.validate-agent-spec.result/1",
+              "instanceDigest": "sha256:0883a0699b3adf576876e2e0de2620b4d1abda18d34d5de1c5aad5941884ab08",
+              "selector": "valid",
+              "validity": "schema-valid-structural-sample"
+            },
+            "schemaDigest": "sha256:5e6c57e74c532dc2aee58a5c59c342bbec35161df1068c3ac90a7532a15b5379",
+            "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/ports/contracts/agent-spec-validator/validate-agent-spec/result/1.0.0"
+          },
+          "role": "subject",
+          "stepId": "PORT-003-valid-contract-sequence/001"
+        }
+      ],
+      "suite": "downstream.renderer-contract.v1"
+    }
+  ],
+  "goldenInvocations": [
+    {
+      "harness": {
+        "action": "invoke",
+        "directiveId": "bytedesk.conformance.operation/bytedesk.port.agent-spec-validator/1#validate-agent-spec/1",
+        "faultPhase": "none"
+      },
+      "invocationId": "bytedesk.port.agent-spec-validator/1#validate-agent-spec:schema-golden/1",
+      "operationId": "validate-agent-spec",
+      "oracle": {
+        "outcome": "pass",
+        "problemCode": null,
+        "sideEffectState": "none"
+      },
+      "portId": "bytedesk.port.agent-spec-validator/1",
+      "protocolProfileIds": [],
+      "request": {
+        "contractId": "bytedesk.port.agent-spec-validator.validate-agent-spec.request/1",
+        "fixture": {
+          "catalogPath": "contracts/ports/v1/contract-fixtures.json",
+          "contractId": "bytedesk.port.agent-spec-validator.validate-agent-spec.request/1",
+          "instanceDigest": "sha256:4c286fd880c6a7c294eac51cd86828456738da50cd871e0768b56a465642816b",
+          "selector": "valid",
+          "validity": "schema-valid-structural-sample"
+        },
+        "schemaDigest": "sha256:6cbfa94875458f26862167d5c8330b381e193468db880c15191a8b6e58101238",
+        "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/ports/contracts/agent-spec-validator/validate-agent-spec/request/1.0.0"
+      },
+      "result": {
+        "contractId": "bytedesk.port.agent-spec-validator.validate-agent-spec.result/1",
+        "fixture": {
+          "catalogPath": "contracts/ports/v1/contract-fixtures.json",
+          "contractId": "bytedesk.port.agent-spec-validator.validate-agent-spec.result/1",
+          "instanceDigest": "sha256:0883a0699b3adf576876e2e0de2620b4d1abda18d34d5de1c5aad5941884ab08",
+          "selector": "valid",
+          "validity": "schema-valid-structural-sample"
+        },
+        "schemaDigest": "sha256:5e6c57e74c532dc2aee58a5c59c342bbec35161df1068c3ac90a7532a15b5379",
+        "schemaId": "https://schemas.bytedesk.ai/agent-delivery/v1/ports/contracts/agent-spec-validator/validate-agent-spec/result/1.0.0"
+      },
+      "semanticImplementationGolden": false
+    }
+  ],
+  "inputs": [
+    {
+      "digest": "sha256:ebe596a1fbb0c3c6ba02120d48ff6777613df8de95f2f401329d0dd3433383b8",
+      "path": "contracts/ports/v1/port-registry.json",
+      "profile": "bytedesk.downstream-port-registry/1",
+      "role": "port-registry"
+    },
+    {
+      "digest": "sha256:101d7cfdcbc6a38cec4ed49c034239b54c412faa7f86637235dc353628bd5bae",
+      "path": "contracts/ports/v1/type-catalog.json",
+      "profile": "bytedesk.port-type-catalog/1",
+      "role": "type-catalog"
+    },
+    {
+      "digest": "sha256:7ef13d0322803808d86aeab18e151e8276708e9e22b854eb5d181ae25db56617",
+      "path": "contracts/ports/v1/contract-fixtures.json",
+      "profile": "bytedesk.port-contract-fixtures/1",
+      "role": "contract-fixtures"
+    },
+    {
+      "digest": "sha256:f77c47cc9317f1d57213357839b65ae23a9eb22446751afceba5af13cf02d62d",
+      "path": "contracts/ports/v1/problem-catalog.json",
+      "profile": "bytedesk.problem-catalog/1",
+      "role": "problem-catalog"
+    },
+    {
+      "digest": "sha256:99bd890a26e035b09a6b6537f41f4f53337104cc42ff97240a5ad9f6337d4741",
+      "path": "contracts/ports/v1/action-catalog.json",
+      "profile": "bytedesk.action-catalog/1",
+      "role": "action-catalog"
+    },
+    {
+      "digest": "sha256:01bb5a810e9771c96e9d6c7fa96ecc62eefae11f781b44d3d5aee52b58e0356d",
+      "path": "contracts/events/v1/event-types.json",
+      "profile": "bytedesk.event-types/1",
+      "role": "event-types"
+    },
+    {
+      "digest": "sha256:b5a16035f1ea4a846cd83cd5c561a59ccfa2ff689ba3ae8a4d5936bbbf5288c3",
+      "path": "contracts/ports/v1/protocol-profiles.json",
+      "profile": "bytedesk.protocol-profiles/1",
+      "role": "protocol-profiles"
+    },
+    {
+      "digest": "sha256:f771042dde26d3fd89fa3456c21810c529cadd2acefb6aa450cb713a10267d44",
+      "path": "contracts/ports/v1/conformance-cases.json",
+      "profile": "bytedesk.downstream-conformance-cases/1",
+      "role": "case-catalog"
+    },
+    {
+      "digest": "sha256:87b5fc22494636748ae5ce2f1f0092a7bc518b96c810344cb3987ff096b05c07",
+      "path": "contracts/ports/v1/protocol-fixtures.json",
+      "profile": "bytedesk.protocol-fixtures/1",
+      "role": "protocol-fixtures"
+    }
+  ],
+  "profile": "bytedesk.downstream-conformance-plan/1",
+  "semantics": {
+    "adapterExecutionRequired": true,
+    "contractFixtureValidity": "schema-valid-only",
+    "semanticImplementationGolden": false
+  },
+  "version": 1
+}
