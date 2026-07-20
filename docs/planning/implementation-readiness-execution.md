@@ -185,79 +185,105 @@ The canonical decision sources for this task are the
 
 ### Acceptance criteria
 
-- [ ] Every externally visible port used by AD-02 through AD-18 has a versioned
+- [x] Every externally visible port used by AD-02 through AD-18 has a versioned
   request/result or artifact contract, stable errors, failure semantics,
   security boundary, compatibility rule, and conformance-test ownership.
-- [ ] Coverage includes catalog/SCM, Agent Spec validation, renderer Strategy and
+- [x] Coverage includes catalog/SCM, Agent Spec validation, renderer Strategy and
   native/Hermes/OpenClaw Adapters, OCI registry, KMS/signing, consumer authority
   and approval, DesiredStateStore, API/events, Promotion Coordinator, private
   compiler, Host Reconciler, Capability Verifier, and CLI automation.
-- [ ] Exact renderer capability/output contracts, OCI config/layer/archive
+- [x] Exact renderer capability/output contracts, OCI config/layer/archive
   layout, signing/SBOM/provenance/scanning profiles, durable-action/problem/event
   catalogs, desired-state watch/CAS semantics, and host/capability evidence
   protocols are frozen and represented in contract fixtures where applicable.
-- [ ] The native Agent Spec versus WayFlow scope, OpenClaw migration-map owner,
+- [x] The native Agent Spec versus WayFlow scope, OpenClaw migration-map owner,
   Capability Verifier trigger owner, Coordinator crash/fencing order, and
   reference host switching/journal behavior are unambiguous.
-- [ ] Each AD task identifies its normative contracts and executable conformance
+- [x] Each AD task identifies its normative contracts and executable conformance
   suite; no task relies on an unpinned "current" external implementation as
   authority.
-- [ ] The downstream contract coverage matrix has no missing required port,
+- [x] The downstream contract coverage matrix has no missing required port,
   schema, error family, lifecycle, security boundary, or verification owner.
 - [ ] Full repository validation, all contract/conformance tests, and focused
   independent audits pass; the task commit is pushed.
 
 ### Evidence
 
-> **Evidence invalidated during final audit hardening (2026-07-17).** The
-> numerical snapshot below describes commit `2d03ae0` only. It is not current
-> Task 4 acceptance evidence and must not be used to claim completion. The
-> active source change adds trust-policy provider, Merkle status, stage-specific
-> eligibility, finalizer/publication, private-compilation, activation, KMS, and
-> OCI-closure contracts. This section and every checkbox above will be refreshed
-> from the final generated fixed point and clean detached verification before
-> Task 4 is accepted.
-
-- The closed downstream registry contains 21 versioned ports and 76 operations.
-  Its generated type authority contains 85 reusable base types, 511 unique
-  field-value schemas, 93 semantic field refinements, 152 closed request/result
-  contracts, and 152 valid contract fixture groups. The denial corpus contains
-  456 structural mutations and 11 operation-semantic mutations.
+- The closed downstream registry contains 26 versioned ports and 86 operations.
+  Its generated type authority contains 137 reusable base types, 761 unique
+  field-value schemas, 111 semantic field refinements, 172 closed request/result
+  contracts, and 172 valid contract fixture groups from 68 offline schema
+  sources. The denial corpus contains 516 structural mutations and 14
+  operation-semantic mutations, plus one coverage-authority mutation proving
+  that deleting a required registry token fails the validator. Machine
+  evidence: `dist/evidence/downstream-port-validation.json`
+  (`bytedesk.downstream-port-validation-evidence/1`, result `pass`), with
+  registry digest
+  `sha256:ebe596a1fbb0c3c6ba02120d48ff6777613df8de95f2f401329d0dd3433383b8`.
+- The [downstream contract coverage matrix](../architecture/downstream-contract-coverage.md)
+  lists all 26 registered ports and marks every row `Complete`; an independent
+  read-only audit of the full matrix and a sample of AD task documents
+  (AD-06, AD-09, AD-12, AD-14) confirmed each cites exact `contracts/ports/v1`
+  registry, type-catalog, and fixture paths rather than an unpinned external
+  implementation. The five previously open disambiguation points (native
+  Agent Spec versus WayFlow scope, OpenClaw migration-map ownership,
+  Capability Verifier trigger ownership, Coordinator crash/fencing order,
+  reference host switching/journal behavior) are each stated unambiguously in
+  ADR-0001, the coverage matrix, and their owning AD task documents.
 - Every AD-02 through AD-18 task cites its exact normative schemas, port
   operations, protocol profiles, and executable task suite. The mechanically
   checked coverage matrix cites every registry contract path, request/result
   contract ID, promised schema ID, and applicable profile; deleting any one
   required authority token is rejected by the generic coverage mutation.
 - The compiled adapter conformance plan binds nine exact machine-authority
-  inputs by digest, 76 operation goldens, and all 108 cases into 187
-  deterministic steps. It executes all 152 valid contract fixtures and 467
-  adversarial mutations. Its RFC 8785 digest is
-  `sha256:178a7eb0982e867561f35183795c3472858cedf3a4335f7f3bb6e6a510b2552b`.
+  inputs by digest, 86 operation goldens, and all 143 source cases into 235
+  deterministic steps. It executes all 172 valid contract fixtures, 530 denial
+  mutations, and 7 adversarial denials. Its RFC 8785 digest is
+  `sha256:4312da196f6fc8ab87fbfce6880556081ec11609b9fa616f49ee0a939afd2f5d`.
+  Machine evidence: `dist/evidence/downstream-conformance-plan-validation.json`
+  (result `pass`).
 - The protocol corpus covers 49 frozen protocol documents and 11 independent
-  materials with 71 denial mutations. Exact renderer preimage validation passes
-  three public/private renderer chains, one selection-to-execution receipt
-  binding, and one two-platform functional-output equivalence case while
-  rejecting 19 digest, exposure, allowlist, compatibility, and fallback
-  substitutions.
-- The source inventory contains 75 product schemas and 216 indexed fixtures.
-  Deterministic metadata refresh manages 153 files with zero drift while
-  preserving two intentional semantic denials. The Go and Python Draft 2020-12
-  validators agree on every fixture; both enforce bounded schema resources.
-- Final repository-wide and detached-checkout verification, including the exact
-  content-commit bundle and manifest identities, will be recorded after the
-  content commit exists so the evidence names an immutable source revision.
-- Release-evidence conformance passes one exact baseline and 20 independent
-  denial cases without authenticating the test attestation or issuing
-  authority. Repository verification covers 71 Markdown files, 576 local
-  links, three YAML files, 328 JSON files, and the complete acyclic
-  18-task/7-milestone planning graph.
+  materials, binding 60 golden fixtures across 71 conformance links and 71
+  denial mutations, with 437 capability-binding checks. Exact renderer
+  preimage validation (`dist/evidence/renderer-digest-validation.json`, result
+  `pass`) passes 3 public/private renderer chains, 1 selection-to-execution
+  receipt binding, and 1 cross-platform functional-output equivalence case
+  while rejecting 77 negative substitution cases covering digest, exposure,
+  allowlist, compatibility, and fallback mutations.
+- The source inventory contains 112 product schemas (1 additional schema is
+  repository-only planning data, excluded from the release bundle) and 638
+  indexed fixture files. The Go and Python Draft 2020-12 validators agree on
+  every fixture (`dist/evidence/validator-agreement.json`); both enforce
+  bounded schema resources.
+- A clean local build produced bundle
+  `dist/contracts-a/agent-delivery-contracts-v1.tar` (20,336,640 bytes, 2,353
+  documents, 112 schemas), digest
+  `sha256:4a499f507ddeb01b33002cc5427f1aa4fd64197d45a36089526772e6a51b8135`,
+  with manifest digest
+  `sha256:3abbfa759cdf0157edcdeba45686f8d89f519033cbee0cb89af87a87f5f1d192`.
+  The reproducible-build comparator ran 2 independent comparisons and reported
+  `pass` (`dist/evidence/reproducible-build.json`).
+- Release-evidence conformance passed 29 cases against 12 required evidence
+  types without authenticating the test attestation or issuing authority
+  (`dist/evidence/release-evidence-conformance.json`). Supply-chain security
+  conformance passed 46 cases without using the external verifier's private
+  key (`dist/evidence/supply-chain-security-conformance.json`). Private
+  compilation graph conformance passed 177 cases spanning 46 deployment
+  cross-field mutations (`dist/evidence/private-compilation-graph-validation.json`).
+  Repository verification covers 72 Markdown files, 641 local links, three
+  YAML files, 778 JSON files, 12 SHA-pinned workflow actions, and the complete
+  acyclic 18-task/7-milestone planning graph
+  (`dist/evidence/repository-validation.json`).
 - Full-gate integration found and closed an authorization-proof binding defect:
   a schema-required `candidateDigest` was not compared with the canary plan.
   A red substitution test proved the gap, the verifier now binds the field, and
   the complete canary and repository suites pass.
-- Focused independent audit, content commit, remote push, detached-checkout
-  verification, pull-request reporting, and GitHub Actions evidence remain
-  required before the final acceptance item is checked.
+- A clean `make verify` run from the current working tree passed end to end,
+  including both independent bundle rebuilds, byte-identical comparison,
+  ephemeral test signing, and all replay/tamper/trailing-byte/repository-only
+  denial cases. Remote push, pull-request reporting, and GitHub Actions
+  evidence for this content commit remain to be recorded once the commit is
+  pushed.
 
 ## Completion condition
 
