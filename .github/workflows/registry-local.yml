@@ -1,0 +1,49 @@
+name: registry-local
+
+on:
+  pull_request:
+    paths:
+      - "registry/local/**"
+      - ".github/workflows/registry-local.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "registry/local/**"
+      - ".github/workflows/registry-local.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: registry-local-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: registry/local
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Install locked uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: 0.11.21
+          enable-cache: false
+
+      - name: Install exact Python and locked dependencies
+        run: |
+          uv python install 3.13.14
+          uv sync --frozen
+
+      - name: Run OCI packaging tests (includes real local-registry integration)
+        run: make test
