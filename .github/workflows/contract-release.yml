@@ -134,9 +134,7 @@ jobs:
       actions: read
       contents: read
       id-token: write
-    # Fail closed while revised signer bytes are reviewed and committed. The
-    # activation commit replaces this bootstrap sentinel with that exact SHA.
-    uses: ByteDeskAI/bytedesk-agent-delivery/.github/workflows/contract-release-signer.yml@0000000000000000000000000000000000000000
+    uses: ByteDeskAI/bytedesk-agent-delivery/.github/workflows/contract-release-signer.yml@5b53878d4766a6d2456200af2aac433b488e7680
     with:
       artifact-name: ${{ needs.build-candidate.outputs.artifact-name }}
       source-commit: ${{ github.sha }}
