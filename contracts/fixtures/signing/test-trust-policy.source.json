@@ -36,7 +36,7 @@
         "workflow": ".github/workflows/contract-release-signer.yml@1111111111111111111111111111111111111111",
         "ref": "refs/tags/v0.1.0-contract-test",
         "environment": "contract-test",
-        "builderDigest": "sha256:c460ed0cfe278df67b5c379932f964feb22a5b545783f2c9235dbd563323b345"
+        "builderDigest": "sha256:0671993fa7ef3b0a69ff4c84c4d0eceb39de62b7dd18fd975fc45fc82a27f4e7"
       }
     }
   ],
