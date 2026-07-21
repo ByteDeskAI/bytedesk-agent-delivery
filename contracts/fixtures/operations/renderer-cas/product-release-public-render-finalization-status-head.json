@@ -9,7 +9,7 @@
   "subjectKind": "product_release",
   "subject": {
     "repository": "registry.example/product/agent-delivery",
-    "digest": "sha256:504733c0e6c8743e3105d4319d0eac619c18f7a91641b4aed81457a6670dfed3",
+    "digest": "sha256:90e259cfd82c5fdef096adda3ea8b6d4b5a16154ca0a119552d5a963bbe34b88",
     "mediaType": "application/vnd.bytedesk.agent.product-release-manifest.v1+json",
     "size": 8598,
     "trustPolicy": {
@@ -21,7 +21,7 @@
   "treeSize": 3,
   "head": {
     "repository": "registry.example/product/status",
-    "digest": "sha256:b625d54a2f53ed088ca0dfdcea58772c27fdb2beb5b7025f7032f79f7c90d4ad",
+    "digest": "sha256:05e9d269b666fd8b97a45a4dbaa1728315ed37ac59dfcca1c3246feee45b5095",
     "mediaType": "application/vnd.bytedesk.agent.release-status.v1+json",
     "size": 2732,
     "trustPolicy": {
@@ -29,11 +29,11 @@
       "digest": "sha256:050cc2bb0b00d65f5531f508c9927d55e599f40b207313707ef19346842eea87"
     }
   },
-  "headDigest": "sha256:b625d54a2f53ed088ca0dfdcea58772c27fdb2beb5b7025f7032f79f7c90d4ad",
-  "headLeafDigest": "sha256:09560cd3f9ac70f2af27015eb59976e28a3caf77c155aeaa356ed2a77c0c570e",
+  "headDigest": "sha256:05e9d269b666fd8b97a45a4dbaa1728315ed37ac59dfcca1c3246feee45b5095",
+  "headLeafDigest": "sha256:0952adc17f632c8dca53f1e3293b250233c4669ebdb45bdcc34ade6befdf0b6c",
   "headInclusionProof": {
     "repository": "registry.example/product/status-heads",
-    "digest": "sha256:acdca5f34c7d11ca667c2899d5f507c0738a5ba4e65e420575528133961e7c6f",
+    "digest": "sha256:f64d2dfbb0f47bb4a32fce1f8d068325981b4602fece9f0e69ebbf2e41ea0d3d",
     "mediaType": "application/vnd.bytedesk.agent.release-status-log-inclusion-proof.v1+json",
     "size": 1194,
     "trustPolicy": {
@@ -42,12 +42,12 @@
     }
   },
   "epoch": 2,
-  "logRootDigest": "sha256:a04e9979fd1122bef72499cecde4d3a8515eda0e528d58c4f2dc8b91b46326b0",
+  "logRootDigest": "sha256:77e71d78b4d1c6fadf860383798ed9478b86184f623812007f47ad9e4e06ae21",
   "clientPriorState": {
     "kind": "match",
     "checkpoint": {
       "repository": "registry.example/product/status-heads",
-      "digest": "sha256:01ef42695b501b6480bb0e6596d345cfeb423ce76c327d353dde2ba48e82b52f",
+      "digest": "sha256:5d4fef33b31201d5f37e344560274980e404c4b7f144d4668924d759b2c80d2c",
       "mediaType": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json",
       "size": 2726,
       "trustPolicy": {
@@ -58,8 +58,8 @@
     "sequence": 3,
     "epoch": 2,
     "treeSize": 3,
-    "logRootDigest": "sha256:a04e9979fd1122bef72499cecde4d3a8515eda0e528d58c4f2dc8b91b46326b0",
-    "headLeafDigest": "sha256:09560cd3f9ac70f2af27015eb59976e28a3caf77c155aeaa356ed2a77c0c570e"
+    "logRootDigest": "sha256:77e71d78b4d1c6fadf860383798ed9478b86184f623812007f47ad9e4e06ae21",
+    "headLeafDigest": "sha256:0952adc17f632c8dca53f1e3293b250233c4669ebdb45bdcc34ade6befdf0b6c"
   },
   "consistencyProof": null,
   "verifiedAt": "2026-07-17T12:00:06.500000Z",

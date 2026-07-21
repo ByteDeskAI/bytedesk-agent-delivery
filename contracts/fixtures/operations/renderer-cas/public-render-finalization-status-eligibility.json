@@ -67,7 +67,7 @@
     "subjectKind": "product_release",
     "subject": {
       "repository": "registry.example/product/agent-delivery",
-      "digest": "sha256:504733c0e6c8743e3105d4319d0eac619c18f7a91641b4aed81457a6670dfed3",
+      "digest": "sha256:90e259cfd82c5fdef096adda3ea8b6d4b5a16154ca0a119552d5a963bbe34b88",
       "mediaType": "application/vnd.bytedesk.agent.product-release-manifest.v1+json",
       "size": 8598,
       "trustPolicy": {
@@ -77,7 +77,7 @@
     },
     "status": {
       "repository": "registry.example/product/status",
-      "digest": "sha256:b625d54a2f53ed088ca0dfdcea58772c27fdb2beb5b7025f7032f79f7c90d4ad",
+      "digest": "sha256:05e9d269b666fd8b97a45a4dbaa1728315ed37ac59dfcca1c3246feee45b5095",
       "mediaType": "application/vnd.bytedesk.agent.release-status.v1+json",
       "size": 2732,
       "trustPolicy": {
@@ -87,7 +87,7 @@
     },
     "checkpoint": {
       "repository": "registry.example/product/status-heads",
-      "digest": "sha256:889f3317f04536e23b4bb36e376682340c389966a3c9e4acf53193b056ba2eb2",
+      "digest": "sha256:53f7cc19f5794573d0eeb4d59f2f89eb53217922550628e93ce4ef42873c1d89",
       "mediaType": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json",
       "size": 2687,
       "trustPolicy": {
@@ -97,7 +97,7 @@
     },
     "checkpointAuthenticationEvidence": {
       "repository": "registry.example/product/status-heads",
-      "digest": "sha256:de8b764baacded44ea801baaf69dfbab589bdf0cce3ec80eba693e2c04395d3a",
+      "digest": "sha256:ecce2fe491d9957513b570a0682312cf6270a03ac670ebdccbd4fd95c9ee22fb",
       "mediaType": "application/vnd.bytedesk.agent.release-status-head-authentication-evidence.v1+json",
       "size": 2419,
       "trustPolicy": {
@@ -110,7 +110,7 @@
       "kind": "match",
       "checkpoint": {
         "repository": "registry.example/product/status-heads",
-        "digest": "sha256:01ef42695b501b6480bb0e6596d345cfeb423ce76c327d353dde2ba48e82b52f",
+        "digest": "sha256:5d4fef33b31201d5f37e344560274980e404c4b7f144d4668924d759b2c80d2c",
         "mediaType": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json",
         "size": 2726,
         "trustPolicy": {
@@ -121,12 +121,12 @@
       "sequence": 3,
       "epoch": 2,
       "treeSize": 3,
-      "logRootDigest": "sha256:a04e9979fd1122bef72499cecde4d3a8515eda0e528d58c4f2dc8b91b46326b0",
-      "headLeafDigest": "sha256:09560cd3f9ac70f2af27015eb59976e28a3caf77c155aeaa356ed2a77c0c570e"
+      "logRootDigest": "sha256:77e71d78b4d1c6fadf860383798ed9478b86184f623812007f47ad9e4e06ae21",
+      "headLeafDigest": "sha256:0952adc17f632c8dca53f1e3293b250233c4669ebdb45bdcc34ade6befdf0b6c"
     },
     "headInclusionProof": {
       "repository": "registry.example/product/status-heads",
-      "digest": "sha256:acdca5f34c7d11ca667c2899d5f507c0738a5ba4e65e420575528133961e7c6f",
+      "digest": "sha256:f64d2dfbb0f47bb4a32fce1f8d068325981b4602fece9f0e69ebbf2e41ea0d3d",
       "mediaType": "application/vnd.bytedesk.agent.release-status-log-inclusion-proof.v1+json",
       "size": 1194,
       "trustPolicy": {
@@ -136,9 +136,9 @@
     },
     "consistencyProof": null,
     "verificationEvidenceDigests": {
-      "status": "sha256:d26c3625de34b63419eddd6596620da5b637c635cb42c6c20aa6825b2edcd49e",
-      "checkpointAuthentication": "sha256:5da4032825cbcff0af48b895331734cc540ba466dad4dc68732404d586644cd0",
-      "headInclusionProof": "sha256:6097ab78a6d9734f49363fad95ae2662824374644d09f081b8ca981d63859b5c",
+      "status": "sha256:9516618c02a0ded781427c23b83d2729ff08077a262432a4964212ac46405983",
+      "checkpointAuthentication": "sha256:d5619365b3577355b1a9e595e1fe2ccc572119debb6410e62eb459c4622e14b3",
+      "headInclusionProof": "sha256:11d627f42272593bbe67c6df21f17de79e2414773fddb1e447f53a86d5501f29",
       "consistencyProof": null
     }
   },
@@ -228,7 +228,7 @@
     }
   ],
   "decision": "eligible",
-  "eligibilityDigest": "sha256:c2d3fa33156735c830709c59d872f8d5b7a4893332f5c35da0670131ec46f690",
+  "eligibilityDigest": "sha256:3319f4869cb04539f1f7870494b9271878ca6e5700854e131c60e3505207c220",
   "trustPolicy": {
     "id": "release-status-eligibility-v1",
     "digest": "sha256:8367ca60dd0527d26044262a93abda75d304ef1afbaee760c5ad13cda423b31a"
@@ -240,17 +240,17 @@
       "digest": "sha256:a64e23f1ae5a04e0c26c67085a41e8d0d70a9df9d45b1ec789c72c7634543ede"
     },
     "requestId": "sign-public-render-finalization-status-eligibility",
-    "requestDigest": "sha256:241fc84bac3a6edeed6ac381d925b62e4864d818cb7d7e30484c7d4987058236",
+    "requestDigest": "sha256:cb150a8809f795ada394f6a0b283c74b1fc188f2cb0bacd0c7da8b0edf0965a2",
     "purpose": "release-status-eligibility-v1",
     "keyVersion": "kms://product/release-status-eligibility-v1/versions/1",
     "algorithm": "ECDSA_P256_SHA256",
     "publicKeyDigest": "sha256:9f134ffc28f511f288a327e84074851148e9a116b5c3fc634424ff369f870981",
     "repository": "registry.example/product/status-eligibility",
-    "subjectDigest": "sha256:c2d3fa33156735c830709c59d872f8d5b7a4893332f5c35da0670131ec46f690",
+    "subjectDigest": "sha256:3319f4869cb04539f1f7870494b9271878ca6e5700854e131c60e3505207c220",
     "subjectMediaType": "application/vnd.bytedesk.agent.release-status-eligibility-evidence-digest.v1+json",
     "signatureBundle": {
       "repository": "registry.example/product/status-eligibility",
-      "digest": "sha256:e5d2528867617b9c2deae48d43b41c068c2557505227f8036fd29e087510008f",
+      "digest": "sha256:c9a07aa96ef62b76983229f8bda924517ea21419637ce2c240994d27ab3ff222",
       "mediaType": "application/vnd.dev.sigstore.bundle.v0.3+json",
       "size": 2312,
       "trustPolicy": {
@@ -264,7 +264,7 @@
     },
     "providerAuditEvidence": {
       "repository": "registry.example/product/status-eligibility",
-      "digest": "sha256:693dce7bbce9d8c9917b91747ab34dc61a9775425b3f311434978687e7e77d9c",
+      "digest": "sha256:29cff2dd60f91a69f345f2e72d08dc5b9be9301745eda81c128c642f18ac5788",
       "mediaType": "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
       "size": 1848,
       "trustPolicy": {

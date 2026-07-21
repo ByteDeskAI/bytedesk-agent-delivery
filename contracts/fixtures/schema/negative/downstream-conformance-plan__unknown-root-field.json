@@ -142,13 +142,13 @@
       "role": "port-registry"
     },
     {
-      "digest": "sha256:255f7d4099f3503a95bf886f6d6a66a86af9b8329500fb90844e5eea4fbca232",
+      "digest": "sha256:10ec23fe7866b3d737764b73e2736459c513a2fb2ea0173679527730c168f5a8",
       "path": "contracts/ports/v1/type-catalog.json",
       "profile": "bytedesk.port-type-catalog/1",
       "role": "type-catalog"
     },
     {
-      "digest": "sha256:d7689ee1f28877ea5d924aae66bd5e6768a1a7bdd501333376dd4f34b19a901c",
+      "digest": "sha256:6e3b36a8a4a382d46bf6fb8ca50697e9d0b28535827d3874273ce766a6d13f7e",
       "path": "contracts/ports/v1/contract-fixtures.json",
       "profile": "bytedesk.port-contract-fixtures/1",
       "role": "contract-fixtures"

@@ -9,7 +9,7 @@
   "subjectKind": "product_release",
   "subject": {
     "repository": "registry.example/product/agent-delivery",
-    "digest": "sha256:504733c0e6c8743e3105d4319d0eac619c18f7a91641b4aed81457a6670dfed3",
+    "digest": "sha256:90e259cfd82c5fdef096adda3ea8b6d4b5a16154ca0a119552d5a963bbe34b88",
     "mediaType": "application/vnd.bytedesk.agent.product-release-manifest.v1+json",
     "size": 8598,
     "trustPolicy": {
@@ -21,7 +21,7 @@
   "treeSize": 3,
   "head": {
     "repository": "registry.example/product/status",
-    "digest": "sha256:b625d54a2f53ed088ca0dfdcea58772c27fdb2beb5b7025f7032f79f7c90d4ad",
+    "digest": "sha256:05e9d269b666fd8b97a45a4dbaa1728315ed37ac59dfcca1c3246feee45b5095",
     "mediaType": "application/vnd.bytedesk.agent.release-status.v1+json",
     "size": 2732,
     "trustPolicy": {
@@ -29,11 +29,11 @@
       "digest": "sha256:050cc2bb0b00d65f5531f508c9927d55e599f40b207313707ef19346842eea87"
     }
   },
-  "headDigest": "sha256:b625d54a2f53ed088ca0dfdcea58772c27fdb2beb5b7025f7032f79f7c90d4ad",
-  "headLeafDigest": "sha256:09560cd3f9ac70f2af27015eb59976e28a3caf77c155aeaa356ed2a77c0c570e",
+  "headDigest": "sha256:05e9d269b666fd8b97a45a4dbaa1728315ed37ac59dfcca1c3246feee45b5095",
+  "headLeafDigest": "sha256:0952adc17f632c8dca53f1e3293b250233c4669ebdb45bdcc34ade6befdf0b6c",
   "headInclusionProof": {
     "repository": "registry.example/product/status-heads",
-    "digest": "sha256:9687c28fe80f26bf8ab2e969d176a59204731c6af49a5b320caf1610e2e81b1f",
+    "digest": "sha256:2eb62cba4220e5547d0c98affe62d2f6851dcfc6274c0c9ae056831773f556ce",
     "mediaType": "application/vnd.bytedesk.agent.release-status-log-inclusion-proof.v1+json",
     "size": 1175,
     "trustPolicy": {
@@ -42,12 +42,12 @@
     }
   },
   "epoch": 2,
-  "logRootDigest": "sha256:a04e9979fd1122bef72499cecde4d3a8515eda0e528d58c4f2dc8b91b46326b0",
+  "logRootDigest": "sha256:77e71d78b4d1c6fadf860383798ed9478b86184f623812007f47ad9e4e06ae21",
   "clientPriorState": {
     "kind": "match",
     "checkpoint": {
       "repository": "registry.example/product/status-heads",
-      "digest": "sha256:f1d31db4381d561f20664c66c9a4907b44b8f94d5da504dca7661445be1dd00c",
+      "digest": "sha256:1b652df3e810fdfe22b802e7de64e1f164fa0b4d8414b4c363f3884b02869524",
       "mediaType": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json",
       "size": 2673,
       "trustPolicy": {
@@ -58,12 +58,12 @@
     "sequence": 1,
     "epoch": 1,
     "treeSize": 1,
-    "logRootDigest": "sha256:dc07dd245e2a846573de411ece3355dba52b417810209e4f5d0b4d8aec730d24",
-    "headLeafDigest": "sha256:dc07dd245e2a846573de411ece3355dba52b417810209e4f5d0b4d8aec730d24"
+    "logRootDigest": "sha256:2022cdc4dd8c4088178e74fbbefefb410436cc8e36d8076d874bf4bcc44a1010",
+    "headLeafDigest": "sha256:2022cdc4dd8c4088178e74fbbefefb410436cc8e36d8076d874bf4bcc44a1010"
   },
   "consistencyProof": {
     "repository": "registry.example/product/status-heads",
-    "digest": "sha256:5b96fc9df76c3169ef517d833420d3ac3982ab4c6940529db740396735964571",
+    "digest": "sha256:48313ea594e365accf0980dc2da85a8af6b83ce9ed4e9eb29366658ccf3b5eb2",
     "mediaType": "application/vnd.bytedesk.agent.release-status-log-consistency-proof.v1+json",
     "size": 3513,
     "trustPolicy": {

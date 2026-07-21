@@ -7,7 +7,7 @@
   "verificationId": "renderer-qualification-suite-finalization-verification",
   "subject": {
     "repository": "registry.example/product/qualification",
-    "digest": "sha256:fd9f5caa497e5c204b5be3f0e7014c74c0162af949c2115611b6370fce037842",
+    "digest": "sha256:d6a0eb9b4bf89dc41450578ec1b45353e02bf34a8d054bedfb7dc582b46b0558",
     "mediaType": "application/vnd.bytedesk.agent.renderer-qualification-suite.v1+json",
     "size": 8405,
     "trustPolicy": {
@@ -23,6 +23,6 @@
   "outcome": "permitted",
   "reasonCodes": [],
   "evidenceDigests": [
-    "sha256:c3f85957283d2b9b0265df041b1be770f28d5d069ae0dfe9b87c730fef98dc9e"
+    "sha256:fdef87ed97d7238ed4e2794e7c7388561d06ba73304e68d6b73c444088dd2037"
   ]
 }

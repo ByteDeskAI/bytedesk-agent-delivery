@@ -56,11 +56,11 @@
   },
   "documentationMap": {
     "path": "documentation-map.json",
-    "digest": "sha256:6f99447d5005ab8ddd782e12510fa810b87f491fccb3344bceb346f599165341",
+    "digest": "sha256:a1e2119dc436988b37e048a8dd9e6739aef451c79f482633926575b7a76c610b",
     "size": 26039,
     "mode": "0644"
   },
-  "buildInputDigest": "sha256:afaacea5ef33ffcce48e422830364d70bbc430f6aaa017c764165cf446e1b1df",
+  "buildInputDigest": "sha256:7a9d3269f12658ac3690811f40fbdf11aa0f2534cc9da05343f5796addb287e5",
   "trustPolicy": {
     "id": "contract-bundle-release-v1",
     "digest": "sha256:c02ce83cb387f9d51b97b3bee467157a217e4cf3ed79c8710183f9f3623bf4f5"

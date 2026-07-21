@@ -8,7 +8,7 @@
   "subjectKind": "product_release",
   "subject": {
     "repository": "registry.example/product/agent-delivery",
-    "digest": "sha256:504733c0e6c8743e3105d4319d0eac619c18f7a91641b4aed81457a6670dfed3",
+    "digest": "sha256:90e259cfd82c5fdef096adda3ea8b6d4b5a16154ca0a119552d5a963bbe34b88",
     "mediaType": "application/vnd.bytedesk.agent.product-release-manifest.v1+json",
     "size": 8598,
     "trustPolicy": {
@@ -18,8 +18,8 @@
   },
   "treeSize": 1,
   "leafIndex": 0,
-  "leafDigest": "sha256:dc07dd245e2a846573de411ece3355dba52b417810209e4f5d0b4d8aec730d24",
-  "rootDigest": "sha256:dc07dd245e2a846573de411ece3355dba52b417810209e4f5d0b4d8aec730d24",
+  "leafDigest": "sha256:2022cdc4dd8c4088178e74fbbefefb410436cc8e36d8076d874bf4bcc44a1010",
+  "rootDigest": "sha256:2022cdc4dd8c4088178e74fbbefefb410436cc8e36d8076d874bf4bcc44a1010",
   "algorithm": "bytedesk-rfc6962-head-inclusion-v1",
   "auditPath": [],
   "trustPolicy": {

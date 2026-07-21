@@ -16,6 +16,10 @@ The normative details are split across:
 - [Delivery lifecycle v1](../standards/delivery-lifecycle-v1.md); and
 - [Operational readiness v1](../standards/operational-readiness-v1.md).
 
+For a practical mapping from this contract to the real, tested code that
+already implements each phase, see the
+[reference consumer integration guide](reference-consumer-integration-guide.md).
+
 The Agent Delivery core reference implementation is fixed by
 [ADR-0002](adr/0002-implementation-stack-and-reference-topology.md). Its Go,
 PostgreSQL, Harbor/Distribution, Kubernetes, and gVisor choices do not cross this
