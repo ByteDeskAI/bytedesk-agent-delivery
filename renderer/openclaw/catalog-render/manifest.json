@@ -1,0 +1,324 @@
+{
+  "entries": [
+    {
+      "archiveDigest": "sha256:77a71a0dfea00787c7822c019706b95491c6e50330b3fde9f961e38f882860cf",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "backend-development-lead",
+      "treeDigest": "sha256:b2ea39bb16c0486ae83d1e95164c66fb0f5bb857d3fcf4ff43f60e489399a856"
+    },
+    {
+      "archiveDigest": "sha256:56a89858d35057221605ef29782f48179e93e00c5c94bd8981eeea781ef27dc2",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "brand-and-creative-director",
+      "treeDigest": "sha256:54fc1df318f2158f428fdd9ee11b6826a0a66c84075d8ef3f229bd684aa03cdd"
+    },
+    {
+      "archiveDigest": "sha256:8212afee3adc34f840de9aa23b1b122a757f1937bee51f904c2b11be52d312dd",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "bytedesk-platform-developer",
+      "treeDigest": "sha256:ca54480132e3b1da2436b47a16b05b4c70767349891b4f953cdb6396bad022d2"
+    },
+    {
+      "archiveDigest": "sha256:14b40c38bcfa3786fc0ce3ca8e58f6f077a43c97bd0bbeaceaa54accc9155445",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "chief-of-staff",
+      "treeDigest": "sha256:a1c66daee9025c84e993f808de6858d507edc40651fd246ed6c1d727e96ce206"
+    },
+    {
+      "archiveDigest": "sha256:124d5b06beac0e6ad3236142668da83b25cb072511905c6297e3887f49b61584",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "client-research-lead",
+      "treeDigest": "sha256:feb598a0132e2dcb6f53e440a13e701ef378cca70137d18e136621dfb516fe04"
+    },
+    {
+      "archiveDigest": "sha256:75e7bc866a648e26fdd9752f192cb18baa2415e08d8ad4b2cb3c2e1cca6e9ecb",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "content-marketing-lead",
+      "treeDigest": "sha256:cda20b1dc0040cf62e0fdb82743794c91e523d051296babc936dd897f2250dfd"
+    },
+    {
+      "archiveDigest": "sha256:bd989b05817aba3d428656c1996aef3b2e028665e33e01c40d3025f61f257ad0",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "customer-success-and-support-lead",
+      "treeDigest": "sha256:77ad8846483b8a79e9b0d07b598ab5c4998f62464addb91216561a7921f1d693"
+    },
+    {
+      "archiveDigest": "sha256:9ed2a165928128db7cb8f4f0fd9840b58d12a63b6b573c035557aa98148e27b6",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "delivery-manager",
+      "treeDigest": "sha256:4a4ffb04b12152d73ab93f4197b82f9481d768520a480992e5bd1b6a6cbd6c45"
+    },
+    {
+      "archiveDigest": "sha256:b3c29c34e335675f218314413458c1d1512b4472b230c793773f1ff473cf7722",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "devex-and-docs-lead",
+      "treeDigest": "sha256:42c44b223163dfc4b88d8d9d8db894c40809f126f75259c3ea17de598f737a47"
+    },
+    {
+      "archiveDigest": "sha256:23bfb8ae3da9c8bc9cd60210b0c1aeb89d0ff8c4d89d34dc17ae2f15558f48c0",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "devprojects-support-resolver",
+      "treeDigest": "sha256:ccdcde21de67f71f485ed97af8337a866859a426d4ab812499fd66c34ce8d530"
+    },
+    {
+      "archiveDigest": "sha256:af0984ca854bc050f53e4d32cdf5dbbedfb37beea64250f63e20f2a533ceab85",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "engineering-scout",
+      "treeDigest": "sha256:f12e84425f865339043bb049e59b0eb25253858e2fa7af8a8b2d274de0621f5e"
+    },
+    {
+      "archiveDigest": "sha256:1aee360d06c1db0906b992cf4f781127c2625f14487189aaec378e3e63374f6b",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "goal-commander",
+      "treeDigest": "sha256:bbc62912d549c63d0ed7836ab9a92a8a606bae5197ec025ddb9e75cef2782d50"
+    },
+    {
+      "archiveDigest": "sha256:b272cac0efff23e9fda4ef49e3b2f6a432d9b71598a3f559a06d855bd46327bf",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "growth-scout",
+      "treeDigest": "sha256:feaca6e47e684ca65ae23875dfd60035a9ed10a18708b3a38de012836f1a0e55"
+    },
+    {
+      "archiveDigest": "sha256:fc82ef468aff190a64c0b4b48adb8fd341cba173278c0038232706f8e543d7c3",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "hr-org-designer",
+      "treeDigest": "sha256:05a579f5a9a4c291a93098cdbfa223d89bd3a265da72ace463f545dd3a0b90af"
+    },
+    {
+      "archiveDigest": "sha256:6c1b0d26ba27bb8406eb5a03e22d5a2c2804e926067a5dba6998fff574ab68d4",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "icp-scoring-analyst",
+      "treeDigest": "sha256:079a7b371b14f6f211e96c3e44e9a3607a427ce212621f2fbb6697176076f3f3"
+    },
+    {
+      "archiveDigest": "sha256:e4006c35ce60086c71eca87900347651eed66ef10c95ed33e553d16307c24e93",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "kade-vector",
+      "treeDigest": "sha256:c3dd060fcb7950940dc86048c22dcbb1502879eaa46cb80d35d6c4a1be352652"
+    },
+    {
+      "archiveDigest": "sha256:34e2fd96f7c6fb660b1c1753044e44a6c417de9244e91b030be83e3a3e4b1145",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "lifecycle-email-marketing-lead",
+      "treeDigest": "sha256:556490477d03e7beebadacc8a8943e0cb666510e996cd2560f027385b21a36cc"
+    },
+    {
+      "archiveDigest": "sha256:89c22ca662e1fb9e58f8add6aa1fbf74ad9cd93f2068123249f3029f274e914b",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "marketing-director",
+      "treeDigest": "sha256:3a7d8b8c729b4aa5d5887f7939cc236b8373073132d3064936621dbf2a6d98e9"
+    },
+    {
+      "archiveDigest": "sha256:d3cfd676c0c09356163acebd904020c77c043be64919bdcba4f317ca090c2f2b",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "office-orchestrator",
+      "treeDigest": "sha256:7f3961bc7380ad99f4d3eb881069b6354811b9ed54fb051d7482a22b4c5795ec"
+    },
+    {
+      "archiveDigest": "sha256:ca0bc2cd8cfce3c5fdd2401de9fe16c682a90dd2116a6b4ef40c0d9cccb1ef70",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "ops-scout",
+      "treeDigest": "sha256:bbc6c60e626b5a600f392ed0c8afcb39f03a8f7812e857e57cce2e57c1ebefb2"
+    },
+    {
+      "archiveDigest": "sha256:cd4f6ec0ae44537197eb657a9d7aa34b6245cee34e2107ac3fb20e3a9741cc79",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "outreach-intelligence-specialist",
+      "treeDigest": "sha256:4910c4057f3c207c31720ca8ca93305456d251c05742da521d475045b2f6083c"
+    },
+    {
+      "archiveDigest": "sha256:4dc1e482220949dccaaa34e0b65e65c26cf3354a764629da8277bb44b2f462b8",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "platform-architect",
+      "treeDigest": "sha256:8c0f935a95f15e09e9f6aea103995523e6e55b82127879b42d8ffdf202b920fd"
+    },
+    {
+      "archiveDigest": "sha256:47cbc6de1bbd7d1f4b67043ed4f6a16d9c2ff8ae608eb592c5c57740e3701242",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "platform-developer",
+      "treeDigest": "sha256:213cbd9fb0b28b4376f50a20c08cf463fd8a0195558a5f13c3e2c6e29211c5bf"
+    },
+    {
+      "archiveDigest": "sha256:8f9f6f9f67438a96b7eb8c72080c39cbae39e5c5675298346ea02f429fd2c163",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "product-ops-director",
+      "treeDigest": "sha256:550675696d0043de74ce3b85533b462e12a50c1d9e8e32b531d8c58472ca2eda"
+    },
+    {
+      "archiveDigest": "sha256:fa3246ac16cbf7320a61c9cfead059e556de5816cb9c9d3ce951121138cee688",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "product-scout",
+      "treeDigest": "sha256:9702ea3c1c0f9456a49e200a03ee70b9e7a329c8187fb206b09e5504bebd6511"
+    },
+    {
+      "archiveDigest": "sha256:109258390f0a2c2509c9d3c5a6de856af948bd39a52a219b96bba4cb539f5fe8",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "prospect-source-mapper",
+      "treeDigest": "sha256:40f4c2a9ca8fd3c324d94c6d7324ed07ecbaeeca06536204a7417583b0fd3836"
+    },
+    {
+      "archiveDigest": "sha256:91f7a1c6ee6fe761f8dcd28b86f77efe78b8ac9b992bf49575831c5a2e3faa56",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "quality-and-release-lead",
+      "treeDigest": "sha256:a8769d7a4aff3fa33dfad829d211e8df16c3d2182b59591948a6bcf464372b13"
+    },
+    {
+      "archiveDigest": "sha256:1b3f9f6b6bc93d85213b0a730ba59bb880ab019ebd17dd1793fce4b8779a53b0",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "revops-and-kpi-manager",
+      "treeDigest": "sha256:ae2b0f471545d7d37d2d1d834fddddd89f07b9130f91befd8ad17feb45e0a3d8"
+    },
+    {
+      "archiveDigest": "sha256:fde5842d779b31d3919092eb13fcd143e97a01823d89468e82577a96c39fd716",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "sales-enablement-lead",
+      "treeDigest": "sha256:8ecee62545906de9bfcb9fc76edb5ff79546c3c697427f32a8fbc6d4827a291e"
+    },
+    {
+      "archiveDigest": "sha256:2eabae13a453b8f5d862d5a1edaadfaf0896e1fb06f9a9713ebbfa28ba880237",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "sales-scout",
+      "treeDigest": "sha256:9782988d5c60e1f4f07564a772fbcf132ce43cf6970d8762b024ab4e1d846488"
+    },
+    {
+      "archiveDigest": "sha256:fcf8b75cab5cd554421fb8acff00df9808506a7904a3968f9e4ac29527d71eb9",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "seo-geo-growth-lead",
+      "treeDigest": "sha256:03c9f7b7bd37ff42ed384bc66e302c489a56f6a68add0bf5538ac644cb86ac6f"
+    },
+    {
+      "archiveDigest": "sha256:b09551df83c9362c7720e81f986a9bbafcbb301c51a928eed984cf39c82d5487",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "support-scout",
+      "treeDigest": "sha256:3bec472d2e41527ac64e1236b142cef82ff0436e7bc6003603eb776b4ddfe55b"
+    },
+    {
+      "archiveDigest": "sha256:f07d991748243396c136eaaa093ba051ebee2f1fc563decf08211b6b3fc4fbf5",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "video-content-producer",
+      "treeDigest": "sha256:6751527298be8631a2759327463c63bfe5da2abce939518ea38ae03567c76568"
+    },
+    {
+      "archiveDigest": "sha256:67be8dfbb1c78e5a90330c11e844a9474eea79381f263b3d4fb8504057740488",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "web-design-director",
+      "treeDigest": "sha256:916be09c530bf2d6c92888a294245679a9683b82e9118f489a1a3e45d6dccf51"
+    },
+    {
+      "archiveDigest": "sha256:204de22afdaf5087b071ec9aaace79a1cf87e5ec0b5c6c158811573cdcf63120",
+      "compatibility": "exact",
+      "compatibilityNotes": [],
+      "fileCount": 4,
+      "outcome": "rendered",
+      "packageId": "web-development-lead",
+      "treeDigest": "sha256:8a5fa52d224e3ca37d0fe77bb3a24fcacb713dcbe80c04e60903850085cf63f9"
+    }
+  ],
+  "packageCount": 35,
+  "profile": "bytedesk.openclaw-catalog-render-manifest/1",
+  "renderedCount": 35,
+  "signing": "ephemeral-test-key-pattern-only; no production KMS in this environment",
+  "unsupportedCount": 0
+}
