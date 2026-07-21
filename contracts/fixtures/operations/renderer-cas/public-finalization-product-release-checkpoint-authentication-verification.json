@@ -7,7 +7,7 @@
   "verificationId": "public-finalization-product-release-checkpoint-authentication-verification",
   "subject": {
     "repository": "registry.example/product/status-heads",
-    "digest": "sha256:889f3317f04536e23b4bb36e376682340c389966a3c9e4acf53193b056ba2eb2",
+    "digest": "sha256:53f7cc19f5794573d0eeb4d59f2f89eb53217922550628e93ce4ef42873c1d89",
     "mediaType": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json",
     "size": 2687,
     "trustPolicy": {
@@ -23,6 +23,6 @@
   "outcome": "permitted",
   "reasonCodes": [],
   "evidenceDigests": [
-    "sha256:bff273cd4be28663ca5a9bc56c9b7ab620ea38b7bf56bccdda43381106ad00f9"
+    "sha256:b7494f814a15ceec17da17cc58bce9ba6a6dff2433684a96159e2a14dc435811"
   ]
 }

@@ -18,6 +18,7 @@ delivery-planning source of truth.
 - [C4 model](architecture/c4.md)
 - [Security and trust](architecture/security-and-trust.md)
 - [Consumer integration contract](architecture/consumer-integration-contract.md)
+- [Reference consumer integration guide](architecture/reference-consumer-integration-guide.md)
 - [OCI artifact model](architecture/oci-artifact-model.md)
 - [Runtime reconciliation](architecture/runtime-reconciliation.md)
 - [Downstream contract coverage](architecture/downstream-contract-coverage.md)

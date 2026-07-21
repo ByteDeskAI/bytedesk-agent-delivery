@@ -6,10 +6,10 @@
   },
   "attemptId": "qualify-openclaw-amd64-1",
   "attemptFencingToken": 1,
-  "qualificationSelectionDigest": "sha256:3df225d0b9448ce5fb0d9c0bb49678c92fd47b07a71e325dc758d1093568d431",
-  "inputTreeDigest": "sha256:c498d7e87bb2a7f992fc0ee05f5572c3dc47728f4563cef779cd415e428f0cc3",
-  "contractBundleDigest": "sha256:00e015b2dea045c7bb14cdcd9c6c7c827812f5fae11a402a6010b4514a308b41",
-  "qualificationSuiteDigest": "sha256:fd9f5caa497e5c204b5be3f0e7014c74c0162af949c2115611b6370fce037842",
+  "qualificationSelectionDigest": "sha256:7bf48c29a2d2635a67682a4145949c221a3cf20fad7c3df6cac05a58fa0323e7",
+  "inputTreeDigest": "sha256:fe3bada77c0531195a691c57add9ecf1cffb0fa45fc4333ed6516bbf7c4aded3",
+  "contractBundleDigest": "sha256:87dbb879340741167ab45899d7a2bc36ae24247ecefe276b1d206f6210fb1b6b",
+  "qualificationSuiteDigest": "sha256:d6a0eb9b4bf89dc41450578ec1b45353e02bf34a8d054bedfb7dc582b46b0558",
   "conformancePlanDigest": "sha256:02553fcdb228176babeafc445489685c040278e74fe8bcb2c3e4556d1d25fbaf",
   "inputCorpusDigest": "sha256:36d2ace03f79ea1827d60db53341635989941c7163c197a215b56938e1a80bf2",
   "evaluatorDistributionDigest": "sha256:146c5b8a1faa79183e822a1b8cfd5d8cbaf0b1b2ccb60502eb78b0c0dd4a816d",
@@ -21,6 +21,6 @@
   "issuerIdentityDigest": "sha256:3b7c3936c9fb8ed6a3e2a1cf793350e0c3dd342e210a08e76ed93e67a3dd60eb",
   "issuedAt": "2026-07-17T11:59:00Z",
   "expiresAt": "2026-07-17T12:05:00Z",
-  "authorityDigest": "sha256:07e331fbdb23a275cfd3763ee74cb128d49a492827aa49af5dea660f6c7deed6",
-  "framedRequestDigest": "sha256:fe1517722079cb505722a3dbc63055c177e78817ee4dcb9e9f79f1e00bb760ff"
+  "authorityDigest": "sha256:491e8b3e8934dbe41bfbd99f6fbd44c3e9a21dcb695d17a96758cde473e20de9",
+  "framedRequestDigest": "sha256:bba6a2a602a3dd896da4142b6aba4d3dc77cf8c09b4164dc0f10e753031e5f36"
 }

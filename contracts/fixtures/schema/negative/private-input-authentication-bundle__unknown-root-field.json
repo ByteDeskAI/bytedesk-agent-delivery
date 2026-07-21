@@ -60,7 +60,7 @@
       "role": "compilation-authority",
       "subject": {
         "repository": "registry.example/consumer/authority",
-        "digest": "sha256:7aff20efadfc10137f46115930df0e1fbb063b4f9f5db56cc1430fb86d435360",
+        "digest": "sha256:604f1e90de13593f41c1b576c16a445015790eb4137a8efa768e840071f5d7a7",
         "mediaType": "application/vnd.bytedesk.agent.consumer-authority.v1+json",
         "size": 2208,
         "trustPolicy": {
@@ -70,7 +70,7 @@
       },
       "signingResult": {
         "repository": "registry.example/consumer/authority",
-        "digest": "sha256:893fb32d19c183670144174a46c0dd58e715bcefda509de33623a29630028bbf",
+        "digest": "sha256:e9f12f889b1221092903a949a3c184e0f64d8b5cffcbc122644e71ebb6346750",
         "mediaType": "application/vnd.bytedesk.agent.signing-result.v1+json",
         "size": 1738,
         "trustPolicy": {
@@ -267,7 +267,7 @@
       "role": "skill-approval-public-skill-3971fab50788b18a3e33e319",
       "subject": {
         "repository": "registry.example/consumer/approvals",
-        "digest": "sha256:bd97b6eb9d5e126b2db40d182e44b055602157df6bae957a86783647c301db24",
+        "digest": "sha256:3679e9b40842e8c1a95d2e8e560cc4a7703b7652074c18a3b307e21d292666db",
         "mediaType": "application/vnd.bytedesk.agent.skill-approval.v1+json",
         "size": 1809,
         "trustPolicy": {
@@ -277,7 +277,7 @@
       },
       "signingResult": {
         "repository": "registry.example/consumer/approvals",
-        "digest": "sha256:cd8af25446a99a780a7e4e8127a8445b1cf81164f90d873df51fed45efee070e",
+        "digest": "sha256:6f79550234e9e1ac6cf82c1165ed4058426eb3b4803ea0e01256102b49519731",
         "mediaType": "application/vnd.bytedesk.agent.signing-result.v1+json",
         "size": 1734,
         "trustPolicy": {

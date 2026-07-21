@@ -10,7 +10,7 @@
   "subjectRole": "product_release",
   "subject": {
     "repository": "registry.example/product/agent-delivery",
-    "digest": "sha256:504733c0e6c8743e3105d4319d0eac619c18f7a91641b4aed81457a6670dfed3",
+    "digest": "sha256:90e259cfd82c5fdef096adda3ea8b6d4b5a16154ca0a119552d5a963bbe34b88",
     "mediaType": "application/vnd.bytedesk.agent.product-release-manifest.v1+json",
     "size": 8598,
     "trustPolicy": {
@@ -20,7 +20,7 @@
   },
   "qualificationSuite": {
     "repository": "registry.example/product/qualification",
-    "digest": "sha256:fd9f5caa497e5c204b5be3f0e7014c74c0162af949c2115611b6370fce037842",
+    "digest": "sha256:d6a0eb9b4bf89dc41450578ec1b45353e02bf34a8d054bedfb7dc582b46b0558",
     "mediaType": "application/vnd.bytedesk.agent.renderer-qualification-suite.v1+json",
     "size": 8405,
     "trustPolicy": {
@@ -28,8 +28,8 @@
       "digest": "sha256:a06d60512fb61f5e9aa1c9b5815a13ac122b29d0ae081d74b6fe95dec2bf5670"
     }
   },
-  "qualificationSelectionDigest": "sha256:652f2d2133393d60502d8dfe3784b93981d27246f7f2ed9de300f714bec6b488",
-  "qualificationReceiptDigest": "sha256:285bc04b9d0736c9bf62d9985499e91d2fe29ea9b741626e39549563a9cfb3bf",
+  "qualificationSelectionDigest": "sha256:cdaaf1acb0b9c718ba23810c0b4a6a8edf3aec03f6a766958698f02726cbd143",
+  "qualificationReceiptDigest": "sha256:e723b73eb27c9b9fe9e12ccb92db0bf1a7e22d899540dd3d95bd37f87f93fead",
   "conformancePlanDigest": "sha256:02553fcdb228176babeafc445489685c040278e74fe8bcb2c3e4556d1d25fbaf",
   "inputCorpusDigest": "sha256:36d2ace03f79ea1827d60db53341635989941c7163c197a215b56938e1a80bf2",
   "evaluatorDistribution": {
@@ -44,7 +44,7 @@
   },
   "evidenceTree": {
     "repository": "registry.example/product/qualification",
-    "digest": "sha256:b32fd80cc6d9a16da7f732250bb8acd18cbfe65b460a85a36e21e484cb9438da",
+    "digest": "sha256:72764f7325cdc3a05039681c6ba9b8f1514baeb3d3209db43c95ff95383fcac4",
     "mediaType": "application/vnd.bytedesk.agent.renderer-qualification-evidence-tree.v1+json",
     "size": 114459,
     "trustPolicy": {
@@ -53,8 +53,8 @@
     }
   },
   "evidenceLeafIndex": 38,
-  "evidenceLeafDigest": "sha256:ae926430c265ac328b3b80504b8130357d5126866efbeefc150956b7b3d5ea53",
-  "evidenceLeafStatementDigest": "sha256:3d571dec488bb8599a15c7f131f48e78847514677097830dd42c962ca7ab9093",
+  "evidenceLeafDigest": "sha256:dfbc0f62b31164edf8395838b568686b6fe2a9597da746b87a95c0fa80f92e57",
+  "evidenceLeafStatementDigest": "sha256:8ba6825e880103a756a7a1114e77188b96a88d364578917e1e6846f2a0b22d5c",
   "evidenceLeafSigningResult": {
     "contract": "bytedesk.signing-result/1",
     "schema": {
@@ -62,17 +62,17 @@
       "digest": "sha256:a64e23f1ae5a04e0c26c67085a41e8d0d70a9df9d45b1ec789c72c7634543ede"
     },
     "requestId": "sign-product-release-product-release-provenance-leaf",
-    "requestDigest": "sha256:3a38835c66abfa314c8e0a1fd7f6f1128e5c5910ac6bfb079cbf5d2cef4c6cda",
+    "requestDigest": "sha256:cfec93b57cb907c01883a50c36c7927760d5348d5956a1ef987c55792acdd63b",
     "purpose": "release-qualification-evidence-v1",
     "keyVersion": "kms://product/release-qualification-evidence-v1/versions/1",
     "algorithm": "ECDSA_P256_SHA256",
     "publicKeyDigest": "sha256:80639d1cd23518517bd75136ab9ad00176ac230ca01a31ce8bfb95a2e991253c",
     "repository": "registry.example/product/qualification",
-    "subjectDigest": "sha256:3d571dec488bb8599a15c7f131f48e78847514677097830dd42c962ca7ab9093",
+    "subjectDigest": "sha256:8ba6825e880103a756a7a1114e77188b96a88d364578917e1e6846f2a0b22d5c",
     "subjectMediaType": "application/vnd.bytedesk.agent.renderer-qualification-evidence-leaf-statement.v1+json",
     "signatureBundle": {
       "repository": "registry.example/product/qualification",
-      "digest": "sha256:d7585f83d365685d0fc4a29bdd2db8c5d4d04233338ae274d12c35f919f70442",
+      "digest": "sha256:ff7b93640d7a8cca712b1788383541a91ec230508720c0bc702b3f2e3ec14314",
       "mediaType": "application/vnd.dev.sigstore.bundle.v0.3+json",
       "size": 2352,
       "trustPolicy": {
@@ -86,7 +86,7 @@
     },
     "providerAuditEvidence": {
       "repository": "registry.example/product/qualification",
-      "digest": "sha256:5ced47f5917a56319e415f2560ed0f8af0d63d693abdd28b9e7c99d02589ff73",
+      "digest": "sha256:4f2d9191ee0c7e451b9bdddd488bd8e3b60d4892e1f5bdaa3dcc638ed5520895",
       "mediaType": "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
       "size": 1894,
       "trustPolicy": {
@@ -98,7 +98,7 @@
   },
   "details": {
     "repository": "registry.example/product/qualification-details",
-    "digest": "sha256:05260797f32a30bb110a127f57be0d6aad7d335dcb5a579b63d0608f4ec7fd4d",
+    "digest": "sha256:4f3d66e76ad8a61c2490ee2254871772611adcfe6c2a2895c8af3ce8488174d1",
     "mediaType": "application/vnd.bytedesk.agent.release-qualification-details.v1+json",
     "size": 362,
     "trustPolicy": {

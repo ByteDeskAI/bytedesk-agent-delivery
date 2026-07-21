@@ -5,7 +5,7 @@
     "digest": "sha256:80de945991486aca16e229083880d1983b08ec00618239d9b46ff682355a92ed"
   },
   "purpose": "release-status-head-v1",
-  "checkpointDigest": "sha256:c859a4a3f88301c57deaf757fc891fe2822f763cac8c7f31fbd8fc0b2055dc26",
+  "checkpointDigest": "sha256:59f3b3308321cef684a17f698d9703ad26b11966f177fe8ce0e33ed708198de5",
   "requestNonce": "status_head_nonce_product-release-status-head-epoch-2_0123456789abcdef",
   "authorityBindingDigest": "sha256:30a870af3677151355c1d260f6d308055df7b50996845fc958f0c8c89905f284",
   "signingResult": {
@@ -15,17 +15,17 @@
       "digest": "sha256:a64e23f1ae5a04e0c26c67085a41e8d0d70a9df9d45b1ec789c72c7634543ede"
     },
     "requestId": "sign-product-release-status-head-epoch-2",
-    "requestDigest": "sha256:eafc156e49ffa5634911b0575e9b7e2189900f9292010486a0f38d313ec815fc",
+    "requestDigest": "sha256:9ae5a6aef83f836d94d990a62740edaf08cdca5ae8eba4f888c3e18cfdee2abf",
     "purpose": "release-status-head-v1",
     "keyVersion": "kms://product/release-status-head-v1/versions/1",
     "algorithm": "ECDSA_P256_SHA256",
     "publicKeyDigest": "sha256:0a4c8de2f435b9898240bcd3231bac4df64dcfff75125fb71604f0aba9232cbc",
     "repository": "registry.example/product/status-heads",
-    "subjectDigest": "sha256:c859a4a3f88301c57deaf757fc891fe2822f763cac8c7f31fbd8fc0b2055dc26",
+    "subjectDigest": "sha256:59f3b3308321cef684a17f698d9703ad26b11966f177fe8ce0e33ed708198de5",
     "subjectMediaType": "application/vnd.bytedesk.agent.release-status-head-checkpoint.v1+json",
     "signatureBundle": {
       "repository": "registry.example/product/status-heads",
-      "digest": "sha256:7ce459daeb1fbaaff87cf5a54d6f4715c5896ca9bd8093c3a1bd9c68f3c87d1b",
+      "digest": "sha256:aed05a00442c7a08fc4b99a07d181539a64fcd6a4b5611a453b640eb953bdeaf",
       "mediaType": "application/vnd.dev.sigstore.bundle.v0.3+json",
       "size": 2201,
       "trustPolicy": {
@@ -39,7 +39,7 @@
     },
     "providerAuditEvidence": {
       "repository": "registry.example/product/status-heads",
-      "digest": "sha256:1319af5c1396098dbc094fe64279b872a211e27801f5ac0ebfeb553671a2a5ec",
+      "digest": "sha256:8e9e9df9ce02222590d879fb7559a7b6bfd9fd248b2c5fe7ec90da89c2749234",
       "mediaType": "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
       "size": 1748,
       "trustPolicy": {
@@ -49,5 +49,5 @@
     },
     "signedAt": "2026-07-17T12:00:01Z"
   },
-  "evidenceDigest": "sha256:846962ddae2e3b9422247c66b7a528567a99e9291ae74bc4ff290fdddba6fa27"
+  "evidenceDigest": "sha256:8bbeb2e6973005ca131a7b5b294363fc7a070c87c7cc6a3195cc765ee0b7ca91"
 }

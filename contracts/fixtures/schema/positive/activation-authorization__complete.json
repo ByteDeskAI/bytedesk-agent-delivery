@@ -11,7 +11,7 @@
   "targetId": "runtime-prod-01",
   "runtimeRelease": {
     "repository": "registry.example/consumer/runtime-releases",
-    "digest": "sha256:2fbc7fb089290854039b511f392ffbd7e9f0880404f81355babd398f838abae8",
+    "digest": "sha256:1c8d58c0b54059b346716d6855d225eb85245d0726e427125f72b6dbf9e6c44b",
     "mediaType": "application/vnd.bytedesk.agent.runtime-release.v1+json",
     "size": 6063,
     "trustPolicy": {
@@ -25,7 +25,7 @@
       "subjectId": "agent-finance-01",
       "deployment": {
         "repository": "registry.example/consumer/deployments",
-        "digest": "sha256:70da7f6496d8894b9c13952d297d57168594dfb487cdaf6435fa1c68409b3983",
+        "digest": "sha256:4cff53b641ff88ee35d462b601be5c25794c3d2245794f4e2e133ae3aff7e55f",
         "mediaType": "application/vnd.bytedesk.agent.consumer-deployment.v1+json",
         "size": 28812,
         "trustPolicy": {
@@ -35,7 +35,7 @@
       },
       "compilationEvidence": {
         "repository": "registry.example/consumer/compilation-evidence",
-        "digest": "sha256:7be539d513529d96f2ad37581090f4ea82c7974d3df811b19107e35152388ef6",
+        "digest": "sha256:91e1973fe864ebab1e9f6acb2310a9f674f24e492100bbfde47373364c9941f5",
         "mediaType": "application/vnd.bytedesk.agent.private-compilation-evidence.v1+json",
         "size": 8237,
         "trustPolicy": {
@@ -50,7 +50,7 @@
       "subjectId": "agent-finance-02",
       "deployment": {
         "repository": "registry.example/consumer/deployments",
-        "digest": "sha256:867a51e8f5cf5172c4059527ed52de0db6511e3c489776ccffe74bcb9282ee18",
+        "digest": "sha256:e519ca3501677cc83c41a51a1fdd51b27bb2896467e907c14d5c14c6217b8790",
         "mediaType": "application/vnd.bytedesk.agent.consumer-deployment.v1+json",
         "size": 28812,
         "trustPolicy": {
@@ -60,7 +60,7 @@
       },
       "compilationEvidence": {
         "repository": "registry.example/consumer/compilation-evidence",
-        "digest": "sha256:0fa632b961ee8cb8d10092d70898630b6b70d9b4f89bf5ce048abf4dc8e9b43b",
+        "digest": "sha256:e48fe13187123960ad6ff813191a0679c48796c079ba92c1ba4d3ecf8a356b8f",
         "mediaType": "application/vnd.bytedesk.agent.private-compilation-evidence.v1+json",
         "size": 8237,
         "trustPolicy": {
@@ -72,13 +72,13 @@
       "generation": 9
     }
   ],
-  "deployableGraphDigest": "sha256:8a08bc7c5ee6fd184dd93bff6a3e2e615dae652520f6c1f188f8c9a1c59081c3",
+  "deployableGraphDigest": "sha256:324affe9f38b703ec7e8d7e9ce14f0b6834a1ea0f29dfcae6e367357a6951d46",
   "candidateReadyEvidence": [
     {
       "subjectId": "agent-finance-01",
       "evidence": {
         "repository": "registry.example/consumer/host-evidence",
-        "digest": "sha256:b3ad618745f017cb78ab737c82afcddd2654581ff5dcbb38a2c092a1cc9dc61b",
+        "digest": "sha256:62935be2d7de262b6486278b3d2cdf41677f447820b25d5d75e235d6c2c8b0fb",
         "mediaType": "application/vnd.bytedesk.agent.canary-evidence.v1+json",
         "size": 2746,
         "trustPolicy": {
@@ -86,13 +86,13 @@
           "digest": "sha256:9f50e538d993ef89de45f59aa0d77f34e5d66114a9e5fc78f3d77476b9a3bb70"
         }
       },
-      "verificationEvidenceDigest": "sha256:998a8f9d57fe8c70dd3cdfc24c9cee2493b0ad577ff28952c202f5862424b781"
+      "verificationEvidenceDigest": "sha256:0fe39f3b941b002b359ac25d499c7dab8be64726f197e1cd5cf4353bbe749776"
     },
     {
       "subjectId": "agent-finance-02",
       "evidence": {
         "repository": "registry.example/consumer/host-evidence",
-        "digest": "sha256:bb43b061c5a587507b1267ccfbb909c2e0546757c552eecec52e64bca6f349c8",
+        "digest": "sha256:a85e8e008c1524151068da9cfab2150b362ae2a814fcf15455c9f414a96336a5",
         "mediaType": "application/vnd.bytedesk.agent.canary-evidence.v1+json",
         "size": 2749,
         "trustPolicy": {
@@ -100,7 +100,7 @@
           "digest": "sha256:9f50e538d993ef89de45f59aa0d77f34e5d66114a9e5fc78f3d77476b9a3bb70"
         }
       },
-      "verificationEvidenceDigest": "sha256:f1f71c850762a2213bc5aaf6871d1b275fb5133b6cb0dcb1dd156282b09f5877"
+      "verificationEvidenceDigest": "sha256:2aa3f2b2f9fb01bcec83f2aad70326369be1cf838a37a10324c76936e5d8b284"
     }
   ],
   "authoritySnapshots": [
@@ -108,7 +108,7 @@
       "subjectId": "agent-finance-01",
       "authority": {
         "repository": "registry.example/consumer/authority",
-        "digest": "sha256:a1763a3478c884b03bd6110c266360056e833d0069827f7981d043a0d424e8a1",
+        "digest": "sha256:817109f5804f15931e07e3e18e40e6d7261b6eda0a28e94d59308805cbf834e3",
         "mediaType": "application/vnd.bytedesk.agent.consumer-authority.v1+json",
         "size": 2098,
         "trustPolicy": {
@@ -116,13 +116,13 @@
           "digest": "sha256:b3ce055867a5266be015caee83e17cf48e101a7929da88d69f4b1f5219918e08"
         }
       },
-      "verificationEvidenceDigest": "sha256:a8d748ce68d4f6cf2fed6c87cba66fa707316591edb41d54748f69e556d5e705"
+      "verificationEvidenceDigest": "sha256:c0df5760b65eec4cee93d30319188d450b6c55dc6e2f3d776bc38456b97bc498"
     },
     {
       "subjectId": "agent-finance-02",
       "authority": {
         "repository": "registry.example/consumer/authority",
-        "digest": "sha256:f384558641bf3affa3d8bce567baa5dcb14622d2ea5ba79244958426cdb91b7b",
+        "digest": "sha256:45be9aebcf74b76728ddfcb4de027761950952894226ad2aa46a50843121b0b1",
         "mediaType": "application/vnd.bytedesk.agent.consumer-authority.v1+json",
         "size": 2101,
         "trustPolicy": {
@@ -130,7 +130,7 @@
           "digest": "sha256:b3ce055867a5266be015caee83e17cf48e101a7929da88d69f4b1f5219918e08"
         }
       },
-      "verificationEvidenceDigest": "sha256:e9c4b1e767e445b6f950b9fedf40e7b023a43e97ca107d6b079e3353fe6e0c3b"
+      "verificationEvidenceDigest": "sha256:135aba7acb93d07c0584e0a98dd633f4c87908d8d4348c5a274fe76a96567c15"
     }
   ],
   "authorizationDecisionProofs": [
@@ -138,7 +138,7 @@
       "subjectId": "agent-finance-01",
       "proof": {
         "repository": "registry.example/consumer/authorization-evidence",
-        "digest": "sha256:504ed3be11a977bc353a0c37da83091aa5911eae739c63aa64361e387098e3b0",
+        "digest": "sha256:03d43cdac6c95341f9733bc7e756589cde0b5f433875bd3ddee43b534fe1a8af",
         "mediaType": "application/vnd.bytedesk.agent.authorization-decision-proof.v1+json",
         "size": 1967,
         "trustPolicy": {
@@ -146,13 +146,13 @@
           "digest": "sha256:e6aa0e692ba5cff16aecb61372629572b9455d424fac15d08ec0ce5f568f1a9d"
         }
       },
-      "verificationEvidenceDigest": "sha256:1f58ccaf2bd9504576b8181243de408e8095dfdf9ac48f59de67febab73ffb97"
+      "verificationEvidenceDigest": "sha256:047c24ebff4aea1301e7510df4be95f08ec928809dbbb5073c8643e8be20cfe7"
     },
     {
       "subjectId": "agent-finance-02",
       "proof": {
         "repository": "registry.example/consumer/authorization-evidence",
-        "digest": "sha256:8dbbc038240840b406ab2f941702403abfb1eed536065ae3431bb6f5d1a472c4",
+        "digest": "sha256:5a7ae03b6ddfadf88f5a4afd138b1091f6df314692c62818186d174718990ab4",
         "mediaType": "application/vnd.bytedesk.agent.authorization-decision-proof.v1+json",
         "size": 1970,
         "trustPolicy": {
@@ -160,12 +160,12 @@
           "digest": "sha256:e6aa0e692ba5cff16aecb61372629572b9455d424fac15d08ec0ce5f568f1a9d"
         }
       },
-      "verificationEvidenceDigest": "sha256:ac83ec39bf8ddb7410939fb088f73cbaab27f451a36a23c8278e2b1f8d2fd7c4"
+      "verificationEvidenceDigest": "sha256:b561430a614e34445b6adfdb305c2215ca827c92241991e96e7607ca671eaf44"
     }
   ],
   "releaseEligibility": {
     "repository": "registry.example/consumer/status-eligibility",
-    "digest": "sha256:22fc030953538850c6f9e6bf196c44dad688140efdcc32a88ac4358354af07c7",
+    "digest": "sha256:884ef530df25681004c917f1659083b0182463e4ab98ef9bd47b503f381a3b65",
     "mediaType": "application/vnd.bytedesk.agent.release-status-eligibility-evidence.v1+json",
     "size": 11298,
     "trustPolicy": {
@@ -173,8 +173,8 @@
       "digest": "sha256:9d300a55ffeabc00b586c41988f6555ffed52c02d5ef1e32d71e070b4e71db6c"
     }
   },
-  "releaseEligibilityDigest": "sha256:6bf3d63ffe04d0fce9a713d298ef88b5e8cbf7e0d540ef7b7d7b003209a5b305",
-  "releaseEligibilityVerificationEvidenceDigest": "sha256:e54335b3a217bb68665499b2ec7b57357084b341e53972d516dfce580d1ccdf2",
+  "releaseEligibilityDigest": "sha256:d3b5210d2c50851c0adf355aebebf3777c077980238a3921a3e4b1ef91d37d4b",
+  "releaseEligibilityVerificationEvidenceDigest": "sha256:71f6e648f9efc29f796a34a4e0172a5e78e57d5d84137b229d7d95b581da5bb4",
   "trustPolicyPinSetDigest": "sha256:af930a54ebfeb738c4c22d2163be6251706592a41ef9b17c68e2fd9f5aaec697",
   "trustPolicyPinSetProviderEvidenceDigest": "sha256:75330f4899c397803881bd2b71c157f97b574e1599e6bfc2e9cd2b3684569d67",
   "authorizationNonce": "activation_authorization_nonce_0123456789abcdef",
@@ -189,25 +189,25 @@
     "id": "consumer-activation-authorization-v1",
     "digest": "sha256:ede8e21cd9a20f0f35c3781144db10e4bbaa163137eee63da4aa928d97a392f3"
   },
-  "authorizationDigest": "sha256:1c66d6436397784b4d7c1fe518cdd854197bbf1cae2486dda0d1985c8e541828",
+  "authorizationDigest": "sha256:39c444d0877c109ca460119bfdb4f3016632f217a93cbd542db07992a1da7bdf",
   "signingResult": {
     "contract": "bytedesk.signing-result/1",
     "schema": {
       "id": "https://schemas.bytedesk.ai/agent-delivery/v1/signing-result/1.0.0",
       "digest": "sha256:a64e23f1ae5a04e0c26c67085a41e8d0d70a9df9d45b1ec789c72c7634543ede"
     },
-    "requestId": "consumer-activation-authorization-v1-request-1c66d6436397784b4d7c1fe5",
-    "requestDigest": "sha256:1069c3198311825f10b2af9d4854906989341eabf98f9745cf18688aa6117852",
+    "requestId": "consumer-activation-authorization-v1-request-39c444d0877c109ca460119b",
+    "requestDigest": "sha256:0227e507f59b8d301a781aefd596f067c937b8547c01c886efe7072b10d8d9e4",
     "purpose": "consumer-activation-authorization-v1",
     "keyVersion": "kms://consumer-01/consumer-activation-authorization-v1/versions/1",
     "algorithm": "ECDSA_P256_SHA256",
     "publicKeyDigest": "sha256:34df2657f7144e6bacef742d5439c5381159bce5a3cf31584dbb6ed49a1abb55",
     "repository": "registry.example/consumer/activation-authorizations",
-    "subjectDigest": "sha256:1c66d6436397784b4d7c1fe518cdd854197bbf1cae2486dda0d1985c8e541828",
+    "subjectDigest": "sha256:39c444d0877c109ca460119bfdb4f3016632f217a93cbd542db07992a1da7bdf",
     "subjectMediaType": "application/vnd.bytedesk.agent.activation-authorization-statement.v1+json",
     "signatureBundle": {
       "repository": "registry.example/consumer/activation-authorizations",
-      "digest": "sha256:c350036c78b44830c9d5eb73cdb2deae12b73a6c1cb56af151d52f5ea5c91dc4",
+      "digest": "sha256:bbbc2044d536fdb52a1a6095a3a98bd6b3ce7d81de7cc56984a340203f22678d",
       "mediaType": "application/vnd.dev.sigstore.bundle.v0.3+json",
       "size": 2449,
       "trustPolicy": {
@@ -221,7 +221,7 @@
     },
     "providerAuditEvidence": {
       "repository": "registry.example/consumer/activation-authorizations",
-      "digest": "sha256:2224855c9a1927110fe584bea461aae91b6b17a9f6ecd685744191fd94ea1803",
+      "digest": "sha256:3f9e1e17f53d9a2db3d8a60ecc3978c95ac09e83f331810c3fbe0a2ef8b538b5",
       "mediaType": "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
       "size": 1982,
       "trustPolicy": {

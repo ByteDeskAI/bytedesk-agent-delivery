@@ -858,7 +858,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.select-renderer.result/1",
-              "instanceDigest": "sha256:89926f432db5d285f2970b0b2cca7db979453a0a59a1e98e67ec254530e380c4",
+              "instanceDigest": "sha256:c8bcdbd8877bcfc0b5877091c15ca32ed52aa8fd2f960fd0483b066287569b5a",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -918,7 +918,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.render.request/1",
-              "instanceDigest": "sha256:38d1c6a31c08876ee26fcf75f51fcfd56d4b79f3a0dc0ec7cbf5c8c64a6cc540",
+              "instanceDigest": "sha256:4c32943823541729f0729612142ac3b9212e1a995cb79b51874a212e863b9296",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -930,7 +930,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.render.result/1",
-              "instanceDigest": "sha256:d2283ae42acf03b55ded42b3f4c1f631c78d75457b481c020f783dae4e8b72e2",
+              "instanceDigest": "sha256:72b05936db11690d7fc429f3753a54300fbf566a4c96d2b45ff57df9043696c7",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -1010,7 +1010,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.render.request/1",
-              "instanceDigest": "sha256:38d1c6a31c08876ee26fcf75f51fcfd56d4b79f3a0dc0ec7cbf5c8c64a6cc540",
+              "instanceDigest": "sha256:4c32943823541729f0729612142ac3b9212e1a995cb79b51874a212e863b9296",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -1022,7 +1022,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.render.result/1",
-              "instanceDigest": "sha256:8de3c13dc186d7299859357c08482c814b400db1e4db532b1c0e4d46f6097b86",
+              "instanceDigest": "sha256:1fa0791b639b5fa40f964134872d19fb0dc36bb3c9c533886f47f6e91ebc3ab2",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -1083,7 +1083,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.validate-output.request/1",
-              "instanceDigest": "sha256:eb6290d569b81b42d96e96d5428b00432ee2eccc3c32abe7b1348ef12b5477cc",
+              "instanceDigest": "sha256:6b101b87f8a77ddf042ec22966ed7be1f9204916e75af4b6c596f213bb9d8631",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -1095,7 +1095,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.validate-output.result/1",
-              "instanceDigest": "sha256:f58623023d59d2462ee65c40149bec66dbbe452073452e93b89f35dc78278b2d",
+              "instanceDigest": "sha256:f95a00687ec5da89be1376dc51fa908eec5dfc2baba1d0599bfd0236d82228ac",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -1175,7 +1175,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.request/1",
-              "instanceDigest": "sha256:98339cdf48a440460effbff7420389187b82f6bb539261a5118a12243ce6b437",
+              "instanceDigest": "sha256:d9651a8125c030d780f933c78740e7724ca25daab70d80f9995ad005aea2e172",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -1187,7 +1187,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.result/1",
-              "instanceDigest": "sha256:b647d7bd03c5772df543421c0e1577cd9c44db80ba481dad24464b1f02724b66",
+              "instanceDigest": "sha256:59407172a5b39b27c450d89b0d8b651ca31d33cdcbafeb6ab19ed598c2875375",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -1279,7 +1279,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.wayflow-compatibility.verify-native-output.result/1",
-              "instanceDigest": "sha256:661107bccf416b3de085e070621eb22f0b7d7b1f7da84f5069a0e5277e6667b3",
+              "instanceDigest": "sha256:e27de36b0f8b500a8aac9bed3da8692251f22e1da27ccbc050f30da6698e8994",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -2746,7 +2746,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.consumer-authority-approval.verify-private-authority.request/1",
-              "instanceDigest": "sha256:926439e1d630e030a4d1544a92a76299d4b05c5451ed5fc9054a3c33b453ef95",
+              "instanceDigest": "sha256:d7e63a59719016411f411c2e5254386ebeed6b91b97799108edad5d628c76dc8",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -4084,7 +4084,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.request/1",
-              "instanceDigest": "sha256:5be72dbae4853f9cea9d4952738d5b910767a2c3c6260b304ee88e6cd030f4a5",
+              "instanceDigest": "sha256:ea19a8b895f19de27532b0a923013ff6f692c8b21f203dbcfa72ac16dd2eb25e",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -4096,7 +4096,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.result/1",
-              "instanceDigest": "sha256:f7ddc103681e4fa18d8e9a86d7c79a2708205d147efc094fd594e9fd418a7f72",
+              "instanceDigest": "sha256:8cb85746df1b5a52ef23740dd069db6b55e1fa1f07125fa1930afca6311e49ea",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -4435,7 +4435,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -4780,7 +4780,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.host-reconciler.activate-candidate.request/1",
-              "instanceDigest": "sha256:4144c259f94f995d38e6326fe0625b5e3455cd1ddcc2337846f420d19f7ec801",
+              "instanceDigest": "sha256:114fcece9f5e88deb36d0e55824ad84c28c5b521400fb1831bbd3a53f27e4964",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -5967,7 +5967,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.select-renderer.result/1",
-              "instanceDigest": "sha256:89926f432db5d285f2970b0b2cca7db979453a0a59a1e98e67ec254530e380c4",
+              "instanceDigest": "sha256:c8bcdbd8877bcfc0b5877091c15ca32ed52aa8fd2f960fd0483b066287569b5a",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6353,7 +6353,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.validate-output.request/1",
-              "instanceDigest": "sha256:eb6290d569b81b42d96e96d5428b00432ee2eccc3c32abe7b1348ef12b5477cc",
+              "instanceDigest": "sha256:6b101b87f8a77ddf042ec22966ed7be1f9204916e75af4b6c596f213bb9d8631",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6365,7 +6365,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.validate-output.result/1",
-              "instanceDigest": "sha256:f58623023d59d2462ee65c40149bec66dbbe452073452e93b89f35dc78278b2d",
+              "instanceDigest": "sha256:f95a00687ec5da89be1376dc51fa908eec5dfc2baba1d0599bfd0236d82228ac",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6425,7 +6425,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.request/1",
-              "instanceDigest": "sha256:98339cdf48a440460effbff7420389187b82f6bb539261a5118a12243ce6b437",
+              "instanceDigest": "sha256:d9651a8125c030d780f933c78740e7724ca25daab70d80f9995ad005aea2e172",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6437,7 +6437,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.result/1",
-              "instanceDigest": "sha256:b647d7bd03c5772df543421c0e1577cd9c44db80ba481dad24464b1f02724b66",
+              "instanceDigest": "sha256:59407172a5b39b27c450d89b0d8b651ca31d33cdcbafeb6ab19ed598c2875375",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6501,7 +6501,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.request/1",
-              "instanceDigest": "sha256:98339cdf48a440460effbff7420389187b82f6bb539261a5118a12243ce6b437",
+              "instanceDigest": "sha256:d9651a8125c030d780f933c78740e7724ca25daab70d80f9995ad005aea2e172",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6513,7 +6513,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.result/1",
-              "instanceDigest": "sha256:b647d7bd03c5772df543421c0e1577cd9c44db80ba481dad24464b1f02724b66",
+              "instanceDigest": "sha256:59407172a5b39b27c450d89b0d8b651ca31d33cdcbafeb6ab19ed598c2875375",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6584,7 +6584,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.select-renderer.result/1",
-              "instanceDigest": "sha256:89926f432db5d285f2970b0b2cca7db979453a0a59a1e98e67ec254530e380c4",
+              "instanceDigest": "sha256:c8bcdbd8877bcfc0b5877091c15ca32ed52aa8fd2f960fd0483b066287569b5a",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6655,7 +6655,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.select-renderer.result/1",
-              "instanceDigest": "sha256:89926f432db5d285f2970b0b2cca7db979453a0a59a1e98e67ec254530e380c4",
+              "instanceDigest": "sha256:c8bcdbd8877bcfc0b5877091c15ca32ed52aa8fd2f960fd0483b066287569b5a",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6726,7 +6726,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.select-renderer.result/1",
-              "instanceDigest": "sha256:89926f432db5d285f2970b0b2cca7db979453a0a59a1e98e67ec254530e380c4",
+              "instanceDigest": "sha256:c8bcdbd8877bcfc0b5877091c15ca32ed52aa8fd2f960fd0483b066287569b5a",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6785,7 +6785,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.render.request/1",
-              "instanceDigest": "sha256:38d1c6a31c08876ee26fcf75f51fcfd56d4b79f3a0dc0ec7cbf5c8c64a6cc540",
+              "instanceDigest": "sha256:4c32943823541729f0729612142ac3b9212e1a995cb79b51874a212e863b9296",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6797,7 +6797,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.render.result/1",
-              "instanceDigest": "sha256:d2283ae42acf03b55ded42b3f4c1f631c78d75457b481c020f783dae4e8b72e2",
+              "instanceDigest": "sha256:72b05936db11690d7fc429f3753a54300fbf566a4c96d2b45ff57df9043696c7",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6857,7 +6857,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.request/1",
-              "instanceDigest": "sha256:98339cdf48a440460effbff7420389187b82f6bb539261a5118a12243ce6b437",
+              "instanceDigest": "sha256:d9651a8125c030d780f933c78740e7724ca25daab70d80f9995ad005aea2e172",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6869,7 +6869,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.result/1",
-              "instanceDigest": "sha256:b647d7bd03c5772df543421c0e1577cd9c44db80ba481dad24464b1f02724b66",
+              "instanceDigest": "sha256:59407172a5b39b27c450d89b0d8b651ca31d33cdcbafeb6ab19ed598c2875375",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6929,7 +6929,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.render.request/1",
-              "instanceDigest": "sha256:38d1c6a31c08876ee26fcf75f51fcfd56d4b79f3a0dc0ec7cbf5c8c64a6cc540",
+              "instanceDigest": "sha256:4c32943823541729f0729612142ac3b9212e1a995cb79b51874a212e863b9296",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -6941,7 +6941,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.render.result/1",
-              "instanceDigest": "sha256:8de3c13dc186d7299859357c08482c814b400db1e4db532b1c0e4d46f6097b86",
+              "instanceDigest": "sha256:1fa0791b639b5fa40f964134872d19fb0dc36bb3c9c533886f47f6e91ebc3ab2",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7001,7 +7001,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.request/1",
-              "instanceDigest": "sha256:98339cdf48a440460effbff7420389187b82f6bb539261a5118a12243ce6b437",
+              "instanceDigest": "sha256:d9651a8125c030d780f933c78740e7724ca25daab70d80f9995ad005aea2e172",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7013,7 +7013,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.result/1",
-              "instanceDigest": "sha256:b647d7bd03c5772df543421c0e1577cd9c44db80ba481dad24464b1f02724b66",
+              "instanceDigest": "sha256:59407172a5b39b27c450d89b0d8b651ca31d33cdcbafeb6ab19ed598c2875375",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7077,7 +7077,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.validate-output.request/1",
-              "instanceDigest": "sha256:eb6290d569b81b42d96e96d5428b00432ee2eccc3c32abe7b1348ef12b5477cc",
+              "instanceDigest": "sha256:6b101b87f8a77ddf042ec22966ed7be1f9204916e75af4b6c596f213bb9d8631",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7089,7 +7089,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.validate-output.result/1",
-              "instanceDigest": "sha256:f58623023d59d2462ee65c40149bec66dbbe452073452e93b89f35dc78278b2d",
+              "instanceDigest": "sha256:f95a00687ec5da89be1376dc51fa908eec5dfc2baba1d0599bfd0236d82228ac",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7164,7 +7164,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.select-renderer.result/1",
-              "instanceDigest": "sha256:89926f432db5d285f2970b0b2cca7db979453a0a59a1e98e67ec254530e380c4",
+              "instanceDigest": "sha256:c8bcdbd8877bcfc0b5877091c15ca32ed52aa8fd2f960fd0483b066287569b5a",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7227,7 +7227,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.render.request/1",
-              "instanceDigest": "sha256:38d1c6a31c08876ee26fcf75f51fcfd56d4b79f3a0dc0ec7cbf5c8c64a6cc540",
+              "instanceDigest": "sha256:4c32943823541729f0729612142ac3b9212e1a995cb79b51874a212e863b9296",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7239,7 +7239,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.render.result/1",
-              "instanceDigest": "sha256:d2283ae42acf03b55ded42b3f4c1f631c78d75457b481c020f783dae4e8b72e2",
+              "instanceDigest": "sha256:72b05936db11690d7fc429f3753a54300fbf566a4c96d2b45ff57df9043696c7",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7280,7 +7280,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.request/1",
-              "instanceDigest": "sha256:98339cdf48a440460effbff7420389187b82f6bb539261a5118a12243ce6b437",
+              "instanceDigest": "sha256:d9651a8125c030d780f933c78740e7724ca25daab70d80f9995ad005aea2e172",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7292,7 +7292,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.result/1",
-              "instanceDigest": "sha256:b647d7bd03c5772df543421c0e1577cd9c44db80ba481dad24464b1f02724b66",
+              "instanceDigest": "sha256:59407172a5b39b27c450d89b0d8b651ca31d33cdcbafeb6ab19ed598c2875375",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7356,7 +7356,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-qualification.request/1",
-              "instanceDigest": "sha256:519d5d6199fcd76cfb1c41d8457f59b0a0bdccea1178564329e01e55bd9e154b",
+              "instanceDigest": "sha256:e73175b6202e74a930721f7203374e1a65a4e0214e3a881cf75451567207de0d",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7368,7 +7368,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-sandbox.execute-qualification.result/1",
-              "instanceDigest": "sha256:31c51ad86d5d1f8f476865a510842b79100fbd2896c8bc91be75a65b684fab4d",
+              "instanceDigest": "sha256:615bdeecaa8ef49eff563733054d449b4d5055692dfb2cf9802a405f5e307a4c",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7440,7 +7440,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.wayflow-compatibility.verify-native-output.result/1",
-              "instanceDigest": "sha256:661107bccf416b3de085e070621eb22f0b7d7b1f7da84f5069a0e5277e6667b3",
+              "instanceDigest": "sha256:e27de36b0f8b500a8aac9bed3da8692251f22e1da27ccbc050f30da6698e8994",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7503,7 +7503,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.render.request/1",
-              "instanceDigest": "sha256:38d1c6a31c08876ee26fcf75f51fcfd56d4b79f3a0dc0ec7cbf5c8c64a6cc540",
+              "instanceDigest": "sha256:4c32943823541729f0729612142ac3b9212e1a995cb79b51874a212e863b9296",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7515,7 +7515,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.render.result/1",
-              "instanceDigest": "sha256:d2283ae42acf03b55ded42b3f4c1f631c78d75457b481c020f783dae4e8b72e2",
+              "instanceDigest": "sha256:72b05936db11690d7fc429f3753a54300fbf566a4c96d2b45ff57df9043696c7",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7560,7 +7560,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.render.request/1",
-              "instanceDigest": "sha256:38d1c6a31c08876ee26fcf75f51fcfd56d4b79f3a0dc0ec7cbf5c8c64a6cc540",
+              "instanceDigest": "sha256:4c32943823541729f0729612142ac3b9212e1a995cb79b51874a212e863b9296",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7572,7 +7572,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.render.result/1",
-              "instanceDigest": "sha256:8de3c13dc186d7299859357c08482c814b400db1e4db532b1c0e4d46f6097b86",
+              "instanceDigest": "sha256:1fa0791b639b5fa40f964134872d19fb0dc36bb3c9c533886f47f6e91ebc3ab2",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7635,7 +7635,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.render.request/1",
-              "instanceDigest": "sha256:38d1c6a31c08876ee26fcf75f51fcfd56d4b79f3a0dc0ec7cbf5c8c64a6cc540",
+              "instanceDigest": "sha256:4c32943823541729f0729612142ac3b9212e1a995cb79b51874a212e863b9296",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7647,7 +7647,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.render.result/1",
-              "instanceDigest": "sha256:d2283ae42acf03b55ded42b3f4c1f631c78d75457b481c020f783dae4e8b72e2",
+              "instanceDigest": "sha256:72b05936db11690d7fc429f3753a54300fbf566a4c96d2b45ff57df9043696c7",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7692,7 +7692,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.validate-output.request/1",
-              "instanceDigest": "sha256:eb6290d569b81b42d96e96d5428b00432ee2eccc3c32abe7b1348ef12b5477cc",
+              "instanceDigest": "sha256:6b101b87f8a77ddf042ec22966ed7be1f9204916e75af4b6c596f213bb9d8631",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -7704,7 +7704,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.validate-output.result/1",
-              "instanceDigest": "sha256:f58623023d59d2462ee65c40149bec66dbbe452073452e93b89f35dc78278b2d",
+              "instanceDigest": "sha256:f95a00687ec5da89be1376dc51fa908eec5dfc2baba1d0599bfd0236d82228ac",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -8233,7 +8233,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.consumer-authority-approval.verify-private-authority.request/1",
-              "instanceDigest": "sha256:926439e1d630e030a4d1544a92a76299d4b05c5451ed5fc9054a3c33b453ef95",
+              "instanceDigest": "sha256:d7e63a59719016411f411c2e5254386ebeed6b91b97799108edad5d628c76dc8",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -8379,7 +8379,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.consumer-authority-approval.verify-private-authority.request/1",
-              "instanceDigest": "sha256:926439e1d630e030a4d1544a92a76299d4b05c5451ed5fc9054a3c33b453ef95",
+              "instanceDigest": "sha256:d7e63a59719016411f411c2e5254386ebeed6b91b97799108edad5d628c76dc8",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -8454,7 +8454,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.consumer-authority-approval.verify-private-authority.request/1",
-              "instanceDigest": "sha256:926439e1d630e030a4d1544a92a76299d4b05c5451ed5fc9054a3c33b453ef95",
+              "instanceDigest": "sha256:d7e63a59719016411f411c2e5254386ebeed6b91b97799108edad5d628c76dc8",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -9631,7 +9631,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.request/1",
-              "instanceDigest": "sha256:5be72dbae4853f9cea9d4952738d5b910767a2c3c6260b304ee88e6cd030f4a5",
+              "instanceDigest": "sha256:ea19a8b895f19de27532b0a923013ff6f692c8b21f203dbcfa72ac16dd2eb25e",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -9643,7 +9643,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.result/1",
-              "instanceDigest": "sha256:f7ddc103681e4fa18d8e9a86d7c79a2708205d147efc094fd594e9fd418a7f72",
+              "instanceDigest": "sha256:8cb85746df1b5a52ef23740dd069db6b55e1fa1f07125fa1930afca6311e49ea",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -9704,7 +9704,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.request/1",
-              "instanceDigest": "sha256:5be72dbae4853f9cea9d4952738d5b910767a2c3c6260b304ee88e6cd030f4a5",
+              "instanceDigest": "sha256:ea19a8b895f19de27532b0a923013ff6f692c8b21f203dbcfa72ac16dd2eb25e",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -9716,7 +9716,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.result/1",
-              "instanceDigest": "sha256:f7ddc103681e4fa18d8e9a86d7c79a2708205d147efc094fd594e9fd418a7f72",
+              "instanceDigest": "sha256:8cb85746df1b5a52ef23740dd069db6b55e1fa1f07125fa1930afca6311e49ea",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -9777,7 +9777,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.request/1",
-              "instanceDigest": "sha256:5be72dbae4853f9cea9d4952738d5b910767a2c3c6260b304ee88e6cd030f4a5",
+              "instanceDigest": "sha256:ea19a8b895f19de27532b0a923013ff6f692c8b21f203dbcfa72ac16dd2eb25e",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -9789,7 +9789,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.result/1",
-              "instanceDigest": "sha256:f7ddc103681e4fa18d8e9a86d7c79a2708205d147efc094fd594e9fd418a7f72",
+              "instanceDigest": "sha256:8cb85746df1b5a52ef23740dd069db6b55e1fa1f07125fa1930afca6311e49ea",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -9850,7 +9850,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.request/1",
-              "instanceDigest": "sha256:5be72dbae4853f9cea9d4952738d5b910767a2c3c6260b304ee88e6cd030f4a5",
+              "instanceDigest": "sha256:ea19a8b895f19de27532b0a923013ff6f692c8b21f203dbcfa72ac16dd2eb25e",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -9862,7 +9862,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.result/1",
-              "instanceDigest": "sha256:f7ddc103681e4fa18d8e9a86d7c79a2708205d147efc094fd594e9fd418a7f72",
+              "instanceDigest": "sha256:8cb85746df1b5a52ef23740dd069db6b55e1fa1f07125fa1930afca6311e49ea",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -9923,7 +9923,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10000,7 +10000,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10073,7 +10073,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10150,7 +10150,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10223,7 +10223,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10296,7 +10296,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10369,7 +10369,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10442,7 +10442,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10515,7 +10515,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10588,7 +10588,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10659,7 +10659,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.host-reconciler.activate-candidate.request/1",
-              "instanceDigest": "sha256:4144c259f94f995d38e6326fe0625b5e3455cd1ddcc2337846f420d19f7ec801",
+              "instanceDigest": "sha256:114fcece9f5e88deb36d0e55824ad84c28c5b521400fb1831bbd3a53f27e4964",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10782,7 +10782,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.host-reconciler.activate-candidate.request/1",
-              "instanceDigest": "sha256:4144c259f94f995d38e6326fe0625b5e3455cd1ddcc2337846f420d19f7ec801",
+              "instanceDigest": "sha256:114fcece9f5e88deb36d0e55824ad84c28c5b521400fb1831bbd3a53f27e4964",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -10909,7 +10909,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.host-reconciler.activate-candidate.request/1",
-              "instanceDigest": "sha256:4144c259f94f995d38e6326fe0625b5e3455cd1ddcc2337846f420d19f7ec801",
+              "instanceDigest": "sha256:114fcece9f5e88deb36d0e55824ad84c28c5b521400fb1831bbd3a53f27e4964",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -11230,7 +11230,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.host-reconciler.activate-candidate.request/1",
-              "instanceDigest": "sha256:4144c259f94f995d38e6326fe0625b5e3455cd1ddcc2337846f420d19f7ec801",
+              "instanceDigest": "sha256:114fcece9f5e88deb36d0e55824ad84c28c5b521400fb1831bbd3a53f27e4964",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -11301,7 +11301,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.host-reconciler.activate-candidate.request/1",
-              "instanceDigest": "sha256:4144c259f94f995d38e6326fe0625b5e3455cd1ddcc2337846f420d19f7ec801",
+              "instanceDigest": "sha256:114fcece9f5e88deb36d0e55824ad84c28c5b521400fb1831bbd3a53f27e4964",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -11524,7 +11524,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.host-reconciler.activate-candidate.request/1",
-              "instanceDigest": "sha256:4144c259f94f995d38e6326fe0625b5e3455cd1ddcc2337846f420d19f7ec801",
+              "instanceDigest": "sha256:114fcece9f5e88deb36d0e55824ad84c28c5b521400fb1831bbd3a53f27e4964",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -11835,7 +11835,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.host-reconciler.activate-candidate.request/1",
-              "instanceDigest": "sha256:4144c259f94f995d38e6326fe0625b5e3455cd1ddcc2337846f420d19f7ec801",
+              "instanceDigest": "sha256:114fcece9f5e88deb36d0e55824ad84c28c5b521400fb1831bbd3a53f27e4964",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -11958,7 +11958,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.host-reconciler.activate-candidate.request/1",
-              "instanceDigest": "sha256:4144c259f94f995d38e6326fe0625b5e3455cd1ddcc2337846f420d19f7ec801",
+              "instanceDigest": "sha256:114fcece9f5e88deb36d0e55824ad84c28c5b521400fb1831bbd3a53f27e4964",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -13370,7 +13370,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.consumer-authority-approval.verify-private-authority.request/1",
-              "instanceDigest": "sha256:926439e1d630e030a4d1544a92a76299d4b05c5451ed5fc9054a3c33b453ef95",
+              "instanceDigest": "sha256:d7e63a59719016411f411c2e5254386ebeed6b91b97799108edad5d628c76dc8",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -13428,7 +13428,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -13484,7 +13484,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.host-reconciler.activate-candidate.request/1",
-              "instanceDigest": "sha256:4144c259f94f995d38e6326fe0625b5e3455cd1ddcc2337846f420d19f7ec801",
+              "instanceDigest": "sha256:114fcece9f5e88deb36d0e55824ad84c28c5b521400fb1831bbd3a53f27e4964",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -13559,7 +13559,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.consumer-authority-approval.verify-private-authority.request/1",
-              "instanceDigest": "sha256:926439e1d630e030a4d1544a92a76299d4b05c5451ed5fc9054a3c33b453ef95",
+              "instanceDigest": "sha256:d7e63a59719016411f411c2e5254386ebeed6b91b97799108edad5d628c76dc8",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -13617,7 +13617,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-              "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+              "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -13674,7 +13674,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.validate-output.request/1",
-              "instanceDigest": "sha256:eb6290d569b81b42d96e96d5428b00432ee2eccc3c32abe7b1348ef12b5477cc",
+              "instanceDigest": "sha256:6b101b87f8a77ddf042ec22966ed7be1f9204916e75af4b6c596f213bb9d8631",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -13686,7 +13686,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-adapter.validate-output.result/1",
-              "instanceDigest": "sha256:f58623023d59d2462ee65c40149bec66dbbe452073452e93b89f35dc78278b2d",
+              "instanceDigest": "sha256:f95a00687ec5da89be1376dc51fa908eec5dfc2baba1d0599bfd0236d82228ac",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -15939,7 +15939,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-status-head.append-release-status.result/1",
-              "instanceDigest": "sha256:34269e0e10aa7df41cc16d05c4663b838efe123ce20b9ea0c5ce75fd011e8bfe",
+              "instanceDigest": "sha256:fe746ea45a5b2a81c49d33248f1949f48d4a7b823c6625c1852d9cdb675deafd",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -15993,7 +15993,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-status-head.resolve-append-attempt.result/1",
-              "instanceDigest": "sha256:b6019bd4dac1fc24e743b07b6995eff572b5f0dd319059581d24296c8ac8d10e",
+              "instanceDigest": "sha256:6498e9faf1f54168c57afe37b12b7ed94211ae1af4a473cb0ec277f0b73f319d",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -16066,7 +16066,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-status-head.append-release-status.result/1",
-              "instanceDigest": "sha256:34269e0e10aa7df41cc16d05c4663b838efe123ce20b9ea0c5ce75fd011e8bfe",
+              "instanceDigest": "sha256:fe746ea45a5b2a81c49d33248f1949f48d4a7b823c6625c1852d9cdb675deafd",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -16120,7 +16120,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-status-head.resolve-append-attempt.result/1",
-              "instanceDigest": "sha256:b6019bd4dac1fc24e743b07b6995eff572b5f0dd319059581d24296c8ac8d10e",
+              "instanceDigest": "sha256:6498e9faf1f54168c57afe37b12b7ed94211ae1af4a473cb0ec277f0b73f319d",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -16193,7 +16193,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-status-head.append-release-status.result/1",
-              "instanceDigest": "sha256:34269e0e10aa7df41cc16d05c4663b838efe123ce20b9ea0c5ce75fd011e8bfe",
+              "instanceDigest": "sha256:fe746ea45a5b2a81c49d33248f1949f48d4a7b823c6625c1852d9cdb675deafd",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -16247,7 +16247,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-status-head.resolve-append-attempt.result/1",
-              "instanceDigest": "sha256:b6019bd4dac1fc24e743b07b6995eff572b5f0dd319059581d24296c8ac8d10e",
+              "instanceDigest": "sha256:6498e9faf1f54168c57afe37b12b7ed94211ae1af4a473cb0ec277f0b73f319d",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -16320,7 +16320,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-status-head.resolve-append-attempt.result/1",
-              "instanceDigest": "sha256:b6019bd4dac1fc24e743b07b6995eff572b5f0dd319059581d24296c8ac8d10e",
+              "instanceDigest": "sha256:6498e9faf1f54168c57afe37b12b7ed94211ae1af4a473cb0ec277f0b73f319d",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -16391,7 +16391,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.renderer-strategy.select-qualification-renderer.result/1",
-              "instanceDigest": "sha256:25d2ee687a36f40c6eb2cad3445f24d0b66b547f600778d91f8f4eac114c4c56",
+              "instanceDigest": "sha256:da475b5e94f04dedc1b84676a0df56bc06cb6f24eb42131ecedaab4b9988b357",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -16464,7 +16464,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-status-head.resolve-status-head.result/1",
-              "instanceDigest": "sha256:73f52402aeecd52089758ad9800977c695f91530685de910924d0459f7922997",
+              "instanceDigest": "sha256:029f11a6dcf846c0aa7f0c59e5d216697a5b18d4a868a86ce3f140ff555a39ac",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -16541,7 +16541,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-status-head.resolve-status-head.result/1",
-              "instanceDigest": "sha256:73f52402aeecd52089758ad9800977c695f91530685de910924d0459f7922997",
+              "instanceDigest": "sha256:029f11a6dcf846c0aa7f0c59e5d216697a5b18d4a868a86ce3f140ff555a39ac",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -16942,7 +16942,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-qualification-finalizer.finalize-release-qualification.request/1",
-              "instanceDigest": "sha256:9f672d54f66d4aa2f171a0a2b4d8e64d65cbdf0a9971d24dc95df6fdd10fd1cb",
+              "instanceDigest": "sha256:9149e186318d8e09014950b435e06519c6c871a56bf84f020467c3ca6683836d",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -16954,7 +16954,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-qualification-finalizer.finalize-release-qualification.result/1",
-              "instanceDigest": "sha256:944602133899d6c4e02fba65817b936a6138d7b50d11402440487e82152013e6",
+              "instanceDigest": "sha256:4dd4ab4afffe328eca177f819a1cc139f3651c17a0653113264d51fbaeba0003",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -17027,7 +17027,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-qualification-finalizer.finalize-release-qualification.request/1",
-              "instanceDigest": "sha256:9f672d54f66d4aa2f171a0a2b4d8e64d65cbdf0a9971d24dc95df6fdd10fd1cb",
+              "instanceDigest": "sha256:9149e186318d8e09014950b435e06519c6c871a56bf84f020467c3ca6683836d",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -17039,7 +17039,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.release-qualification-finalizer.finalize-release-qualification.result/1",
-              "instanceDigest": "sha256:944602133899d6c4e02fba65817b936a6138d7b50d11402440487e82152013e6",
+              "instanceDigest": "sha256:4dd4ab4afffe328eca177f819a1cc139f3651c17a0653113264d51fbaeba0003",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -17100,7 +17100,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.public-render-finalizer.finalize-public-render.request/1",
-              "instanceDigest": "sha256:901b3c67052b9a4cc53a461fd2fb1f12ef8b1c5103aabe68244db4b26e7a4bd7",
+              "instanceDigest": "sha256:6a64355deb47c4de48401d409be3f0b0609de4e553b135c71ef1f65357bc3877",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -17112,7 +17112,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.public-render-finalizer.finalize-public-render.result/1",
-              "instanceDigest": "sha256:ad84cac3211de9c245edc49830893fdaf3299ee6e8e4f89f3d446de1d45a66d2",
+              "instanceDigest": "sha256:b5baafdc96e87fc017581e0d3f653474af3f815945ad5aa17430566f38237c6a",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -17185,7 +17185,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.public-render-finalizer.finalize-public-render.request/1",
-              "instanceDigest": "sha256:901b3c67052b9a4cc53a461fd2fb1f12ef8b1c5103aabe68244db4b26e7a4bd7",
+              "instanceDigest": "sha256:6a64355deb47c4de48401d409be3f0b0609de4e553b135c71ef1f65357bc3877",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -17197,7 +17197,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.public-render-finalizer.finalize-public-render.result/1",
-              "instanceDigest": "sha256:ad84cac3211de9c245edc49830893fdaf3299ee6e8e4f89f3d446de1d45a66d2",
+              "instanceDigest": "sha256:b5baafdc96e87fc017581e0d3f653474af3f815945ad5aa17430566f38237c6a",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -17258,7 +17258,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.public-render-publisher.publish-public-render.request/1",
-              "instanceDigest": "sha256:ebc227a57277459fc3353f7bed5b8a1c4b1b100deed1b414677f6fba905843bb",
+              "instanceDigest": "sha256:742cd6ddcf8c627882cf120de13b8df9abbcdb4d82f84176fbc75313f442f62b",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -17343,7 +17343,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.public-render-publisher.publish-public-render.request/1",
-              "instanceDigest": "sha256:ebc227a57277459fc3353f7bed5b8a1c4b1b100deed1b414677f6fba905843bb",
+              "instanceDigest": "sha256:742cd6ddcf8c627882cf120de13b8df9abbcdb4d82f84176fbc75313f442f62b",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -17469,7 +17469,7 @@
             "fixture": {
               "catalogPath": "contracts/ports/v1/contract-fixtures.json",
               "contractId": "bytedesk.port.public-render-publisher.publish-public-render.request/1",
-              "instanceDigest": "sha256:ebc227a57277459fc3353f7bed5b8a1c4b1b100deed1b414677f6fba905843bb",
+              "instanceDigest": "sha256:742cd6ddcf8c627882cf120de13b8df9abbcdb4d82f84176fbc75313f442f62b",
               "selector": "valid",
               "validity": "schema-valid-structural-sample"
             },
@@ -18132,7 +18132,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-strategy.select-qualification-renderer.result/1",
-          "instanceDigest": "sha256:25d2ee687a36f40c6eb2cad3445f24d0b66b547f600778d91f8f4eac114c4c56",
+          "instanceDigest": "sha256:da475b5e94f04dedc1b84676a0df56bc06cb6f24eb42131ecedaab4b9988b357",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18175,7 +18175,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-strategy.select-renderer.result/1",
-          "instanceDigest": "sha256:89926f432db5d285f2970b0b2cca7db979453a0a59a1e98e67ec254530e380c4",
+          "instanceDigest": "sha256:c8bcdbd8877bcfc0b5877091c15ca32ed52aa8fd2f960fd0483b066287569b5a",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18206,7 +18206,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-strategy.render.request/1",
-          "instanceDigest": "sha256:38d1c6a31c08876ee26fcf75f51fcfd56d4b79f3a0dc0ec7cbf5c8c64a6cc540",
+          "instanceDigest": "sha256:4c32943823541729f0729612142ac3b9212e1a995cb79b51874a212e863b9296",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18218,7 +18218,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-strategy.render.result/1",
-          "instanceDigest": "sha256:d2283ae42acf03b55ded42b3f4c1f631c78d75457b481c020f783dae4e8b72e2",
+          "instanceDigest": "sha256:72b05936db11690d7fc429f3753a54300fbf566a4c96d2b45ff57df9043696c7",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18250,7 +18250,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-adapter.render.request/1",
-          "instanceDigest": "sha256:38d1c6a31c08876ee26fcf75f51fcfd56d4b79f3a0dc0ec7cbf5c8c64a6cc540",
+          "instanceDigest": "sha256:4c32943823541729f0729612142ac3b9212e1a995cb79b51874a212e863b9296",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18262,7 +18262,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-adapter.render.result/1",
-          "instanceDigest": "sha256:8de3c13dc186d7299859357c08482c814b400db1e4db532b1c0e4d46f6097b86",
+          "instanceDigest": "sha256:1fa0791b639b5fa40f964134872d19fb0dc36bb3c9c533886f47f6e91ebc3ab2",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18294,7 +18294,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-adapter.validate-output.request/1",
-          "instanceDigest": "sha256:eb6290d569b81b42d96e96d5428b00432ee2eccc3c32abe7b1348ef12b5477cc",
+          "instanceDigest": "sha256:6b101b87f8a77ddf042ec22966ed7be1f9204916e75af4b6c596f213bb9d8631",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18306,7 +18306,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-adapter.validate-output.result/1",
-          "instanceDigest": "sha256:f58623023d59d2462ee65c40149bec66dbbe452073452e93b89f35dc78278b2d",
+          "instanceDigest": "sha256:f95a00687ec5da89be1376dc51fa908eec5dfc2baba1d0599bfd0236d82228ac",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18338,7 +18338,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.request/1",
-          "instanceDigest": "sha256:98339cdf48a440460effbff7420389187b82f6bb539261a5118a12243ce6b437",
+          "instanceDigest": "sha256:d9651a8125c030d780f933c78740e7724ca25daab70d80f9995ad005aea2e172",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18350,7 +18350,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-sandbox.execute-renderer.result/1",
-          "instanceDigest": "sha256:b647d7bd03c5772df543421c0e1577cd9c44db80ba481dad24464b1f02724b66",
+          "instanceDigest": "sha256:59407172a5b39b27c450d89b0d8b651ca31d33cdcbafeb6ab19ed598c2875375",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18382,7 +18382,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-sandbox.execute-qualification.request/1",
-          "instanceDigest": "sha256:519d5d6199fcd76cfb1c41d8457f59b0a0bdccea1178564329e01e55bd9e154b",
+          "instanceDigest": "sha256:e73175b6202e74a930721f7203374e1a65a4e0214e3a881cf75451567207de0d",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18394,7 +18394,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.renderer-sandbox.execute-qualification.result/1",
-          "instanceDigest": "sha256:31c51ad86d5d1f8f476865a510842b79100fbd2896c8bc91be75a65b684fab4d",
+          "instanceDigest": "sha256:615bdeecaa8ef49eff563733054d449b4d5055692dfb2cf9802a405f5e307a4c",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -18438,7 +18438,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.wayflow-compatibility.verify-native-output.result/1",
-          "instanceDigest": "sha256:661107bccf416b3de085e070621eb22f0b7d7b1f7da84f5069a0e5277e6667b3",
+          "instanceDigest": "sha256:e27de36b0f8b500a8aac9bed3da8692251f22e1da27ccbc050f30da6698e8994",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -19391,7 +19391,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.consumer-authority-approval.verify-private-authority.request/1",
-          "instanceDigest": "sha256:926439e1d630e030a4d1544a92a76299d4b05c5451ed5fc9054a3c33b453ef95",
+          "instanceDigest": "sha256:d7e63a59719016411f411c2e5254386ebeed6b91b97799108edad5d628c76dc8",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -20124,7 +20124,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.request/1",
-          "instanceDigest": "sha256:5be72dbae4853f9cea9d4952738d5b910767a2c3c6260b304ee88e6cd030f4a5",
+          "instanceDigest": "sha256:ea19a8b895f19de27532b0a923013ff6f692c8b21f203dbcfa72ac16dd2eb25e",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -20136,7 +20136,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.promotion-coordinator.authorize-activation.result/1",
-          "instanceDigest": "sha256:f7ddc103681e4fa18d8e9a86d7c79a2708205d147efc094fd594e9fd418a7f72",
+          "instanceDigest": "sha256:8cb85746df1b5a52ef23740dd069db6b55e1fa1f07125fa1930afca6311e49ea",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -20304,7 +20304,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.private-compiler.compile-private-deployment.request/1",
-          "instanceDigest": "sha256:d8eb965890cfd64b8f031daee467f7763f53342109afb1554d5e2082a94ae976",
+          "instanceDigest": "sha256:26d690e97287b83512ace63e7cf0ec461e29e353589be01e7f82cdfe72395ddc",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -20478,7 +20478,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.host-reconciler.activate-candidate.request/1",
-          "instanceDigest": "sha256:4144c259f94f995d38e6326fe0625b5e3455cd1ddcc2337846f420d19f7ec801",
+          "instanceDigest": "sha256:114fcece9f5e88deb36d0e55824ad84c28c5b521400fb1831bbd3a53f27e4964",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -21105,7 +21105,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.release-status-head.append-release-status.result/1",
-          "instanceDigest": "sha256:34269e0e10aa7df41cc16d05c4663b838efe123ce20b9ea0c5ce75fd011e8bfe",
+          "instanceDigest": "sha256:fe746ea45a5b2a81c49d33248f1949f48d4a7b823c6625c1852d9cdb675deafd",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -21150,7 +21150,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.release-status-head.resolve-append-attempt.result/1",
-          "instanceDigest": "sha256:b6019bd4dac1fc24e743b07b6995eff572b5f0dd319059581d24296c8ac8d10e",
+          "instanceDigest": "sha256:6498e9faf1f54168c57afe37b12b7ed94211ae1af4a473cb0ec277f0b73f319d",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -21195,7 +21195,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.release-status-head.resolve-status-head.result/1",
-          "instanceDigest": "sha256:73f52402aeecd52089758ad9800977c695f91530685de910924d0459f7922997",
+          "instanceDigest": "sha256:029f11a6dcf846c0aa7f0c59e5d216697a5b18d4a868a86ce3f140ff555a39ac",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -21314,7 +21314,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.release-qualification-finalizer.finalize-release-qualification.request/1",
-          "instanceDigest": "sha256:9f672d54f66d4aa2f171a0a2b4d8e64d65cbdf0a9971d24dc95df6fdd10fd1cb",
+          "instanceDigest": "sha256:9149e186318d8e09014950b435e06519c6c871a56bf84f020467c3ca6683836d",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -21326,7 +21326,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.release-qualification-finalizer.finalize-release-qualification.result/1",
-          "instanceDigest": "sha256:944602133899d6c4e02fba65817b936a6138d7b50d11402440487e82152013e6",
+          "instanceDigest": "sha256:4dd4ab4afffe328eca177f819a1cc139f3651c17a0653113264d51fbaeba0003",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -21359,7 +21359,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.public-render-finalizer.finalize-public-render.request/1",
-          "instanceDigest": "sha256:901b3c67052b9a4cc53a461fd2fb1f12ef8b1c5103aabe68244db4b26e7a4bd7",
+          "instanceDigest": "sha256:6a64355deb47c4de48401d409be3f0b0609de4e553b135c71ef1f65357bc3877",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -21371,7 +21371,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.public-render-finalizer.finalize-public-render.result/1",
-          "instanceDigest": "sha256:ad84cac3211de9c245edc49830893fdaf3299ee6e8e4f89f3d446de1d45a66d2",
+          "instanceDigest": "sha256:b5baafdc96e87fc017581e0d3f653474af3f815945ad5aa17430566f38237c6a",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -21404,7 +21404,7 @@
         "fixture": {
           "catalogPath": "contracts/ports/v1/contract-fixtures.json",
           "contractId": "bytedesk.port.public-render-publisher.publish-public-render.request/1",
-          "instanceDigest": "sha256:ebc227a57277459fc3353f7bed5b8a1c4b1b100deed1b414677f6fba905843bb",
+          "instanceDigest": "sha256:742cd6ddcf8c627882cf120de13b8df9abbcdb4d82f84176fbc75313f442f62b",
           "selector": "valid",
           "validity": "schema-valid-structural-sample"
         },
@@ -21434,13 +21434,13 @@
       "role": "port-registry"
     },
     {
-      "digest": "sha256:255f7d4099f3503a95bf886f6d6a66a86af9b8329500fb90844e5eea4fbca232",
+      "digest": "sha256:10ec23fe7866b3d737764b73e2736459c513a2fb2ea0173679527730c168f5a8",
       "path": "contracts/ports/v1/type-catalog.json",
       "profile": "bytedesk.port-type-catalog/1",
       "role": "type-catalog"
     },
     {
-      "digest": "sha256:d7689ee1f28877ea5d924aae66bd5e6768a1a7bdd501333376dd4f34b19a901c",
+      "digest": "sha256:6e3b36a8a4a382d46bf6fb8ca50697e9d0b28535827d3874273ce766a6d13f7e",
       "path": "contracts/ports/v1/contract-fixtures.json",
       "profile": "bytedesk.port-contract-fixtures/1",
       "role": "contract-fixtures"

@@ -7,7 +7,7 @@
   "verificationId": "qualification-finalization-product-release-inclusion-verification",
   "subject": {
     "repository": "registry.example/product/status-heads",
-    "digest": "sha256:d283227a08d172dbe2d2e275aa63a5d8653cc19eed73b7ef0f67ffd225268efb",
+    "digest": "sha256:e4c26d59d7f20ed86a8e3314bc40516d81615759bedb954803c12257cd4598bb",
     "mediaType": "application/vnd.bytedesk.agent.release-status-log-inclusion-proof.v1+json",
     "size": 1194,
     "trustPolicy": {
@@ -23,6 +23,6 @@
   "outcome": "permitted",
   "reasonCodes": [],
   "evidenceDigests": [
-    "sha256:e759866d1bea7b0068f5b420b1429b42272ae785c8f7c46413e0c9fe6e6bf55e"
+    "sha256:cd771d305e4bf1618a09d4437b0330b48706a2f219e5ea168ce1811d007a414e"
   ]
 }

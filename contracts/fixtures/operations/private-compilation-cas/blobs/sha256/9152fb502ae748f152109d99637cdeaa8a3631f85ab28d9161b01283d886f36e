@@ -1,0 +1,1 @@
+{"profile":"bytedesk.release-qualification-details/1","qualificationSelectionDigest":"sha256:787adbba8db7167c472b343e8a00d569524287b7df2fb6e8164de67d0bfb6915","requirementId":"every-renderer-executable-malware","result":"pass","role":"malware","subjectDigest":"sha256:a8c5229342c5b810f6f945e3fb9ec3f17cb7ff63670c7ba02e37d1586596fb78","subjectRole":"renderer_executable"}

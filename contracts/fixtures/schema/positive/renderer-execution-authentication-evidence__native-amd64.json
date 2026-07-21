@@ -5,9 +5,9 @@
     "digest": "sha256:23a5b139d269b11ccd3c361089519b90eec26ff720435f93a4354500aabd6229"
   },
   "purpose": "renderer-execution-v1",
-  "receiptDigest": "sha256:e91028fe8e03d05f74fcc8789c5fc78352bb5d40080484802c688e04c559174d",
-  "attemptAuthorityDigest": "sha256:1e576aedca2a067afd4e91ab14d3f19ce751ca1111a3acd2a4d8d0fbc6ab286e",
-  "rendererSelectionDigest": "sha256:7fe3dd029497c0ec7334b57b30c255f307e8f6d02080e0bd629123e776e6f763",
+  "receiptDigest": "sha256:390c3ba74b44364b615c8e15968497db17bd3820735e4e1f39590e7c1bf4eb1d",
+  "attemptAuthorityDigest": "sha256:9bda19877a4c789d9bf616a53f48c2141389ee0818bb7db29af4564021551821",
+  "rendererSelectionDigest": "sha256:8172e69275ec9c1f258c249d1cd06044ec92f020b34409ed7a6cacfaa12aa4a9",
   "launcherIdentityDigest": "sha256:7bdfec5c657aaa1f5acfa2fe8e673785a56c8bc8f52ab44dd7b174b0b86d58a0",
   "signingResult": {
     "contract": "bytedesk.signing-result/1",
@@ -16,17 +16,17 @@
       "digest": "sha256:a64e23f1ae5a04e0c26c67085a41e8d0d70a9df9d45b1ec789c72c7634543ede"
     },
     "requestId": "sign-native-linux-amd64-selection-execution-renderer-execution",
-    "requestDigest": "sha256:7cc745348a0592934fa41a19eb3b77183b4dc4912991b429112966bab094047e",
+    "requestDigest": "sha256:8290219a5064375cb3730929640eaf5bd14dcfa2e8e7078b22ed73e12f549ade",
     "purpose": "renderer-execution-v1",
     "keyVersion": "kms://product/renderer-execution-v1/versions/1",
     "algorithm": "ECDSA_P256_SHA256",
     "publicKeyDigest": "sha256:1e25e409e03e0a9a46b19973c340537a1e5b852eae6dcc88644609389ae21f6f",
     "repository": "registry.example/product/renderer-execution-evidence",
-    "subjectDigest": "sha256:e91028fe8e03d05f74fcc8789c5fc78352bb5d40080484802c688e04c559174d",
+    "subjectDigest": "sha256:390c3ba74b44364b615c8e15968497db17bd3820735e4e1f39590e7c1bf4eb1d",
     "subjectMediaType": "application/vnd.bytedesk.agent.renderer-execution-receipt.v1+json",
     "signatureBundle": {
       "repository": "registry.example/product/renderer-execution-evidence",
-      "digest": "sha256:5b0d3aee88787b4a23d6823331617cb9b924ff761307967dc339464eb904c0ed",
+      "digest": "sha256:d32dcc3e90dc8a4cdc9d049efb00678a791cdd3c3b5f5b54880c978f79721936",
       "mediaType": "application/vnd.dev.sigstore.bundle.v0.3+json",
       "size": 2238,
       "trustPolicy": {
@@ -40,7 +40,7 @@
     },
     "providerAuditEvidence": {
       "repository": "registry.example/product/renderer-execution-evidence",
-      "digest": "sha256:0cd260c48aa812d68cdef36ceac70987c8dee50879023e95f12d6db5a57109b7",
+      "digest": "sha256:f288f3893a3dbbbfda0a1fc7aad92f65101451955590c7747d7a4ed2b6f28e72",
       "mediaType": "application/vnd.bytedesk.agent.signer-authentication-evidence.v1+json",
       "size": 1804,
       "trustPolicy": {
@@ -50,5 +50,5 @@
     },
     "signedAt": "2026-07-17T12:00:01Z"
   },
-  "evidenceDigest": "sha256:a4e2efde0b4e6782b9b0a0137b6f2527f2692d36fc6ef25aa999e3c049de3aa4"
+  "evidenceDigest": "sha256:623982c0e5f498df7b43a7c0598067bbe80e1feeb6625cb43e1d2a45c6b925f3"
 }
