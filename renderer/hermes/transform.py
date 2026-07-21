@@ -1,44 +1,62 @@
 """Hermes harness renderer: deterministic Agent Spec -> native Hermes profile.
 
 AD-05 required-work item 1: "Implement a Hermes adapter behind the shared
-renderer interface." The target shape (profile directory containing
-SOUL.md/config.yaml/.env.template/distribution.yaml, built from
-`{{TOKEN}}`-templated files) is real: it mirrors
-ops/hermes-native/render-profiles.py and ops/hermes-native/templates/ in
-ByteDesk's own bytedesk-platform repository, locked as compatibility
-evidence, not copied wholesale.
+renderer interface." Hermes Agent (NousResearch, hermes-agent.nousresearch.com)
+is a real, independently documented open-source harness; every `config.yaml`
+field this renderer emits is taken from its official public documentation,
+not from any single deployment's private configuration - the same standard
+applied to the OpenClaw adapter. Sources consulted:
 
-Two things that repository's real renderer does are deliberately NOT
-reproduced here, per required-work item 3 ("Keep MCP servers, workload
-credentials, consumer grants, engine IDs, organizational identities, tenant
-bindings... out of reusable public render output"):
+- https://hermes-agent.nousresearch.com/docs/user-guide/configuration/
+  (agent.reasoning_effort, agent.disabled_toolsets, model.provider/default,
+  terminal.backend/cwd/timeout/home_mode)
+- https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban
+  (kanban.dispatch_in_gateway, kanban.dispatch_interval_seconds,
+  kanban.failure_limit, kanban.auto_decompose, kanban.auto_decompose_per_tick,
+  kanban.orchestrator_profile, kanban.default_assignee,
+  kanban.max_in_progress_per_profile, kanban.dispatch_stale_timeout_seconds)
+- https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation
+  (delegation.max_concurrent_children, delegation.max_spawn_depth,
+  delegation.orchestrator_enabled)
+- https://hermes-agent.nousresearch.com/docs/user-guide/security and
+  general documentation (approvals.mode: smart|manual|off,
+  approvals.cron_mode: deny|approve)
+- https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/features/api-server.md
+  (API_SERVER_ENABLED/HOST/PORT/KEY/MODEL_NAME env vars - API server
+  configuration is env-only; "config.yaml support coming in a future
+  release" per that page, so these never appear in config.yaml here)
 
-- `bytedesk_mcp_config`: injects a workload identity's MCP transport
-  (endpoint, client certificate/key paths, OAuth) into config.yaml. That is
-  consumer workload credential material - it belongs only to a private
-  deployment compilation step in a consumer-owned repository, never to this
-  core/public renderer.
-- `org_section`: appends a department/manager/reports organizational chart
-  into SOUL.md from a signed Office org snapshot. That is ByteDesk
-  organizational identity - explicitly forbidden in public render output,
-  and per required-work item 5 ("without... making ByteDesk's
-  office-orchestrator a core fixture") the orchestrator/default-assignee
-  profile names are caller-supplied parameters here, never hardcoded.
+Fields with no confirmed public documentation - a `plugins` section, an
+`onboarding` block, and `gateway.api_server.max_concurrent_runs` - are not
+emitted. An earlier draft of this renderer copied those verbatim from
+ByteDesk's own production `ops/hermes-native/templates/config.yaml` in
+bytedesk-platform; that template is real and working, but it is one
+deployment's compatibility evidence, not the generic harness contract, and
+mixing the two would have made ByteDesk-specific customization look like
+core Hermes semantics. The top-level `max_concurrent_sessions` field
+replaces the unconfirmed `gateway.api_server.max_concurrent_runs`.
+
+Per required-work item 3 ("Keep MCP servers, workload credentials, consumer
+grants, engine IDs, organizational identities, tenant bindings... out of
+reusable public render output"), this renderer also never emits an MCP
+transport block or an organizational chart into SOUL.md - both are private-
+deployment-compilation-only concerns in any case, independent of the schema
+correction above.
 
 # ponytail: this module implements the pure transform (source + generic
 # renderer input parameters -> output tree -> archive/tree digests) plus a
 # compatibility classifier that rejects (not silently drops) unsupported
 # input shapes. It does not yet assemble a full bytedesk.render-manifest/1
-# instance, matching the same documented gap in renderer/native/transform.py
-# and for the same reason: that needs a real renderer registry this pass
-# doesn't build. Sandbox execution and qualification are likewise out of
-# scope here, per docs/planning/infra-defaults.md.
+# instance, matching the same documented gap in renderer/native/transform.py.
+# Sandbox execution and qualification are likewise out of scope here, per
+# docs/planning/infra-defaults.md.
 """
 
 from __future__ import annotations
 
 import hashlib
 import io
+import json
 import tarfile
 from dataclasses import dataclass, field
 from typing import Any
@@ -47,52 +65,35 @@ import rfc8785
 
 OUTPUT_TREE_PROFILE = "bytedesk.renderer-output-tree/1"
 
-_ONBOARDING_BLOCK = """onboarding:
-  profile_build: "off"
-  seen:
-    busy_input_prompt: true
-    tool_progress_prompt: true
-    openclaw_residue_cleanup: true
-    profile_build_offered: true"""
-
-_TERMINAL_BLOCK = """terminal:
-  backend: local
-  cwd: {workspace}
-  home_mode: profile
-  timeout: 180"""
-
 _CONFIG_TEMPLATE = """model:
   provider: {model_provider}
   default: {model_default}
-fallback_providers: []
-toolsets: {toolsets}
 agent:
   reasoning_effort: {reasoning_effort}
+  disabled_toolsets: {disabled_toolsets}
+terminal:
+  backend: {terminal_backend}
+  cwd: {workspace}
+  home_mode: {terminal_home_mode}
+  timeout: {terminal_timeout}
 approvals:
-  mode: "off"
-  cron_mode: approve
-{onboarding}
-{terminal}
+  mode: {approvals_mode}
+  cron_mode: {approvals_cron_mode}
+max_concurrent_sessions: {max_concurrent_sessions}
 kanban:
   dispatch_in_gateway: {dispatch_in_gateway}
-  dispatch_interval_seconds: 10
-  failure_limit: 2
+  dispatch_interval_seconds: {kanban_dispatch_interval_seconds}
+  failure_limit: {kanban_failure_limit}
   orchestrator_profile: {orchestrator_profile}
   default_assignee: {default_assignee}
-  max_spawn: {kanban_max_spawn}
   max_in_progress_per_profile: {kanban_max_in_progress_per_profile}
   auto_decompose: {auto_decompose}
-  auto_decompose_per_tick: 1
-  dispatch_stale_timeout_seconds: 900
-gateway:
-  api_server:
-    max_concurrent_runs: {api_max_concurrent_runs_per_profile}
+  auto_decompose_per_tick: {kanban_auto_decompose_per_tick}
+  dispatch_stale_timeout_seconds: {kanban_dispatch_stale_timeout_seconds}
 delegation:
   max_concurrent_children: {delegation_max_concurrent_children}
   max_spawn_depth: {delegation_max_spawn_depth}
   orchestrator_enabled: {delegation_orchestrator_enabled}
-plugins:
-  enabled: []
 """
 
 _ENV_TEMPLATE = """API_SERVER_ENABLED=true
@@ -137,31 +138,46 @@ class RendererInputParameters:
     """Generic, consumer-neutral Hermes harness configuration.
 
     Every field here is an operational knob (workspace path, capacity
-    limits, model defaults), never a workload credential, tenant identity,
-    or ByteDesk-specific fixture. `orchestrator_profile` and
+    limits, model defaults) documented in Hermes Agent's own public
+    reference, never a workload credential, tenant identity, or
+    deployment-specific fixture. `orchestrator_profile` and
     `default_assignee` are caller-supplied precisely so this renderer never
-    hardcodes ByteDesk's `office-orchestrator`/`chief-of-staff` roster.
+    hardcodes any specific profile roster (AD-05 required-work item 5).
     """
 
+    # No officially documented default exists for these - Hermes Agent's own
+    # schema leaves model.provider/model.default blank until configured, and
+    # a specific model/profile-roster/version binding is a real product
+    # decision this renderer must not invent on the caller's behalf.
     workspace: str
     api_host: str
     api_port: int
     kanban_db: str
-    dispatch_in_gateway: bool = False
-    auto_decompose: bool = False
-    kanban_tools: bool = False
+    model_provider: str
+    model_default: str
+    orchestrator_profile: str
+    default_assignee: str
+    hermes_requires: str
+    # Every field below has a real, documented Hermes Agent default and is
+    # safe to leave at that default for a generic public render.
     reasoning_effort: str = "medium"
-    model_provider: str = "openai-codex"
-    model_default: str = "gpt-5.5"
-    orchestrator_profile: str = "orchestrator"
-    default_assignee: str = "orchestrator"
-    kanban_max_spawn: int = 1
+    disabled_toolsets: tuple[str, ...] = ()
+    terminal_backend: str = "local"
+    terminal_home_mode: str = "auto"
+    terminal_timeout: int = 180
+    approvals_mode: str = "off"
+    approvals_cron_mode: str = "approve"
+    max_concurrent_sessions: int = 1
+    dispatch_in_gateway: bool = True
+    kanban_dispatch_interval_seconds: int = 60
+    kanban_failure_limit: int = 2
     kanban_max_in_progress_per_profile: int = 1
-    api_max_concurrent_runs_per_profile: int = 1
-    delegation_max_concurrent_children: int = 1
+    auto_decompose: bool = True
+    kanban_auto_decompose_per_tick: int = 3
+    kanban_dispatch_stale_timeout_seconds: int = 14400
+    delegation_max_concurrent_children: int = 3
     delegation_max_spawn_depth: int = 1
-    delegation_orchestrator_enabled: bool = False
-    hermes_requires: str = "==0.18.2"
+    delegation_orchestrator_enabled: bool = True
     author: str = "Agent Delivery"
     license: str = "Proprietary"
 
@@ -193,8 +209,8 @@ def classify_compatibility(agent_spec_document: dict[str, Any]) -> Compatibility
     notes: list[str] = []
     if agent_spec_document.get("human_in_the_loop") is True:
         notes.append(
-            "human_in_the_loop=true has no Hermes config representation - "
-            "every profile runs with approvals.mode 'off' (unattended, cron-approved)"
+            "human_in_the_loop=true has no direct Hermes config.yaml field - "
+            "represented only through the caller-chosen approvals.mode/cron_mode"
         )
     if agent_spec_document.get("transforms"):
         notes.append("transforms are not represented in Hermes config output")
@@ -256,21 +272,27 @@ def render_hermes(
     if not soul_bytes.endswith(b"\n"):
         soul_bytes += b"\n"
 
-    toolsets = ["hermes-cli", "kanban"] if params.kanban_tools else ["hermes-cli"]
     config_text = _CONFIG_TEMPLATE.format(
         model_provider=_yaml_scalar(params.model_provider),
         model_default=_yaml_scalar(params.model_default),
-        toolsets=_yaml_list(toolsets),
         reasoning_effort=_yaml_scalar(params.reasoning_effort),
-        onboarding=_ONBOARDING_BLOCK,
-        terminal=_TERMINAL_BLOCK.format(workspace=_yaml_scalar(params.workspace)),
+        disabled_toolsets=_yaml_list(list(params.disabled_toolsets)),
+        terminal_backend=_yaml_scalar(params.terminal_backend),
+        workspace=_yaml_scalar(params.workspace),
+        terminal_home_mode=_yaml_scalar(params.terminal_home_mode),
+        terminal_timeout=params.terminal_timeout,
+        approvals_mode=_yaml_scalar(params.approvals_mode),
+        approvals_cron_mode=_yaml_scalar(params.approvals_cron_mode),
+        max_concurrent_sessions=params.max_concurrent_sessions,
         dispatch_in_gateway=_yaml_bool(params.dispatch_in_gateway),
+        kanban_dispatch_interval_seconds=params.kanban_dispatch_interval_seconds,
+        kanban_failure_limit=params.kanban_failure_limit,
         orchestrator_profile=_yaml_scalar(params.orchestrator_profile),
         default_assignee=_yaml_scalar(params.default_assignee),
-        kanban_max_spawn=params.kanban_max_spawn,
         kanban_max_in_progress_per_profile=params.kanban_max_in_progress_per_profile,
         auto_decompose=_yaml_bool(params.auto_decompose),
-        api_max_concurrent_runs_per_profile=params.api_max_concurrent_runs_per_profile,
+        kanban_auto_decompose_per_tick=params.kanban_auto_decompose_per_tick,
+        kanban_dispatch_stale_timeout_seconds=params.kanban_dispatch_stale_timeout_seconds,
         delegation_max_concurrent_children=params.delegation_max_concurrent_children,
         delegation_max_spawn_depth=params.delegation_max_spawn_depth,
         delegation_orchestrator_enabled=_yaml_bool(params.delegation_orchestrator_enabled),
@@ -324,8 +346,6 @@ def render_hermes(
 
 
 def _yaml_scalar(value: str) -> str:
-    import json
-
     return json.dumps(value)
 
 
@@ -334,8 +354,6 @@ def _yaml_bool(value: bool) -> str:
 
 
 def _yaml_list(values: list[str]) -> str:
-    import json
-
     return json.dumps(values, separators=(",", ":"))
 
 

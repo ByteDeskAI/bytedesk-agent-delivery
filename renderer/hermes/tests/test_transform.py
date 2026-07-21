@@ -52,6 +52,11 @@ PARAMS = RendererInputParameters(
     api_host="127.0.0.1",
     api_port=8801,
     kanban_db="/var/lib/hermes/kanban.db",
+    model_provider="openrouter",
+    model_default="anthropic/claude-opus-4-6",
+    orchestrator_profile="orchestrator",
+    default_assignee="orchestrator",
+    hermes_requires=">=0.18.0",
 )
 
 
@@ -90,7 +95,15 @@ def test_changing_the_source_changes_every_digest():
 
 def test_changing_renderer_parameters_changes_the_archive_but_not_soul():
     other_params = RendererInputParameters(
-        workspace="/work/other", api_host="0.0.0.0", api_port=9000, kanban_db="/tmp/kanban.db"
+        workspace="/work/other",
+        api_host="0.0.0.0",
+        api_port=9000,
+        kanban_db="/tmp/kanban.db",
+        model_provider="openrouter",
+        model_default="google/gemini-3-flash-preview",
+        orchestrator_profile="orchestrator",
+        default_assignee="orchestrator",
+        hermes_requires=">=0.18.0",
     )
     baseline = render_hermes(BACKEND_LEAD, PARAMS)
     reparametrized = render_hermes(BACKEND_LEAD, other_params)
@@ -159,16 +172,21 @@ def test_archive_is_a_deterministic_ustar_tarball_with_zeroed_metadata():
             assert member.mode == 0o644
 
 
-def test_config_yaml_is_valid_yaml_and_carries_no_bytedesk_mcp_block():
+def test_config_yaml_is_valid_yaml_and_carries_no_mcp_block():
     import yaml
 
     result = render_hermes(BACKEND_LEAD, PARAMS)
     with tarfile.open(fileobj=io.BytesIO(result.archive_bytes)) as archive:
         config_text = archive.extractfile("config.yaml").read().decode("utf-8")
     parsed = yaml.safe_load(config_text)
-    assert parsed["plugins"]["enabled"] == []
     assert "mcp_servers" not in parsed
+    assert "plugins" not in parsed
+    assert "onboarding" not in parsed
     assert parsed["kanban"]["orchestrator_profile"] == PARAMS.orchestrator_profile
+    assert parsed["model"]["provider"] == PARAMS.model_provider
+    assert parsed["model"]["default"] == PARAMS.model_default
+    assert parsed["agent"]["disabled_toolsets"] == []
+    assert parsed["max_concurrent_sessions"] == PARAMS.max_concurrent_sessions
 
 
 def test_expanded_size_equals_sum_of_file_sizes():
