@@ -59,6 +59,14 @@ This is a slice of AD-06, not the complete task:
 - [x] Compatibility classification that *rejects* (not silently drops)
       unsupported input: non-`Agent` component types, and `tools`/
       `toolboxes` (which require private deployment compilation).
+- [x] AD-17 required-work item 1's "expected public OpenClaw catalog
+      bundle": `render_marketplace_catalog.py` renders every real,
+      already-validated `bytedesk-agent-marketplace` package through this
+      adapter — 35/35 rendered, checked into `catalog-render/manifest.json`.
+      Not the AD-17 migration map/full-catalog comparison (required-work
+      item 5), which needs real ByteDesk OpenClaw deployment data that
+      does not exist. Signing uses only the repository-wide ephemeral
+      test-key pattern; no production KMS exists.
 - [ ] Full `bytedesk.render-manifest/1` instance assembly — same
       documented gap as `renderer/native` and `renderer/hermes`; needs a
       real renderer registry.
