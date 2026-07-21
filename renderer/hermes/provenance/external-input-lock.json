@@ -1,0 +1,48 @@
+{
+  "commit": "69729951ace917f6e32ed6690d8c1da93e23cbe3",
+  "compatibilityEvidenceOnly": true,
+  "contract": "bytedesk.external-input-lock/1",
+  "lockId": "hermes-native-renderer-2026-07-21",
+  "paths": [
+    {
+      "digest": "sha256:d1c7cd4706d2c13f0601b29175b7560c2c225f4290be3e3309e3eb4a76614705",
+      "path": "ops/hermes-native/render-profiles.py",
+      "size": 8481
+    },
+    {
+      "digest": "sha256:d9613cdaa1e7378782c2453102eee9262a36115daaea029f25398e44219ab300",
+      "path": "ops/hermes-native/templates/.env.template",
+      "size": 196
+    },
+    {
+      "digest": "sha256:c3662274b154c6925da95de34ca26c8fd626fe2ef3349e4593595f61606e23ac",
+      "path": "ops/hermes-native/templates/config.yaml",
+      "size": 1487
+    },
+    {
+      "digest": "sha256:1a92bc1057e89393cdc230403fabd43b0a2bb264dc5cf0da2987ef17eb148ab7",
+      "path": "ops/hermes-native/templates/distribution.yaml",
+      "size": 522
+    }
+  ],
+  "repository": "https://github.com/ByteDeskAI/bytedesk-platform",
+  "retrievedAt": "2026-07-21T02:30:00Z",
+  "role": "compatibility_evidence",
+  "schema": {
+    "digest": "sha256:0b8c314dfc6f25f150b92db704cd80358f43c8109bffc2a64d3f61ff67881faf",
+    "id": "https://schemas.bytedesk.ai/agent-delivery/v1/external-input-lock/1.0.0"
+  },
+  "treeDigest": "sha256:5d14ab596ae4e938fdfcecf3b8e5b647dc1b12a19f7bac46d51822ae89c9a9b4",
+  "validators": [
+    {
+      "digest": "sha256:e808bd4b1bb2eb14e2d03ab338e2317ed38f9c51e060f43f099096d5dd7c9906",
+      "mediaType": "application/vnd.bytedesk.agent-delivery.validator-script.v1+python",
+      "repository": "registry.example.local/bytedesk-agent-delivery/validators/render-hermes",
+      "size": 12706,
+      "trustPolicy": {
+        "digest": "sha256:b6a3954294cc4a0e6ade5e52646f3be777df8d695f97cdebf653234438d1577e",
+        "id": "public-source-v1"
+      }
+    }
+  ]
+}
